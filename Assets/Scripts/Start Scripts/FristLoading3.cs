@@ -1,9 +1,29 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FristLoading3 : UIStartList
 {
     [Tooltip("캔버스에 있는 UI")]
     [SerializeField] private GameObject _uiFirstLoading3;
+
+    [Tooltip("씨앗 이미지")]
+    [SerializeField] private Image _seedImage;
+
+    [Tooltip("페이드 인 페이드 아웃 UI")]
+    [SerializeField] private GameObject _maskImage;
+
+    [Tooltip("페이드 인 스케일 사이즈 설정")]
+    [SerializeField] private Vector3 _fadeInSize;
+
+    [Tooltip("페이드 인 속도")]
+    [SerializeField] private float _fadeInTime;
+
+    [Tooltip("페이드 아웃 스케일 사이즈 설정")]
+    [SerializeField] private Vector3 _fadeOutSize;
+
+    [Tooltip("페이드 아웃 속도")]
+    [SerializeField] private float _fadeOutTime;
 
 
     private UIStart _uiStart;
@@ -22,6 +42,7 @@ public class FristLoading3 : UIStartList
         {
             _isStart = true;
             _uiFirstLoading3.SetActive(true);
+            StartCoroutine(StartFadeIn());
         }
         
     }
@@ -32,4 +53,53 @@ public class FristLoading3 : UIStartList
     public override void UIEnd()
     {
     }
+
+    private IEnumerator StartFadeIn()
+    {
+        _seedImage.gameObject.SetActive(false);
+        float timer = 0;
+        Vector3 tempScale = _maskImage.transform.localScale;
+
+        while(timer <  _fadeInTime)
+        {
+            timer += Time.deltaTime;
+            _maskImage.transform.localScale = 
+                Vector3.Lerp(tempScale, _fadeInSize, timer / _fadeInTime);
+
+            yield return null;
+        }
+
+        _seedImage.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(5);
+
+        yield return StartCoroutine(StartFadeOut());
+
+        Debug.Log("끝!");
+
+    }
+
+    private IEnumerator StartFadeOut()
+    {
+        float timer = 0;
+        Vector3 tempScale = _maskImage.transform.localScale;
+
+        while (timer < _fadeOutTime)
+        {
+            timer += Time.deltaTime;
+            _maskImage.transform.localScale =
+                Vector3.Lerp(tempScale, _fadeOutSize, timer / _fadeOutTime);
+
+
+            Color color = _seedImage.color;
+            color.a = Mathf.Abs(1 -(timer / _fadeOutTime));
+            _seedImage.color = color;
+
+            Debug.Log(color.a);
+
+            yield return null;
+        }
+    }
+
+
 }

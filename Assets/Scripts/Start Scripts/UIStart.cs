@@ -67,6 +67,7 @@ public class UIStart : MonoBehaviour
         if (_currentIndex < _lastIndex)
         {
             _currentIndex++;
+            OnBackgroundButtonClickd();
         }
     }
 }

@@ -70,7 +70,8 @@ public class FirstStartTitle : UIStartList
                 yield return null;
             }
         }
-        
+
+        yield return new WaitForSeconds(3);
         UIEnd();
     }
 }

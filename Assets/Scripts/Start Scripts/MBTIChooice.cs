@@ -133,7 +133,7 @@ public class MBTIChooice : UIStartList
 
         yield return new WaitForSeconds(time);
 
-        _contexts.text = _totalMBTI + " 입니다.";
+        _contexts.text = _totalMBTI + "\n입니다.";
 
         yield return new WaitForSeconds(time);
 
