@@ -69,8 +69,11 @@ public class FristLoading3 : UIStartList
         while(timer <  _fadeInTime)
         {
             timer += Time.deltaTime;
+            float t = timer / _fadeInTime;
+            t = t * t * (3f - 2f * t);
+
             _maskImage.transform.localScale = 
-                Vector3.Lerp(tempScale, _fadeInSize, timer / _fadeInTime);
+                Vector3.Lerp(tempScale, _fadeInSize, t);
 
             yield return null;
         }
@@ -93,11 +96,14 @@ public class FristLoading3 : UIStartList
         while (timer < _fadeOutTime)
         {
             timer += Time.deltaTime;
+            float t = timer / _fadeOutTime;
+            t = t * t * (3f - 2f * t);
+
             _maskImage.transform.localScale =
-                Vector3.Lerp(tempScale, _fadeOutSize, timer / _fadeOutTime);
+                Vector3.Lerp(tempScale, _fadeOutSize, t);
 
             Color color = _seedImage.color;
-            color.a = Mathf.Abs(1 -(timer / _fadeOutTime));
+            color.a = Mathf.Abs(1 - (timer / _fadeOutTime));
             _seedImage.color = color;
 
             yield return null;
