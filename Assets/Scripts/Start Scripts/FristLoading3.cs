@@ -10,14 +10,20 @@ public class FristLoading3 : UIStartList
     [Tooltip("씨앗 이미지")]
     [SerializeField] private Image _seedImage;
 
+    [Space(20)]
+
     [Tooltip("페이드 인 페이드 아웃 UI")]
     [SerializeField] private GameObject _maskImage;
+
+    [Space(5)]
 
     [Tooltip("페이드 인 스케일 사이즈 설정")]
     [SerializeField] private Vector3 _fadeInSize;
 
     [Tooltip("페이드 인 속도")]
     [SerializeField] private float _fadeInTime;
+
+    [Space(5)]
 
     [Tooltip("페이드 아웃 스케일 사이즈 설정")]
     [SerializeField] private Vector3 _fadeOutSize;
