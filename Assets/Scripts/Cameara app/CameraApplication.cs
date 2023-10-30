@@ -61,11 +61,4 @@ public class CameraApplication : MonoBehaviour
         if (Application.isPlaying)
             Destroy(ss);
     }
-
-
-    private float GetScale(int width, int height, Vector2 scalerReferenceResolution, float scalerMatchWidthOrHeight)
-    {
-        return Mathf.Pow(width / scalerReferenceResolution.x, 1f - scalerMatchWidthOrHeight)
-            * Mathf.Pow(height / scalerReferenceResolution.y, scalerMatchWidthOrHeight);
-    }
 }
