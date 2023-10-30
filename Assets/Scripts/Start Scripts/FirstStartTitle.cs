@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class FirstStartTitle : UIStartList
 {
+    
     [Serializable]
     public struct TimeLine
     {
@@ -20,7 +21,10 @@ public class FirstStartTitle : UIStartList
         public float MoveTime;
     }
 
+    [Tooltip("이동할 타이틀")]
     [SerializeField] private TextMeshPro _startTitle;
+
+    [Tooltip("이동 순서, 오브젝트, 거리, 시간을 설정할 수 있다.")]
     [SerializeField] private TimeLine[] _timeLines;
 
     private UIStart _uiStart;
@@ -51,7 +55,7 @@ public class FirstStartTitle : UIStartList
     }
     public override void UIEnd()
     {
-        _uiStart.UIEnd();
+        _uiStart.ChangeCurrentUI();
     }
 
 

@@ -5,19 +5,34 @@ using UnityEngine.UI;
 
 public class UIStart : MonoBehaviour
 {
+    [Tooltip("배경 버튼")]
     [SerializeField] private Button _startBackgroundButton;
 
+    [Tooltip("기존 유저 로그인시 나타나게될 UI 순서")]
     [SerializeField] private List<UIStartList> _uiLoadingList;
 
+    [Tooltip("신규 유저 로그인시 나타나게될 UI 순서")]
     [SerializeField] private List<UIStartList> _uiFirstLoadingList;
 
+    private UIStartList _currentUI;
+
     private int _lastIndex;
-    private int _currentIndex;
+    private int _nextIndex;
 
     private void Awake()
     {
+        Init();
         _startBackgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
+    }
 
+    private void Update()
+    {
+            _currentUI?.UIUpdate();
+    }
+
+
+    private void Init()
+    {
         if (GameManager.Instance.IsFirstStart)
         {
             _lastIndex = _uiFirstLoadingList.Count;
@@ -35,38 +50,29 @@ public class UIStart : MonoBehaviour
             }
         }
 
+        ChangeCurrentUI();
     }
 
-    private void Update()
-    {
-        if (GameManager.Instance.IsFirstStart)
-        {
-            _uiFirstLoadingList[_currentIndex].UIUpdate();
-        }
-        else
-        {
-            _uiLoadingList[_currentIndex].UIUpdate();
-        }
-            
-    }
 
     private void OnBackgroundButtonClickd()
     {
-        if(GameManager.Instance.IsFirstStart)
-        {
-            _uiFirstLoadingList[_currentIndex].UIStart();
-        }
-        else
-        {
-            _uiLoadingList[_currentIndex].UIStart();
-        }      
+        _currentUI?.UIStart();
     }
 
-    public void UIEnd()
+
+    public void ChangeCurrentUI()
     {
-        if (_currentIndex < _lastIndex)
+        if (_nextIndex < _lastIndex)
         {
-            _currentIndex++;
+            if (GameManager.Instance.IsFirstStart)
+            {
+                _currentUI = _uiFirstLoadingList[_nextIndex];
+            }
+            else
+            {
+                _currentUI = _uiLoadingList[_nextIndex];
+            }
+            _nextIndex++;
             OnBackgroundButtonClickd();
         }
     }
