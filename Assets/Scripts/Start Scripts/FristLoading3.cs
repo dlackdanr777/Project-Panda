@@ -43,6 +43,11 @@ public class FristLoading3 : UIStartList
             _isStart = true;
             _uiFirstLoading3.SetActive(true);
             StartCoroutine(StartFadeIn());
+            Debug.Log("시작");
+        }
+        else
+        {
+            Debug.Log("이미 실행중 입니다.");
         }
         
     }
@@ -52,6 +57,7 @@ public class FristLoading3 : UIStartList
 
     public override void UIEnd()
     {
+        _uiStart?.ChangeCurrentUI();
     }
 
     private IEnumerator StartFadeIn()
@@ -63,8 +69,11 @@ public class FristLoading3 : UIStartList
         while(timer <  _fadeInTime)
         {
             timer += Time.deltaTime;
+            float t = timer / _fadeInTime;
+            t = t * t * (3f - 2f * t);
+
             _maskImage.transform.localScale = 
-                Vector3.Lerp(tempScale, _fadeInSize, timer / _fadeInTime);
+                Vector3.Lerp(tempScale, _fadeInSize, t);
 
             yield return null;
         }
@@ -87,15 +96,15 @@ public class FristLoading3 : UIStartList
         while (timer < _fadeOutTime)
         {
             timer += Time.deltaTime;
-            _maskImage.transform.localScale =
-                Vector3.Lerp(tempScale, _fadeOutSize, timer / _fadeOutTime);
+            float t = timer / _fadeOutTime;
+            t = t * t * (3f - 2f * t);
 
+            _maskImage.transform.localScale =
+                Vector3.Lerp(tempScale, _fadeOutSize, t);
 
             Color color = _seedImage.color;
-            color.a = Mathf.Abs(1 -(timer / _fadeOutTime));
+            color.a = Mathf.Abs(1 - (timer / _fadeOutTime));
             _seedImage.color = color;
-
-            Debug.Log(color.a);
 
             yield return null;
         }

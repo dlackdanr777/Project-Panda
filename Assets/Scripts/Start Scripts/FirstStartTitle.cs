@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class FirstStartTitle : UIStartList
 {
+    
     [Serializable]
     public struct TimeLine
     {
@@ -17,10 +18,13 @@ public class FirstStartTitle : UIStartList
         public Vector3 MovePosition;
 
         [Tooltip("이동 시간")]
-        public float MoveTime;
+        public float Duration;
     }
 
+    [Tooltip("이동할 타이틀")]
     [SerializeField] private TextMeshPro _startTitle;
+
+    [Tooltip("이동 순서, 오브젝트, 거리, 시간을 설정할 수 있다.")]
     [SerializeField] private TimeLine[] _timeLines;
 
     private UIStart _uiStart;
@@ -51,7 +55,7 @@ public class FirstStartTitle : UIStartList
     }
     public override void UIEnd()
     {
-        _uiStart.UIEnd();
+        _uiStart.ChangeCurrentUI();
     }
 
 
@@ -63,10 +67,15 @@ public class FirstStartTitle : UIStartList
             Vector3 destinationPos = targetPos + _timeLines[i].MovePosition;
             float timer = 0;
 
-            while (timer < _timeLines[i].MoveTime)
+            while (timer < _timeLines[i].Duration)
             {
-                _timeLines[i].MoveObject.transform.position = Vector3.Lerp(targetPos, destinationPos, timer / _timeLines[i].MoveTime);
                 timer += Time.deltaTime;
+
+                float t = timer / _timeLines[i].Duration;
+                t = t * t * (3f - 2f * t);
+
+                _timeLines[i].MoveObject.transform.position = Vector3.Lerp(targetPos, destinationPos, t);
+                
                 yield return null;
             }
         }

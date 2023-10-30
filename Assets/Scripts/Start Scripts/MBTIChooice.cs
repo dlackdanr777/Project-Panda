@@ -40,19 +40,9 @@ public class MBTIChooice : UIStartList
     private bool _isEnd;
 
     private Dialogue _currentDialogue;
-    public override void Init(UIStart uiStart)
-    {
-        _uiStart = uiStart;
 
-        DialogueParser theParser = GetComponent<DialogueParser>();
-        Dialogue[] dialogues = theParser.Parse(_csvFileName);
-        _uiFirstChooice.SetActive(false);
-        for (int i = 0; i < dialogues.Length; i++)
-        {
-            _dialogueDic.Add(i + 1, dialogues[i]);
-        }
 
-    }
+
     public override void UIStart()
     {
         if (!_isStart)
@@ -68,18 +58,34 @@ public class MBTIChooice : UIStartList
         else
         {
             Debug.Log("이미 실행중 입니다.");
-        }
-       
+        } 
     }
 
     public override void UIUpdate()
     {
+
     }
+
 
     public override void UIEnd()
     {
         _uiFirstChooice.SetActive(false);
-        _uiStart.UIEnd();
+        _uiStart.ChangeCurrentUI();
+    }
+
+
+    public override void Init(UIStart uiStart)
+    {
+        _uiStart = uiStart;
+
+        DialogueParser theParser = GetComponent<DialogueParser>();
+        Dialogue[] dialogues = theParser.Parse(_csvFileName);
+        _uiFirstChooice.SetActive(false);
+
+        for (int i = 0; i < dialogues.Length; i++)
+        {
+            _dialogueDic.Add(i + 1, dialogues[i]);
+        }
     }
 
 
@@ -98,21 +104,9 @@ public class MBTIChooice : UIStartList
             if (!_isEnd)
             {
                 _isEnd = true;
-                StartCoroutine(CompleteMBTI(2));
+                StartCoroutine(CompleteMBTI(1.5f));
             }
         }
-    }
-
-    private void OnLeftButtonClicked()
-    {
-        _totalMBTI += _currentDialogue.LeftButtonOutput;
-        ShowDialogue();
-    }
-
-    private void OnRightButtonClicked()
-    {
-        _totalMBTI += _currentDialogue.RightButtonOutput;
-        ShowDialogue();
     }
 
     private IEnumerator CompleteMBTI(float time)
@@ -143,7 +137,26 @@ public class MBTIChooice : UIStartList
 
     private Dialogue GetDialogue(int id)
     {
-        Dialogue dialogue = _dialogueDic[id];
-        return dialogue;
+        if (_dialogueDic.ContainsKey(id))
+        {
+            Dialogue dialogue = _dialogueDic[id];
+            return dialogue;
+        }
+        return default;
     }
+
+
+    private void OnLeftButtonClicked()
+    {
+        _totalMBTI += _currentDialogue.LeftButtonOutput;
+        ShowDialogue();
+    }
+
+    private void OnRightButtonClicked()
+    {
+        _totalMBTI += _currentDialogue.RightButtonOutput;
+        ShowDialogue();
+    }
+
+   
 }
