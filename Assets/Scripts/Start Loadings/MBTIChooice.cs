@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MBTIChooice : UIStartList
+public class MBTIChooice : StartList
 {
-    private UIStart _uiStart;
+    private StartClassController _uiStart;
 
     [Tooltip("CSV 파일 이름")]
     [SerializeField] string _csvFileName;
@@ -70,11 +70,11 @@ public class MBTIChooice : UIStartList
     public override void UIEnd()
     {
         _uiFirstChooice.SetActive(false);
-        _uiStart.ChangeCurrentUI();
+        _uiStart.ChangeCurrentClass();
     }
 
 
-    public override void Init(UIStart uiStart)
+    public override void Init(StartClassController uiStart)
     {
         _uiStart = uiStart;
 
