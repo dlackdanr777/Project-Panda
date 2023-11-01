@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FirstStartTitle : UIStartList
+public class FirstStartTitle : StartList
 {
     
     [Serializable]
@@ -27,10 +27,10 @@ public class FirstStartTitle : UIStartList
     [Tooltip("이동 순서, 오브젝트, 거리, 시간을 설정할 수 있다.")]
     [SerializeField] private TimeLine[] _timeLines;
 
-    private UIStart _uiStart;
+    private StartClassController _uiStart;
     private bool _isStart;
 
-    public override void Init(UIStart uiStart)
+    public override void Init(StartClassController uiStart)
     {
         _uiStart = uiStart;
     }
@@ -55,7 +55,7 @@ public class FirstStartTitle : UIStartList
     }
     public override void UIEnd()
     {
-        _uiStart.ChangeCurrentUI();
+        _uiStart.ChangeCurrentClass();
     }
 
 

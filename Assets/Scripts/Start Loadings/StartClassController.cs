@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIStart : MonoBehaviour
+public class StartClassController : MonoBehaviour
 {
     [Tooltip("배경 버튼")]
     [SerializeField] private Button _startBackgroundButton;
 
     [Tooltip("기존 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<UIStartList> _uiLoadingList;
+    [SerializeField] private List<StartList> _startLoadingList;
 
     [Tooltip("신규 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<UIStartList> _uiFirstLoadingList;
+    [SerializeField] private List<StartList> _firstStartLoadingList;
 
-    private UIStartList _currentUI;
+    private StartList _currentClass;
 
     private int _lastIndex;
     private int _nextIndex;
@@ -27,7 +27,7 @@ public class UIStart : MonoBehaviour
 
     private void Update()
     {
-            _currentUI?.UIUpdate();
+            _currentClass?.UIUpdate();
     }
 
 
@@ -35,42 +35,42 @@ public class UIStart : MonoBehaviour
     {
         if (GameManager.Instance.IsFirstStart)
         {
-            _lastIndex = _uiFirstLoadingList.Count;
+            _lastIndex = _firstStartLoadingList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _uiFirstLoadingList[i].Init(this);
+                _firstStartLoadingList[i].Init(this);
             }
         }
         else
         {
-            _lastIndex = _uiLoadingList.Count;
+            _lastIndex = _startLoadingList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _uiLoadingList[i].Init(this);
+                _startLoadingList[i].Init(this);
             }
         }
 
-        ChangeCurrentUI();
+        ChangeCurrentClass();
     }
 
 
     private void OnBackgroundButtonClickd()
     {
-        _currentUI?.UIStart();
+        _currentClass?.UIStart();
     }
 
 
-    public void ChangeCurrentUI()
+    public void ChangeCurrentClass()
     {
         if (_nextIndex < _lastIndex)
         {
             if (GameManager.Instance.IsFirstStart)
             {
-                _currentUI = _uiFirstLoadingList[_nextIndex];
+                _currentClass = _firstStartLoadingList[_nextIndex];
             }
             else
             {
-                _currentUI = _uiLoadingList[_nextIndex];
+                _currentClass = _startLoadingList[_nextIndex];
             }
             _nextIndex++;
             OnBackgroundButtonClickd();

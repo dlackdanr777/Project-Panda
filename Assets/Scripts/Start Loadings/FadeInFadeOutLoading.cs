@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FristLoading3 : UIStartList
+public class FadeInFadeOutLoading : StartList
 {
     [Tooltip("캔버스에 있는 UI")]
     [SerializeField] private GameObject _uiFirstLoading3;
@@ -32,11 +32,11 @@ public class FristLoading3 : UIStartList
     [SerializeField] private float _fadeOutTime;
 
 
-    private UIStart _uiStart;
+    private StartClassController _uiStart;
 
     private bool _isStart;
 
-    public override void Init(UIStart uiStart)
+    public override void Init(StartClassController uiStart)
     {
         _uiStart = uiStart;
         _uiFirstLoading3.SetActive(false);
@@ -63,7 +63,7 @@ public class FristLoading3 : UIStartList
 
     public override void UIEnd()
     {
-        _uiStart?.ChangeCurrentUI();
+        _uiStart?.ChangeCurrentClass();
     }
 
     private IEnumerator StartFadeIn()
