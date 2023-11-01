@@ -1,18 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class MessageDetail : MonoBehaviour
 {
     private Button _messageButton;
     private GameObject _checkedImage;
-    private GameObject MessageView;
+    private GameObject _messageView;
     private Player _player;
-    private int _currentIndex;
 
     public Action NoticeHandler;
 
@@ -24,28 +20,32 @@ public class MessageDetail : MonoBehaviour
 
         _messageButton = GetComponent<Button>();
         _messageButton.onClick.AddListener(OnCheckMessage);
-        MessageView = transform.parent.parent.GetChild(1).gameObject;
-        MessageView.transform.Find("Gift").GetComponent<Button>().onClick.AddListener(OnAddInventoryItem);
+
+        _messageView = transform.root.Find("Phone/Message").GetComponent<UIMessage>().MessageView;
+        
     }
 
     private void OnCheckMessage()
     {
-        _currentIndex = _player.MaxMessageCount - 1 - GetIndex();
-        Debug.Log(_currentIndex);
+        int _currentIndex = _player.MaxMessageCount - 1 - GetIndex();
         _checkedImage.SetActive(false);
         _player.IsCheckMessage[_currentIndex] = true;
+
         //알림 이벤트
         NoticeHandler?.Invoke();
 
         //UI
-        MessageView.SetActive(true);
-        MessageView.transform.Find("To").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].To;
-        MessageView.transform.Find("Content").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].Content;
-        MessageView.transform.Find("From").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].From;
-        MessageView.transform.Find("Gift").GetComponent<Image>().sprite = _player.Messages[_currentIndex].GiftImage;
+        _messageView.SetActive(true);
+        _messageView.transform.Find("To").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].To;
+        _messageView.transform.Find("Content").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].Content;
+        _messageView.transform.Find("From").GetComponent<TextMeshProUGUI>().text = _player.Messages[_currentIndex].From;
+        _messageView.transform.Find("Gift").GetComponent<Image>().sprite = _player.Messages[_currentIndex].GiftImage;
 
         //gift 버튼 처리
-        MessageView.transform.Find("Gift").gameObject.SetActive(!_player.IsReceiveGift[_currentIndex]);
+        _messageView.transform.Find("Gift").gameObject.SetActive(!_player.IsReceiveGift[_currentIndex]);
+        //문자 상세 보기를 눌렀을 때 버튼 리스너 할당 => 해당 버튼 매개변수로 넘겨줌
+        int index = _currentIndex;
+        _messageView.transform.Find("Gift").GetComponent<Button>().onClick.AddListener(() => OnAddInventoryItem(index));
 
     }
     private int GetIndex()
@@ -60,16 +60,14 @@ public class MessageDetail : MonoBehaviour
         return -1;
     }
 
-    private void OnAddInventoryItem()
+    private void OnAddInventoryItem(int index)
     {
-        if(!_player.IsReceiveGift[_currentIndex])
+        if(!_player.IsReceiveGift[index])
         {
-            _player.IsReceiveGift[_currentIndex] = true;
+            _player.IsReceiveGift[index] = true;
             //선물 버튼 클릭하면 인벤토리에 추가
-            _player.Inventory.Add(_player.Messages[_currentIndex].Gift);
-            MessageView.transform.Find("Gift").gameObject.SetActive(false); //버튼 안보이게
-
+            _player.Inventory.Add(_player.Messages[index].Gift);
+            _messageView.transform.Find("Gift").gameObject.SetActive(false); //버튼 안보이게
         }
-
     }
 }

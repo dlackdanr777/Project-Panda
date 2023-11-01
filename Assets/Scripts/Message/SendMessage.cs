@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 //특정 조건 시, 문자 발송
@@ -35,7 +32,7 @@ public class SendMessage : MonoBehaviour
     {
         while (!message.IsSend)
         {
-            if (condition(_player.familiarity))
+            if (condition(_player.Familiarity))
             {
                 //message 데이터베이스에서 보냈음을 확인
                 message.IsSend = true;
