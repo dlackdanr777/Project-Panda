@@ -118,6 +118,13 @@ public class WeightedRandom<T>
     /// </summary>
     public T GetRamdomItemBySub()
     {
+        //딕셔너리에 들어있는 아이템 갯수가 0이하면
+        if (_dic.Count <= 0)
+        {
+            Debug.LogError("리스트에 아이템이 없습니다. 뽑기 불가능");
+            return default;
+        }
+
         int totalWeight = GetTotalWeight();
         int weight = 0;
         int pivot = Mathf.RoundToInt(totalWeight * Random.Range(0.0f, 1.0f));
@@ -140,6 +147,13 @@ public class WeightedRandom<T>
     /// </summary>
     public T GetRamdomItem()
     {
+        //딕셔너리에 들어있는 아이템 갯수가 0이하면
+        if (_dic.Count <= 0)
+        {
+            Debug.LogError("리스트에 아이템이 없습니다. 뽑기 불가능");
+            return default;
+        }
+
         int totalWeight = GetTotalWeight();
         int weight = 0;
         int pivot = Mathf.RoundToInt(totalWeight * Random.Range(0.0f, 1.0f));
