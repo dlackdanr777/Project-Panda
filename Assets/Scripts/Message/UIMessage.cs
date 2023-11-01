@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,23 +11,24 @@ public class UIMessage : MonoBehaviour
     [SerializeField]
     private GameObject _messagePf;
     [SerializeField]
-    private GameObject MessageList;
+    private GameObject _messageList;
     [SerializeField]
-    private GameObject Notice;
+    private GameObject _notice;
     [SerializeField]
-    private GameObject RemovePopup;
+    private GameObject _removePopup;
     [SerializeField]
     private Transform _instantiatePosition;
 
     private Player _player;
     private SendMessage _sendMessage;
 
+    public GameObject MessageView;
+
     // Start is called before the first frame update
     void Start()
     {
         _player = GameManager.Instance.Player;
         _sendMessage = GetComponent<SendMessage>();
-        Debug.Log(_player.MaxMessageCount);
 
         for (int i = 0; i < _player.MaxMessageCount; i++)
         {
@@ -41,18 +39,18 @@ public class UIMessage : MonoBehaviour
         _messageButton.onClick.AddListener(OnClickMessageButton);
         _removeButton.onClick.AddListener(OnClickRemoveButton);
         _sendMessage.NoticeHandler += SendMessage_NoticeHandler;
-        RemovePopup.transform.Find("YesButton").GetComponent<Button>().onClick.AddListener(OnRemoveMessage);
+        _removePopup.transform.Find("YesButton").GetComponent<Button>().onClick.AddListener(OnRemoveMessage);
         
     }
 
     private void SendMessage_NoticeHandler()
     {
-        OnTakeMessage();
+        OnChangeaReveivedMessage();
     }
     
     private void OnClickMessageButton()
     {
-        MessageList.gameObject.SetActive(true);
+        _messageList.gameObject.SetActive(true);
     }
 
     private void OnClickRemoveButton()
@@ -64,7 +62,7 @@ public class UIMessage : MonoBehaviour
             {
                 if (message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn)
                 {
-                    RemovePopup.SetActive(true);
+                    _removePopup.SetActive(true);
                 }
             }
         }
@@ -82,6 +80,7 @@ public class UIMessage : MonoBehaviour
                 {
                     message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn = false;
                     _player.IsCheckMessage.RemoveAt(_player.MaxMessageCount - 1 - i); //마지막 자리에서부터 삭제           
+                    _player.IsReceiveGift.RemoveAt(_player.MaxMessageCount - 1 - i);         
                     _player.Messages.RemoveAt(_player.MaxMessageCount - 1 - i);
 
                 }
@@ -89,16 +88,14 @@ public class UIMessage : MonoBehaviour
             }
         }
 
-        RemovePopup.SetActive(false);
+        _removePopup.SetActive(false);
 
-        OnTakeMessage() ;
+        OnChangeaReveivedMessage() ;
     }
 
-    private void OnTakeMessage()
+    private void OnChangeaReveivedMessage()
     {
-        Debug.Log("messages" + _player.Messages.Count);
         int index = _player.MaxMessageCount - _player.Messages.Count;
-        Debug.Log("CApacity" + index);
 
         SetNotice();
 
@@ -111,9 +108,9 @@ public class UIMessage : MonoBehaviour
             //문자 UI
             for (int i = index; i < _player.MaxMessageCount; i++)
             {
-                _instantiatePosition.GetChild(index).gameObject.SetActive(true); //스크롤 뷰의 자식 setActive true
-                _instantiatePosition.GetChild(index).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = _player.Messages[_player.MaxMessageCount- 1 -index].From; //text를 받은 문자로 변환
-
+                _instantiatePosition.GetChild(i).gameObject.SetActive(true); //스크롤 뷰의 자식 setActive true
+                _instantiatePosition.GetChild(i).transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = _player.Messages[_player.MaxMessageCount- 1 -i].From; //text를 받은 문자로 변환
+                _instantiatePosition.GetChild(i).transform.GetChild(2).gameObject.SetActive(!_player.IsCheckMessage[_player.MaxMessageCount - 1 - i]); //문자 확인 이미지 변경
             }
         }
     }
@@ -122,13 +119,13 @@ public class UIMessage : MonoBehaviour
     {
         if (_player.CurrentNotCheckedMessage == 0)
         {
-            Notice.SetActive(false);
+            _notice.SetActive(false);
         }
         else
         {
             //알림 보이기
-            Notice.SetActive(true);
-            Notice.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _player.CurrentNotCheckedMessage.ToString();// 알림 갯수 변경
+            _notice.SetActive(true);
+            _notice.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _player.CurrentNotCheckedMessage.ToString();// 알림 갯수 변경
         }
     }
 }
