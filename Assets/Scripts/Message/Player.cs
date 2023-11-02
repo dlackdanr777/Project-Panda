@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour //싱글톤 적용 혹은 GameManager에 Player 추가(이걸로 진행)
+public class Player : MonoBehaviour 
 {
     public int Familiarity;
-    public List<InventoryItem> Inventory = new List<InventoryItem>();
+
+    [Header("Inventory")]
+    public Inventory Inventory = new Inventory();
 
     [Header("Message")]
     public List<Message> Messages = new List<Message>(); 

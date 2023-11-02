@@ -5,6 +5,7 @@ using UnityEngine;
 public class InventoryItem
 {
     public int Id;
+    public int Count;
     public string Name;
     public string Description;
     public Sprite Image;

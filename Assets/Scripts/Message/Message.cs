@@ -10,5 +10,5 @@ public class Message
     public string Content;
     public bool IsSend;
     public Sprite GiftImage;
-    public InventoryItem Gift;
+    public Item Gift;
 }
