@@ -48,7 +48,7 @@ public class FadeInFadeOutLoading : StartList
         {
             _isStart = true;
             _uiFirstLoading3.SetActive(true);
-            StartCoroutine(StartFadeIn());
+            StartCoroutine(StartRoutine());
             Debug.Log("시작");
         }
         else
@@ -64,6 +64,14 @@ public class FadeInFadeOutLoading : StartList
     public override void UIEnd()
     {
         _uiStart?.ChangeCurrentClass();
+    }
+
+
+    private IEnumerator StartRoutine()
+    {
+        yield return StartCoroutine(StartFadeIn());
+        yield return StartCoroutine(StartFadeOut());
+        Debug.Log("끝");
     }
 
     private IEnumerator StartFadeIn()
@@ -87,11 +95,6 @@ public class FadeInFadeOutLoading : StartList
         _seedImage.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(5);
-
-        yield return StartCoroutine(StartFadeOut());
-
-        Debug.Log("끝!");
-
     }
 
     private IEnumerator StartFadeOut()

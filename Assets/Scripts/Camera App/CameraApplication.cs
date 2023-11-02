@@ -21,6 +21,10 @@ public class CameraApplication : MonoBehaviour
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
     [SerializeField] private AreaImage _areaImage;
 
+    [Tooltip("사진을 찍은 후 인화되는 애니메이션을 출력하는 클래스")]
+    [SerializeField] private PhotoPrinting _photoPrinting;
+
+
     private Camera _camera => Camera.main;
 
    
@@ -54,7 +58,9 @@ public class CameraApplication : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 스크린샷을 찍어주는 함수
+    /// </summary>
     private IEnumerator ScreenshotByAreaImage()
     {
 
@@ -92,6 +98,7 @@ public class CameraApplication : MonoBehaviour
 
         PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
         AddPhotoData(photoData);
+        _photoPrinting.Show(ss);
         OnScreenshotHandler?.Invoke();
 
         Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
@@ -106,7 +113,9 @@ public class CameraApplication : MonoBehaviour
         MagnetFunction();
     }
 
-    //특정 오브젝트에 범위가 달라붙게 하는 함수
+    /// <summary>
+    /// 특정 오브젝트에 범위가 달라붙게 하는 함수
+    /// </summary>
     private void MagnetFunction()
     {
         if (!_isMagnetMode || !_isMagnetEnable)
@@ -160,6 +169,7 @@ public class CameraApplication : MonoBehaviour
 
         return corners;
     }
+
 
     private void AddPhotoData(PhotoData photoData)
     {
