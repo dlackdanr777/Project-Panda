@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,9 @@ using UnityEngine.UI;
 
 public class CameraApplication : MonoBehaviour
 {
+    //스크린샷 찍는 함수를 실행하면 이 이벤트도 실행
+    public event Action OnScreenshotHandler;
+
     [Tooltip("카메라 모드 활성/비활성")]
     [SerializeField] private bool _isActive;
 
@@ -46,12 +50,12 @@ public class CameraApplication : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            StartCoroutine(ScreenshotObjectByAreaImage());
+            StartCoroutine(ScreenshotByAreaImage());
         }
     }
 
 
-    private IEnumerator ScreenshotObjectByAreaImage()
+    private IEnumerator ScreenshotByAreaImage()
     {
 
         yield return new WaitForEndOfFrame();
@@ -79,13 +83,18 @@ public class CameraApplication : MonoBehaviour
         byte[] byteArray = ss.EncodeToPNG();
 
         //저장 위치 지정
-        string savePath = Application.persistentDataPath + "/ScreenshotSave.png";
+        string savePath = Application.persistentDataPath;
+        string fileName = "/Screenshot" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
 
         //새 파일을 만들고 지정된 바이트 배열을 savePath위치에 파일로 저장
         //대상 파일이 이미 있으면 덮어씀
-        File.WriteAllBytes(savePath, byteArray);
+        File.WriteAllBytes(savePath + fileName, byteArray);
 
-        Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath);
+        PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
+        AddPhotoData(photoData);
+        OnScreenshotHandler?.Invoke();
+
+        Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
 
         if (Application.isPlaying)
             Destroy(ss);
@@ -150,5 +159,18 @@ public class CameraApplication : MonoBehaviour
         objToScreenshot.GetWorldCorners(corners);
 
         return corners;
+    }
+
+    private void AddPhotoData(PhotoData photoData)
+    {
+        if(photoData != null)
+        {
+            Database.Instance.Photos.Add(photoData);
+        }
+        else
+        {
+            Debug.LogError("photoData가 null입니다.");
+        }
+        
     }
 }

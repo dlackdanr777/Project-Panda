@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class DataList<T>
 {
-    [SerializeField] private List<T> _data;
+    [SerializeField] private List<T> _data = new List<T>();
     
     public int Count => _data.Count;
 
