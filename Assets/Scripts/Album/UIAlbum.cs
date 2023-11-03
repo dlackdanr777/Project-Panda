@@ -24,35 +24,10 @@ public class UIAlbum : UIView
 
     public event Action OnActiveHandler;
 
-    private void Awake()
+    public void Awake()
     {
-        _albumMenuButton.onClick.AddListener(() => ChangeActive(true));
+        gameObject.SetActive(false);
     }
-
-    private void Start()
-    {
-        ChangeActive(false);
-    }
-
-    public void ChangeActive()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
-
-        if (gameObject.activeSelf)
-        {
-            OnActiveHandler?.Invoke();
-        }   
-    }
-
-    public void ChangeActive(bool isActived)
-    {
-        gameObject.SetActive(isActived);
-        if(isActived)
-        {
-            OnActiveHandler?.Invoke();
-        }      
-    }
-
     public void SelectMenu(AlbumMenus option)
     {
         AlbumMenu.gameObject.SetActive(false);

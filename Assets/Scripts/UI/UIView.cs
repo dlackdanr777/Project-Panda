@@ -7,13 +7,14 @@ public class UIView : MonoBehaviour
 {
     public enum VisibleState
     {
-        Appearing, //나타나는중
-        Appeared, //나타남
+        Disappeared, // 사라짐
         Disappearing, //사라지는 중
-        Disappeared // 사라짐
+        Appeared, //나타남
+        Appearing, //나타나는중
     }
 
     public VisibleState _visibleState;
+
 
     public virtual void Show()
     {
@@ -29,6 +30,7 @@ public class UIView : MonoBehaviour
         if(_visibleState == VisibleState.Appeared)
         {
             gameObject.SetActive(false);
+            Debug.Log(gameObject.activeSelf);
             _visibleState = VisibleState.Disappeared;
         }
             

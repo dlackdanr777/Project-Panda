@@ -19,9 +19,12 @@ public class UINavigation : MonoBehaviour
 
     private Stack<UIView> _uiViews;
 
-    private UIView _currentView;
+    [SerializeField] private UIView _currentView;
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
+
+    public int Count => _uiViews.Count;
+
 
     private void Awake()
     {
