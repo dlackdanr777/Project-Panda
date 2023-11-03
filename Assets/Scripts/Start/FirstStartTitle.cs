@@ -39,7 +39,7 @@ public class FirstStartTitle : StartList
     {
         if (!_isStart)
         {
-            StartCoroutine(MoveCamera());
+            StartCoroutine(FirstScene());
             _isStart = true;
             Debug.Log("Ω√¿€");
         }
@@ -59,7 +59,7 @@ public class FirstStartTitle : StartList
     }
 
 
-    private IEnumerator MoveCamera()
+    private IEnumerator FirstScene()
     {   
         for(int i = 0, count = _timeLines.Length; i < count; i++)
         {
