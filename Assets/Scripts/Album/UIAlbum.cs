@@ -28,14 +28,25 @@ public class UIAlbum : UIView
     {
         gameObject.SetActive(false);
     }
-    public void SelectMenu(AlbumMenus option)
+
+    public override void Hide()
     {
-        AlbumMenu.gameObject.SetActive(false);
-
-
-        if (option == AlbumMenus.Album)
-        {
-            AlbumMenu.gameObject.SetActive(true);
-        }
+        gameObject.SetActive(false);
     }
+
+    public override void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    /* public void SelectMenu(AlbumMenus option)
+     {
+        // AlbumMenu.gameObject.SetActive(false);
+
+
+         if (option == AlbumMenus.Album)
+         {
+             AlbumMenu.gameObject.SetActive(true);
+         }
+     }*/
 }

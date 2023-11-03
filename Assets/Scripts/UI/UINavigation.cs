@@ -17,7 +17,7 @@ public class UINavigation : MonoBehaviour
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-    private Stack<UIView> _uiViews;
+     private Stack<UIView> _uiViews;
 
     [SerializeField] private UIView _currentView;
 
@@ -59,6 +59,7 @@ public class UINavigation : MonoBehaviour
     {
         if (_viewDic.ContainsKey(viewName))
         {
+            Debug.Log("실행");
             if(_currentView != null)
                 _currentView.Hide();
 
@@ -79,13 +80,21 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Pop()
     {
-        _currentView.Hide();
-
         if (_uiViews.Count > 0)
         {
             _currentView = _uiViews.Pop();
             _currentView.Show();
         }
+        if(_uiViews.Count == 0)
+        {
+            if (_currentView != null)
+            {
+                _currentView.Hide();
+                _currentView = null;
+            }    
+        }
+
+
     }
 
     /// <summary>
@@ -108,5 +117,19 @@ public class UINavigation : MonoBehaviour
         {
             Debug.LogError("켜져있는 ui가 존재하지 않습니다.");
         }
+    }
+
+
+    /// <summary>
+    /// 모든 ui를 받는 함수
+    /// </summary>
+    public void Clear()
+    {
+        for (int i = 0, count = _uiViews.Count; i < count; i++)
+        {
+            _uiViews.Pop();
+        }
+
+        _currentView?.Hide();
     }
 }

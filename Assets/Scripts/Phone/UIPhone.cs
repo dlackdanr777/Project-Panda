@@ -27,17 +27,17 @@ public class UIPhone : MonoBehaviour
         _cameraButton.onClick.AddListener(OnCameraButtonClicked);
         _libraryButton.onClick.AddListener(OnLibaryButtonClicked);
         _borderButton.onClick.AddListener(OnBorderButtonClicked);
-
     }
 
     private void OnPhoneButtonClicked()
     { 
+        _uiNav.Clear();
         gameObject.SetActive(!gameObject.activeSelf);
     }
 
     private void OnCameraButtonClicked()
     {
-        _uiNav.Push("Cameara");
+        _uiNav.Push("Camera");
     }
 
     private void OnLibaryButtonClicked()

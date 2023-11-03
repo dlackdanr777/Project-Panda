@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class UIView : MonoBehaviour
+public abstract class UIView : MonoBehaviour
 {
     public enum VisibleState
     {
@@ -15,27 +15,51 @@ public class UIView : MonoBehaviour
 
     public VisibleState _visibleState;
 
+    static Dictionary<string, TextData> _dataBindingTextToDic = null;
 
-    public virtual void Show()
+    /// <summary>
+    /// 텍스트 데이터를 저장해두는 함수
+    /// </summary>
+    public static void SetValue(string dataID, string data)
     {
-        if(_visibleState == VisibleState.Disappeared)
-        {
-            gameObject.SetActive(true);
-            _visibleState = VisibleState.Appeared;
-        }
-    }
+        if (_dataBindingTextToDic == null)
+            _dataBindingTextToDic = new Dictionary<string, TextData>();
 
-    public virtual void Hide()
-    {
-        if(_visibleState == VisibleState.Appeared)
+        if (!_dataBindingTextToDic.TryGetValue(dataID, out TextData textData))
         {
-            gameObject.SetActive(false);
-            Debug.Log(gameObject.activeSelf);
-            _visibleState = VisibleState.Disappeared;
+            textData = new TextData();
+            _dataBindingTextToDic.Add(dataID, textData);
         }
-            
-    }
 
+        textData.text = data;
+    }
     
+
+    /// <summary>
+    /// 저장된 데이터를 불러오는 함수
+    /// </summary>
+    public static TextData GetValue(string dataID)
+    {
+        if (_dataBindingTextToDic == null)
+            _dataBindingTextToDic = new Dictionary<string, TextData>();
+
+        if (!_dataBindingTextToDic.TryGetValue(dataID, out TextData textData))
+        {
+            textData = new TextData();
+            _dataBindingTextToDic.Add(dataID, textData);
+        }
+
+        return textData;
+    }
+
+    /// <summary>
+    /// UI를 불러낼때 콜백되는 함수
+    /// </summary>
+    public abstract void Show();
+
+    /// <summary>
+    /// UI를 끌때 콜백되는 함수
+    /// </summary>
+    public abstract void Hide();
 
 }
