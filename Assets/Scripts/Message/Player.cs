@@ -6,7 +6,8 @@ public class Player : MonoBehaviour
     public int Familiarity;
 
     [Header("Inventory")]
-    public Inventory Inventory = new Inventory();
+    public Inventory ToyInventory = new Inventory();
+    public Inventory SnackInventory = new Inventory();
 
     [Header("Message")]
     public List<Message> Messages = new List<Message>(); 

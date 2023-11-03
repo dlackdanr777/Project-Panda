@@ -24,24 +24,35 @@ public class Inventory
     
     public void Add(Item item)
     {
-        for(int i=0;i<Items.Count;i++)
+        //처음 생성
+        if(Items.Count == 0)
         {
-            if (Items[i].Id == item.Id) //id가 같은 아이템이 있다면
+            InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
+            Items.Add(addItem); //새로운 인벤토리 생성
+
+        }
+        else
+        {
+            for(int i=0;i<Items.Count;i++)
             {
-                if (Items[i].Count > MaxInventoryItemCount) //개수가 최대 개수보다 많은지 확인
+                if (Items[i].Id == item.Id) //id가 같은 아이템이 있다면
                 {
-                    continue;
+                    if (Items[i].Count > MaxInventoryItemCount) //개수가 최대 개수보다 많은지 확인
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Items[i].Count++;
+                    }
                 }
-                else
+                else //없다면 새로운 아이템 생성
                 {
-                    Items[i].Count++;
+                    InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
+                    Items.Add(addItem); //새로운 인벤토리 생성
                 }
             }
-            else //없다면 새로운 아이템 생성
-            {
-                InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
-                Items.Add(addItem); //새로운 인벤토리 생성
-            }
+
         }
     }
 

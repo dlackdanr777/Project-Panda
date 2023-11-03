@@ -2,19 +2,12 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class InventoryItem
+public class InventoryItem : Item
 {
-    public int Id;
     public int Count;
-    public string Name;
-    public string Description;
-    public Sprite Image;
 
-    public InventoryItem(int id, string name, string description, Sprite image)
+    public InventoryItem(int id, string name, string description, Sprite image) :base(id, name, description, image)
     {
-        Id = id;
-        Name = name;
-        Description = description;
-        Image = image;
+        Count = 0;
     }
 }
