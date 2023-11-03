@@ -93,9 +93,8 @@ public class UINavigation : MonoBehaviour
                 _currentView = null;
             }    
         }
-
-
     }
+
 
     /// <summary>
     /// 맨 처음 열렸던 ui로 이동하는 함수

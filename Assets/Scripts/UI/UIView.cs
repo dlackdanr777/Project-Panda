@@ -57,6 +57,7 @@ public abstract class UIView : MonoBehaviour
     /// </summary>
     public abstract void Show();
 
+
     /// <summary>
     /// UI를 끌때 콜백되는 함수
     /// </summary>
