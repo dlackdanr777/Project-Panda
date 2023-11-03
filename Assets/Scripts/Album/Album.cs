@@ -16,11 +16,4 @@ public class Album : MonoBehaviour
         _cameraApp.OnScreenshotHandler += _uiAlbum.AlbumMenu.CreateSlot;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            _uiAlbum.ChangeActive();
-        }
-    }
 }

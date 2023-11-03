@@ -12,7 +12,7 @@ public enum AlbumMenus
 
 }
 
-public class UIAlbum : MonoBehaviour
+public class UIAlbum : UIView
 {
     [Tooltip("앨범 메뉴 스크립트 넣는 곳")]
     public UIAlbumAlbumMenu AlbumMenu;
