@@ -47,15 +47,6 @@ public class UIPhone : MonoBehaviour
 
     private void OnBorderButtonClicked()
     {
-        if (_uiNav.Count > 0)
-        {
-
-            _uiNav.Pop();
-        }
-        else
-        {
-            OnPhoneButtonClicked();
-        }
-        
+        _uiNav.Pop();
     }
 }

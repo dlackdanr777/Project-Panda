@@ -17,26 +17,22 @@ public class UINavigation : MonoBehaviour
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-     private Stack<UIView> _uiViews;
-
     [SerializeField] private UIView _currentView;
+
+    private Stack<UIView> _uiViews;
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
     public int Count => _uiViews.Count;
 
-
-    private void Awake()
+    private void Start()
     {
         Init();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Push("Album");
-        }
+        Debug.Log(_uiViews.Count);
     }
 
     private void Init()
@@ -48,6 +44,8 @@ public class UINavigation : MonoBehaviour
             UIView _uiView = _uiViewList[i].UIView;
 
             _viewDic.Add(Name, _uiView);
+
+            _uiView.gameObject.SetActive(false);
         }
     }
 
@@ -59,14 +57,22 @@ public class UINavigation : MonoBehaviour
     {
         if (_viewDic.ContainsKey(viewName))
         {
-            Debug.Log("실행");
-            if(_currentView != null)
-                _currentView.Hide();
+            if (!_uiViews.Contains(_viewDic[viewName]))
+            {
+                if (_currentView != null)
+                {
+                    _currentView.Hide();
+                    _uiViews.Push(_currentView);
+                }
+                UIView view = _viewDic[viewName];
+                _currentView = view;
+                _currentView.Show();
+            }
+            else
+            {
+                Debug.Log("이미 스택에 존재하는 ui클래스 입니다.");
+            }
 
-            UIView view = _viewDic[viewName];
-            _uiViews.Push(view);
-            _currentView = view;
-            _currentView.Show();
         }
         else
         {
@@ -82,10 +88,12 @@ public class UINavigation : MonoBehaviour
     {
         if (_uiViews.Count > 0)
         {
+            _currentView.Hide();
             _currentView = _uiViews.Pop();
+            Debug.Log(_currentView.name);
             _currentView.Show();
         }
-        if(_uiViews.Count == 0)
+        else if(_uiViews.Count == 0)
         {
             if (_currentView != null)
             {
