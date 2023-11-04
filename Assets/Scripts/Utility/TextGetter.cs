@@ -5,8 +5,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class TextGetter : MonoBehaviour
 {
-    [SerializeField] string _dataID;
-    Text _text;
+    [SerializeField] private string _dataID;
+    private Text _text;
     private TextData _data;
 
     private void Awake()
@@ -18,20 +18,32 @@ public class TextGetter : MonoBehaviour
             Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
             _dataID = gameObject.name;
         }
-
-        _data = UIView.GetValue(_dataID);
-        _text.text = _data.text;
-        _data.callback += UpdateText;
     }
-    
+    private void OnEnable()
+    {
+        Invoke("Enabled", 0.02f);
+    }
+
     private void OnDisable()
     {
-        _data.callback -= UpdateText;
+        Invoke("Disabled", 0.02f);
     }
 
     public void UpdateText(string text)
     {
         _text.text = text;
+    }
+
+    private void Enabled()
+    {
+        _data = DataBinding.GetTextValue(_dataID);
+        _text.text = _data.text;
+        _data.callback += UpdateText;
+    }
+
+    private void Disabled()
+    {
+        _data.callback -= UpdateText;
     }
 }
 

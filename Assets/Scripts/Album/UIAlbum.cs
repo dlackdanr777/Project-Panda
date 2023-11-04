@@ -22,13 +22,6 @@ public class UIAlbum : UIView
 
     [SerializeField] private Button _illustratedGuide;
 
-    public event Action OnActiveHandler;
-
-    public void Awake()
-    {
-        gameObject.SetActive(false);
-    }
-
     public override void Hide()
     {
         gameObject.SetActive(false);
