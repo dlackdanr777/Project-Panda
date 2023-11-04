@@ -6,8 +6,7 @@ public class Player : MonoBehaviour
     public int Familiarity;
 
     [Header("Inventory")]
-    public Inventory ToyInventory = new Inventory();
-    public Inventory SnackInventory = new Inventory();
+    public Inventory[] Inventory = new Inventory[2];
 
     [Header("Message")]
     public List<Message> Messages = new List<Message>(); 
@@ -31,5 +30,9 @@ public class Player : MonoBehaviour
     {
         MaxMessageCount = 20;
         
+        for(int i=0; i < Inventory.Length; i++)
+        {
+            Inventory[i] = new Inventory();
+        }
     }
 }

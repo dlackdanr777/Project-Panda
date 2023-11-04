@@ -66,7 +66,7 @@ public class MessageDetail : MonoBehaviour
         {
             _player.IsReceiveGift[index] = true;
             //선물 버튼 클릭하면 인벤토리에 추가
-            _player.ToyInventory.Add(_player.Messages[index].Gift);
+            //_player.Inventory[0].Add(_player.Messages[index].Gift);
             _messageView.transform.Find("Gift").gameObject.SetActive(false); //버튼 안보이게
         }
     }

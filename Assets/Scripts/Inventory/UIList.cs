@@ -14,29 +14,39 @@ public enum Field
 public abstract class UIList<T> : MonoBehaviour where T : Item
 {
     [SerializeField] private GameObject _prefab; //spawn할 prefab
-    [SerializeField] private Transform[] _spawnPoint; //spawn할 위치
     [SerializeField] private ToggleGroup _field; //토글 종류
     [SerializeField] private Image _inventorySlots;//slots 배경
-    [SerializeField] private GameObject _detailView; //상세설명 창
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
+
+    [SerializeField] protected GameObject _detailView; //상세설명 창
+    [SerializeField] protected Transform[] _spawnPoint; //spawn할 위치
 
     protected List<T>[] _lists = new List<T>[System.Enum.GetValues(typeof(Field)).Length-1]; //Field 개수만큼 리스트 존재(None 제외) //데이터를 저장할 공간
     protected Field _currentField;
-    protected List<T> _list;
     protected Color[] _fieldColor; //panel 색상 변경할 색상 배열
+    protected int[] _maxCount = new int[System.Enum.GetValues(typeof(Field)).Length - 1];
 
     /// <summary>
     /// Panel 색상 배열(_fieldColor)을 설정하는 함수
     /// </summary>
-    public abstract void SetFieldColorArray();
+    protected abstract void SetFieldColorArray();
+
+    /// <summary>
+    /// DetailView Text 받아오는 함수
+    /// </summary>
+    protected abstract void GetText(int index);
+
+    /// <summary>
+    /// InventorySlots의 SetActive(), Count() ui를 update하는 함수
+    /// </summary>
+    protected abstract void UpdateInventorySlots();
 
     protected void Init()
     {
-        _currentField = Field.Toy; //처음에 선택된 장난감으로 초기화
-
+        CreateSlots(); //slot 생성
         ChangeBackGroundColor(); //배경 색 변경
-
-
+        UpdateInventorySlots(); //초기 slot update
+        
         //버튼 리스너
         foreach(Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
         {
@@ -49,17 +59,18 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         }
         _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
     }
-    
-    //list마다 해당 spawn 위치에 Instantiate
-    protected void CreateSlots()
-    {
-        _list = _lists[(int)_currentField];
 
-        for (int i = 0; i < _list.Count; i++)
+    //list마다 해당 spawn 위치에 Instantiate하는 함수
+    private void CreateSlots()
+    {
+        for(int i=0;i<_maxCount.Length;i++)
         {
-            GameObject slot = Instantiate(_prefab, _spawnPoint[(int)_currentField]);
-            int index = i;
-            slot.GetComponent<Button>().onClick.AddListener(()=>OnClickSlot(index));
+            for (int j = 0; j < _maxCount[i]; j++)
+            {
+                GameObject slot = Instantiate(_prefab, _spawnPoint[i]);
+                int _slotIndex = j;
+                slot.GetComponent<Button>().onClick.AddListener(()=>OnClickSlot(_slotIndex));
+            }
         }
     }
 
@@ -99,7 +110,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     //SlotClick 이벤트
     private void OnClickSlot(int index)
     {
+        GetText(index); //텍스트 바인딩
         _detailView.SetActive(true); //상세 설명 창 나타남
-        //대장님 text 어쩌구로 상세 설명 받아옴
     }
 }

@@ -8,6 +8,6 @@ public class InventoryItem : Item
 
     public InventoryItem(int id, string name, string description, Sprite image) :base(id, name, description, image)
     {
-        Count = 0;
+        Count = 1;
     }
 }
