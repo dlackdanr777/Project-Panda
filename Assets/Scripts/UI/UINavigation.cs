@@ -30,11 +30,6 @@ public class UINavigation : MonoBehaviour
         Init();
     }
 
-    private void Update()
-    {
-        Debug.Log(_uiViews.Count);
-    }
-
     private void Init()
     {
         _uiViews = new Stack<UIView>();
@@ -50,11 +45,13 @@ public class UINavigation : MonoBehaviour
     }
 
 
+
     /// <summary>
     /// 이름을 받아 현재 이름의 view를 열어주는 함수
     /// </summary>
     public void Push(string viewName)
     {
+
         if (_viewDic.ContainsKey(viewName))
         {
             if (!_uiViews.Contains(_viewDic[viewName]))
@@ -90,7 +87,6 @@ public class UINavigation : MonoBehaviour
         {
             _currentView.Hide();
             _currentView = _uiViews.Pop();
-            Debug.Log(_currentView.name);
             _currentView.Show();
         }
         else if(_uiViews.Count == 0)

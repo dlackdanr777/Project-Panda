@@ -21,6 +21,9 @@ public class UICamera : UIView
 
     private void Awake()
     {
-        _shootingButton.onClick.AddListener(() => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
+       // _shootingButton.onClick.AddListener(() => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
+
+        DataBinding.SetButtonValue("ShootingButton", () => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
     }
+
 }

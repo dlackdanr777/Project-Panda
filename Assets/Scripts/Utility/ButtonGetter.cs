@@ -1,0 +1,51 @@
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+
+[RequireComponent(typeof(Button))]
+public class ButtonGetter : MonoBehaviour
+{
+    [SerializeField] private  string _dataID;
+    private Button _button;
+    private ButtonData _data;
+
+    private void Awake()
+    {
+        _button = GetComponent<Button>();
+
+        if (string.IsNullOrEmpty(_dataID))
+        {
+            Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
+            _dataID = gameObject.name;
+        }
+    }
+
+    private void OnEnable()
+    {
+        Invoke("Enabled", 0.02f);
+    }
+
+    private void OnDisable()
+    {
+        Invoke("Disabled", 0.02f);
+    }
+
+    private void UpdateButton(UnityAction action)
+    { 
+        _data.Action = action;
+    }
+
+    private void Enabled()
+    {
+        _data = DataBinding.GetButtonValue(_dataID);
+        _data.CallBack += UpdateButton;
+        _button.onClick?.AddListener(_data.Action);
+    }
+
+    private void Disabled()
+    {
+        _data.CallBack -= UpdateButton;
+        _button.onClick?.RemoveListener(_data.Action);
+    }
+}
