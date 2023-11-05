@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIInventoryList : UIList<InventoryItem>
@@ -73,6 +74,8 @@ public class UIInventoryList : UIList<InventoryItem>
     {
         UseItem();
         _detailView.SetActive(false);
+
+        MoveItem();
     }
 
     private void UseItem()
@@ -81,5 +84,14 @@ public class UIInventoryList : UIList<InventoryItem>
         UpdateInventorySlots();
     }
 
+    private void MoveItem()
+    {
+        Vector2 mousePos = Input.mousePosition;
+        Transform parent = GetComponentInParent<Canvas>().gameObject.transform;
+        GameObject arrageItem = Instantiate(_spawnPoint[(int)_currentField].GetChild(_currentItemIndex).gameObject, parent.position, Quaternion.identity);
+        arrageItem.transform.position = mousePos;
+        
+        
+    }
     
 }
