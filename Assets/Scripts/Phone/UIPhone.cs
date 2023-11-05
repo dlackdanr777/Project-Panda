@@ -33,7 +33,7 @@ public class UIPhone : MonoBehaviour
 
     private void OnLibaryButtonClicked()
     {
-        _uiNav.Push("Album");
+        _uiNav.Push("Library");
     }
 
     private void OnBorderButtonClicked()

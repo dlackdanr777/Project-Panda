@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIAlbumAlbumMenu : MonoBehaviour
+public class UIAlbum : MonoBehaviour
 {
-    [Tooltip("앨범 스크립트를 넣는 곳")]
-    [SerializeField] private Album _album;
+    [Tooltip(" 저장소 스크립트를 넣는 곳")]
+    [SerializeField] private Library _library;
 
     [Tooltip("슬롯들의 부모 오브젝트를 넣는 곳")]
     [SerializeField] private GameObject _layoutGroup;

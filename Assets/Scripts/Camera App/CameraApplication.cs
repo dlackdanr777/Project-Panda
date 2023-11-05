@@ -44,6 +44,10 @@ public class CameraApplication : MonoBehaviour
     [SerializeField]  private bool _isMagnetMode;
 
 
+    private void OnEnable()
+    {
+        _screenshotEnable = true;
+    }
 
 
     private void Update()
@@ -52,7 +56,6 @@ public class CameraApplication : MonoBehaviour
             return;
 
         MoveCamera();
-
     }
 
 
@@ -126,12 +129,15 @@ public class CameraApplication : MonoBehaviour
             _photoPrinting.Show(ss);
             OnScreenshotHandler?.Invoke();
 
+            Invoke("SceenshotEnable", 2);
+
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
 
-            yield return new WaitForSeconds(waitTime);
-            _screenshotEnable = true;
+
         }
     }
+
+    private void SceenshotEnable() => _screenshotEnable = true;
 
 
     private void FixedUpdate()
