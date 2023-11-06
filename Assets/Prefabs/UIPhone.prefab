@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 14}
-  m_SizeDelta: {x: 320, y: 600}
+  m_AnchoredPosition: {x: 0, y: 5}
+  m_SizeDelta: {x: 310, y: 550}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4736158484686833421
 CanvasRenderer:
@@ -467,7 +467,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiViewList:
-  - Name: Album
+  - Name: Library
+    UIView: {fileID: 0}
+  - Name: Camera
     UIView: {fileID: 0}
   _currentView: {fileID: 0}
 --- !u!114 &3455044616887193254
@@ -482,10 +484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b04139b04d50114e90fdf3fab39cc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _phoneButton: {fileID: 0}
-  _borderButton: {fileID: 7255901386493942140}
-  _cameraButton: {fileID: 4128083491274739620}
-  _libraryButton: {fileID: 8878559098195801329}
 --- !u!1 &3751314660347581983
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,6 +496,7 @@ GameObject:
   - component: {fileID: 1726260250044632834}
   - component: {fileID: 5253876978301912884}
   - component: {fileID: 4128083491274739620}
+  - component: {fileID: 600084064803833249}
   m_Layer: 5
   m_Name: Camera Button
   m_TagString: Untagged
@@ -607,6 +606,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &600084064803833249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3751314660347581983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataID: CameraButton
 --- !u!1 &4784477481465980582
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +631,7 @@ GameObject:
   - component: {fileID: 2595210914953695011}
   - component: {fileID: 8590042438107069891}
   - component: {fileID: 7255901386493942140}
+  - component: {fileID: 8731565094324175180}
   m_Layer: 5
   m_Name: Border Button
   m_TagString: Untagged
@@ -667,7 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.27450982}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -728,6 +741,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8731565094324175180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4784477481465980582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataID: BorderButton
 --- !u!1 &4891332853385552906
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,6 +924,7 @@ GameObject:
   - component: {fileID: 2171091896794264678}
   - component: {fileID: 1090522011843116750}
   - component: {fileID: 8878559098195801329}
+  - component: {fileID: 1239370710250269843}
   m_Layer: 5
   m_Name: Library Button
   m_TagString: Untagged
@@ -1007,6 +1034,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1239370710250269843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898153927298447752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataID: LibaryButton
 --- !u!1 &6916850394379642170
 GameObject:
   m_ObjectHideFlags: 0

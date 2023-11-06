@@ -9,14 +9,16 @@ public class UIPhone : MonoBehaviour
 {
     private UINavigation _uiNav;
 
+    private string _value;
+
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
 
-        DataBinding.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
-        DataBinding.SetButtonValue("CameraButton", OnCameraButtonClicked);
-        DataBinding.SetButtonValue("LibaryButton", OnLibaryButtonClicked);
-        DataBinding.SetButtonValue("BorderButton", OnBorderButtonClicked);
+        DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
+        DataBind.SetButtonValue("CameraButton", OnCameraButtonClicked);
+        DataBind.SetButtonValue("LibaryButton", OnLibaryButtonClicked);
+        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
     }
 
 
@@ -33,7 +35,7 @@ public class UIPhone : MonoBehaviour
 
     private void OnLibaryButtonClicked()
     {
-        _uiNav.Push("Album");
+        _uiNav.Push("Library");
     }
 
     private void OnBorderButtonClicked()

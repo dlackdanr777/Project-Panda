@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,74 +9,41 @@ public class CameraApplication : MonoBehaviour
     //스크린샷 찍는 함수를 실행하면 이 이벤트도 실행
     public event Action OnScreenshotHandler;
 
+    [Tooltip("UI카메라 앱 스크립트를 넣는곳")]
+    [SerializeField] private UICameraApp _uiCameraApp;
+
+    [Tooltip("스크린샷 카메라 스크립트")]
+    [SerializeField] private ScreenshotCamera _screenshotCamera;
+
+    [Tooltip("사진을 찍은 후 인화되는 애니메이션을 출력하는 클래스")]
+    [SerializeField] private PhotoPrinting _photoPrinting;
+
     [Tooltip("카메라 모드 활성/비활성")]
     [SerializeField] private bool _isActive;
 
     [Tooltip("메인 캔버스")]
     [SerializeField] private Canvas _canvas;
 
-    [Tooltip("촬영할 카메라")]
-    [SerializeField] private Camera _ScreenshotCamera;
 
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
     [SerializeField] private Image _areaImage;
 
-    [Tooltip("사진을 찍은 후 인화되는 애니메이션을 출력하는 클래스")]
-    [SerializeField] private PhotoPrinting _photoPrinting;
 
-
-    private Camera _camera => _ScreenshotCamera;
-
-   
-
-    //====================================================//
-    [Space(50)]
-
-    [Tooltip("자석 모드 활성/비활성")]
-    [SerializeField] private bool _isMagnetEnable;
-
-    [Tooltip("자석 기능의 감지 범위")]
-    [SerializeField] private Vector3 _boxSize;
-
-    [SerializeField]  private bool _isMagnetMode;
-
-
-
-
-    private void Update()
-    {
-        if (!_isActive)
-            return;
-
-        MoveCamera();
-
-    }
-
-
-    Vector2 _clickPoint;
-    float dragSpeed = 30f;
-    private void MoveCamera()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _clickPoint = Input.mousePosition;
-            if (_isMagnetEnable) _isMagnetMode = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (_isMagnetEnable) _isMagnetMode = true;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 pos = _ScreenshotCamera.ScreenToViewportPoint((Vector2)Input.mousePosition - _clickPoint);
-
-            Vector3 move = pos * (Time.deltaTime * dragSpeed);
-            _ScreenshotCamera.transform.Translate(move);
-        }
-    }
 
     private bool _screenshotEnable = true;
+
+    private void Awake()
+    {
+        _uiCameraApp.OnShowHandler += () => _screenshotCamera.gameObject.SetActive(true);
+        _uiCameraApp.OnHideHandler += () => _screenshotCamera.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        _screenshotEnable = true;
+    }
+
+
     /// <summary>
     /// 스크린샷을 찍어주는 함수
     /// </summary>
@@ -126,61 +90,9 @@ public class CameraApplication : MonoBehaviour
             _photoPrinting.Show(ss);
             OnScreenshotHandler?.Invoke();
 
+            Invoke("SceenshotEnable", 2);
+
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
-
-            yield return new WaitForSeconds(waitTime);
-            _screenshotEnable = true;
-        }
-    }
-
-
-    private void FixedUpdate()
-    {
-        MagnetFunction();
-    }
-
-    /// <summary>
-    /// 특정 오브젝트에 범위가 달라붙게 하는 함수
-    /// </summary>
-    private void MagnetFunction()
-    {
-        if (!_isMagnetMode || !_isMagnetEnable)
-            return;
-
-        Vector3 imageWorldPos = _camera.ScreenToWorldPoint(_areaImage.transform.position);
-
-        RaycastHit2D hit = Physics2D.BoxCast(_camera.transform.position, _boxSize, 0, _camera.transform.forward);
-        
-        if (hit.collider != null)
-        {
-            if ( hit.transform.gameObject.TryGetComponent(out ScreenshotObject screenshotObject))
-            {
-
-                if(Vector2.Distance(_ScreenshotCamera.transform.position, screenshotObject.transform.position) > 0.5f)
-                    StartCoroutine(ImagePosLerp(_ScreenshotCamera.transform.position, screenshotObject.transform.position, 0.3f));
-            }   
-        }
-    }
-
-
-    private IEnumerator ImagePosLerp(Vector3 startPos, Vector3 endPos, float duration )
-    {
-        if(_isMagnetEnable)
-        {
-            float timer = 0;
-            endPos = new Vector3(endPos.x, endPos.y, startPos.z);
-
-            while (timer < duration)
-            {
-                timer += Time.deltaTime;
-
-                float t = timer / duration;
-                t = t * t * (3f - 2f * t);
-
-                _ScreenshotCamera.transform.position = Vector3.Lerp(startPos, endPos, t);
-
-                yield return null;
-            }
         }
     }
 

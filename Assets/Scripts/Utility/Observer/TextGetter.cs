@@ -7,7 +7,7 @@ public class TextGetter : MonoBehaviour
 {
     [SerializeField] private string _dataID;
     private Text _text;
-    private TextData _data;
+    private BindData<string> _data;
 
     private void Awake()
     {
@@ -36,14 +36,14 @@ public class TextGetter : MonoBehaviour
 
     private void Enabled()
     {
-        _data = DataBinding.GetTextValue(_dataID);
-        _text.text = _data.text;
-        _data.callback += UpdateText;
+        _data = DataBind.GetTextValue(_dataID);
+        _text.text = _data.Item;
+        _data.CallBack += UpdateText;
     }
 
     private void Disabled()
     {
-        _data.callback -= UpdateText;
+        _data.CallBack -= UpdateText;
     }
 }
 

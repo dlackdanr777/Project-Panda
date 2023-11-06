@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using Muks.Tween;
 
 public class FirstStartTitle : StartList
 {
@@ -12,10 +11,10 @@ public class FirstStartTitle : StartList
     public struct TimeLine
     {
         [Tooltip("이동 오브젝트")]
-        public GameObject MoveObject;
+        public GameObject Object;
 
         [Tooltip("이동 거리")]
-        public Vector3 MovePosition;
+        public Vector3 TargetPosition;
 
         [Tooltip("이동 시간")]
         public float Duration;
@@ -39,8 +38,9 @@ public class FirstStartTitle : StartList
     {
         if (!_isStart)
         {
-            StartCoroutine(FirstScene());
-            _isStart = true;
+            //StartCoroutine(FirstScene());
+            Tween.Move(_timeLines[0].Object, _timeLines[0].TargetPosition, _timeLines[0].Duration, TweenMode.Smootherstep, CallBack);
+                _isStart = true;
             Debug.Log("시작");
         }
         else
@@ -58,30 +58,9 @@ public class FirstStartTitle : StartList
         _uiStart.ChangeCurrentClass();
     }
 
-
-    private IEnumerator FirstScene()
-    {   
-        for(int i = 0, count = _timeLines.Length; i < count; i++)
-        {
-            Vector3 targetPos = _timeLines[i].MoveObject.transform.position;
-            Vector3 destinationPos = targetPos + _timeLines[i].MovePosition;
-            float timer = 0;
-
-            while (timer < _timeLines[i].Duration)
-            {
-                timer += Time.deltaTime;
-
-                float t = timer / _timeLines[i].Duration;
-                t = t * t * (3f - 2f * t);
-
-                _timeLines[i].MoveObject.transform.position = Vector3.Lerp(targetPos, destinationPos, t);
-                
-                yield return null;
-            }
-        }
-
-        yield return new WaitForSeconds(3);
-        UIEnd();
+    private void CallBack()
+    {
+        Tween.Move(_timeLines[1].Object, _timeLines[1].TargetPosition, _timeLines[1].Duration, TweenMode.Smootherstep,
+                     () => Tween.Move(_timeLines[2].Object, _timeLines[2].TargetPosition, _timeLines[2].Duration, TweenMode.Smootherstep, UIEnd));
     }
-
 }

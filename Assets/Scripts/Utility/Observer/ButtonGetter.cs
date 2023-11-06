@@ -8,7 +8,7 @@ public class ButtonGetter : MonoBehaviour
 {
     [SerializeField] private  string _dataID;
     private Button _button;
-    private ButtonData _data;
+    private BindData<UnityAction> _data;
 
     private void Awake()
     {
@@ -33,19 +33,19 @@ public class ButtonGetter : MonoBehaviour
 
     private void UpdateButton(UnityAction action)
     { 
-        _data.Action = action;
+        _data.Item = action;
     }
 
     private void Enabled()
     {
-        _data = DataBinding.GetButtonValue(_dataID);
+        _data = DataBind.GetButtonValue(_dataID);
         _data.CallBack += UpdateButton;
-        _button.onClick?.AddListener(_data.Action);
+        _button.onClick?.AddListener(_data.Item);
     }
 
     private void Disabled()
     {
         _data.CallBack -= UpdateButton;
-        _button.onClick?.RemoveListener(_data.Action);
+        _button.onClick?.RemoveListener(_data.Item);
     }
 }

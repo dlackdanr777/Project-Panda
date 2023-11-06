@@ -134,5 +134,6 @@ public class UINavigation : MonoBehaviour
         }
 
         _currentView?.Hide();
+        _currentView = null;
     }
 }
