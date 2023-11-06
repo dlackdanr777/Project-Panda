@@ -21,19 +21,25 @@ namespace Muks.WeightedRandom
         /// <summary>
         /// 가중치 리스트에 아이템과 수량을 추가함
         /// </summary>
-        public void Add(T item, uint value)
+        public void Add(T item, int value)
         {
+            if (value < 0)
+            {
+                Debug.LogError("음수는 들어갈 수 없습니다.");
+                return;
+            }
+
             //만약 딕셔너리에 키가 존재하면?
             if (_dic.ContainsKey(item))
             {
                 //해당 키의 값의 수치를 변경한다.
-                _dic[item] += (int)value;
+                _dic[item] += value;
             }
             //존재하지 않으면?
             else
             {
                 //아이템을 추가한다.
-                _dic.Add(item, (int)value);
+                _dic.Add(item, value);
             }
         }
 
@@ -41,8 +47,14 @@ namespace Muks.WeightedRandom
         /// <summary>
         /// 가중치 리스트에 아이템이 있으면 지정 수량을 빼고, 지정 수량이 더 크면 리스트에서 아이템을 뺌
         /// </summary>
-        public void Sub(T item, uint value)
+        public void Sub(T item, int value)
         {
+            if (value < 0)
+            {
+                Debug.LogError("음수는 들어갈 수 없습니다.");
+                return;
+            }
+
             //만약 딕셔너리에 키가 존재하면?
             if (_dic.ContainsKey(item))
             {
@@ -50,7 +62,7 @@ namespace Muks.WeightedRandom
                 if (_dic[item] > value)
                 {
                     //해당 키의 값의 수치를 변경한다.
-                    _dic[item] -= (int)value;
+                    _dic[item] -= value;
                 }
                 //같거나 작으면?
                 else
@@ -130,15 +142,16 @@ namespace Muks.WeightedRandom
                 return default;
             }
 
-            int totalWeight = GetTotalWeight();
             int weight = 0;
+            int totalWeight = GetTotalWeight();
             int pivot = Mathf.RoundToInt(totalWeight * Random.Range(0.0f, 1.0f));
 
             foreach (var item in _dic)
             {
                 weight += item.Value;
-                if (pivot <= item.Value)
+                if (pivot <= weight)
                 {
+                    
                     _dic[item.Key] -= 1;
                     return item.Key;
                 }

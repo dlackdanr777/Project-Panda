@@ -20,7 +20,7 @@ public class TextGetter_Ssun : MonoBehaviour
             _dataID = gameObject.name;
         }
 
-        _data = UIView.GetValue(_dataID);
+/*        _data = UIView.GetValue(_dataID);*/
         _text.text = _data.text;
         _data.callback += UpdateText;
     }
