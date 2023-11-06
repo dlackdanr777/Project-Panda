@@ -8,7 +8,12 @@ using UnityEngine.UI;
 public class UIInventoryList : UIList<InventoryItem>
 {
     [SerializeField] private Button _arrangeButton;
+    [SerializeField] private SpriteRenderer _selectedImage;
+    [SerializeField] private GameObject _arrangeItem;
     private int _currentItemIndex;
+
+    //Test
+    public Sprite Test;
 
     // Start is called before the first frame update
     void Start() 
@@ -19,10 +24,10 @@ public class UIInventoryList : UIList<InventoryItem>
         }
 
         //Test
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", null)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", null)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(1, "n1", "d", null)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(2, "n2", "d", null)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(1, "n1", "d", Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(2, "n2", "d", Test)); //인벤토리에 item add
 
         for (int i = 0; i < GameManager.Instance.Player.Inventory[0].ItemsCount; i++)
         {
@@ -74,8 +79,11 @@ public class UIInventoryList : UIList<InventoryItem>
     {
         UseItem();
         _detailView.SetActive(false);
-
+        
         MoveItem();
+        //마우스 따라다니는 이미지 setactive
+        
+
     }
 
     private void UseItem()
@@ -86,12 +94,11 @@ public class UIInventoryList : UIList<InventoryItem>
 
     private void MoveItem()
     {
-        Vector2 mousePos = Input.mousePosition;
-        Transform parent = GetComponentInParent<Canvas>().gameObject.transform;
-        GameObject arrageItem = Instantiate(_spawnPoint[(int)_currentField].GetChild(_currentItemIndex).gameObject, parent.position, Quaternion.identity);
-        arrageItem.transform.position = mousePos;
-        
-        
+        //선택된 아이템의 이미지 보여지기
+        _selectedImage.sprite = GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image;
+        //이미지 보여지기
+        _arrangeItem.SetActive(true);
+
     }
     
 }
