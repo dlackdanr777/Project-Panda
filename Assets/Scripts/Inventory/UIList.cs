@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +35,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     /// <summary>
     /// DetailView Text 받아오는 함수
     /// </summary>
-    protected abstract void GetText(int index);
+    protected abstract void GetContent(int index);
 
     /// <summary>
     /// InventorySlots의 SetActive(), Count() ui를 update하는 함수
@@ -110,7 +111,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     //SlotClick 이벤트
     private void OnClickSlot(int index)
     {
-        GetText(index); //텍스트 바인딩
+        GetContent(index); //텍스트 바인딩
         _detailView.SetActive(true); //상세 설명 창 나타남
     }
 }

@@ -21,14 +21,7 @@ public class Inventory
 
     public void Add(Item item)
     {
-        //처음 생성
-        if(Items.Count == 0)
-        {
-            InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
-            Items.Add(addItem); //새로운 인벤토리 생성
-
-        }
-        else
+        if(Items.Count > 0) 
         {
             for (int i = 0; i < Items.Count; i++)
             {
@@ -45,12 +38,13 @@ public class Inventory
                     }
                 }
             }
-
-            //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-            InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
-            Items.Add(addItem); //새로운 인벤토리 생성
-
         }
+
+        //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
+        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
+        Items.Add(addItem); //새로운 인벤토리 생성
+
+        
     }
 
     public void RemoveByIndex(int index)
@@ -64,5 +58,11 @@ public class Inventory
                 Items.Clear();
             }
         }
+    }
+
+    public void PrintList()
+    {
+        foreach(var item in Items) { 
+        Debug.Log(item.Name);}
     }
 }
