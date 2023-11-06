@@ -21,6 +21,9 @@ public enum TweenMode
     /// <summary>빠르게 위치로 갔다가 제자리로 돌아감</summary>
     Spike,
 
+    /// <summary>빠르게 위치로 가서 한번 튕김</summary>
+    Back,
+
     /// <summary>Sin 그래프 이동</summary>
     Sinerp,
 
@@ -46,13 +49,28 @@ namespace Muks.Tween
                 ? targetObject.AddComponent<TweenMove>()
                 : targetObject.GetComponent<TweenMove>();
 
-            objToMove.ElapsedDuration = 0;
-            objToMove.StartPosition = targetObject.transform.position;
-            objToMove.TargetPosition = targetPosition;
-            objToMove.TotalDuration = duration;
-            objToMove.TweenMode = tweenMode;
-            objToMove.OnComplete = onComplete;
-            objToMove.enabled = true;
+            if(objToMove.enabled)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.StartObject = targetObject.transform.position;
+                tempData.TargetObject = targetPosition;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                objToMove.SetDataSequence(tempData);
+            }
+
+            else
+            {
+                objToMove.ElapsedDuration = 0;
+                objToMove.StartPosition = targetObject.transform.position;
+                objToMove.TargetPosition = targetPosition;
+                objToMove.TotalDuration = duration;
+                objToMove.TweenMode = tweenMode;
+                objToMove.OnComplete = onComplete;
+                objToMove.enabled = true;
+            }
+
         }
 
         public static void Rotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
@@ -62,13 +80,28 @@ namespace Muks.Tween
                 ? targetObject.AddComponent<TweenRotate>()
                 : targetObject.GetComponent<TweenRotate>();
 
-            objToRotate.ElapsedDuration = 0;
-            objToRotate.StartEulerAngles = targetObject.transform.eulerAngles;
-            objToRotate.TargetEulerAngles = targetEulerAngles;
-            objToRotate.TotalDuration = duration;
-            objToRotate.TweenMode = tweenMode;
-            objToRotate.OnComplete = onComplete;
-            objToRotate.enabled = true;
+            if (objToRotate.enabled)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.StartObject = targetObject.transform.rotation;
+                tempData.TargetObject = targetEulerAngles;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                objToRotate.SetDataSequence(tempData);
+            }
+            else
+            {
+                objToRotate.ElapsedDuration = 0;
+                objToRotate.StartEulerAngles = targetObject.transform.eulerAngles;
+                objToRotate.TargetEulerAngles = targetEulerAngles;
+                objToRotate.TotalDuration = duration;
+                objToRotate.TweenMode = tweenMode;
+                objToRotate.OnComplete = onComplete;
+                objToRotate.enabled = true;
+            }
+
+            
         }
 
         public static void Scale(GameObject targetObject, Vector3 targetScale, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
@@ -78,13 +111,27 @@ namespace Muks.Tween
                 ? targetObject.AddComponent<TweenScale>()
                 : targetObject.GetComponent<TweenScale>();
 
-            objToScale.ElapsedDuration = 0;
-            objToScale.StartScale = targetObject.transform.localScale;
-            objToScale.TargetScale = targetScale;
-            objToScale.TotalDuration = duration;
-            objToScale.TweenMode = tweenMode;
-            objToScale.OnComplete = onComplete;
-            objToScale.enabled = true;
+            if (objToScale.enabled)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.StartObject = targetObject.transform.localScale;
+                tempData.TargetObject = targetScale;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                objToScale.SetDataSequence(tempData);
+            }
+            else
+            {
+                objToScale.ElapsedDuration = 0;
+                objToScale.StartScale = targetObject.transform.localScale;
+                objToScale.TargetScale = targetScale;
+                objToScale.TotalDuration = duration;
+                objToScale.TweenMode = tweenMode;
+                objToScale.OnComplete = onComplete;
+                objToScale.enabled = true;
+            }
+
         }
 
         public static void SizeDelta(RectTransform rectTransform, Vector2 targetSizeDelta, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
@@ -94,14 +141,28 @@ namespace Muks.Tween
                 ? rectTransform.gameObject.AddComponent<TweenSizeDelta>()
                 : rectTransform.gameObject.GetComponent<TweenSizeDelta>();
 
-            objToSizeDelta.ElapsedDuration = 0;
-            objToSizeDelta.RectTransform = rectTransform;
-            objToSizeDelta.StartSizeDelta = rectTransform.sizeDelta;
-            objToSizeDelta.TargetSizeDelta = targetSizeDelta;
-            objToSizeDelta.TotalDuration = duration;
-            objToSizeDelta.TweenMode = tweenMode;
-            objToSizeDelta.OnComplete = onComplete;
-            objToSizeDelta.enabled = true;
+            if (objToSizeDelta.enabled)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.Object = rectTransform;
+                tempData.StartObject = rectTransform.sizeDelta;
+                tempData.TargetObject = targetSizeDelta;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                objToSizeDelta.SetDataSequence(tempData);
+            }
+            else
+            {
+                objToSizeDelta.ElapsedDuration = 0;
+                objToSizeDelta.RectTransform = rectTransform;
+                objToSizeDelta.StartSizeDelta = rectTransform.sizeDelta;
+                objToSizeDelta.TargetSizeDelta = targetSizeDelta;
+                objToSizeDelta.TotalDuration = duration;
+                objToSizeDelta.TweenMode = tweenMode;
+                objToSizeDelta.OnComplete = onComplete;
+                objToSizeDelta.enabled = true;
+            }   
         }
 
         public static void Color(Image targetImage, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
@@ -111,14 +172,29 @@ namespace Muks.Tween
                 ? targetImage.AddComponent<TweenColor>()
                 : targetImage.GetComponent<TweenColor>();
 
-            objToColor.ElapsedDuration = 0;
-            objToColor.Image = targetImage;
-            objToColor.StartColor = targetImage.color;
-            objToColor.TargetColor = targetColor;
-            objToColor.TotalDuration = duration;
-            objToColor.TweenMode = tweenMode;
-            objToColor.OnComplete = onComplete;
-            objToColor.enabled = true;
+            if (objToColor.enabled)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.Object = targetImage;
+                tempData.StartObject = targetImage.color;
+                tempData.TargetObject = targetColor;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                objToColor.SetDataSequence(tempData);
+            }
+            else
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.Image = targetImage;
+                objToColor.StartColor = targetImage.color;
+                objToColor.TargetColor = targetColor;
+                objToColor.TotalDuration = duration;
+                objToColor.TweenMode = tweenMode;
+                objToColor.OnComplete = onComplete;
+                objToColor.enabled = true;
+            }
+
         }
     }
 }

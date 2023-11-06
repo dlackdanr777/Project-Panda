@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [Serializable]
 public class DataList<T>
 {
     [SerializeField] private List<T> _data = new List<T>();
-    
+
     public int Count => _data.Count;
 
 
@@ -46,16 +47,16 @@ public class DataList<T>
             Debug.LogError("해당 인덱스가 List 저장 범위를 초과합니다.");
             return;
         }
-        else if(index < 0)
+        else if (index < 0)
         {
             Debug.LogError("해당 인덱스가 음수 입니다.");
             return;
         }
-        
+
         _data.RemoveAt(index);
     }
 
-    
+
     /// <summary>
     /// 인덱스를 받아 리스트의 해당 데이터를 반환
     /// </summary>
@@ -106,5 +107,4 @@ public class DataList<T>
     {
         _data = list;
     }
-
 }

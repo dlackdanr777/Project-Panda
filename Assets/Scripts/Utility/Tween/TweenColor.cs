@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,16 @@ namespace Muks.Tween
         public Color StartColor;
 
         public Image Image;
+
+        public override void SetData(DataSequence dataSequence)
+        {
+            Image = (Image)dataSequence.Object;
+            StartColor = (Color)dataSequence.StartObject;
+            TargetColor = (Color)dataSequence.TargetObject;
+            TotalDuration = dataSequence.Duration;
+            TweenMode = dataSequence.TweenMode;
+            OnComplete = dataSequence.OnComplete;
+        }
 
         protected override void Update()
         {

@@ -2,50 +2,52 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-
-[RequireComponent(typeof(Button))]
-public class ButtonGetter : MonoBehaviour
+namespace Muks.DataBind
 {
-    [SerializeField] private  string _dataID;
-    private Button _button;
-    private BindData<UnityAction> _data;
-
-    private void Awake()
+    [RequireComponent(typeof(Button))]
+    public class ButtonGetter : MonoBehaviour
     {
-        _button = GetComponent<Button>();
+        [SerializeField] private string _dataID;
+        private Button _button;
+        private BindData<UnityAction> _data;
 
-        if (string.IsNullOrEmpty(_dataID))
+        private void Awake()
         {
-            Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
-            _dataID = gameObject.name;
+            _button = GetComponent<Button>();
+
+            if (string.IsNullOrEmpty(_dataID))
+            {
+                Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
+                _dataID = gameObject.name;
+            }
         }
-    }
 
-    private void OnEnable()
-    {
-        Invoke("Enabled", 0.02f);
-    }
+        private void OnEnable()
+        {
+            Invoke("Enabled", 0.02f);
+        }
 
-    private void OnDisable()
-    {
-        Invoke("Disabled", 0.02f);
-    }
+        private void OnDisable()
+        {
+            Invoke("Disabled", 0.02f);
+        }
 
-    private void UpdateButton(UnityAction action)
-    { 
-        _data.Item = action;
-    }
+        private void UpdateButton(UnityAction action)
+        {
+            _data.Item = action;
+        }
 
-    private void Enabled()
-    {
-        _data = DataBind.GetButtonValue(_dataID);
-        _data.CallBack += UpdateButton;
-        _button.onClick?.AddListener(_data.Item);
-    }
+        private void Enabled()
+        {
+            _data = DataBind.GetButtonValue(_dataID);
+            _data.CallBack += UpdateButton;
+            _button.onClick?.AddListener(_data.Item);
+        }
 
-    private void Disabled()
-    {
-        _data.CallBack -= UpdateButton;
-        _button.onClick?.RemoveListener(_data.Item);
+        private void Disabled()
+        {
+            _data.CallBack -= UpdateButton;
+            _button.onClick?.RemoveListener(_data.Item);
+        }
     }
 }

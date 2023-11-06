@@ -17,6 +17,15 @@ namespace Muks.Tween
 
         public RectTransform RectTransform;
 
+        public override void SetData(DataSequence dataSequence)
+        {
+            RectTransform = (RectTransform)dataSequence.Object;
+            StartSizeDelta = (Vector2)dataSequence.StartObject;
+            TargetSizeDelta = (Vector2)dataSequence.TargetObject;
+            TotalDuration = dataSequence.Duration;
+            TweenMode = dataSequence.TweenMode;
+            OnComplete = dataSequence.OnComplete;
+        }
 
         protected override void Update()
         {
