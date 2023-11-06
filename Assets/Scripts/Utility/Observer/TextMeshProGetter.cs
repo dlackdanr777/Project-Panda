@@ -1,17 +1,23 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-[RequireComponent(typeof(Text))]
-public class TextGetter : MonoBehaviour
+
+[RequireComponent(typeof(TextMeshProUGUI))]
+public class TextMeshProGetter : MonoBehaviour
 {
     [SerializeField] private string _dataID;
-    private Text _text;
+    private TextMeshProUGUI _text;
     private BindData<string> _data;
 
     private void Awake()
     {
-        _text = GetComponent<Text>();
+        if(!TryGetComponent(out _text))
+        {
+            Debug.LogErrorFormat("{0}에 연결될 컴포넌트가 존재하지 않습니다.", gameObject.name);
+            return;
+        }
 
         if (string.IsNullOrEmpty(_dataID))
         {

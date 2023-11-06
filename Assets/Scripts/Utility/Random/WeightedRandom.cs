@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/// <summary>
-/// 가중치 랜덤 뽑기 시스템 클래스
-/// </summary>
+
 
 namespace Muks.WeightedRandom
 {
+    /// <summary>
+    /// 가중치 랜덤 뽑기 시스템 클래스
+    /// </summary>
     public class WeightedRandom<T>
     {
         public WeightedRandom()
@@ -28,8 +29,10 @@ namespace Muks.WeightedRandom
                 //해당 키의 값의 수치를 변경한다.
                 _dic[item] += (int)value;
             }
+            //존재하지 않으면?
             else
             {
+                //아이템을 추가한다.
                 _dic.Add(item, (int)value);
             }
         }

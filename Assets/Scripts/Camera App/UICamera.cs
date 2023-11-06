@@ -1,27 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UICamera : UIView
+public class UICameraApp : UIView
 {
     [Tooltip("카메라 어플을 놓는 곳")]
     [SerializeField] private CameraApplication _cameraApp;
 
-    [SerializeField] private Button _shootingButton;
+    public event Action OnShowHandler;
+    public event Action OnHideHandler;
+
     public override void Show()
     {
         gameObject.SetActive(true);
+        OnShowHandler?.Invoke();
     }
 
     public override void Hide()
     {
         gameObject.SetActive(false);
+        OnHideHandler?.Invoke();
     }
 
     private void Awake()
     {
-        DataBinding.SetButtonValue("ShootingButton", () => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
+        DataBind.SetButtonValue("ShootingButton", () => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
     }
 
 }

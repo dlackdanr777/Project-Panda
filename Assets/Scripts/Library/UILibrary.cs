@@ -29,8 +29,8 @@ public class UILibrary : UIView
 
     private void Init()
     {
-        DataBinding.SetButtonValue("AlbumButton", OnAlbumButtonClicked);
-        DataBinding.SetButtonValue("IllustratedGuideButton", OnIllustratedGuideButtonClicked);
+        DataBind.SetButtonValue("AlbumButton", OnAlbumButtonClicked);
+        DataBind.SetButtonValue("IllustratedGuideButton", OnIllustratedGuideButtonClicked);
     }
 
     private void OnEnable()
