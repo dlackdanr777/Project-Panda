@@ -1,4 +1,5 @@
 
+using TMPro;
 using UnityEngine;
 
 namespace Muks.Tween
@@ -13,11 +14,10 @@ namespace Muks.Tween
 
         public override void SetData(DataSequence dataSequence)
         {
-            StartEulerAngles = (Vector3)dataSequence.StartObject;
-            TargetEulerAngles = (Vector3)dataSequence.TargetObject;
-            TotalDuration = dataSequence.Duration;
-            TweenMode = dataSequence.TweenMode;
-            OnComplete = dataSequence.OnComplete;
+            base.SetData(dataSequence);
+
+            StartEulerAngles = transform.eulerAngles;
+            TargetEulerAngles = (Vector3)dataSequence.TargetValue;
         }
 
         protected override void Update()
@@ -26,7 +26,7 @@ namespace Muks.Tween
 
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
 
-            transform.eulerAngles = Vector3.Lerp(StartEulerAngles, TargetEulerAngles, percent);
+            transform.eulerAngles = Vector3.LerpUnclamped(StartEulerAngles, TargetEulerAngles, percent);
 
         }
     }

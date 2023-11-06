@@ -17,15 +17,22 @@ namespace Muks.Tween
 
         public RectTransform RectTransform;
 
+
         public override void SetData(DataSequence dataSequence)
         {
-            RectTransform = (RectTransform)dataSequence.Object;
-            StartSizeDelta = (Vector2)dataSequence.StartObject;
-            TargetSizeDelta = (Vector2)dataSequence.TargetObject;
-            TotalDuration = dataSequence.Duration;
-            TweenMode = dataSequence.TweenMode;
-            OnComplete = dataSequence.OnComplete;
+            base.SetData(dataSequence);
+
+            if (TryGetComponent(out RectTransform))
+            {
+                StartSizeDelta = RectTransform.sizeDelta;
+                TargetSizeDelta = (Vector2)dataSequence.TargetValue;
+            }
+            else
+            {
+                Debug.LogError("필요 컴포넌트가 존재하지 않습니다.");
+            }
         }
+
 
         protected override void Update()
         {
@@ -33,8 +40,8 @@ namespace Muks.Tween
 
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
 
-            float width = Mathf.Lerp(StartSizeDelta.x, TargetSizeDelta.x, percent);
-            float height = Mathf.Lerp(StartSizeDelta.y, TargetSizeDelta.y, percent);
+            float width = Mathf.LerpUnclamped(StartSizeDelta.x, TargetSizeDelta.x, percent);
+            float height = Mathf.LerpUnclamped(StartSizeDelta.y, TargetSizeDelta.y, percent);
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }

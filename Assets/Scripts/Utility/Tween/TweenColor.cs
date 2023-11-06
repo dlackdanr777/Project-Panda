@@ -16,12 +16,16 @@ namespace Muks.Tween
 
         public override void SetData(DataSequence dataSequence)
         {
-            Image = (Image)dataSequence.Object;
-            StartColor = (Color)dataSequence.StartObject;
-            TargetColor = (Color)dataSequence.TargetObject;
-            TotalDuration = dataSequence.Duration;
-            TweenMode = dataSequence.TweenMode;
-            OnComplete = dataSequence.OnComplete;
+            base.SetData(dataSequence);
+            if(TryGetComponent(out Image))
+            {
+                StartColor = Image.color;
+                TargetColor = (Color)dataSequence.TargetValue;
+            }
+            else
+            {
+                Debug.LogError("필요 컴포넌트가 존재하지 않습니다.");
+            }
         }
 
         protected override void Update()
@@ -30,7 +34,7 @@ namespace Muks.Tween
 
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
             
-            Image.color = Color.Lerp(StartColor, TargetColor, percent);
+            Image.color = Color.LerpUnclamped(StartColor, TargetColor, percent);
         }
     }
 }

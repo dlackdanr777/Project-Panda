@@ -39,7 +39,9 @@ public class FirstStartTitle : StartList
         if (!_isStart)
         {
             //StartCoroutine(FirstScene());
-            Tween.Move(_timeLines[0].Object, _timeLines[0].TargetPosition, _timeLines[0].Duration, TweenMode.Smootherstep, CallBack);
+            Tween.Move(_timeLines[0].Object, _timeLines[0].TargetPosition, _timeLines[0].Duration, TweenMode.Smootherstep);
+            Tween.Move(_timeLines[1].Object, _timeLines[1].TargetPosition, _timeLines[1].Duration, TweenMode.Smootherstep);
+            Tween.Move(_timeLines[2].Object, _timeLines[2].TargetPosition, _timeLines[2].Duration, TweenMode.Smootherstep, UIEnd);
                 _isStart = true;
             Debug.Log("½ÃÀÛ");
         }
@@ -56,11 +58,5 @@ public class FirstStartTitle : StartList
     public override void UIEnd()
     {
         _uiStart.ChangeCurrentClass();
-    }
-
-    private void CallBack()
-    {
-        Tween.Move(_timeLines[1].Object, _timeLines[1].TargetPosition, _timeLines[1].Duration, TweenMode.Smootherstep,
-                     () => Tween.Move(_timeLines[2].Object, _timeLines[2].TargetPosition, _timeLines[2].Duration, TweenMode.Smootherstep, UIEnd));
     }
 }

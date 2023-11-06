@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Muks.Tween;
 
 public class FadeInFadeOutLoading : StartList
 {
@@ -48,7 +49,7 @@ public class FadeInFadeOutLoading : StartList
         {
             _isStart = true;
             _uiFirstLoading3.SetActive(true);
-            StartCoroutine(StartRoutine());
+            StartFadeIn();
             Debug.Log("시작");
         }
         else
@@ -66,57 +67,30 @@ public class FadeInFadeOutLoading : StartList
         _uiStart?.ChangeCurrentClass();
     }
 
-
-    private IEnumerator StartRoutine()
-    {
-        yield return StartCoroutine(StartFadeIn());
-        yield return StartCoroutine(StartFadeOut());
-        Debug.Log("끝");
-    }
-
-    private IEnumerator StartFadeIn()
+    private void StartFadeIn()
     {
         _seedImage.gameObject.SetActive(false);
-        float timer = 0;
-        Vector3 tempScale = _maskImage.transform.localScale;
-
-        while(timer <  _fadeInTime)
-        {
-            timer += Time.deltaTime;
-            float t = timer / _fadeInTime;
-            t = t * t * (3f - 2f * t);
-
-            _maskImage.transform.localScale = 
-                Vector3.Lerp(tempScale, _fadeInSize, t);
-
-            yield return null;
-        }
-
-        _seedImage.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(5);
+        Debug.Log("실행");
+        Tween.Scale(_maskImage, _fadeInSize, _fadeInTime, TweenMode.Smootherstep, SeedEnable);
     }
 
-    private IEnumerator StartFadeOut()
+    private void SeedEnable()
     {
-        float timer = 0;
-        Vector3 tempScale = _maskImage.transform.localScale;
+        _seedImage.gameObject.SetActive(true);
+        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike, StartFadeOut);
+    }
 
-        while (timer < _fadeOutTime)
-        {
-            timer += Time.deltaTime;
-            float t = timer / _fadeOutTime;
-            t = t * t * (3f - 2f * t);
-
-            _maskImage.transform.localScale =
-                Vector3.Lerp(tempScale, _fadeOutSize, t);
-
-            Color color = _seedImage.color;
-            color.a = Mathf.Abs(1 - (timer / _fadeOutTime));
-            _seedImage.color = color;
-
-            yield return null;
-        }
+    private void StartFadeOut()
+    {
+        Color targetColor = _seedImage.color;
+        targetColor.a = 0;
+        
+        Tween.Scale(_maskImage, _fadeOutSize, _fadeOutTime, TweenMode.Constant);
+        Tween.Color(_seedImage.gameObject, targetColor, _fadeOutTime * 0.5f, TweenMode.Constant);
     }
 
 

@@ -19,6 +19,11 @@ public class UIPhone : MonoBehaviour
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
     }
 
+    private void Start()
+    {
+
+    }
+
 
     private void OnPhoneButtonClicked()
     { 
