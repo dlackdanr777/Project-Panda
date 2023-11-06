@@ -1,20 +1,23 @@
 using System;
 
-public class BindData<T>
+namespace Muks.DataBind
 {
-    public event Action<T> CallBack;
-
-    private T _item;
-    public T Item
+    public class BindData<T>
     {
-        get
+        public event Action<T> CallBack;
+
+        private T _item;
+        public T Item
         {
-            return _item;
-        }
-        set
-        {
-            _item = value;
-            CallBack?.Invoke(_item);
+            get
+            {
+                return _item;
+            }
+            set
+            {
+                _item = value;
+                CallBack?.Invoke(_item);
+            }
         }
     }
 }

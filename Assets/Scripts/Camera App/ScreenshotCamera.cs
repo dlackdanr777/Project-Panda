@@ -24,8 +24,6 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("화면을 드래그했을때의 카메라 이동속도")]
     [SerializeField] private float _dragSpeed = 30f;
 
-
-
     [Space(20)]
 
     [Tooltip("자석 기능 활성/비활성")]

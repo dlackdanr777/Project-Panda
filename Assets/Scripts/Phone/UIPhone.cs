@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using Muks.DataBind;
 
 [RequireComponent(typeof(UINavigation))]
 public class UIPhone : MonoBehaviour
@@ -19,6 +17,11 @@ public class UIPhone : MonoBehaviour
         DataBind.SetButtonValue("CameraButton", OnCameraButtonClicked);
         DataBind.SetButtonValue("LibaryButton", OnLibaryButtonClicked);
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
+    }
+
+    private void Start()
+    {
+
     }
 
 

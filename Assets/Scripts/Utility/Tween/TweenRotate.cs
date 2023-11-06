@@ -1,4 +1,5 @@
 
+using TMPro;
 using UnityEngine;
 
 namespace Muks.Tween
@@ -11,6 +12,13 @@ namespace Muks.Tween
         /// <summary> 시작 회전 값</summary>
         public Vector3 StartEulerAngles;
 
+        public override void SetData(DataSequence dataSequence)
+        {
+            base.SetData(dataSequence);
+
+            StartEulerAngles = transform.eulerAngles;
+            TargetEulerAngles = (Vector3)dataSequence.TargetValue;
+        }
 
         protected override void Update()
         {
@@ -18,7 +26,7 @@ namespace Muks.Tween
 
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
 
-            transform.eulerAngles = Vector3.Lerp(StartEulerAngles, TargetEulerAngles, percent);
+            transform.eulerAngles = Vector3.LerpUnclamped(StartEulerAngles, TargetEulerAngles, percent);
 
         }
     }
