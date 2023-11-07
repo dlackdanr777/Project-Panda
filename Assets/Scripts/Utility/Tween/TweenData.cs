@@ -44,7 +44,7 @@ namespace Muks.Tween
             DataSequences = new Queue<DataSequence>();
             _percentHandler = new Dictionary<TweenMode, Func<float, float, float>>
             {
-                { TweenMode.Constant, ConstantSpeed },
+                { TweenMode.Constant, Constant },
                 {TweenMode.Quadratic, Quadratic },
                 { TweenMode.Smoothstep, Smoothstep },
                 { TweenMode.Smootherstep, Smootherstep },
@@ -87,7 +87,7 @@ namespace Muks.Tween
 
 
         //등속운동
-        private float ConstantSpeed(float elapsedDuration, float totalDuration)
+        private float Constant(float elapsedDuration, float totalDuration)
         {
             float percent = elapsedDuration / totalDuration;
             return percent;
@@ -111,7 +111,7 @@ namespace Muks.Tween
         }
 
 
-        //더욱더 스무스하게 움직임
+        //더욱 더 스무스하게 움직임
         private float Smootherstep(float elapsedDuration, float totalDuration)
         {
             float percent = elapsedDuration / totalDuration;
