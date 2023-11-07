@@ -59,10 +59,4 @@ public class Inventory
             }
         }
     }
-
-    public void PrintList()
-    {
-        foreach(var item in Items) { 
-        Debug.Log(item.Name);}
-    }
 }

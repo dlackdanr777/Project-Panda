@@ -15,10 +15,10 @@ public enum Field
 public abstract class UIList<T> : MonoBehaviour where T : Item
 {
     [SerializeField] private GameObject _prefab; //spawn할 prefab
-    [SerializeField] private ToggleGroup _field; //토글 종류
     [SerializeField] private Image _inventorySlots;//slots 배경
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
 
+    [SerializeField] protected ToggleGroup _field; //토글 종류
     [SerializeField] protected GameObject _detailView; //상세설명 창
     [SerializeField] protected Transform[] _spawnPoint; //spawn할 위치
 
@@ -49,7 +49,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         UpdateInventorySlots(); //초기 slot update
         
         //버튼 리스너
-        foreach(Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
         {
             toggle.onValueChanged.AddListener(
                 (bool isOn) =>
@@ -80,7 +80,9 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     {
         _fieldColor = new Color[_field.transform.childCount];
         SetFieldColorArray();
+
         Toggle selectedField = _field.ActiveToggles().FirstOrDefault(); //선택된 토글
+
         _currentField = GetIndexByTransform(selectedField.transform);
         _inventorySlots.color = _fieldColor[(int)_currentField];
     }
