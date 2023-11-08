@@ -1,6 +1,9 @@
 using Muks.DataBind;
+using System;
+using System.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIInventoryList : UIList<InventoryItem>
@@ -14,42 +17,36 @@ public class UIInventoryList : UIList<InventoryItem>
     public Sprite Test2;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
-        {
-            _maxCount[i] = GameManager.Instance.Player.Inventory[i].MaxInventoryItem;
-        }
-        
-        _arrangeButton.onClick.AddListener(OnClickArrangeButton);
-
         //Test
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(1, "n1", "d1", Test2)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(2, "n2", "d2", Test2)); //인벤토리에 item add
-    }
+        
+        for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
+        {
+            _maxCount[i] = GameManager.Instance.Player.Inventory[i].MaxInventoryItem;
+            _lists[i] = GameManager.Instance.Player.Inventory[i].GetInventoryList();//Player에 있는 인벤토리 설정
+        }
 
-    private void OnEnable()
-    {
-        _currentField = Field.Toy; //처음에 선택된 장난감으로 초기화
-        _field.transform.GetChild((int)_currentField).GetComponent<Toggle>().Select();
-
-        _lists[(int)_currentField] = GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList(); //Player에 있는 인벤토리 설정
         Init();
-
+        _arrangeButton.onClick.AddListener(OnClickArrangeButton);
     }
 
-    protected override void SetFieldColorArray()
+    protected override Color[] SetFieldColorArray()
     {
-        _fieldColor[0] = new Color(253 / 255f, 253 / 255f, 150 / 255f, 255 / 255f);
-        _fieldColor[1] = new Color(255 / 255f, 192 / 255f, 204 / 255f, 255 / 255f);
+        Color[] fieldColor = new Color[2];
+        fieldColor[0] = new Color(253 / 255f, 253 / 255f, 150 / 255f, 255 / 255f);
+        fieldColor[1] = new Color(255 / 255f, 192 / 255f, 204 / 255f, 255 / 255f);
+        return fieldColor;
     }
 
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
-    
+
         DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
         DataBind.SetImageValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
@@ -61,7 +58,7 @@ public class UIInventoryList : UIList<InventoryItem>
         {
             for (int j = 0; j < _maxCount[i]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
             {
-                if(j < GameManager.Instance.Player.Inventory[i].ItemsCount)
+                if (j < GameManager.Instance.Player.Inventory[i].ItemsCount)
                 {
                     _spawnPoint[i].GetChild(j).gameObject.SetActive(true);
                     _spawnPoint[i].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
@@ -79,10 +76,10 @@ public class UIInventoryList : UIList<InventoryItem>
     private void OnClickArrangeButton()
     {
         _detailView.SetActive(false);
-        
+
         //마우스 따라다니는 이미지 setactive
         MoveItem();
-        
+
         UseItem();
 
     }
@@ -101,5 +98,5 @@ public class UIInventoryList : UIList<InventoryItem>
         _arrangeItem.SetActive(true);
 
     }
-    
+
 }
