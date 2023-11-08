@@ -1,9 +1,6 @@
 using Muks.DataBind;
-using System;
-using System.Data;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIInventoryList : UIList<InventoryItem>
@@ -17,27 +14,30 @@ public class UIInventoryList : UIList<InventoryItem>
     public Sprite Test2;
 
     // Start is called before the first frame update
-    void Start() 
+    void Start()
     {
-        for(int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
+        for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
         {
             _maxCount[i] = GameManager.Instance.Player.Inventory[i].MaxInventoryItem;
         }
+        
+        _arrangeButton.onClick.AddListener(OnClickArrangeButton);
 
         //Test
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(1, "n1", "d1", Test2)); //인벤토리에 item add
         GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(2, "n2", "d2", Test2)); //인벤토리에 item add
+    }
 
+    private void OnEnable()
+    {
         _currentField = Field.Toy; //처음에 선택된 장난감으로 초기화
         _field.transform.GetChild((int)_currentField).GetComponent<Toggle>().Select();
 
         _lists[(int)_currentField] = GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList(); //Player에 있는 인벤토리 설정
         Init();
 
-        _arrangeButton.onClick.AddListener(OnClickArrangeButton);
-        
     }
 
     protected override void SetFieldColorArray()

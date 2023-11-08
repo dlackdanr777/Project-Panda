@@ -52,10 +52,11 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
         {
             toggle.onValueChanged.AddListener(
-                (bool isOn) =>
+                (bool isOn)=>
                 {
                     SetActiveContent();
                     ChangeBackGroundColor();
+
                 });
         }
         _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
