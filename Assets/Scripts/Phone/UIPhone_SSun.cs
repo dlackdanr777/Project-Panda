@@ -1,50 +1,35 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using Muks.DataBind;
 
 [RequireComponent(typeof(UINavigation))]
-public class UIPhone_SSun : MonoBehaviour
+public class UIPhone_Ssun : MonoBehaviour
 {
     private UINavigation _uiNav;
 
-    [Tooltip("외곽 버튼")]
-    [SerializeField] private Button _borderButton;
+    private string _value;
 
-    [Tooltip("인벤토리 버튼")]
-    [SerializeField] private Button _inventoryButton;
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
-        _borderButton.onClick.AddListener(OnBorderButtonClicked);
-        _inventoryButton.onClick.AddListener(OnInventoryButtonClicked);
-    }
-    
-    private void OnPhoneButtonClicked()
-    { 
-        _uiNav.Clear();
-        gameObject.SetActive(!gameObject.activeSelf);
+
+        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
     }
 
-    private void OnBorderButtonClicked()
+    private void Start()
     {
-        if (_uiNav.Count > 0)
-        {
 
-            _uiNav.Pop();
-        }
-        else
-        {
-            OnPhoneButtonClicked();
-        }
-        
     }
 
-    //인벤토리 추가
     private void OnInventoryButtonClicked()
     {
         _uiNav.Push("Inventory");
     }
 
+
+    private void OnBorderButtonClicked()
+    {
+        _uiNav.Pop();
+    }
 }
