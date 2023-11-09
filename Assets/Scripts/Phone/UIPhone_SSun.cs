@@ -14,6 +14,7 @@ public class UIPhone_Ssun : MonoBehaviour
         _uiNav = GetComponent<UINavigation>();
 
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
     }
 
@@ -21,7 +22,11 @@ public class UIPhone_Ssun : MonoBehaviour
     {
 
     }
-
+    
+    private void OnItemButtonClicked()
+    {
+        _uiNav.Push("Item");
+    }
     private void OnInventoryButtonClicked()
     {
         _uiNav.Push("Inventory");

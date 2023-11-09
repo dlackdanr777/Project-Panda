@@ -10,6 +10,8 @@ public class UIInventoryList : UIList<InventoryItem>
 {
     [SerializeField] private Button _arrangeButton;
     [SerializeField] private GameObject _arrangeItem;
+
+    [SerializeField] private DropSlot _dropSlot;
     private int _currentItemIndex;
 
     //Test
@@ -33,6 +35,20 @@ public class UIInventoryList : UIList<InventoryItem>
 
         Init();
         _arrangeButton.onClick.AddListener(OnClickArrangeButton);
+
+
+        _dropSlot.OnUseItem += UIInventoryList_OnUseItem;
+        _dropSlot.OnMoveItem += _dropSlot_OnMoveItem;
+    }
+
+    private void _dropSlot_OnMoveItem()
+    {
+        MoveItem();
+    }
+
+    private void UIInventoryList_OnUseItem()
+    {
+        UseItem();
     }
 
     protected override Color[] SetFieldColorArray()
@@ -80,8 +96,6 @@ public class UIInventoryList : UIList<InventoryItem>
         //마우스 따라다니는 이미지 setactive
         MoveItem();
 
-        UseItem();
-
     }
 
     private void UseItem()
@@ -89,7 +103,6 @@ public class UIInventoryList : UIList<InventoryItem>
         GameManager.Instance.Player.Inventory[(int)_currentField].RemoveByIndex(_currentItemIndex);
         UpdateInventorySlots();
     }
-
     private void MoveItem()
     {
         //선택된 아이템의 이미지 보여지기
