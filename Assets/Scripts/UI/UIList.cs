@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,14 +8,15 @@ public enum Field
 {
     None = -1,
     Toy,
-    Snack
+    Snack,
+    Album,
+    Friend
+    
 }
 
 public abstract class UIList<T> : MonoBehaviour where T : Item
 {
-    private Color[] _fieldColor; //panel 색상 변경할 색상 배열
     [SerializeField] private GameObject _prefab; //spawn할 prefab
-    [SerializeField] private Image _inventorySlots;//slots 배경
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
 
     [SerializeField] protected ToggleGroup _field; //토글 종류
@@ -28,11 +28,6 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     protected int[] _maxCount = new int[System.Enum.GetValues(typeof(Field)).Length - 1];
 
     /// <summary>
-    /// Panel 색상 배열(_fieldColor)을 설정하는 함수
-    /// </summary>
-    protected abstract Color[] SetFieldColorArray();
-
-    /// <summary>
     /// DetailView Text 받아오는 함수
     /// </summary>
     protected abstract void GetContent(int index);
@@ -40,7 +35,6 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     /// <summary>
     /// InventorySlots의 SetActive(), Count() ui를 update하는 함수
     /// </summary>
-    protected abstract void UpdateInventorySlots();
 
     void Awake()
     {
@@ -62,15 +56,10 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         }
     }
 
-    //배경색 변경 함수
-    private void ChangeBackGroundColor()
+    private void GetCurrentField()
     {
-        Color[] fieldColor = SetFieldColorArray();
-
         Toggle selectedField = _field.ActiveToggles().FirstOrDefault(); //선택된 토글
-
         _currentField = GetFieldByTransform(selectedField);
-        _inventorySlots.color = fieldColor[(int)_currentField];
     }
 
     //spawnPosition 활성화 함수
@@ -103,34 +92,21 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         _detailView.SetActive(true); //상세 설명 창 나타남
     }
 
-    private void OnClickFieldButton(bool isOn, Transform toggle)
+    private void OnClickedFieldButton(bool isOn, Transform toggle)
     {
-        if(isOn)
-        {
-            //mask active true
-            toggle.GetChild(0).GetComponent<Mask>().enabled = true;
-
-        }
-        else
-        {
-            toggle.GetChild(0).GetComponent<Mask>().enabled = false;
-
-        }
-
         SetActiveContent();
-        ChangeBackGroundColor();
+        GetCurrentField();
     }
 
     protected void Init()
     {
         CreateSlots(); //slot 생성
-        ChangeBackGroundColor(); //배경 색 변경
-        UpdateInventorySlots(); //초기 slot update
+        GetCurrentField(); //배경 색 변경
 
         //버튼 리스너
         foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
         {
-            toggle.onValueChanged.AddListener((bool isOn) => OnClickFieldButton(isOn, toggle.transform));
+            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
         }
         _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
     }

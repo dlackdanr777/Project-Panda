@@ -7,72 +7,82 @@ using UnityEngine.UI;
 public class DropSlot : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private GameObject _selectedItem;
-    [SerializeField] private GameObject _spawnItem;
     [SerializeField] private GameObject _dropPopup;
+    [SerializeField] private ClickPhone _clickPhone;
 
     private Transform _spawnPoint;
-    private bool _isDropPossible = false;
     public event Action OnUseItem;
-    public event Action OnMoveItem;
 
     private void Start()
     {
-        DataBind.SetButtonValue("ItemDropPopupCloseBtn", OnClickedClosePopup);
+        DataBind.SetButtonValue("ItemDropPopupCloseBtn", OnClickedNoItemDrop);
         DataBind.SetButtonValue("ItemDropBtn", OnClickedItemDrop);
-        
+
+        _clickPhone.OnRemoveSelectedItem += _clickPhone_OnRemoveSelectedItem;
     }
 
-    private void RemoveSelectedItem()
+    private void _clickPhone_OnRemoveSelectedItem()
+    {
+        RemoveSelectedItem();
+    }
+
+    private void SpawnImage(bool isSpawn) //spawn하거나 제거 할 때
+    {
+        Image spawnImage = _spawnPoint.transform.GetChild(0).GetComponent<Image>();
+        Color tempColor = spawnImage.color;
+
+        if (isSpawn)
+        {
+            spawnImage.gameObject.transform.position = _spawnPoint.position;
+            //image setactive
+            tempColor.a = 255f;
+            spawnImage.color = tempColor;
+
+            _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite = _selectedItem.GetComponent<SpriteRenderer>().sprite;
+
+        }
+        else
+        {
+            tempColor.a = 0f;
+            spawnImage.color = tempColor;
+
+            spawnImage.sprite = null;
+        }
+    }
+
+    private void OnClickedItemDrop()
+    {
+        _dropPopup.SetActive(false);
+        RemoveSelectedItem();
+        OnUseItem?.Invoke();
+        
+    }
+    private void OnClickedNoItemDrop()
+    {
+        SpawnImage(false);
+        _dropPopup.SetActive(false);
+        _selectedItem.SetActive(true);
+    }
+
+    public void RemoveSelectedItem()//따라다니는 객체 삭제
     {
         _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
         _selectedItem.SetActive(false);
     }
 
-    private void OnClickedItemDrop()
-    {
-        _dropPopup.gameObject.SetActive(false);
-        if (_isDropPossible)
-        {
-            //생성
-            //GameObject dropItem = Instantiate(_spawnItem, new Vector3(0, 0, 0), Quaternion.identity);
-            //dropItem.transform.SetParent(_spawnPoint, false);//spawn
-            //dropItem.GetComponent<Image>().sprite = _selectedItem.GetComponent<SpriteRenderer>().sprite;
-
-            OnUseItem?.Invoke();
-        }
-        else
-        {
-            OnMoveItem?.Invoke();
-        }
-    }
-    private void OnClickedClosePopup()
-    {
-        _dropPopup.gameObject.SetActive(false);
-        RemoveSelectedItem();
-    }
-
+    //slot을 눌렀을 때
     public void OnPointerDown(PointerEventData eventData)
     {
-        _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform;
-
+        _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
         if(_spawnPoint != null)
         {
-            GameObject dropItem = Instantiate(_spawnItem, new Vector3(0, 0, 0), Quaternion.identity);
-            dropItem.transform.SetParent(_spawnPoint, false);//spawn
-            dropItem.GetComponent<Image>().sprite = _selectedItem.GetComponent<SpriteRenderer>().sprite;
-            RemoveSelectedItem();
-
-            //위치에 놓으면 popup
-            _dropPopup.gameObject.SetActive(true);
-
             //안에 이미지가 있으면(선택된 아이템이 있다면), 할당된 아이템이 없다면
-            if (_selectedItem.GetComponent<SpriteRenderer>().sprite != null && _spawnPoint.childCount == 0)
+            if (_selectedItem.GetComponent<SpriteRenderer>().sprite != null && _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite == null)
             {
-                _isDropPossible = true;
-            }
-            else
-            {
-                _isDropPossible = false;
+                //위치에 놓으면 popup
+                _dropPopup.gameObject.SetActive(true);
+                SpawnImage(true); //해당 위치에 spawn
+                _selectedItem.SetActive(false); //따라다니는 아이템 보이지 않도록
             }
 
         }

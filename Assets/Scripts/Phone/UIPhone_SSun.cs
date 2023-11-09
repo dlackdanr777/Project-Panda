@@ -13,6 +13,7 @@ public class UIPhone_Ssun : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation>();
 
+        DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
@@ -22,7 +23,13 @@ public class UIPhone_Ssun : MonoBehaviour
     {
 
     }
-    
+
+    private void OnPhoneButtonClicked()
+    {
+        _uiNav.Clear();
+        gameObject.SetActive(!gameObject.activeSelf);
+    }
+
     private void OnItemButtonClicked()
     {
         _uiNav.Push("Item");

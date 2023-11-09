@@ -1,9 +1,6 @@
 using Muks.DataBind;
-using System;
-using System.Data;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIInventoryList : UIList<InventoryItem>
@@ -22,10 +19,10 @@ public class UIInventoryList : UIList<InventoryItem>
     private void Start()
     {
         //Test
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(0, "n", "d", Test)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(1, "n1", "d1", Test2)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem(2, "n2", "d2", Test2)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem("0", "n", "d", Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem("0", "n", "d", Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem("1", "n1", "d1", Test2)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new InventoryItem("2", "n2", "d2", Test2)); //인벤토리에 item add
         
         for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
         {
@@ -34,16 +31,21 @@ public class UIInventoryList : UIList<InventoryItem>
         }
 
         Init();
+        UpdateListSlots(); //초기 slot update
+
         _arrangeButton.onClick.AddListener(OnClickArrangeButton);
-
-
         _dropSlot.OnUseItem += UIInventoryList_OnUseItem;
-        _dropSlot.OnMoveItem += _dropSlot_OnMoveItem;
     }
 
-    private void _dropSlot_OnMoveItem()
+    private void OnDisable()
     {
-        MoveItem();
+        if(_detailView.activeSelf)
+        {
+            _detailView.SetActive(false);
+
+        }
+        _arrangeButton.onClick.RemoveListener(OnClickArrangeButton);
+        _dropSlot.OnUseItem -= UIInventoryList_OnUseItem;
     }
 
     private void UIInventoryList_OnUseItem()
@@ -51,14 +53,28 @@ public class UIInventoryList : UIList<InventoryItem>
         UseItem();
     }
 
-    protected override Color[] SetFieldColorArray()
+    private void OnClickArrangeButton()
     {
-        Color[] fieldColor = new Color[2];
-        fieldColor[0] = new Color(253 / 255f, 253 / 255f, 150 / 255f, 255 / 255f);
-        fieldColor[1] = new Color(255 / 255f, 192 / 255f, 204 / 255f, 255 / 255f);
-        return fieldColor;
+        //마우스 따라다니는 이미지 setactive
+        MoveItem();
+
+        //Tween 핸드폰 밑으로 내려감
     }
 
+    private void UseItem()
+    {
+        GameManager.Instance.Player.Inventory[(int)_currentField].RemoveByIndex(_currentItemIndex);
+        UpdateListSlots();
+        _detailView.SetActive(false);
+    }
+    private void MoveItem()
+    {
+        //선택된 아이템의 이미지 보여지기
+        _arrangeItem.gameObject.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image;
+        //이미지 보여지기
+        _arrangeItem.SetActive(true);
+
+    }
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
@@ -68,7 +84,7 @@ public class UIInventoryList : UIList<InventoryItem>
         DataBind.SetImageValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
     }
 
-    protected override void UpdateInventorySlots()
+    private void UpdateListSlots()
     {
         for (int i = 0; i < System.Enum.GetValues(typeof(Field)).Length - 1; i++)
         {
@@ -89,27 +105,4 @@ public class UIInventoryList : UIList<InventoryItem>
             }
         }
     }
-    private void OnClickArrangeButton()
-    {
-        _detailView.SetActive(false);
-
-        //마우스 따라다니는 이미지 setactive
-        MoveItem();
-
-    }
-
-    private void UseItem()
-    {
-        GameManager.Instance.Player.Inventory[(int)_currentField].RemoveByIndex(_currentItemIndex);
-        UpdateInventorySlots();
-    }
-    private void MoveItem()
-    {
-        //선택된 아이템의 이미지 보여지기
-        _arrangeItem.gameObject.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image;
-        //이미지 보여지기
-        _arrangeItem.SetActive(true);
-
-    }
-
 }
