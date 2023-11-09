@@ -103,6 +103,24 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         _detailView.SetActive(true); //상세 설명 창 나타남
     }
 
+    private void OnClickFieldButton(bool isOn, Transform toggle)
+    {
+        if(isOn)
+        {
+            //mask active true
+            toggle.GetChild(0).GetComponent<Mask>().enabled = true;
+
+        }
+        else
+        {
+            toggle.GetChild(0).GetComponent<Mask>().enabled = false;
+
+        }
+
+        SetActiveContent();
+        ChangeBackGroundColor();
+    }
+
     protected void Init()
     {
         CreateSlots(); //slot 생성
@@ -112,13 +130,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         //버튼 리스너
         foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
         {
-            toggle.onValueChanged.AddListener(
-                (bool isOn) =>
-                {
-                    SetActiveContent();
-                    ChangeBackGroundColor();
-
-                });
+            toggle.onValueChanged.AddListener((bool isOn) => OnClickFieldButton(isOn, toggle.transform));
         }
         _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
     }
