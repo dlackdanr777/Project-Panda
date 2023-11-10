@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DropSlot : MonoBehaviour, IPointerDownHandler
+public class DropSlot : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private GameObject _selectedItem;
     [SerializeField] private GameObject _dropPopup;
-    [SerializeField] private ClickPhone _clickPhone;
+    //[SerializeField] private ClickPhone _clickPhone;
 
     private Transform _spawnPoint;
     public event Action OnUseItem;
@@ -18,7 +18,7 @@ public class DropSlot : MonoBehaviour, IPointerDownHandler
         DataBind.SetButtonValue("ItemDropPopupCloseBtn", OnClickedNoItemDrop);
         DataBind.SetButtonValue("ItemDropBtn", OnClickedItemDrop);
 
-        _clickPhone.OnRemoveSelectedItem += _clickPhone_OnRemoveSelectedItem;
+        //_clickPhone.OnRemoveSelectedItem += _clickPhone_OnRemoveSelectedItem;
     }
 
     private void _clickPhone_OnRemoveSelectedItem()
@@ -71,8 +71,9 @@ public class DropSlot : MonoBehaviour, IPointerDownHandler
     }
 
     //slot을 눌렀을 때
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("OnPointerEnter");
         _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
         if(_spawnPoint != null)
         {
