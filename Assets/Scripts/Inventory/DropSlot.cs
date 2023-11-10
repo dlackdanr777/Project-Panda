@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DropSlot : MonoBehaviour, IPointerClickHandler
+public class DropSlot : MonoBehaviour, IDropHandler
 {
     [SerializeField] private GameObject _selectedItem;
     [SerializeField] private GameObject _dropPopup;
@@ -88,4 +88,24 @@ public class DropSlot : MonoBehaviour, IPointerClickHandler
 
         }
     }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        _selectedItem.SetActive(false);
+
+        _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
+        if (_spawnPoint != null)
+        {
+            //안에 이미지가 있으면(선택된 아이템이 있다면), 할당된 아이템이 없다면
+            if (_selectedItem.GetComponent<SpriteRenderer>().sprite != null && _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite == null)
+            {
+                //위치에 놓으면 popup
+                _dropPopup.gameObject.SetActive(true);
+                SpawnImage(true); //해당 위치에 spawn
+                _selectedItem.SetActive(false); //따라다니는 아이템 보이지 않도록
+            }
+
+        }
+    }
+
 }

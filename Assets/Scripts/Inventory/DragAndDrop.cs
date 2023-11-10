@@ -14,7 +14,8 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
     [SerializeField] private GameObject _dropPopup;
     [SerializeField] private GameObject _phone;
     [SerializeField] private GameObject _itemDropZone;
-
+    [SerializeField] private Button _itemDropButton;
+    [SerializeField] private Button _itemNoDropButton;
     private float speed = 20f;
     private Transform _spawnPoint;
     public event Action OnUseItem;
@@ -26,8 +27,8 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
 
     private void Start()
     {
-        DataBind.SetButtonValue("ItemDropPopupCloseBtn", OnClickedNoItemDrop);
-        DataBind.SetButtonValue("ItemDropBtn", OnClickedItemDrop);
+        _itemDropButton.onClick.AddListener(OnClickedItemDrop);
+        _itemNoDropButton.onClick.AddListener(OnClickedNoItemDrop);
     }
     private void SpawnImage(bool isSpawn) //spawn하거나 제거 할 때
     {
@@ -55,7 +56,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
 
     private void OnClickedItemDrop()
     {
-        StartCoroutine(MovePhone(80));//폰 내려감
+        MovePhone(1); //폰 내려감
         RemoveSelectedItem(); //selected image 사라짐
         _dropPopup.SetActive(false); //popup 사라짐
         OnUseItem?.Invoke(); //item 사용
@@ -63,7 +64,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
     }
     private void OnClickedNoItemDrop()
     {
-        StartCoroutine(MovePhone(80)); //폰 내려감
+        MovePhone(1); //폰 내려감
         SpawnImage(false); //
         _dropPopup.SetActive(false);//popup 사라짐
         _selectedItem.SetActive(false);
@@ -71,21 +72,12 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
         _itemDropZone.gameObject.SetActive(false);
     }
 
-    private IEnumerator MovePhone(int gap)
+    private void MovePhone(int gap)
     {
-        Tween.Move(_phone, new Vector3(_phone.transform.position.x, _phone.transform.position.y + gap, _phone.transform.position.z), 1f, TweenMode.Smoothstep);
-        if (gap < 0)
-        {   
-            yield return new WaitForSeconds(1f);
-            _phone.transform.GetChild(0).GetChild(0).gameObject.SetActive(false); //border button set active false
-
-        }
-        else
-        {
-
-            _phone.transform.GetChild(0).GetChild(0).gameObject.SetActive(true); //border button set active true
-        }
-        yield return null;
+        Debug.Log(_phone.transform.position.y);
+        _phone.transform.GetChild(0).GetChild(0).gameObject.SetActive(!_phone.transform.GetChild(0).GetChild(0).gameObject.activeSelf); //border button set active false
+        Tween.Move(_phone, new Vector3(_phone.transform.position.x,  gap, _phone.transform.position.z), 1f, TweenMode.Smoothstep);
+       
     }
 
     public void RemoveSelectedItem()//따라다니는 객체 삭제
@@ -100,28 +92,9 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
         _selectedItem.transform.position = Camera.main.ScreenToWorldPoint(pos);
         _selectedItem.SetActive(true);
 
-        StartCoroutine(MovePhone(-80));
+        MovePhone(-80);
 
         _itemDropZone.gameObject.SetActive(true);
-    }
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        _selectedItem.SetActive(false);
-
-        _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
-        if (_spawnPoint != null)
-        {
-            //안에 이미지가 있으면(선택된 아이템이 있다면), 할당된 아이템이 없다면
-            if (_selectedItem.GetComponent<SpriteRenderer>().sprite != null && _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite == null)
-            {
-                //위치에 놓으면 popup
-                _dropPopup.gameObject.SetActive(true);
-                SpawnImage(true); //해당 위치에 spawn
-                _selectedItem.SetActive(false); //따라다니는 아이템 보이지 않도록
-            }
-
-        }
-
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -134,5 +107,37 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IDragHandler, IEn
         //Tween
         mousePosition = new Vector2(Mathf.Round(mousePosition.x), Mathf.Round(mousePosition.y));
         _selectedItem.transform.position = Vector2.Lerp(_selectedItem.transform.position, mousePosition, Time.deltaTime * speed);
+    }
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        Debug.Log("OnEndDrag");
+
+        try
+        {
+            _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
+            if (_spawnPoint != null)
+            {
+                //안에 이미지가 있으면(선택된 아이템이 있다면), 할당된 아이템이 없다면
+                if (_selectedItem.GetComponent<SpriteRenderer>().sprite != null && _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite == null)
+                {
+                    //위치에 놓으면 popup
+                    _dropPopup.gameObject.SetActive(true);
+                    SpawnImage(true); //해당 위치에 spawn
+                }
+
+            }
+        }
+        catch (Exception)
+        {
+            _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
+            MovePhone(1);
+            _itemDropZone.SetActive(false);
+        }
+        finally
+        {
+            _selectedItem.SetActive(false); //따라다니는 아이템 보이지 않도록
+
+        }
+
     }
 }
