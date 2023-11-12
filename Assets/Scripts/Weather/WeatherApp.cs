@@ -31,7 +31,7 @@ public class WeatherApp : MonoBehaviour
 {
     [SerializeField] private UIWeather _uiWeather;
 
-    private UserInfo _userInfo;
+    public UserInfo UserInfo {get; private set; }
 
     private DataManager _dataManager => DataManager.Instance;
 
@@ -97,15 +97,15 @@ public class WeatherApp : MonoBehaviour
         }
 
 
-        _userInfo._lastAccessDay = DateTime.Now;
-        _userInfo.DayCount++;
+        UserInfo._lastAccessDay = DateTime.Now;
+        UserInfo.DayCount++;
     }
 
     //현재 보상을 체크하는 함수
     private bool RewardedCheck()
     {
         //만약 현재 날짜 전날에 접속했다면?
-        if (UserInfo.TODAY.Day -1 == _userInfo._lastAccessDay.Day)
+        if (UserInfo.TODAY.Day -1 == UserInfo._lastAccessDay.Day)
         {
             return true;
         }
@@ -116,7 +116,7 @@ public class WeatherApp : MonoBehaviour
     //일주일 단위를 체크하는 함수
     private bool WeeksCheck()
     {
-        if(_userInfo.DayCount % 7 == 0)
+        if(UserInfo.DayCount % 7 == 0)
         {
             return true;
         }
@@ -128,7 +128,7 @@ public class WeatherApp : MonoBehaviour
 
     private void Login()
     {
-        _userInfo = new UserInfo();
-        _userInfo.LoadUserInfoData();
+        UserInfo = new UserInfo();
+        UserInfo.LoadUserInfoData();
     }
 }

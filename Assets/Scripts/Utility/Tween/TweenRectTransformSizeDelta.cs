@@ -7,7 +7,7 @@ namespace Muks.Tween
     /// <summary>
     /// Recttransform의 width와 height를 조절하는 Tween
     /// </summary>
-    public class TweenSizeDelta : TweenData
+    public class TweenRectTransformSizeDelta : TweenData
     {
         /// <summary> 목표 회전 값 </summary>
         public Vector2 TargetSizeDelta;

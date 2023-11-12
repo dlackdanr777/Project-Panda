@@ -45,11 +45,11 @@ namespace Muks.Tween
         /// <summary>
         /// 지속시간만큼 오브젝트를 이동시키는 함수
         /// </summary>
-        public static void Move(GameObject targetObject, Vector3 targetPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static void TransformMove(GameObject targetObject, Vector3 targetPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
-            TweenMove objToMove = !targetObject.GetComponent<TweenMove>()
-                ? targetObject.AddComponent<TweenMove>()
-                : targetObject.GetComponent<TweenMove>();
+            TweenTransformMove objToMove = !targetObject.GetComponent<TweenTransformMove>()
+                ? targetObject.AddComponent<TweenTransformMove>()
+                : targetObject.GetComponent<TweenTransformMove>();
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetPosition;
@@ -67,11 +67,11 @@ namespace Muks.Tween
         }
 
 
-        public static void Rotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static void TransformRotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
-            TweenRotate objToRotate = !targetObject.GetComponent<TweenRotate>()
-                ? targetObject.AddComponent<TweenRotate>()
-                : targetObject.GetComponent<TweenRotate>();
+            TweenTransformRotate objToRotate = !targetObject.GetComponent<TweenTransformRotate>()
+                ? targetObject.AddComponent<TweenTransformRotate>()
+                : targetObject.GetComponent<TweenTransformRotate>();
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetEulerAngles;
@@ -89,11 +89,11 @@ namespace Muks.Tween
         }
 
 
-        public static void Scale(GameObject targetObject, Vector3 targetScale, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static void TransformScale(GameObject targetObject, Vector3 targetScale, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
-            TweenScale objToScale = !targetObject.GetComponent<TweenScale>()
-                ? targetObject.AddComponent<TweenScale>()
-                : targetObject.GetComponent<TweenScale>();
+            TweenTransformScale objToScale = !targetObject.GetComponent<TweenTransformScale>()
+                ? targetObject.AddComponent<TweenTransformScale>()
+                : targetObject.GetComponent<TweenTransformScale>();
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetScale;
@@ -111,11 +111,11 @@ namespace Muks.Tween
         }
 
 
-        public static void SizeDelta(GameObject targetObject, Vector2 targetSizeDelta, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static void RectTransfromSizeDelta(GameObject targetObject, Vector2 targetSizeDelta, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
-            TweenSizeDelta objToSizeDelta = !targetObject.GetComponent<TweenSizeDelta>()
-                ? targetObject.AddComponent<TweenSizeDelta>()
-                : targetObject.GetComponent<TweenSizeDelta>();
+            TweenRectTransformSizeDelta objToSizeDelta = !targetObject.GetComponent<TweenRectTransformSizeDelta>()
+                ? targetObject.AddComponent<TweenRectTransformSizeDelta>()
+                : targetObject.GetComponent<TweenRectTransformSizeDelta>();
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetSizeDelta;
@@ -133,11 +133,11 @@ namespace Muks.Tween
         }
 
 
-        public static void Color(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static void IamgeColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
-            TweenColor objToColor = !targetObject.GetComponent<TweenColor>()
-                ? targetObject.AddComponent<TweenColor>()
-                : targetObject.GetComponent<TweenColor>();
+            TweenImageColor objToColor = !targetObject.GetComponent<TweenImageColor>()
+                ? targetObject.AddComponent<TweenImageColor>()
+                : targetObject.GetComponent<TweenImageColor>();
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetColor;
