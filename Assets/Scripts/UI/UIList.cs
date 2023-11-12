@@ -1,18 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-
-//아이템 종류
-public enum Field
-{
-    None = -1,
-    Toy,
-    Snack,
-    Album,
-    Friend
-    
-}
 
 public abstract class UIList<T> : MonoBehaviour where T : Item
 {
@@ -35,12 +27,17 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     /// <summary>
     /// InventorySlots의 SetActive(), Count() ui를 update하는 함수
     /// </summary>
+    protected abstract void UpdateListSlots();
 
-    void Awake()
+    void OnEnable()
     {
-        _field.transform.GetChild(0).GetComponent<Toggle>().isOn = true;
+        Toggle firstToggle = _field.transform.GetChild(0).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
+        if (firstToggle != null)
+        {
+            firstToggle.isOn = true;
+        }
+        UpdateListSlots();
     }
-
 
     //list마다 해당 spawn 위치에 Instantiate하는 함수
     private void CreateSlots()
@@ -58,8 +55,9 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
 
     private void GetCurrentField()
     {
-        Toggle selectedField = _field.ActiveToggles().FirstOrDefault(); //선택된 토글
+        Toggle selectedField = GetOnToggle(); //선택된 토글
         _currentField = GetFieldByTransform(selectedField);
+        SetActiveContent();
     }
 
     //spawnPosition 활성화 함수
@@ -69,7 +67,23 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         {
             _spawnPoint[i].gameObject.SetActive(false);
         }
-        _spawnPoint[(int)_currentField].gameObject.SetActive(true);//현재 토글의 content를 setactive 
+        if(_currentField >= 0)
+        {
+            _spawnPoint[(int)_currentField].gameObject.SetActive(true);//현재 토글의 content를 setactive 
+
+        }
+    }
+
+    private Toggle GetOnToggle()
+    {
+        foreach (Toggle toggle in _field.transform.GetComponentsInChildren<Toggle>())
+        {
+            if (toggle.isOn == true)
+            {
+                return toggle;
+            }
+        }
+        return null;
     }
 
     //Transform으로 Field값 찾기
@@ -94,14 +108,17 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
 
     private void OnClickedFieldButton(bool isOn, Transform toggle)
     {
-        SetActiveContent();
         GetCurrentField();
+        if (_currentField == Field.Toy || _currentField == Field.Snack)
+        {
+            UpdateListSlots();
+
+        }
     }
 
     protected void Init()
     {
         CreateSlots(); //slot 생성
-        GetCurrentField(); //배경 색 변경
 
         //버튼 리스너
         foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화

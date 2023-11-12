@@ -1,6 +1,5 @@
 using Muks.DataBind;
-using System.Collections.Generic;
-using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,60 +8,26 @@ public class UIItemList : UIList<Item>
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
 
-    //Test
-    public Sprite TestImage;
+    public Sprite Test;
+
+    private void Awake()
+    {
+        _dataBase = Database_Ssun.Instance;
+    }
     void Start()
     {
-        //Test
-        _dataBase = Database_Ssun.Instance;
-        _maxCount[2] = _dataBase.DataSnack.Count;
+        //Test snack
+        for(int i = 0; i < 2; i++)
+        {
+            _maxCount[i] = _dataBase.ItemCount[i];
+            _lists[i] = _dataBase.ItemList[i];
+        }
 
-        //for (int i = 0; i < _maxCount.Length; i++)
-        //{
-        //    for (int j = 0; j < _maxCount[i]; j++)
-        //    {
-        //        _lists[i].Add(new Item(_dataBase.DataSnack[j]["Id"].ToString(),
-        //            _dataBase.DataSnack[j]["Name"].ToString(),
-        //            _dataBase.DataSnack[j]["Description"].ToString(),
-        //            null));
-        //    }
-        //}
-
-        GameManager.Instance.Player.Inventory[1].Add(new Item(_dataBase.DataSnack[2]["Id"].ToString(),
-                    _dataBase.DataSnack[2]["Name"].ToString(),
-                    _dataBase.DataSnack[2]["Description"].ToString(),
-                    null));
-
+        GameManager.Instance.Player.Inventory[1].AddById(Field.Snack, "I03"); //player가 아이템 하나를 얻음
+       
         Init();
     }
 
-    private void OnEnable()
-    {
-        CheckReceivedItem();
-    }
-
-    private void CheckReceivedItem()
-    {
-        //for (int i = 0; i < _maxCount.Length; i++)
-        //{
-        //    for (int j = 0; j < _maxCount[i]; j++)
-        //    {
-        //        if (_lists[i][j].IsReceived)
-        //        {
-        //            _spawnPoint[i].GetChild(j).GetComponent<Button>().interactable = true;
-        //        }
-        //    }
-        //}
-        for (int j = 0; j < _maxCount[2]; j++)
-        {
-            if (_lists[2][j].IsReceived)
-            {
-                _spawnPoint[2].GetChild(j).GetComponent<Button>().interactable = true;
-                _spawnPoint[2].GetChild(j).GetComponent<Image>().sprite = _lists[2][j].Image;
-
-            }
-        }
-    }
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
@@ -72,5 +37,15 @@ public class UIItemList : UIList<Item>
         DataBind.SetImageValue("ItemDetailImage", _lists[(int)_currentField][index].Image);
     }
 
-    
+    protected override void UpdateListSlots()
+    {
+        for (int j = 0; j < _maxCount[(int)_currentField]; j++)
+        {
+            if (_lists[(int)_currentField][j].IsReceived)
+            {
+                _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = true;
+                _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
+            }
+        }
+    }
 }
