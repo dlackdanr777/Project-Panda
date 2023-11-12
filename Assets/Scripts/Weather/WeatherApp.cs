@@ -29,11 +29,9 @@ public class RamdomWeather
 
 public class WeatherApp : MonoBehaviour
 {
+    [SerializeField] private UIWeather _uiWeather;
 
-    public static DateTime TODAY;
-    private DateTime _endDay; //이벤트 종료일
     private UserInfo _userInfo;
-
 
     private DataManager _dataManager => DataManager.Instance;
 
@@ -47,17 +45,17 @@ public class WeatherApp : MonoBehaviour
     /// <summary>현재 날씨</summary>
     [SerializeField] private Seasons _currentSeason;
 
-    [SerializeField] private List<string> _weekWeathers;
 
+    public List<string> _weekWeathers { get; private set; }
     private WeightedRandom<string> _weatherDatas;
-
 
     //===========================================================
 
     private void Awake()
     {
         Init();
-        Init2();
+        Login();
+        AttendanceCheck();
     }
 
     private void Init()
@@ -73,55 +71,64 @@ public class WeatherApp : MonoBehaviour
         {
             _weekWeathers.Add(_weatherDatas.GetRamdomItemBySub());
         }
-
-        //====테스트====
-
-
     }
 
-    private void Init2()
+    //일주일치 날씨를 설정하는 함수
+    private void SetWeekWeather()
     {
-        TODAY = DateTime.Now;
-        _userInfo = new UserInfo();
-
-        _endDay = TODAY.AddDays(1);
-    }
-
-    //받은 아이템을 출력해주는 함수
-    private void GetItemPrint(ItemData item)
-    {
-        Debug.LogFormat("{0}일자 아이템입니다.", _userInfo.DayCount);
-        Debug.LogFormat("{0} , {1}", item.Name, item.Amount);
-    }
-
-    private void View(string check)
-    {
-        //데이터를 불러온다.
-        Dictionary<int,EverydayData> data = _dataManager.GetEverydayDatas();
-        List<int> list = new List<int>(data.Keys);
-
-        if(check != "1")
+        for (int i = 0; i < 7; i++)
         {
-            Debug.Log("---하루소요---");
-            Debug.LogFormat("오늘날짜:{0} 월{1} 일{2} / 이벤트 남은 일자:[{3}일]", TODAY.Month, TODAY.Day, _endDay.Day - TODAY.Day);
+            _weekWeathers.Add(_weatherDatas.GetRamdomItemBySub());
+        }
+    }
+
+    //출석 체크
+    private void AttendanceCheck()
+    {
+        //오늘 접속했었다면 넘긴다.
+        if (RewardedCheck())
             return;
-        }
 
-        foreach(var key in list)
+        //만약 일주일치 출석체크를 완료했다면
+        if (WeeksCheck())
         {
-            var item = _dataManager.GetItemData(data[key].Item);
-
-            if (data[key].Date % 7 == 0) { }
+            //다시 설정한다.
+            SetWeekWeather();
         }
-    } 
 
-    public void GetItem(ItemData rewardedItem, int amount)
-    {
 
+        _userInfo._lastAccessDay = DateTime.Now;
+        _userInfo.DayCount++;
     }
+
+    //현재 보상을 체크하는 함수
+    private bool RewardedCheck()
+    {
+        //만약 현재 날짜 전날에 접속했다면?
+        if (UserInfo.TODAY.Day -1 == _userInfo._lastAccessDay.Day)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    //일주일 단위를 체크하는 함수
+    private bool WeeksCheck()
+    {
+        if(_userInfo.DayCount % 7 == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+
 
     private void Login()
     {
+        _userInfo = new UserInfo();
         _userInfo.LoadUserInfoData();
     }
 }
