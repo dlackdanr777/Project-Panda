@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Muks.Tween
 {
-    public class TweenRotate : TweenData
+    public class TweenTransformRotate : TweenData
     {
         /// <summary> 목표 회전 값 </summary>
         public Vector3 TargetEulerAngles;

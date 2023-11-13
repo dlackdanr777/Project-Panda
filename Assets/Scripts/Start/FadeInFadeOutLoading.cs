@@ -71,17 +71,17 @@ public class FadeInFadeOutLoading : StartList
     {
         _seedImage.gameObject.SetActive(false);
         Debug.Log("½ÇÇà");
-        Tween.Scale(_maskImage, _fadeInSize, _fadeInTime, TweenMode.Smootherstep, SeedEnable);
+        Tween.TransformScale(_maskImage, _fadeInSize, _fadeInTime, TweenMode.Smootherstep, SeedEnable);
     }
 
     private void SeedEnable()
     {
         _seedImage.gameObject.SetActive(true);
-        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
-        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
-        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
-        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
-        Tween.Scale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike, StartFadeOut);
+        Tween.TransformScale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.TransformScale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.TransformScale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.TransformScale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike);
+        Tween.TransformScale(_seedImage.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1, TweenMode.Spike, StartFadeOut);
     }
 
     private void StartFadeOut()
@@ -89,8 +89,8 @@ public class FadeInFadeOutLoading : StartList
         Color targetColor = _seedImage.color;
         targetColor.a = 0;
         
-        Tween.Scale(_maskImage, _fadeOutSize, _fadeOutTime, TweenMode.Constant);
-        Tween.Color(_seedImage.gameObject, targetColor, _fadeOutTime * 0.5f, TweenMode.Constant);
+        Tween.TransformScale(_maskImage, _fadeOutSize, _fadeOutTime, TweenMode.Constant);
+        Tween.IamgeColor(_seedImage.gameObject, targetColor, _fadeOutTime * 0.5f, TweenMode.Constant);
     }
 
 

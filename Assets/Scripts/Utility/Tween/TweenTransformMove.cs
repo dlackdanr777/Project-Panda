@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Muks.Tween
 {
-    public class TweenMove : TweenData
+    public class TweenTransformMove : TweenData
     {
         public Vector3 StartPosition;
         public Vector3 TargetPosition;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Muks.Tween
 {
-    public class TweenScale : TweenData
+    public class TweenTransformScale : TweenData
     {
 
         /// <summary> 시작 회전 값</summary>
