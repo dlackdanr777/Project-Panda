@@ -41,6 +41,12 @@ public class CameraApplication : MonoBehaviour
     private void OnEnable()
     {
         _screenshotEnable = true;
+        _photoPrinting.gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        _screenshotEnable = false;
     }
 
 
@@ -94,6 +100,11 @@ public class CameraApplication : MonoBehaviour
 
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
         }
+    }
+
+    private void SceenshotEnable()
+    {
+        _screenshotEnable = true;
     }
 
     private Vector3[] GetIamgeCorners(Image image)

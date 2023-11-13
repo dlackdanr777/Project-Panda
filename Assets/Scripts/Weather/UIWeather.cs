@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Muks.DataBind;
-using Muks.Tween;
 using System.Linq;
 
 public class UIWeather : MonoBehaviour
 {
     [SerializeField] private WeatherApp _weatherApp;
-
-    [SerializeField] private List<string> _weekWeathers;
 
     //레이아웃을 넣는 곳
     [SerializeField] private GameObject _layoutGroup;
@@ -20,9 +17,16 @@ public class UIWeather : MonoBehaviour
     //현재 날짜를 보여주는 슬롯
     [SerializeField] private GameObject _uiTodaySlot;
 
+    private List<UIWeatherSlot> _slots;
+
+    private List<WeatherData> _weekWeathers;
+
     public void Init()
     {
-        List<string> _weekWeathers = new List<string>();
+        DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
+
+        List<WeatherData> _weekWeathers = new List<WeatherData>();
+        _slots = new List<UIWeatherSlot>();
         _weekWeathers = _weatherApp._weekWeathers.ToList();
 
         for(int i = 0; i < 7; i++)
@@ -38,6 +42,9 @@ public class UIWeather : MonoBehaviour
             }
 
             slot.transform.parent = _layoutGroup.transform;
+            _slots.Add(slot.GetComponent<UIWeatherSlot>());
+
+            _slots[i].UpdateUI(_weekWeathers[i]);
         }
     }
 }

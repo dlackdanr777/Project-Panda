@@ -49,7 +49,7 @@ public class UIInventoryList : UIList<InventoryItem>
 
         DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
-        DataBind.SetImageValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
+        DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
     }
 
     protected override void UpdateInventorySlots()
