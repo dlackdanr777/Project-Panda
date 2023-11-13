@@ -49,10 +49,10 @@ public class UIInventoryList : UIList<InventoryItem>
 
     protected override void GetText(int index)
     {
-     /*   _currentItemIndex = index;
+        _currentItemIndex = index;
         Debug.Log(_lists[(int)_currentField][index].Name);
         UIView.SetValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
-        UIView.SetValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);*/
+        UIView.SetValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
     }
 
     protected override void UpdateInventorySlots()
