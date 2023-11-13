@@ -5,6 +5,9 @@ using UnityEngine;
 using Muks.WeightedRandom;
 
 
+public enum Seasons { Spring, Summer, Fall, Winter, Count }
+public enum Weather {Sunny, Cloudy, Rainy, Count }
+
 /// <summary>날씨 가중치 데이터를 가지고 있는 클래스</summary>
 [Serializable]
 public class RamdomWeather
@@ -24,8 +27,8 @@ public class RamdomWeather
     /// <summary>비 날씨 가중치</summary>
     public int RainyWeighted => _rainyWeighted;
 
-
 }
+
 
 public class WeatherApp : MonoBehaviour
 {
@@ -37,8 +40,9 @@ public class WeatherApp : MonoBehaviour
 
     //=======================날씨 데이터==========================
 
-
-    public enum Seasons { Spring, Summer, Fall, Winter }
+    [SerializeField] private WeatherData _sunnyData;
+    [SerializeField] private WeatherData _cloudyData;
+    [SerializeField] private WeatherData _rainyData;
 
     [SerializeField] private RamdomWeather[] _ramdomWeathers;
 
@@ -46,31 +50,30 @@ public class WeatherApp : MonoBehaviour
     [SerializeField] private Seasons _currentSeason;
 
 
-    public List<string> _weekWeathers { get; private set; }
-    private WeightedRandom<string> _weatherDatas;
+    public List<WeatherData> _weekWeathers { get; private set; }
+    private WeightedRandom<WeatherData> _weatherDatas;
 
     //===========================================================
 
     private void Awake()
     {
-        Init();
         Login();
+        Init();
         AttendanceCheck();
     }
 
     private void Init()
     {
-        _weatherDatas = new WeightedRandom<string>();
-        _weekWeathers = new List<string>();
+        _weatherDatas = new WeightedRandom<WeatherData>();
+        _weekWeathers = new List<WeatherData>();
 
-        _weatherDatas.Add("맑음", _ramdomWeathers[(int)_currentSeason].SunnyWeighted);
-        _weatherDatas.Add("흐림", _ramdomWeathers[(int)_currentSeason].CloudyWeighted);
-        _weatherDatas.Add("비", _ramdomWeathers[(int)_currentSeason].RainyWeighted);
+        _weatherDatas.Add(_sunnyData, _ramdomWeathers[(int)_currentSeason].SunnyWeighted);
+        _weatherDatas.Add(_cloudyData, _ramdomWeathers[(int)_currentSeason].CloudyWeighted);
+        _weatherDatas.Add(_rainyData, _ramdomWeathers[(int)_currentSeason].RainyWeighted);
 
-        for(int i = 0; i < 7; i++)
-        {
-            _weekWeathers.Add(_weatherDatas.GetRamdomItemBySub());
-        }
+        SetWeekWeather();
+
+        _uiWeather.Init();
     }
 
     //일주일치 날씨를 설정하는 함수

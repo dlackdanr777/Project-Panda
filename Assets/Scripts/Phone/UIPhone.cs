@@ -21,8 +21,10 @@ public class UIPhone : MonoBehaviour
 
     private void Start()
     {
-
+        Invoke("Hide", 0.02f);
     }
+
+    private void Hide() => gameObject.SetActive(false);
 
 
     private void OnPhoneButtonClicked()
