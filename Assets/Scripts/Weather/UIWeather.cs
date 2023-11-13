@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Muks.DataBind;
 using System.Linq;
+using System;
 
 public class UIWeather : MonoBehaviour
 {
@@ -21,11 +22,10 @@ public class UIWeather : MonoBehaviour
 
     private List<WeatherData> _weekWeathers;
 
+    private WeatherData _todayWeatherData;
+
     public void Init()
     {
-        DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
-
-        List<WeatherData> _weekWeathers = new List<WeatherData>();
         _slots = new List<UIWeatherSlot>();
         _weekWeathers = _weatherApp._weekWeathers.ToList();
 
@@ -35,6 +35,7 @@ public class UIWeather : MonoBehaviour
             if (_weatherApp.UserInfo.DayCount % 7 == i)
             {
                 slot = Instantiate(_uiTodaySlot, new Vector3(0, 0, 0), Quaternion.identity);
+                _todayWeatherData = _weekWeathers[i];
             }
             else
             {
@@ -46,5 +47,13 @@ public class UIWeather : MonoBehaviour
 
             _slots[i].UpdateUI(_weekWeathers[i]);
         }
+        SetBind();
+    }
+
+    private void SetBind()
+    {
+        DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
+        DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
+        DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.Sprite);
     }
 }
