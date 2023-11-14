@@ -18,15 +18,15 @@ public class UIInventoryList : UIList<InventoryItem>
     {
 
         //Test
-        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", Test)); //ÀÎº¥Åä¸®¿¡ item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", Test)); //ÀÎº¥Åä¸®¿¡ item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("1", "n1", "d1", Test2)); //ÀÎº¥Åä¸®¿¡ item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("2", "n2", "d2", Test2)); //ÀÎº¥Åä¸®¿¡ item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", Test)); //ì¸ë²¤í† ë¦¬ì— item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", Test)); //ì¸ë²¤í† ë¦¬ì— item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("1", "n1", "d1", Test2)); //ì¸ë²¤í† ë¦¬ì— item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("2", "n2", "d2", Test2)); //ì¸ë²¤í† ë¦¬ì— item add
         
         for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
         {
             _maxCount[i] = GameManager.Instance.Player.Inventory[i].MaxInventoryItem;
-            _lists[i] = GameManager.Instance.Player.Inventory[i].GetInventoryList();//Player¿¡ ÀÖ´Â ÀÎº¥Åä¸® ¼³Á¤ -> º¯°æµÉ ¶§¸¶´Ù ÀÌº¥Æ®·Î ui º¯°æÇØÁà¾ß ÇÔ
+            _lists[i] = GameManager.Instance.Player.Inventory[i].GetInventoryList();//Playerì— ìˆëŠ” ì¸ë²¤í† ë¦¬ ì„¤ì • -> ë³€ê²½ë  ë•Œë§ˆë‹¤ ì´ë²¤íŠ¸ë¡œ ui ë³€ê²½í•´ì¤˜ì•¼ í•¨
         }
         Init();
     }
@@ -52,12 +52,12 @@ public class UIInventoryList : UIList<InventoryItem>
         DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
     }
 
-    private void UIInventoryList_OnUseItem() //¾ÆÀÌÅÛ 
+    private void UIInventoryList_OnUseItem() //ì•„ì´í…œ 
     {
         UseItem();    
     }
 
-    private void UIInventoryList_DontUseItem() //»ó¼¼ ¼³¸íÃ¢ ´İÀ½
+    private void UIInventoryList_DontUseItem() //ìƒì„¸ ì„¤ëª…ì°½ ë‹«ìŒ
     {
         _detailView.SetActive(false);
     }
@@ -66,7 +66,7 @@ public class UIInventoryList : UIList<InventoryItem>
     {
         GameManager.Instance.Player.Inventory[(int)_currentField].RemoveByIndex(_currentItemIndex);
         UpdateListSlots();
-        //»ó¼¼ ¼³¸íÃ¢ ´İÀ½
+        //ìƒì„¸ ì„¤ëª…ì°½ ë‹«ìŒ
         _detailView.SetActive(false);
     }
 
@@ -79,14 +79,14 @@ public class UIInventoryList : UIList<InventoryItem>
         DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
         DataBind.SetImageValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
-        //¹èÄ¡¾ÆÀÌÅÛ data bind
+        //ë°°ì¹˜ì•„ì´í…œ data bind
         DataBind.SetImageValue("ArrangeItemSprite", GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image);
 
     }
 
     protected override void UpdateListSlots()
     {
-        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //ÇöÀç playerÀÇ ÀÎº¥Åä¸®¿¡ ÀúÀåµÈ ¾ÆÀÌÅÛ °¹¼ö
+        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //í˜„ì¬ playerì˜ ì¸ë²¤í† ë¦¬ì— ì €ì¥ëœ ì•„ì´í…œ ê°¯ìˆ˜
         {
             if (j < GameManager.Instance.Player.Inventory[(int)_currentField].ItemsCount)
             {

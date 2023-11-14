@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Muks.Tween
 {
-    public class TweenColor : TweenData
+    public class TweenImageColor : TweenData
     {
         /// <summary> 목표 위치 </summary>
         public Color TargetColor;

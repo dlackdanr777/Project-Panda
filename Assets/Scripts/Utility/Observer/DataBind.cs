@@ -84,7 +84,7 @@ namespace Muks.DataBind
         /// <summary>
         /// 버튼 데이터의 연결장소와 보낼값을 지정해두는 함수(action값이 변할 경우 GetButtonValue로 연결된 곳의 값도 변함)
         /// </summary>
-        public static void SetImageValue(string dataID, Sprite sprite)
+        public static void SetSpriteValue(string dataID, Sprite sprite)
         {
             if (_dataBindingSprite == null)
                 _dataBindingSprite = new Dictionary<string, BindData<Sprite>>();
@@ -99,9 +99,9 @@ namespace Muks.DataBind
 
 
         /// <summary>
-        /// 버튼 텍스트 데이터의 연결장소를 불러오는 함수
+        /// 텍스트 데이터의 연결장소를 불러오는 함수
         /// </summary>
-        public static BindData<Sprite> GetImageValue(string dataID)
+        public static BindData<Sprite> GetSpriteValue(string dataID)
         {
             if (_dataBindingSprite == null)
                 _dataBindingSprite = new Dictionary<string, BindData<Sprite>>();
@@ -113,5 +113,6 @@ namespace Muks.DataBind
             }
             return imageData;
         }
+
     }
 }
