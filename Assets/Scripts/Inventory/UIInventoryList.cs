@@ -47,9 +47,8 @@ public class UIInventoryList : UIList<InventoryItem>
 
         }
 
-        DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
-        DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
-        DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
+        _arrangeButton.GetComponent<DragAndDrop>().DontUseItem -= UIInventoryList_DontUseItem;
+        _arrangeButton.GetComponent<DragAndDrop>().OnUseItem -= UIInventoryList_OnUseItem;
     }
 
     private void UIInventoryList_OnUseItem() //æ∆¿Ã≈€ 
