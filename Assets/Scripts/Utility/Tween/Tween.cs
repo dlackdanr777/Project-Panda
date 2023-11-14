@@ -132,6 +132,27 @@ namespace Muks.Tween
             }
         }
 
+        public static void RectTransfromAnchoredPosition(GameObject targetObject, Vector2 targetAnchoredPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenRectTransformAnchoredPosition objToAnchoredPosition = !targetObject.GetComponent<TweenRectTransformAnchoredPosition>()
+                ? targetObject.AddComponent<TweenRectTransformAnchoredPosition>()
+                : targetObject.GetComponent<TweenRectTransformAnchoredPosition>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAnchoredPosition;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToAnchoredPosition.SetDataSequence(tempData);
+
+            if (!objToAnchoredPosition.enabled)
+            {
+                objToAnchoredPosition.ElapsedDuration = 0;
+                objToAnchoredPosition.TotalDuration = 0;
+                objToAnchoredPosition.enabled = true;
+            }
+        }
+
 
         public static void IamgeColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
