@@ -47,9 +47,8 @@ public class UIInventoryList : UIList<InventoryItem>
 
         }
 
-        DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
-        DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
-        DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
+        _arrangeButton.GetComponent<DragAndDrop>().DontUseItem -= UIInventoryList_DontUseItem;
+        _arrangeButton.GetComponent<DragAndDrop>().OnUseItem -= UIInventoryList_OnUseItem;
     }
 
     private void UIInventoryList_OnUseItem() //아이템 
@@ -78,9 +77,9 @@ public class UIInventoryList : UIList<InventoryItem>
 
         DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
-        DataBind.SetImageValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
+        DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
         //배치아이템 data bind
-        DataBind.SetImageValue("ArrangeItemSprite", GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image);
+        DataBind.SetSpriteValue("ArrangeItemSprite", GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image);
 
     }
 

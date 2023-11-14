@@ -28,7 +28,7 @@ public class UIItemList : UIList<Item>
     {
         DataBind.SetTextValue("ItemDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("ItemDetailDescription", _lists[(int)_currentField][index].Description);
-        DataBind.SetImageValue("ItemDetailImage", _lists[(int)_currentField][index].Image);
+        DataBind.SetSpriteValue("ItemDetailImage", _lists[(int)_currentField][index].Image);
     }
 
     protected override void UpdateListSlots()
