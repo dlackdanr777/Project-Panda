@@ -84,7 +84,6 @@ public class UIInventoryList : UIList<InventoryItem>
 
     protected override void UpdateListSlots()
     {
-
         for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
         {
             if (j < GameManager.Instance.Player.Inventory[(int)_currentField].ItemsCount)

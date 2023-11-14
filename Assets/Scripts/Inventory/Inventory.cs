@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class Inventory
@@ -11,7 +10,8 @@ public class Inventory
     public List<InventoryItem> Items = new List<InventoryItem>();
     
     public int ItemsCount => Items.Count;
-    
+
+
     public List<InventoryItem> GetInventoryList()
     {
         return Items;
@@ -40,7 +40,6 @@ public class Inventory
 
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
         InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
-        addItem.IsReceived = true;
         Items.Add(addItem); //새로운 인벤토리 생성
     }
 
@@ -54,12 +53,13 @@ public class Inventory
     {
         List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
         int listCount = Database_Ssun.Instance.ItemCount[(int)field];
-        Debug.Log(listCount);
+
         for (int i=0;i< listCount; i++)
         {
             if (database[i].Id.Equals(id))
             {
                 Add(database[i]);
+                database[i].IsReceived = true;
             }
         }
     }
