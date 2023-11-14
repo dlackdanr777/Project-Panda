@@ -4,12 +4,13 @@ using UnityEngine;
 [Serializable]
 public class Item
 {
-    public int Id;
+    public string Id;
     public string Name;
     public string Description;
     public Sprite Image;
+    public bool IsReceived;
 
-    public Item(int id, string name, string description, Sprite image)
+    public Item(string id, string name, string description, Sprite image)
     {
         Id = id;
         Name = name;

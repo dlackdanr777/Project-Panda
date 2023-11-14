@@ -1,4 +1,4 @@
-public class UIInventory : UIView
+public class UIItem : UIView
 {
     public override void Hide()
     {

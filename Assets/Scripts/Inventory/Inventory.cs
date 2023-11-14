@@ -1,10 +1,7 @@
-using JetBrains.Annotations;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Unity.VisualScripting;
-using UnityEngine;
 
+[Serializable]
 public class Inventory
 {
     public int MaxInventoryItem { get; private set; } = 30; //inventory 최대 저장 개수
@@ -13,7 +10,8 @@ public class Inventory
     public List<InventoryItem> Items = new List<InventoryItem>();
     
     public int ItemsCount => Items.Count;
-    
+
+
     public List<InventoryItem> GetInventoryList()
     {
         return Items;
@@ -25,7 +23,7 @@ public class Inventory
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Id == item.Id) //id가 같은 아이템이 있다면
+                if (Items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
                 {
                     if (Items[i].Count == MaxInventoryItemCount) //개수가 최대 개수와 같은지 확인
                     {
@@ -43,8 +41,27 @@ public class Inventory
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
         InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
         Items.Add(addItem); //새로운 인벤토리 생성
+    }
 
-        
+    /// <summary>
+    /// 플레이어의 인벤토리에 id을 이용해서 add
+    /// field는 종류 Field.Toy, Field.Snack이 있음
+    /// </summary>
+    /// <param name="field"></param>
+    /// <param name="id"></param>
+    public void AddById(Field field, string id)
+    {
+        List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
+        int listCount = Database_Ssun.Instance.ItemCount[(int)field];
+
+        for (int i=0;i< listCount; i++)
+        {
+            if (database[i].Id.Equals(id))
+            {
+                Add(database[i]);
+                database[i].IsReceived = true;
+            }
+        }
     }
 
     public void RemoveByIndex(int index)
