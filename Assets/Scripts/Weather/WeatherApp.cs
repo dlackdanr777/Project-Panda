@@ -53,6 +53,10 @@ public class WeatherApp : MonoBehaviour
     public List<WeatherData> _weekWeathers { get; private set; }
     private WeightedRandom<WeatherData> _weatherDatas;
 
+
+    private bool _isCanReward; //보상획득 가능 유무
+    public bool IsCanReward => _isCanReward;
+
     //===========================================================
 
     private void Awake()
@@ -60,6 +64,7 @@ public class WeatherApp : MonoBehaviour
         Login();
         Init();
         AttendanceCheck();
+        _uiWeather.Init();
     }
 
     private void Init()
@@ -72,8 +77,6 @@ public class WeatherApp : MonoBehaviour
         _weatherDatas.Add(_rainyData, _ramdomWeathers[(int)_currentSeason].RainyWeighted);
 
         SetWeekWeather();
-
-        _uiWeather.Init();
     }
 
     //일주일치 날씨를 설정하는 함수
@@ -88,28 +91,31 @@ public class WeatherApp : MonoBehaviour
     //출석 체크
     private void AttendanceCheck()
     {
-        //오늘 접속했었다면 넘긴다.
-        if (RewardedCheck())
-            return;
-
         //만약 일주일치 출석체크를 완료했다면
         if (WeeksCheck())
         {
-            //다시 설정한다.
+            //설정한다.
             SetWeekWeather();
         }
 
+        //전날 접속했었다면 넘긴다.
+        if (!RewardedCheck())
+            return;
 
-        UserInfo._lastAccessDay = DateTime.Now;
-        UserInfo.DayCount++;
+
+
     }
 
     //현재 보상을 체크하는 함수
     private bool RewardedCheck()
     {
         //만약 현재 날짜 전날에 접속했다면?
-        if (UserInfo.TODAY.Day -1 == UserInfo._lastAccessDay.Day)
+        if (UserInfo.TODAY.Day > UserInfo._lastAccessDay.Day)
         {
+            UserInfo._lastAccessDay = DateTime.Now;
+            UserInfo.DayCount++;
+            _uiWeather.OnRewardedHandler += GiveReward;
+            _isCanReward = true;
             return true;
         }
 
@@ -119,7 +125,7 @@ public class WeatherApp : MonoBehaviour
     //일주일 단위를 체크하는 함수
     private bool WeeksCheck()
     {
-        if(UserInfo.DayCount % 7 == 0)
+        if(UserInfo.DayCount % 7 == 1)
         {
             return true;
         }
@@ -127,11 +133,21 @@ public class WeatherApp : MonoBehaviour
     }
 
 
-
-
     private void Login()
     {
         UserInfo = new UserInfo();
         UserInfo.LoadUserInfoData();
     }
+
+    //보상지급 함수
+    private void GiveReward()
+    {
+        Debug.Log("보상이 지급됬습니다.");
+    }
+
+    public List<WeatherData> GetWeekWeathers()
+    {
+        return _weekWeathers;
+    }
+
 }
