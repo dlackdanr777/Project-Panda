@@ -44,7 +44,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
 
     void Awake()
     {
-        _field.transform.GetChild(0).GetComponent<Toggle>().isOn = true;
+        _field.transform.GetChild(0).GetComponent<Toggle>().isOn = true; 
     }
 
 
