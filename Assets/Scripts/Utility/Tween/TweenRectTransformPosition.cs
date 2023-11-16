@@ -25,7 +25,7 @@ namespace Muks.Tween
             if (TryGetComponent(out _rectTransform))
             {
                 StartAnchoredPosition = _rectTransform.anchoredPosition;
-                TargetAnchoredPosition = (Vector3)dataSequence.TargetValue;
+                TargetAnchoredPosition = (Vector2)dataSequence.TargetValue;
             }
             else
             {

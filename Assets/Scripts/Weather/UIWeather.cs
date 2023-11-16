@@ -62,6 +62,8 @@ public class UIWeather : MonoBehaviour
                 {
                     //보상획득 이벤트
                     RewardAnime(_slots[i]);
+
+                    _todayWeatherData = _weekWeathers[i];
                     //이벤트핸들러 실행
                     OnRewardedHandler?.Invoke();
                 }
@@ -83,8 +85,9 @@ public class UIWeather : MonoBehaviour
     public void Init()
     {
         _weekWeathers = _weatherApp.GetWeekWeathers().ToList();
-        SetBind();
         InitSlot();
+
+        SetBind();
     }
 
    /* public void Init()
@@ -126,7 +129,7 @@ public class UIWeather : MonoBehaviour
     {
         DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
         DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
-        //DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.WeatherSprite);
+        DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.WeatherSprite);
     }
 
 
@@ -145,6 +148,7 @@ public class UIWeather : MonoBehaviour
 
         Vector2 tmepSizeDelta = rectTransform.sizeDelta;
         rectTransform.sizeDelta = new Vector2(200, 200);
+
 
         Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, rectTransform.sizeDelta, 0.1f);
         Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, tmepSizeDelta, 0.5f, TweenMode.Quadratic, () =>
