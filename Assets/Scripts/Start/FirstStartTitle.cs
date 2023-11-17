@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using Muks.Tween;
 
+using Muks.DataBind;
+
 public class FirstStartTitle : StartList
 {
     
@@ -42,6 +44,7 @@ public class FirstStartTitle : StartList
             Tween.TransformMove(_timeLines[0].Object, _timeLines[0].TargetPosition, _timeLines[0].Duration, TweenMode.Smootherstep);
             Tween.TransformMove(_timeLines[1].Object, _timeLines[1].TargetPosition, _timeLines[1].Duration, TweenMode.Smootherstep);
             Tween.TransformMove(_timeLines[2].Object, _timeLines[2].TargetPosition, _timeLines[2].Duration, TweenMode.Smootherstep, UIEnd);
+
                 _isStart = true;
             Debug.Log("Ω√¿€");
         }
