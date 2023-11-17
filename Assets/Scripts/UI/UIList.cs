@@ -96,7 +96,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     }
 
     //SlotClick 이벤트
-    private void OnClickSlot(int index)
+    protected virtual void OnClickSlot(int index)
     {
         GetContent(index); //텍스트 바인딩
         _detailView.SetActive(true); //상세 설명 창 나타남

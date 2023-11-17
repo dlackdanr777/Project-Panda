@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UIShopList : UIList<Item>
 {
+    [SerializeField] private Button _purchaseButton;
+    [SerializeField] private GameObject _purchasedPanel;
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
 
@@ -24,6 +26,28 @@ public class UIShopList : UIList<Item>
         Init();
     }
 
+    private void Start()
+    {
+        _purchaseButton.onClick.AddListener(OnClickPurchaseButton);
+    }
+
+    private void OnClickPurchaseButton()
+    {
+        StartCoroutine(ItemPurchased());
+    }
+
+    IEnumerator ItemPurchased()
+    {
+        _detailView.SetActive(false);
+        _purchasedPanel.SetActive(true);
+
+        GameManager.Instance.Player.Inventory[(int)_currentField].AddById(_currentField, _dataBase.ItemList[(int)_currentField][_currentItemIndex].Id);
+
+        yield return new WaitForSeconds(1.0f);
+
+        _purchasedPanel.SetActive(false);
+    }
+
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
@@ -39,6 +63,15 @@ public class UIShopList : UIList<Item>
         {          
             _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
             
+        }
+    }
+
+    protected override void OnClickSlot(int index)
+    {
+        base.OnClickSlot(index);
+        if(_currentField == Field.Toy || _currentField == Field.Snack)
+        {
+            _purchaseButton.gameObject.SetActive(true);
         }
     }
 }
