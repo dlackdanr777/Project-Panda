@@ -2,34 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Muks.Tween;
 
 public class UIWeatherSlot : MonoBehaviour
 {
-    [SerializeField] private Text _nameText;
+    [SerializeField] private Text _dayText;
 
     [SerializeField] private Text _amountText;
 
-    [SerializeField] private Image _image;
+    [SerializeField] private Image _weatherImage;
+
+    [SerializeField] private Image _rewardImage;
+
+    [SerializeField] private Image _attendanceStamp;
+    public Image AttendanceStamp => _attendanceStamp;
 
     private WeatherData _weatherData;
-    
 
-    public void UpdateUI(WeatherData weatherData)
+    public void UpdateUI(WeatherData weatherData, int day)
     {
         _weatherData = weatherData;
         if (_weatherData != null)
         {
-            _nameText.text = _weatherData.Name;
+            _dayText.text = day.ToString() + "일 차";
             _amountText.text = _weatherData.Amount.ToString();
-            _image.sprite = _weatherData.Sprite;
+            _weatherImage.sprite = _weatherData.WeatherSprite;
+            _rewardImage.sprite = _weatherData.RewardSprite;
         }
 
         else
         {
-            _nameText.text = string.Empty;
-            _amountText.text = "0";
-            _image.sprite = null;
+            _dayText.text = string.Empty;
+            _amountText.text = string.Empty;
+            _weatherImage.sprite = null;
+            _rewardImage.sprite = null;
         }
 
+    }
+
+    //이미 출석되어있는 것을 출력하는 함수
+    public void AttendanceComplated(Sprite sprite)
+    {
+        _attendanceStamp.gameObject.SetActive(true);
+        _attendanceStamp.sprite = sprite;
     }
 }

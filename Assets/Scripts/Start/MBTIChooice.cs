@@ -1,3 +1,5 @@
+using Muks.Tween;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +14,12 @@ public class MBTIChooice : StartList
 
     [Tooltip("UI 부모 오브젝트")]
     [SerializeField] GameObject _uiFirstChooice;
+
+    [Tooltip("편지 오브젝트")]
+    [SerializeField] private GameObject _uiLetter;
+
+    [Tooltip("편지 버튼")]
+    [SerializeField] private Button _letterButton;
 
     [Tooltip("질문 상자")]
     [SerializeField] private Text _contexts;
@@ -39,7 +47,10 @@ public class MBTIChooice : StartList
 
     private bool _isEnd;
 
+    private bool _isButtonClickEnable;
+
     private Dialogue _currentDialogue;
+
 
 
 
@@ -49,9 +60,15 @@ public class MBTIChooice : StartList
         {
             _isStart = true;
             _uiFirstChooice.SetActive(true);
+            _contexts.gameObject.SetActive(false);
+            _rightButton.gameObject.SetActive(false);
+            _leftButton.gameObject.SetActive(false);
+            _letterButton.gameObject.SetActive(false);
+
             _leftButton.onClick.AddListener(OnLeftButtonClicked);
             _rightButton.onClick.AddListener(OnRightButtonClicked);
-            ShowDialogue();
+
+            StartAnime();
 
             Debug.Log("시작");
         }
@@ -88,10 +105,56 @@ public class MBTIChooice : StartList
         }
     }
 
+    //시작 애니메이션
+    private void StartAnime()
+    {
+        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 4, TweenMode.Smoothstep);
+        
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0,0,0));
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0, 0, 0));
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 2f, TweenMode.Constant, ButtonAnime);
+    }
+
+    private void AtivateDialog()
+    {
+        _isButtonClickEnable = true;
+        _contexts.gameObject.SetActive(true);
+        _rightButton.gameObject.SetActive(true);
+        _leftButton.gameObject.SetActive(true);
+        ShowDialogue();
+        UIChangeAlpha(1, 0.5f);
+    }
+
+    //버튼의 애니메이션
+    private void ButtonAnime()
+    {
+        _letterButton.gameObject.SetActive(true);
+        _letterButton.onClick.AddListener(OnLetterButtonClicked);
+    }
+
+    //버튼 클릭 이벤트
+    private void OnLetterButtonClicked()
+    {
+        AtivateDialog();
+        _letterButton.onClick.RemoveAllListeners();
+        _letterButton.gameObject.SetActive(false);
+    }
+
+    private void UIChangeAlpha(float alpha, float duration, Action onComplate = null)
+    {
+        Tween.TextAlpha(_contexts.gameObject, alpha, duration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(_leftButton.gameObject, alpha, duration, TweenMode.Smootherstep);
+        Tween.TextAlpha(_leftButtonContexts.gameObject, alpha, duration, TweenMode.Smoothstep);
+
+        Tween.IamgeAlpha(_rightButton.gameObject, alpha, duration, TweenMode.Smootherstep);
+        Tween.TextAlpha(_rightButtonContexts.gameObject, alpha, duration, TweenMode.Smoothstep, onComplate);
+    }
+
 
     private void ShowDialogue()
     {
-        if(_dialogueIndex <= _dialogueDic.Count)
+        _isButtonClickEnable = true;
+        if (_dialogueIndex <= _dialogueDic.Count)
         {
             _currentDialogue = GetDialogue(_dialogueIndex);
             _contexts.text = _currentDialogue.Contexts;
@@ -148,15 +211,31 @@ public class MBTIChooice : StartList
 
     private void OnLeftButtonClicked()
     {
+        if (!_isButtonClickEnable)
+            return;
+
+        _isButtonClickEnable = false;
         _totalMBTI += _currentDialogue.LeftButtonOutput;
-        ShowDialogue();
+
+        UIChangeAlpha(0, 0.5f, () => {
+            ShowDialogue();
+            UIChangeAlpha(1, 0.5f);
+            });
     }
 
     private void OnRightButtonClicked()
     {
+        if (!_isButtonClickEnable)
+            return;
+
+        _isButtonClickEnable = false;
         _totalMBTI += _currentDialogue.RightButtonOutput;
-        ShowDialogue();
+
+        UIChangeAlpha(0, 0.5f, () => {
+            ShowDialogue();
+            UIChangeAlpha(1, 0.5f);
+        });
     }
 
-   
+
 }

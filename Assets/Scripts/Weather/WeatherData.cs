@@ -11,11 +11,16 @@ public class WeatherData
     [SerializeField] private string _name;
     public string Name => _name;
 
-    //이미지
-    [SerializeField] private Sprite _sprite;
-    public Sprite Sprite => _sprite;
+    //날씨 이미지
+    [SerializeField] private Sprite _weatherSprite;
+    public Sprite WeatherSprite => _weatherSprite;
+
+    //보상 이미지
+    [SerializeField] private Sprite _rewardSprite;
+    public Sprite RewardSprite => _rewardSprite;
 
     //보상
+    //나중에 배열로 변경하여 보상 목록을 보여줘야함
     [SerializeField] private string _reward;
     public string Reward => _reward;
 

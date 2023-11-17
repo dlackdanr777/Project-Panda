@@ -132,6 +132,27 @@ namespace Muks.Tween
             }
         }
 
+        public static void RectTransfromAnchoredPosition(GameObject targetObject, Vector2 targetAnchoredPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenRectTransformAnchoredPosition objToAnchoredPosition = !targetObject.GetComponent<TweenRectTransformAnchoredPosition>()
+                ? targetObject.AddComponent<TweenRectTransformAnchoredPosition>()
+                : targetObject.GetComponent<TweenRectTransformAnchoredPosition>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAnchoredPosition;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToAnchoredPosition.SetDataSequence(tempData);
+
+            if (!objToAnchoredPosition.enabled)
+            {
+                objToAnchoredPosition.ElapsedDuration = 0;
+                objToAnchoredPosition.TotalDuration = 0;
+                objToAnchoredPosition.enabled = true;
+            }
+        }
+
 
         public static void IamgeColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
@@ -141,6 +162,72 @@ namespace Muks.Tween
 
             DataSequence tempData = new DataSequence();
             tempData.TargetValue = targetColor;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.SetDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void IamgeAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenImageAlpha objToColor = !targetObject.GetComponent<TweenImageAlpha>()
+                ? targetObject.AddComponent<TweenImageAlpha>()
+                : targetObject.GetComponent<TweenImageAlpha>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAlpha;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.SetDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void TextColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTextColor objToColor = !targetObject.GetComponent<TweenTextColor>()
+                ? targetObject.AddComponent<TweenTextColor>()
+                : targetObject.GetComponent<TweenTextColor>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetColor;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.SetDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void TextAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTextAlpha objToColor = !targetObject.GetComponent<TweenTextAlpha>()
+                ? targetObject.AddComponent<TweenTextAlpha>()
+                : targetObject.GetComponent<TweenTextAlpha>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAlpha;
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
