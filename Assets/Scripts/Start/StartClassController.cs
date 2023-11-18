@@ -9,12 +9,16 @@ public class StartClassController : MonoBehaviour
     [SerializeField] private Button _startBackgroundButton;
 
     [Tooltip("기존 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartList> _startLoadingList;
+    [SerializeField] private List<StartClass> _startLoadingList;
 
     [Tooltip("신규 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartList> _firstStartLoadingList;
+    [SerializeField] private List<StartClass> _firstStartLoadingList;
 
-    private StartList _currentClass;
+    [SerializeField] private GameObject _uiStart;
+
+    [SerializeField] private GameObject _mainScene;
+
+    private StartClass _currentClass;
 
     private int _lastIndex;
     private int _nextIndex;
@@ -23,6 +27,12 @@ public class StartClassController : MonoBehaviour
     {
         Init();
         _startBackgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
+
+    }
+
+    private void Start()
+    {
+        _mainScene.SetActive(false);
     }
 
     private void Update()
@@ -62,18 +72,26 @@ public class StartClassController : MonoBehaviour
 
     public void ChangeCurrentClass()
     {
-        if (_nextIndex < _lastIndex)
+        if (_nextIndex >= _lastIndex) //index를 모두 지나왔다면?
         {
-            if (GameManager.Instance.IsFirstStart)
-            {
-                _currentClass = _firstStartLoadingList[_nextIndex];
-            }
-            else
-            {
-                _currentClass = _startLoadingList[_nextIndex];
-            }
-            _nextIndex++;
-            OnBackgroundButtonClickd();
+            _mainScene.SetActive(true);
+            _uiStart.SetActive(false);
+            enabled = false; //현재 클래스를 끈다.
+
+            return;
         }
+            
+
+        if (GameManager.Instance.IsFirstStart)
+        {
+            _currentClass = _firstStartLoadingList[_nextIndex];
+        }
+        else
+        {
+            _currentClass = _startLoadingList[_nextIndex];
+        }
+
+        _nextIndex++;
+        OnBackgroundButtonClickd();
     }
 }

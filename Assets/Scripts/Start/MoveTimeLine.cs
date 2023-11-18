@@ -3,7 +3,7 @@ using UnityEngine;
 using Muks.Tween;
 
 [Tooltip("오브젝트 이동 타임라인을 설정하는 클래스")]
-public class MoveTimeLine : StartList
+public class MoveTimeLine : StartClass
 {
     
     [Serializable]
@@ -44,7 +44,7 @@ public class MoveTimeLine : StartList
             if (i == _timeLines.Length - 1)
             {
                 Tween.TransformMove(_timeLines[i].Object, _timeLines[i].TargetPosition, _timeLines[i].Duration, _timeLines[i].TweenMode, UIEnd);
-                continue;
+                return;
             }
                 
             Tween.TransformMove(_timeLines[i].Object, _timeLines[i].TargetPosition, _timeLines[i].Duration, _timeLines[i].TweenMode);
