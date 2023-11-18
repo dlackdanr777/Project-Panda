@@ -82,21 +82,8 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         return null;
     }
 
-    //Transform으로 Field값 찾기
-    private Field GetFieldByTransform(Toggle toggle)
-    {
-        for(int i=0; i < _field.transform.childCount; i++)
-        {
-            if(_field.transform.GetChild(i).GetComponent<Toggle>() == toggle)
-            {
-                return (Field)i;
-            }
-        }
-        return Field.None;
-    }
-
     //SlotClick 이벤트
-    protected virtual void OnClickSlot(int index)
+    private void OnClickSlot(int index)
     {
         GetContent(index); //텍스트 바인딩
         _detailView.SetActive(true); //상세 설명 창 나타남
@@ -111,6 +98,30 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
 
         }
     }
+
+    //Transform으로 Field값 찾기
+    private Field GetFieldByTransform(Toggle toggle)
+    {
+        for(int i=0; i < _field.transform.childCount; i++)
+        {
+            if(_field.transform.GetChild(i).GetComponent<Toggle>() == toggle)
+            {
+                return (Field)i;
+            }
+        }
+        return Field.None;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (_detailView.activeSelf)
+        {
+            _detailView.SetActive(false);
+
+        }
+    }
+
+    
 
     protected void Init()
     {

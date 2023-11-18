@@ -6,9 +6,7 @@ public enum Field
 {
     None = -1,
     Toy,
-    Snack,
-    Album,
-    Friend
+    Snack
 }
 
 public class Database_Ssun : SingletonHandler<Database_Ssun>
@@ -32,6 +30,7 @@ public class Database_Ssun : SingletonHandler<Database_Ssun>
                 ItemList[i].Add(new Item(DataSnack[j]["Id"].ToString(),
                     DataSnack[j]["Name"].ToString(),
                     DataSnack[j]["Description"].ToString(),
+                    (int)DataSnack[i]["Price"],
                     Test)); //아직 이미지는 받아오지 않음
             }
             ItemCount[i] = ItemList[i].Count;

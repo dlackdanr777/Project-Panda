@@ -7,16 +7,17 @@ using UnityEngine.UI;
 public class UIShopList : UIList<Item>
 {
     [SerializeField] private Button _purchaseButton;
+
     [SerializeField] private GameObject _purchasedPanel;
+
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
 
     private void Awake()
     {
         _dataBase = Database_Ssun.Instance;
-        GameManager.Instance.Player.Inventory[1].AddById(Field.Snack, "I03"); //player가 아이템 하나를 얻음
 
-        //Test snack
+        //Shop
         for (int i = 0; i < 2; i++)
         {
             _maxCount[i] = _dataBase.ItemCount[i];
@@ -33,10 +34,14 @@ public class UIShopList : UIList<Item>
 
     private void OnClickPurchaseButton()
     {
-        StartCoroutine(ItemPurchased());
+        if (GameManager.Instance.Player.SpendBamboo(_lists[(int)_currentField][_currentItemIndex].Price))
+        {
+            StartCoroutine(ItemPurchased());
+
+        }
     }
 
-    IEnumerator ItemPurchased()
+    private IEnumerator ItemPurchased()
     {
         _detailView.SetActive(false);
         _purchasedPanel.SetActive(true);
@@ -46,6 +51,17 @@ public class UIShopList : UIList<Item>
         yield return new WaitForSeconds(1.0f);
 
         _purchasedPanel.SetActive(false);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (_purchasedPanel.activeSelf)
+        {
+            _purchasedPanel.SetActive(false);
+        }
+        
     }
 
     protected override void GetContent(int index)
@@ -66,12 +82,12 @@ public class UIShopList : UIList<Item>
         }
     }
 
-    protected override void OnClickSlot(int index)
-    {
-        base.OnClickSlot(index);
-        if(_currentField == Field.Toy || _currentField == Field.Snack)
-        {
-            _purchaseButton.gameObject.SetActive(true);
-        }
-    }
+    //protected override void OnClickSlot(int index)
+    //{
+    //    base.OnClickSlot(index);
+    //    if(_currentField == Field.Toy || _currentField == Field.Snack)
+    //    {
+    //        _purchaseButton.gameObject.SetActive(true);
+    //    }
+    //}
 }
