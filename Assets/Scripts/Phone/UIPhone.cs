@@ -14,9 +14,11 @@ public class UIPhone : MonoBehaviour
         _uiNav = GetComponent<UINavigation>();
 
         DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
+        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
         DataBind.SetButtonValue("CameraButton", OnCameraButtonClicked);
         DataBind.SetButtonValue("LibaryButton", OnLibaryButtonClicked);
-        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
+        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
     }
 
     private void Start()
@@ -41,6 +43,15 @@ public class UIPhone : MonoBehaviour
     private void OnLibaryButtonClicked()
     {
         _uiNav.Push("Library");
+    }
+
+    private void OnItemButtonClicked()
+    {
+        _uiNav.Push("Item");
+    }
+    private void OnInventoryButtonClicked()
+    {
+        _uiNav.Push("Inventory");
     }
 
     private void OnBorderButtonClicked()

@@ -109,7 +109,7 @@ public class MBTI : StartClass
     private void StartAnime()
     {
         Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 5, TweenMode.Smoothstep);
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 1080), 5, TweenMode.Smoothstep, ButtonAnime);
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
     }
 
     private void AtivateDialog()

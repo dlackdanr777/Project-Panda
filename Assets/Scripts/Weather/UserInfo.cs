@@ -18,7 +18,13 @@ public class UserInfo
 
     public static bool IsTodayRewardReceipt; //오늘 아이템을 수령했나?
 
+    public static bool IsExistingUser => false; //기존 유저인가?
+
     public static Dictionary<int, ItemData> DicRewardedItems;
+
+    [SerializeField] private List<string> _weekWeathers;
+    private WeightedRandom<string> _weatherDatas;
+
 
 
     //유저의 데이터를 가져오는 함수
@@ -26,7 +32,6 @@ public class UserInfo
     {
 
     }
-    [SerializeField] private List<string> _weekWeathers;
-    private WeightedRandom<string> _weatherDatas;
+
 
 }

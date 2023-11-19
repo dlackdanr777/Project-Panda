@@ -38,6 +38,8 @@ public class MoveTimeLine : StartClass
         if (_isStart)
             return;
 
+        _isStart = true;
+        Debug.Log(_isStart);
         for (int i = 0; i < _timeLines.Length; i++)
         {
             //마지막 순번의 경우만 콜백함수를 쓴다.
@@ -50,7 +52,7 @@ public class MoveTimeLine : StartClass
             Tween.TransformMove(_timeLines[i].Object, _timeLines[i].TargetPosition, _timeLines[i].Duration, _timeLines[i].TweenMode);
         }
 
-        _isStart = true;
+
     }
 
     public override void UIUpdate()

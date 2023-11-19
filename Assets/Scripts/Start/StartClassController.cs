@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class StartClassController : MonoBehaviour
 {
     [Tooltip("배경 버튼")]
-    [SerializeField] private Button _startBackgroundButton;
+    [SerializeField] private Button _backgroundButton;
 
     [Tooltip("기존 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartClass> _startLoadingList;
+    [SerializeField] private List<StartClass> _existingUserStartList;
 
     [Tooltip("신규 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartClass> _firstStartLoadingList;
+    [SerializeField] private List<StartClass> _newUserStartList;
 
     [SerializeField] private GameObject _uiStart;
 
@@ -21,18 +21,24 @@ public class StartClassController : MonoBehaviour
     private StartClass _currentClass;
 
     private int _lastIndex;
+
     private int _nextIndex;
 
     private void Awake()
     {
         Init();
-        _startBackgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
+        _backgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
 
     }
 
     private void Start()
     {
-        _mainScene.SetActive(false);
+        if (!UserInfo.IsExistingUser)
+        {
+            _mainScene.SetActive(false);
+            return;
+        }
+            
     }
 
     private void Update()
@@ -43,20 +49,20 @@ public class StartClassController : MonoBehaviour
 
     private void Init()
     {
-        if (GameManager.Instance.IsFirstStart)
+        if (!UserInfo.IsExistingUser)
         {
-            _lastIndex = _firstStartLoadingList.Count;
+            _lastIndex = _newUserStartList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _firstStartLoadingList[i].Init(this);
+                _newUserStartList[i].Init(this);
             }
         }
         else
         {
-            _lastIndex = _startLoadingList.Count;
+            _lastIndex = _existingUserStartList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _startLoadingList[i].Init(this);
+                _existingUserStartList[i].Init(this);
             }
         }
 
@@ -82,13 +88,13 @@ public class StartClassController : MonoBehaviour
         }
             
 
-        if (GameManager.Instance.IsFirstStart)
+        if (!UserInfo.IsExistingUser)
         {
-            _currentClass = _firstStartLoadingList[_nextIndex];
+            _currentClass = _newUserStartList[_nextIndex];
         }
         else
         {
-            _currentClass = _startLoadingList[_nextIndex];
+            _currentClass = _existingUserStartList[_nextIndex];
         }
 
         _nextIndex++;
