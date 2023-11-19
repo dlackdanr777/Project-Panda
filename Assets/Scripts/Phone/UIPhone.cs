@@ -12,7 +12,6 @@ public class UIPhone : MonoBehaviour
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
-
         DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
         DataBind.SetButtonValue("CameraButton", OnCameraButtonClicked);
