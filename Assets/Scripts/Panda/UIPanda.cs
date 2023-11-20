@@ -7,8 +7,8 @@ using Muks.Tween;
 public class UIPanda : MonoBehaviour
 {
     private Button _stateButton;
-    private Button _giftButton;
-    private Button _messageButton;
+    private Button _cameraButton;
+    private Button _isPandaClickButton;
 
     [SerializeField]
     private Image _stateImage;
@@ -16,21 +16,25 @@ public class UIPanda : MonoBehaviour
     public Sprite[] _stateSprite = new Sprite[4]; //상태 이미지
 
     [SerializeField]
+    private GameObject _currentStateImage;
+
+    [SerializeField]
     private StarterPanda _starterPanda;
 
     private void Awake()
     {
-        _stateButton = transform.GetChild(0).gameObject.GetComponent<Button>();
-        _giftButton = transform.GetChild(1).gameObject.GetComponent<Button>();
-        _messageButton = transform.GetChild(2).gameObject.GetComponent<Button>();
+        _stateButton = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Button>();
+        _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
+        _isPandaClickButton = transform.GetChild(2).gameObject.GetComponent<Button>();
     }
     private void OnEnable()
     {
         _starterPanda.stateData.StateHandler += StateData_StateHandler;
+        OnChangeStateImage(0); // 행복 상태로 시작
 
         _stateButton.onClick.AddListener(OnClickStateButton);
-        _giftButton.onClick.AddListener(OnClickGiftButton);
-        _messageButton.onClick.AddListener(OnClickMessageButton);
+        _cameraButton.onClick.AddListener(OnClickCameraButton);
+        _isPandaClickButton.onClick.AddListener(OnClickIsPandaClickButton);
     }
 
     private void OnDisable()
@@ -41,6 +45,7 @@ public class UIPanda : MonoBehaviour
     // 상태 이미지 변경
     private void StateData_StateHandler(int currentPandaState)
     {
+        Debug.Log("상태 이미지 변경");
         OnChangeStateImage(currentPandaState);
     }
 
@@ -49,15 +54,14 @@ public class UIPanda : MonoBehaviour
         // 상태창 표시 추가
         Debug.Log("상태창 표시");
     }
-    private void OnClickGiftButton()
+    private void OnClickCameraButton()
     {
-        // 인벤토리창 열기 추가
-        Debug.Log("인벤토리 열기");
-    }
-    private void OnClickMessageButton()
+        // 카메라와 연동
+        Debug.Log("카메라 실행");
+    } 
+    private void OnClickIsPandaClickButton()
     {
-        // 채팅 앱 열기 추가
-        Debug.Log("채팅 앱 열기");
+        _starterPanda.ToggleUIPandaButton();
     }
     private void OnChangeStateImage(int currentPandaState)
     {

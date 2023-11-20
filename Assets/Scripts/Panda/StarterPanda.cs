@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,37 +11,33 @@ using UnityEngine;
 /// </summary>
 public class StarterPanda : Panda
 {
-    public StateData stateData;
     [SerializeField]
     private UIPanda _uiPanda;
     private bool _isUISetActive;
+    public PreferenceData preferenceData;
+    public MBTIData mbtiData;
 
-    // 수정 필요
-    public StarterPanda(string mbti, Sprite image)
-    {
-        Nature = mbti;
-        State = "행복";
-        Intimacy = 0; //친밀도 0으로 시작
-        Image = image;
-    }
-
-    // 수정 필요
+    // 수정 필요 - NPC와의 공통 부분 Panda로 옮기기
     private void Awake()
     {
-        //test
-        Nature = "intp";
-        State = "행복";
+        //test - 판다 상태 초기 설정
+        Nature = MBTIData.MBTI.intp;
         Intimacy = 0; //친밀도 0으로 시작
+        //(수정)mbti 취향 설정
+        //mbtiData = new MBTIData();
+        //mbtiData.SetMBTI();
+        //preferenceData = mbtiData._preferenceDatas[(int)Nature];
 
-        //판다 상태 초기 설정
         stateData = new StateData();
         stateData.InitStateData();
+        _uiPanda.gameObject.SetActive(true);
+        _isUISetActive = false;
     }
 
     private void Update()
     {
         PandaMouseClick();
-        stateData.ChangeState();
+        stateData.CheckState();
     }
 
     //판다 클릭하면 버튼 표시
@@ -49,13 +46,13 @@ public class StarterPanda : Panda
         //(수정)판다 클릭하는 것으로 변경
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ToggleUIPanda();
+            ToggleUIPandaButton();
         }
     }
-    private void ToggleUIPanda()
+    public void ToggleUIPandaButton()
     {
-        _uiPanda.gameObject.SetActive(_isUISetActive);
         _isUISetActive = !_isUISetActive;
+        _uiPanda.transform.GetChild(0).gameObject.SetActive(_isUISetActive);
     }
 
     private void TakeGift()

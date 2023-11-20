@@ -10,8 +10,8 @@ using UnityEngine;
 /// </summary>
 public abstract class Panda : MonoBehaviour
 {
-    public string Nature { get; set; } // 성격
-    public string State; // 상태
+    public MBTIData.MBTI Nature { get; set; } // 성격
+    public StateData stateData;
     public float Intimacy { get; set; } // 친밀도
     public Sprite Image;
 
