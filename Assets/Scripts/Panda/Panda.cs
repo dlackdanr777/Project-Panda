@@ -1,22 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-
-/// <summary>
-/// NPC, 스타터 판다의 공통 기능을 모아놓은 클래스
-/// 고유 성격, 친밀도를 추상 함수로 설정하여 NPC, 스타터 판다 각자 실체화할 수 있도록 해야함
-/// </summary>
+/// <summary>NPC 판다, 스타터 판다의 부모 클래스</summary>
 public abstract class Panda : MonoBehaviour
 {
-    public MBTIData.MBTI Nature { get; set; } // 성격
-    public StateData stateData;
-    public float Intimacy { get; set; } // 친밀도
-    public Sprite Image;
+    [SerializeField]
+    protected UIPanda _uiPanda;
+    protected bool _isUISetActive;
 
+    //상태 이미지 변경 액션
+    public Action<int> StateHandler;
 
+    /// <summary>성향</summary>
+    protected string _mbtiData;
 
+    /// <summary>친밀도</summary>
+    protected int _intimacy;
+
+    /// <summary>행복도</summary>
+    protected int _happiness;
+
+    //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성하시면 됩니다.
     public abstract void AddIntimacy();
     public abstract void SubIntimacy();
 }
