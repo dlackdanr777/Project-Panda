@@ -8,7 +8,6 @@ public class UIPanda : MonoBehaviour
 {
     private Button _stateButton;
     private Button _cameraButton;
-    private Button _isPandaClickButton;
 
     [SerializeField]
     private Image _stateImage;
@@ -25,7 +24,6 @@ public class UIPanda : MonoBehaviour
     {
         _stateButton = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Button>();
         _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
-        _isPandaClickButton = transform.GetChild(2).gameObject.GetComponent<Button>();
     }
     private void OnEnable()
     {
@@ -34,7 +32,6 @@ public class UIPanda : MonoBehaviour
 
         _stateButton.onClick.AddListener(OnClickStateButton);
         _cameraButton.onClick.AddListener(OnClickCameraButton);
-        _isPandaClickButton.onClick.AddListener(OnClickIsPandaClickButton);
     }
 
     private void OnDisable()
@@ -59,10 +56,7 @@ public class UIPanda : MonoBehaviour
         // 카메라와 연동
         Debug.Log("카메라 실행");
     } 
-    private void OnClickIsPandaClickButton()
-    {
-        _starterPanda.ToggleUIPandaButton();
-    }
+
     private void OnChangeStateImage(int currentPandaState)
     {
         //(수정) DataID 바꾸기

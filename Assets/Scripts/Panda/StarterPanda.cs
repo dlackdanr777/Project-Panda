@@ -43,10 +43,15 @@ public class StarterPanda : Panda
     //판다 클릭하면 버튼 표시
     private void PandaMouseClick()
     {
-        //(수정)판다 클릭하는 것으로 변경
-        if (Input.GetKeyDown(KeyCode.P))
+        if(Input.GetMouseButtonDown(0))
         {
-            ToggleUIPandaButton();
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(mousePos);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            if(hit.collider == GetComponent<Collider2D>())
+            {
+                ToggleUIPandaButton();
+            }
         }
     }
     public void ToggleUIPandaButton()
