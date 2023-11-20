@@ -9,6 +9,8 @@ namespace BT
 
         private BehaviorTree _behaviorTree;
 
+        private float _feelingTimer;
+
         private void Awake()
         {
             _behaviorTree = new BehaviorTree(SettingBT());
@@ -18,7 +20,7 @@ namespace BT
         private void OnEnable()
         {
             //3초마다 BT를 실행한다.
-            InvokeRepeating("StartBT", 3, 3);
+            InvokeRepeating("StartBT", 1, 1);
         }
 
 
@@ -37,6 +39,8 @@ namespace BT
             }
 
             _happiness += 1;
+
+            _feelingTimer += Time.deltaTime;
         }
 
 
@@ -51,16 +55,31 @@ namespace BT
         {
             List<INode> nodes = new List<INode>()
         {
-            FeelingsNode()
+            new ConditionNode(FeelingsNode(), () => FeelingCondition())
         };
 
             return new SelectorNode(nodes);
+        }
+
+        
+        private bool FeelingCondition()
+        {
+            if(_feelingTimer < 10)
+            {
+                _feelingTimer = 0;
+                return true;
+            }
+
+            Debug.Log("시간이 충족되지 않았습니다.");
+            return false;
+                
         }
 
 
         /// <summary> 감정 표현을 실행하는 노드 </summary>
         private INode FeelingsNode()
         {
+            Debug.Log("감정표현 실행");
             List<INode> nodes = new List<INode>()
         {
             //노드를 순서대로 입력한다.
