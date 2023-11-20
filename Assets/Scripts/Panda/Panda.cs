@@ -11,5 +11,8 @@ public abstract class Panda : MonoBehaviour
     /// <summary>친밀도</summary>
     protected int _intimacy;
 
+    /// <summary>행복도</summary>
+    protected int _happiness;
+
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성하시면 됩니다.
 }
