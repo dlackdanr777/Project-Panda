@@ -1,9 +1,9 @@
 using BT;
 using Muks.DataBind;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Muks.Tween;
+using System;
 
 public class UIPanda : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class UIPanda : MonoBehaviour
     private Button _cameraButton;
 
     [SerializeField]
-    public Sprite[] _stateSprite = new Sprite[4]; //상태 이미지
+    public Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
 
     [SerializeField]
     private StarterPanda _starterPanda;
@@ -24,25 +24,34 @@ public class UIPanda : MonoBehaviour
 
     private void OnEnable()
     {
-        _starterPanda.StateHandler += StateData_StateHandler;
+        _starterPanda.StateHandler += StarterPanda_StateHandler;
+        _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
 
         _stateButton.onClick.AddListener(OnClickStateButton);
         _cameraButton.onClick.AddListener(OnClickCameraButton);
+        //ChangePandaUIAlpha(1, 1);
+
     }
     private void OnDisable()
     {
-        _starterPanda.StateHandler -= StateData_StateHandler;
+        _starterPanda.StateHandler -= StarterPanda_StateHandler;
     }
     // 상태 이미지 변경
-    private void StateData_StateHandler(int currentPandaState)
+    private void StarterPanda_StateHandler(int currentPandaState)
     {
         OnChangeStateImage(currentPandaState);
+    }
+    private void StarterPanda_UIAlphaHandler(float targetAlpha, float duration, Action onComplate = null)
+    {
+        OnChangePandaUIAlpha(targetAlpha, duration, onComplate);
     }
 
     private void OnClickStateButton()
     {
         // 상태창 표시 추가
         Debug.Log("상태창 표시");
+
+
     }
     private void OnClickCameraButton()
     {
@@ -54,5 +63,12 @@ public class UIPanda : MonoBehaviour
     {
         //(수정) DataID 바꾸기
         DataBind.SetSpriteValue("941", _stateSprite[currentPandaState]);
+    }
+
+    private void OnChangePandaUIAlpha(float targetAlpha, float duration, Action onComplate = null)
+    {
+        Tween.IamgeAlpha(_stateButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(_stateButton.gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(_cameraButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
     }
 }
