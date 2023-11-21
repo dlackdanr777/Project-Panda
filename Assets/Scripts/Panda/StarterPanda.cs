@@ -10,11 +10,9 @@ namespace BT
 {
     public class StarterPanda : Panda
     {
-
         private BehaviorTree _behaviorTree;
 
         private float _feelingTimer;
-        private float _stateImageTimer = 1f;
 
         private void Awake()
         {
@@ -45,59 +43,18 @@ namespace BT
             PandaMouseClick();
             ShowStateImage();
 
-            if(_happiness > 0)
+            if(_happiness > -10)
             {
                 _happiness -= Time.deltaTime * 0.1f;
             }
             else
             {
-                _happiness = 0;
+                _happiness = -10;
             }
             _feelingTimer += Time.deltaTime;
             _stateImageTimer += Time.deltaTime;
         }
 
-        private void PandaMouseClick()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-                if (hit.collider == GetComponent<Collider2D>())
-                {
-                    ToggleUIPandaButton();
-                }
-            }
-        }
-        public void ToggleUIPandaButton()
-        {
-            _isUISetActive = !_isUISetActive;
-            if( _isUISetActive )
-            {
-                _uiPanda.transform.GetChild(0).gameObject.SetActive(true);
-                UIAlphaHandler?.Invoke(1f, 1f, null);
-            }
-            else
-            {
-                UIAlphaHandler?.Invoke(0f, 1f, () => 
-                { _uiPanda.transform.GetChild(0).gameObject.SetActive(false);
-                });
-            }
-
-        }
-        public void ShowStateImage()
-        {
-
-            if (Mathf.FloorToInt(_happiness) != Mathf.FloorToInt(_lastHappiness) && _stateImageTimer > 2f) 
-            {
-                AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 1f, 0.7f, () =>
-                { AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 0f, 0.7f, null);
-                });
-                _stateImageTimer = 0f;
-            }
-            _lastHappiness = _happiness;
-            
-        }
 
         #region BT
         private void StartBT()
@@ -228,7 +185,7 @@ namespace BT
         }
         #endregion
 
-        public override void ChangeIntimacy(int changeIntimacy)
+        protected override void ChangeIntimacy(int changeIntimacy)
         {
             if(changeIntimacy > 0)
             {
@@ -239,7 +196,7 @@ namespace BT
                 //친밀도 하락
             }
         }
-        public override void SetPreference(string mbti)
+        protected override void SetPreference(string mbti)
         {
             //mbti 정보를 통해 판다 취향 설정
         }

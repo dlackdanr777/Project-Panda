@@ -7,18 +7,16 @@ using System;
 
 public class UIPanda : MonoBehaviour
 {
-    private Button _stateButton;
     private Button _cameraButton;
 
     [SerializeField]
-    public Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
+    private Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
 
     [SerializeField]
     private StarterPanda _starterPanda;
 
     private void Awake()
     {
-        _stateButton = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Button>();
         _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
     }
 
@@ -28,9 +26,7 @@ public class UIPanda : MonoBehaviour
         _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
         _starterPanda.AlphaImageHandler += StarterPanda_AlphaImageHandler;
 
-        _stateButton.onClick.AddListener(OnClickStateButton);
         _cameraButton.onClick.AddListener(OnClickCameraButton);
-        //ChangePandaUIAlpha(1, 1);
 
     }
     private void OnDisable()
@@ -54,11 +50,6 @@ public class UIPanda : MonoBehaviour
         OnChangeAlpha(gameObject, targetAlpha, duration, onComplate);
     }
 
-    private void OnClickStateButton()
-    {
-        // 상태창 표시 추가
-        Debug.Log("상태창 표시");
-    }
     private void OnClickCameraButton()
     {
         // 카메라와 연동
@@ -79,8 +70,7 @@ public class UIPanda : MonoBehaviour
     /// </summary>
     private void OnChangePandaUIAlpha(float targetAlpha, float duration, Action onComplate = null)
     {
-        Tween.IamgeAlpha(_stateButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep);
-        Tween.IamgeAlpha(_stateButton.gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep);
         Tween.IamgeAlpha(_cameraButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep);
         Tween.IamgeAlpha(_cameraButton.gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
     }
