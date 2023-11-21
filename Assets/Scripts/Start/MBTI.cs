@@ -13,10 +13,13 @@ public class MBTI : StartClass
     [SerializeField] string _csvFileName;
 
     [Tooltip("UI 부모 오브젝트")]
-    [SerializeField] GameObject _uiFirstChooice;
+    [SerializeField] GameObject _uiMBTI;
 
     [Tooltip("편지 오브젝트")]
     [SerializeField] private GameObject _uiLetter;
+
+    [Tooltip("판다 오브젝트")]
+    [SerializeField] private GameObject _pandaPaper;
 
     [Tooltip("편지 버튼")]
     [SerializeField] private Button _letterButton;
@@ -52,18 +55,23 @@ public class MBTI : StartClass
     private Dialogue _currentDialogue;
 
 
-
+    private void OnEnable()
+    {
+        _uiLetter.SetActive(false);
+        _pandaPaper.SetActive(false);
+    }
 
     public override void UIStart()
     {
         if (!_isStart)
         {
             _isStart = true;
-            _uiFirstChooice.SetActive(true);
+            _uiMBTI.SetActive(true);
             _contexts.gameObject.SetActive(false);
             _rightButton.gameObject.SetActive(false);
             _leftButton.gameObject.SetActive(false);
             _letterButton.gameObject.SetActive(false);
+            
 
             _leftButton.onClick.AddListener(OnLeftButtonClicked);
             _rightButton.onClick.AddListener(OnRightButtonClicked);
@@ -86,7 +94,11 @@ public class MBTI : StartClass
 
     public override void UIEnd()
     {
-        _uiFirstChooice.SetActive(false);
+        _uiMBTI.SetActive(false);
+        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 12, TweenMode.Smootherstep, () =>
+        {
+            Tween.SpriteRendererAlpha(_pandaPaper, 0, 3, TweenMode.Smootherstep);
+        });
         _uiStart.ChangeCurrentClass();
     }
 
@@ -97,7 +109,7 @@ public class MBTI : StartClass
 
         DialogueParser theParser = GetComponent<DialogueParser>();
         Dialogue[] dialogues = theParser.Parse(_csvFileName);
-        _uiFirstChooice.SetActive(false);
+        _uiMBTI.SetActive(false);
 
         for (int i = 0; i < dialogues.Length; i++)
         {
@@ -108,7 +120,8 @@ public class MBTI : StartClass
     //시작 애니메이션
     private void StartAnime()
     {
-        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 5, TweenMode.Smoothstep);
+        _uiLetter.SetActive(true);
+        Tween.TransformMove(_uiLetter, new Vector2(0, 5), 5, TweenMode.Smoothstep);
         Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
     }
 
@@ -231,9 +244,22 @@ public class MBTI : StartClass
     //버튼 클릭 이벤트
     private void OnLetterButtonClicked()
     {
-        AtivateDialog();
+        _pandaPaper.SetActive(true);
         _letterButton.onClick.RemoveAllListeners();
         _letterButton.gameObject.SetActive(false);
+
+        if(_pandaPaper.TryGetComponent(out SpriteRenderer renderer))
+        {
+            Color color = renderer.color;
+            color.a = 0;
+            renderer.color = color;
+        }
+
+        Tween.SpriteRendererAlpha(_pandaPaper, 1, 5, TweenMode.Smootherstep, () =>
+        {
+            Tween.SpriteRendererAlpha(_uiLetter, 0, 5, TweenMode.Smoothstep);
+            Tween.TransformMove(_pandaPaper, new Vector2(0, 6), 5, TweenMode.Smootherstep, () =>AtivateDialog());
+        });    
     }
 
 

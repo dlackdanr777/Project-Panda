@@ -24,7 +24,14 @@ public class UICameraApp : UIView
 
     private void Awake()
     {
-        DataBind.SetButtonValue("ShootingButton", () => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
+        DataBind.SetButtonValue("ShootingButton", () => {
+            StartCoroutine(_cameraApp.ScreenshotByAreaImage());
+        }) ;
+    }
+
+    private void Start()
+    {
+        Hide();
     }
 
 }

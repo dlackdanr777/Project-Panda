@@ -45,8 +45,7 @@ public class UIAlbum : MonoBehaviour
 
     public void CreateSlot()
     {
-        UIAlbumSlot uiAlbumSlot = new UIAlbumSlot();
-        uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
+        UIAlbumSlot uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
                 .GetComponent<UIAlbumSlot>();
         uiAlbumSlot.transform.parent = _layoutGroup.transform;
 

@@ -28,7 +28,6 @@ public class PhotoPrinting : MonoBehaviour
     public void Show(Texture2D texture)
     {
         gameObject.SetActive(true);
-         
         _image.material.mainTexture = texture;
         _image.material = null;
         _image.material = _tempMat;

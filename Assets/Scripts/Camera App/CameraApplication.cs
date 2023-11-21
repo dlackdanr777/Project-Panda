@@ -32,10 +32,6 @@ public class CameraApplication : MonoBehaviour
 
     private bool _screenshotEnable = true;
 
-    private void Awake()
-    {
-
-    }
 
     private void OnEnable()
     {
@@ -48,17 +44,34 @@ public class CameraApplication : MonoBehaviour
         _screenshotEnable = false;
     }
 
+    private void Update()
+    {
+        AA();
+    }
+
+    private void AA()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+            ShowCameraUI();
+    }
+
+    public void ShowCameraUI()
+    {
+        _uiCameraApp.gameObject.SetActive(true);
+    }
+
 
     /// <summary>
     /// 스크린샷을 찍어주는 함수
     /// </summary>
-    public IEnumerator ScreenshotByAreaImage(float waitTime)
+    public IEnumerator ScreenshotByAreaImage()
     {
         if (_screenshotEnable)
         {
             _screenshotEnable = false;
-
+            
             yield return new WaitForEndOfFrame();
+
             Image image = _shootingRange.GetComponent<Image>();
             Vector3[] corners = GetIamgeCorners(image);
 
@@ -94,8 +107,9 @@ public class CameraApplication : MonoBehaviour
             AddPhotoData(photoData);
             _photoPrinting.Show(ss);
             OnScreenshotHandler?.Invoke();
-
             Invoke("SceenshotEnable", 2);
+
+            _uiCameraApp.gameObject.SetActive(false);
 
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
         }
