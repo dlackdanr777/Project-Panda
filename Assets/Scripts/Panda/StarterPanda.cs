@@ -1,6 +1,7 @@
 using Muks.DataBind;
 using Muks.Tween;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
@@ -13,6 +14,7 @@ namespace BT
         private BehaviorTree _behaviorTree;
 
         private float _feelingTimer;
+        private float _stateImageTimer = 1f;
 
         private void Awake()
         {
@@ -42,8 +44,17 @@ namespace BT
         {
             PandaMouseClick();
             ShowStateImage();
-            _happiness -= Time.deltaTime;
+
+            if(_happiness > 0)
+            {
+                _happiness -= Time.deltaTime * 0.1f;
+            }
+            else
+            {
+                _happiness = 0;
+            }
             _feelingTimer += Time.deltaTime;
+            _stateImageTimer += Time.deltaTime;
         }
 
         private void PandaMouseClick()
@@ -61,7 +72,6 @@ namespace BT
         public void ToggleUIPandaButton()
         {
             _isUISetActive = !_isUISetActive;
-            //_uiPanda.transform.GetChild(0).gameObject.SetActive(_isUISetActive);
             if( _isUISetActive )
             {
                 _uiPanda.transform.GetChild(0).gameObject.SetActive(true);
@@ -69,27 +79,24 @@ namespace BT
             }
             else
             {
-                UIAlphaHandler?.Invoke(1f, 1f, () => 
-                { _uiPanda.transform.GetChild(0).gameObject.SetActive(true);
+                UIAlphaHandler?.Invoke(0f, 1f, () => 
+                { _uiPanda.transform.GetChild(0).gameObject.SetActive(false);
                 });
             }
 
         }
         public void ShowStateImage()
         {
-            Debug.Log("행복도"+Mathf.RoundToInt(_happiness));
-            Debug.Log("이전 행복도"+Mathf.RoundToInt(_lastHappiness));
 
-            if (Mathf.RoundToInt(_happiness)!=Mathf.RoundToInt(_lastHappiness))
+            if (Mathf.FloorToInt(_happiness) != Mathf.FloorToInt(_lastHappiness) && _stateImageTimer > 2f) 
             {
-                Debug.Log("이미지 true");
-                _uiPanda.transform.GetChild(1).gameObject.SetActive(true);
-                _lastHappiness = _happiness;
+                AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 1f, 0.7f, () =>
+                { AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 0f, 0.7f, null);
+                });
+                _stateImageTimer = 0f;
             }
-            else
-            {
-                _uiPanda.transform.GetChild(1).gameObject.SetActive(false);
-            }
+            _lastHappiness = _happiness;
+            
         }
 
         #region BT
@@ -119,7 +126,7 @@ namespace BT
                 return true;
             }
 
-            Debug.Log("시간이 충족되지 않았습니다.");
+            //Debug.Log("시간이 충족되지 않았습니다.");
             return false;
                 
         }
@@ -146,11 +153,10 @@ namespace BT
         //매우 행복해하는 감정표현 
         private INode.ENodeState Ecstatic()
         {
-            //행복도가 90이상이면?
+            //행복도가 9이상이면?
             if (_happiness >= 9)
             {
-                //매우 행복함 감정표현 관련 행동을 코드로 작성하면 됩니다.
-                Debug.Log("엄청난 행복함을 느낍니다.");
+                //매우 행복함 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(0);
 
                 //Success일경우 해당 이 노드만 실행
@@ -165,18 +171,14 @@ namespace BT
         //행복해하는 감정표현
         private INode.ENodeState Pleased()
         {
-            //행복도가 70이상이면?
             if (_happiness >= 5)
             {
-                //행복함 감정표현 관련 행동을 코드로 작성하면 됩니다.
-                Debug.Log("행복함을 느낍니다.");
+                //행복함 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(1);
 
-                //Success일경우 해당 이 노드만 실행
                 return INode.ENodeState.Success;
             }
 
-            //Failure일 경우 같은 높이의 다음 노드 실행
             return INode.ENodeState.Failure;
         }
 
@@ -184,18 +186,14 @@ namespace BT
         //평범함 감정표현
         private INode.ENodeState Nomal()
         {
-            //행복도가 50이상이면?
             if (_happiness >= 0)
             {
-                //평범함 감정표현 관련 행동을 코드로 작성하면 됩니다.
-                Debug.Log("아무행동도 하지 않습니다.");
+                //평범함 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(2);
 
-                //Success일경우 해당 이 노드만 실행
                 return INode.ENodeState.Success;
             }
 
-            //Failure일 경우 같은 높이의 다음 노드 실행
             return INode.ENodeState.Failure;
         }
 
@@ -203,18 +201,14 @@ namespace BT
         //슬픔 감정표현
         private INode.ENodeState Sad()
         {
-            //행복도가 30이상이면?
             if (_happiness >= -5)
             {
-                //슬픔 감정표현 관련 행동을 코드로 작성하면 됩니다.
-                Debug.Log("슬픔을 느낍니다.");
+                //슬픔 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(3);
 
-                //Success일경우 해당 이 노드만 실행
                 return INode.ENodeState.Success;
             }
 
-            //Failure일 경우 같은 높이의 다음 노드 실행
             return INode.ENodeState.Failure;
         }
 
@@ -222,18 +216,14 @@ namespace BT
         //외로움 감정표현
         private INode.ENodeState Lonely()
         {
-            //행복도가 0이상이면?
             if (_happiness >= -10)
             {
-                //슬픔 감정표현 관련 행동을 코드로 작성하면 됩니다.
-                Debug.Log("외로움을 느낍니다.");
+                //슬픔 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(4);
 
-                //Success일경우 해당 이 노드만 실행
                 return INode.ENodeState.Success;
             }
 
-            //Failure일 경우 같은 높이의 다음 노드 실행
             return INode.ENodeState.Failure;
         }
         #endregion

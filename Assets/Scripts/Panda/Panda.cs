@@ -13,6 +13,7 @@ public abstract class Panda : MonoBehaviour
     //상태 이미지 변경 액션
     public Action<int> StateHandler;
     public Action<float, float, Action> UIAlphaHandler;
+    public Action<GameObject, float, float, Action> AlphaImageHandler;
 
     /// <summary>성향</summary>
     protected string _mbtiData;
