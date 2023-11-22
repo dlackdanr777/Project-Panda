@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using Muks.Tween;
 
-[Tooltip("오브젝트 이동 타임라인을 설정하는 클래스")]
-public class MoveTimeLine : StartClass
+using Muks.DataBind;
+
+public class FirstStartTitle : StartList
 {
     
     [Serializable]
@@ -17,10 +20,10 @@ public class MoveTimeLine : StartClass
 
         [Tooltip("이동 시간")]
         public float Duration;
-
-        [Tooltip("애니메이션 커브")]
-        public TweenMode TweenMode;
     }
+
+    [Tooltip("이동할 타이틀")]
+    [SerializeField] private TextMeshPro _startTitle;
 
     [Tooltip("이동 순서, 오브젝트, 거리, 시간을 설정할 수 있다.")]
     [SerializeField] private TimeLine[] _timeLines;
@@ -35,24 +38,20 @@ public class MoveTimeLine : StartClass
 
     public override void UIStart()
     {
-        if (_isStart)
-            return;
-
-        _isStart = true;
-        Debug.Log(_isStart);
-        for (int i = 0; i < _timeLines.Length; i++)
+        if (!_isStart)
         {
-            //마지막 순번의 경우만 콜백함수를 쓴다.
-            if (i == _timeLines.Length - 1)
-            {
-                Tween.TransformMove(_timeLines[i].Object, _timeLines[i].TargetPosition, _timeLines[i].Duration, _timeLines[i].TweenMode, UIEnd);
-                return;
-            }
-                
-            Tween.TransformMove(_timeLines[i].Object, _timeLines[i].TargetPosition, _timeLines[i].Duration, _timeLines[i].TweenMode);
+            //StartCoroutine(FirstScene());
+            Tween.TransformMove(_timeLines[0].Object, _timeLines[0].TargetPosition, _timeLines[0].Duration, TweenMode.Smootherstep);
+            Tween.TransformMove(_timeLines[1].Object, _timeLines[1].TargetPosition, _timeLines[1].Duration, TweenMode.Smootherstep);
+            Tween.TransformMove(_timeLines[2].Object, _timeLines[2].TargetPosition, _timeLines[2].Duration, TweenMode.Smootherstep, UIEnd);
+
+                _isStart = true;
+            Debug.Log("시작");
         }
-
-
+        else
+        {
+            Debug.Log("이미 실행중 입니다.");
+        }
     }
 
     public override void UIUpdate()

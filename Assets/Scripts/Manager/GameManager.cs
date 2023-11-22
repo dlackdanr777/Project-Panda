@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : SingletonHandler<GameManager>
 {
     public bool IsStart;
+    public bool IsFirstStart;
 
     public Player Player;
     public MessageDatabase MessageDatabase;

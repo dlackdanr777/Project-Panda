@@ -36,7 +36,6 @@ public class CameraApplication : MonoBehaviour
     {
         _uiCameraApp.OnShowHandler += () => _screenshotCamera.gameObject.SetActive(true);
         _uiCameraApp.OnHideHandler += () => _screenshotCamera.gameObject.SetActive(false);
-        _screenshotCamera.gameObject.SetActive(false);
     }
 
     private void OnEnable()

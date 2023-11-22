@@ -16,6 +16,7 @@ public class UIPhone_Ssun : MonoBehaviour
         DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
+        DataBind.SetButtonValue("ShopButton", OnShopButtonClicked);
         DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
     }
 
@@ -39,6 +40,10 @@ public class UIPhone_Ssun : MonoBehaviour
         _uiNav.Push("Inventory");
     }
 
+    private void OnShopButtonClicked()
+    {
+        _uiNav.Push("Shop");
+    }
 
     private void OnBorderButtonClicked()
     {

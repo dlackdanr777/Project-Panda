@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 
-public class FadeInFadeOutLoading : StartClass
+public class FadeInFadeOutLoading : StartList
 {
     [Tooltip("캔버스에 있는 UI")]
     [SerializeField] private GameObject _uiFirstLoading3;

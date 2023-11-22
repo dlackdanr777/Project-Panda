@@ -24,14 +24,6 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("화면을 드래그했을때의 카메라 이동속도")]
     [SerializeField] private float _dragSpeed = 30f;
 
-    [Tooltip("카메라 제한 범위")]
-    [SerializeField] private Vector2 _clampSize;
-
-    //카메라 제한 범위의 중앙
-    [SerializeField] private Vector2 _clampCenter;
-
-
-
     [Space(20)]
 
     [Tooltip("자석 기능 활성/비활성")]
@@ -40,18 +32,9 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("자석 기능의 감지 범위")]
     [SerializeField] private Vector3 _boxSize;
 
-    private float _height;
-
-    private float _width;
-
     private bool _isMagnetMode;
 
     private Vector2 _clickPoint;
-
-    private void Start()
-    {
-        Init();
-    }
 
     private void OnEnable()
     {
@@ -62,12 +45,6 @@ public class ScreenshotCamera : MonoBehaviour
     {
         MoveCamera();
         MagnetFunction();
-    }
-
-    private void Init()
-    {
-        _height = _screenshotCamera.orthographicSize;
-        _width = _height * _areaImage.rectTransform.rect.width / _areaImage.rectTransform.rect.height;
     }
 
 
@@ -89,8 +66,6 @@ public class ScreenshotCamera : MonoBehaviour
 
             Vector3 move = -pos * (Time.deltaTime * _dragSpeed);
             _screenshotCamera.transform.Translate(move);
-
-            _screenshotCamera.transform.position = ClampedPos(_screenshotCamera.transform.position);
         }
     }
 
@@ -137,26 +112,6 @@ public class ScreenshotCamera : MonoBehaviour
                 yield return null;
             }
         }
-    }
-
-    private Vector3 ClampedPos(Vector3 cameraPos)
-    {
-        float lx = (_clampSize.x * 0.5f) - _width;
-        float clampX = Mathf.Clamp(cameraPos.x, _clampCenter.x - lx, _clampCenter.x + lx ) ;
-
-        float ly = (_clampSize.y * 0.5f) - _height;
-        float clampY = Mathf.Clamp(cameraPos.y, _clampCenter.y - ly, _clampCenter.y + ly);
-
-        Debug.Log(new Vector3(clampX, clampY, -10));
-        Debug.Log(lx);
-        Debug.Log(ly);
-        return new Vector3(clampX, clampY, -10);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_clampCenter, _clampSize);
     }
 
 }
