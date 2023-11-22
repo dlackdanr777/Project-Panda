@@ -49,7 +49,7 @@ public class Inventory
     /// </summary>
     /// <param name="field"></param>
     /// <param name="id"></param>
-    public void AddById(Field field, string id)
+    public void AddById(ItemField field, string id)
     {
         List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
         int listCount = Database_Ssun.Instance.ItemCount[(int)field];

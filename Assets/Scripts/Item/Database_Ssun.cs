@@ -2,12 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //아이템 종류
-public enum Field
+public enum ItemField
 {
     None = -1,
     Toy,
     Snack,
     Furniture
+}
+
+public enum MessageField
+{
+    None = -1,
+    Mail,
+    Wish
 }
 
 public class Database_Ssun : SingletonHandler<Database_Ssun>

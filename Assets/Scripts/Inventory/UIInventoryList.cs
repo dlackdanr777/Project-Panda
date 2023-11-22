@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInventoryList : UIList<InventoryItem>
+public class UIInventoryList : UIList<InventoryItem, ItemField>
 {
     [SerializeField] private Button _arrangeButton;
     [SerializeField] private Button _sellButton;

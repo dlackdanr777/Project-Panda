@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIShopList : UIList<Item>
+public class UIShopList : UIList<Item, ItemField>
 {
     [SerializeField] private Button _purchaseButton;
 

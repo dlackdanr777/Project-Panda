@@ -46,14 +46,9 @@ public class SendMessage : MonoBehaviour
 
     private void Send(Message message)
     {
-        //리스트에 저장
-        if (_player.Messages.Count == _player.MaxMessageCount) //총 용량이 차면 
-        {
-            _player.Messages.RemoveAt(0);//먼저 온 문자 삭제
-        }
-        _player.Messages.Add(message); //문자 넣기(FIFO)
-        _player.IsCheckMessage.Add(false); //문자확인했는지 알 수 있는 리스트에도 정보 저장
-        _player.IsReceiveGift.Add(false);
+        _player.Messages[0].Add(message);
+        _player.Messages[0].IsCheckMessage.Add(false); //문자확인했는지 알 수 있는 리스트에도 정보 저장
+        _player.Messages[0].IsReceiveGift.Add(false);
 
         //UI변환
         NoticeHandler?.Invoke();

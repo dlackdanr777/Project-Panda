@@ -9,13 +9,14 @@ public class Player : MonoBehaviour
     public int Familiarity;
 
     [Header("Inventory")]
+    //public Inventory[] Inventory = new Inventory[System.Enum.GetValues(typeof(ItemField)).Length - 1]; //0:toy, 1:snack
     public Inventory[] Inventory = new Inventory[2]; //0:toy, 1:snack
 
     [Header("Message")]
-    public List<Message> Messages = new List<Message>(); 
-    public int MaxMessageCount { get; private set; }
-    public List<bool> IsCheckMessage = new List<bool>();
-    public List<bool> IsReceiveGift = new List<bool>();
+    public MessageList[] Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1]; //0:Mail, 1:Wish 
+    //public int MaxMessageCount { get; private set; }
+    //public List<bool> IsCheckMessage = new List<bool>();
+    //public List<bool> IsReceiveGift = new List<bool>();
 
     [Header("Bamboo")]
     [SerializeField] private GameObject _popupPanel;
@@ -27,12 +28,16 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        MaxMessageCount = 20;
+        //MaxMessageCount = 20;
         MaxBamboo = 1000;
         
-        for(int i=0; i < Inventory.Length; i++)
+        for(int i=0; i < 2; i++)
         {
             Inventory[i] = new Inventory();
+        }
+        for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
+        {
+            Messages[i] = new MessageList();
         }
     }
 
@@ -41,18 +46,18 @@ public class Player : MonoBehaviour
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
 
-    public int CurrentNotCheckedMessage {
-        get
-        {
-            int count = 0;
-            for (int i = 0; i < IsCheckMessage.Count; i++)
-            {
-                if (!IsCheckMessage[i])
-                    count++;
-            }
-            return count;
-        }
-    }
+    //public int CurrentNotCheckedMessage {
+    //    get
+    //    {
+    //        int count = 0;
+    //        for (int i = 0; i < IsCheckMessage.Count; i++)
+    //        {
+    //            if (!IsCheckMessage[i])
+    //                count++;
+    //        }
+    //        return count;
+    //    }
+    //}
 
     public bool SpendBamboo(int amount)
     {
