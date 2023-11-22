@@ -81,13 +81,4 @@ public class UIShopList : UIList<Item>
             
         }
     }
-
-    //protected override void OnClickSlot(int index)
-    //{
-    //    base.OnClickSlot(index);
-    //    if(_currentField == Field.Toy || _currentField == Field.Snack)
-    //    {
-    //        _purchaseButton.gameObject.SetActive(true);
-    //    }
-    //}
 }
