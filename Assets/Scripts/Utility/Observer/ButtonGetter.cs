@@ -48,6 +48,9 @@ namespace Muks.DataBind
 
         private void Disabled()
         {
+            if (_data == null)
+                return;
+
             _data.CallBack -= UpdateButton;
             _button.onClick?.RemoveListener(_data.Item);
         }

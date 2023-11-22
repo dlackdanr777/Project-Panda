@@ -14,12 +14,16 @@ public struct ViewDicStruct
 
 public class UINavigation : MonoBehaviour
 {
+
+    [Tooltip("최상위 lootUIView를 넣는 곳")]
+    [SerializeField] private ViewDicStruct _rootUiView;
+
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
     [SerializeField] private UIView _currentView;
 
-    private Stack<UIView> _uiViews;
+    private Stack<UIView> _uiViews = new Stack<UIView>();
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
@@ -32,18 +36,20 @@ public class UINavigation : MonoBehaviour
 
     private void Init()
     {
-        _uiViews = new Stack<UIView>();
+        _viewDic.Add(_rootUiView.Name, _rootUiView.UIView);
+        _currentView = _rootUiView.UIView;
+        _rootUiView.UIView.Init(this);
+
         for(int i = 0, count = _uiViewList.Length; i < count; i++)
         {
-            string Name = _uiViewList[i].Name;
-            UIView _uiView = _uiViewList[i].UIView;
+            string name = _uiViewList[i].Name;
+            UIView uiView = _uiViewList[i].UIView;
 
-            _viewDic.Add(Name, _uiView);
-
-            _uiView.gameObject.SetActive(false);
+            _viewDic.Add(name, uiView);
+            uiView.Init(this);
+            uiView.gameObject.SetActive(false);
         }
     }
-
 
 
     /// <summary>
@@ -51,25 +57,22 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Push(string viewName)
     {
-
-        if (_viewDic.ContainsKey(viewName))
+        if (_viewDic.TryGetValue(viewName, out UIView uiView))
         {
-            if (!_uiViews.Contains(_viewDic[viewName]))
+            if (!_uiViews.Contains(uiView))
             {
-                if (_currentView != null)
+                if(_currentView != null)
                 {
-                    _currentView.Hide();
                     _uiViews.Push(_currentView);
+                    _currentView.Hide();
                 }
-                UIView view = _viewDic[viewName];
-                _currentView = view;
+                _currentView = uiView;
                 _currentView.Show();
             }
             else
             {
                 Debug.Log("이미 스택에 존재하는 ui클래스 입니다.");
             }
-
         }
         else
         {
@@ -83,20 +86,12 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Pop()
     {
-        if (_uiViews.Count > 0)
-        {
-            _currentView.Hide();
-            _currentView = _uiViews.Pop();
-            _currentView.Show();
-        }
-        else if(_uiViews.Count == 0)
-        {
-            if (_currentView != null)
-            {
-                _currentView.Hide();
-                _currentView = null;
-            }    
-        }
+        if (_uiViews.Count <= 0)
+            return;
+
+        _currentView.Hide();
+        _currentView = _uiViews.Pop();
+        _currentView.Show();
     }
 
 
@@ -105,20 +100,9 @@ public class UINavigation : MonoBehaviour
     /// </summary>
    public void PopToLoot()
     {
-        if (_uiViews.Count > 0)
+        while(_uiViews.Count > 1)
         {
-            for (int i = 0, count = _uiViews.Count - 1; i < count; i++)
-            {
-                _uiViews.Pop();
-            }
-            _currentView.Hide();
-            _currentView = _uiViews.Pop();
-
-            Pop();
-        }
-        else
-        {
-            Debug.LogError("켜져있는 ui가 존재하지 않습니다.");
+            _uiViews.Pop();
         }
     }
 
@@ -132,8 +116,14 @@ public class UINavigation : MonoBehaviour
         {
             _uiViews.Pop();
         }
-
-        _currentView?.Hide();
-        _currentView = null;
     }
+
+    /// <summary>
+    /// 루트ui를 푸시하는 함수
+    /// </summary>
+/*    public void PushRootView()
+    {
+        Clear();
+        Push(_rootUiView.Name);
+    }*/
 }

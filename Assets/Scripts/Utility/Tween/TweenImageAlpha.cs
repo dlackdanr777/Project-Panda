@@ -37,7 +37,7 @@ namespace Muks.Tween
             base.Update();
 
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
-            
+
             Image.color = Color.LerpUnclamped(StartColor, TargetColor, percent);
         }
     }

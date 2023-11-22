@@ -12,8 +12,8 @@ public class CameraApplication : MonoBehaviour
     [Tooltip("UI카메라 앱 스크립트를 넣는곳")]
     [SerializeField] private UICameraApp _uiCameraApp;
 
-    [Tooltip("스크린샷 카메라 스크립트")]
-    [SerializeField] private ScreenshotCamera _screenshotCamera;
+    //[Tooltip("스크린샷 카메라 스크립트")]
+    //[SerializeField] private ScreenshotCamera _screenshotCamera;
 
     [Tooltip("사진을 찍은 후 인화되는 애니메이션을 출력하는 클래스")]
     [SerializeField] private PhotoPrinting _photoPrinting;
@@ -26,23 +26,14 @@ public class CameraApplication : MonoBehaviour
 
 
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
-    [SerializeField] private Image _areaImage;
-
-
+    [SerializeField] private ShootingRange _shootingRange;
 
     private bool _screenshotEnable = true;
 
-    private void Awake()
-    {
-        _uiCameraApp.OnShowHandler += () => _screenshotCamera.gameObject.SetActive(true);
-        _uiCameraApp.OnHideHandler += () => _screenshotCamera.gameObject.SetActive(false);
-        _screenshotCamera.gameObject.SetActive(false);
-    }
 
     private void OnEnable()
     {
         _screenshotEnable = true;
-        _photoPrinting.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -51,18 +42,31 @@ public class CameraApplication : MonoBehaviour
     }
 
 
+    public void ShowCameraUI()
+    {
+        _uiCameraApp.gameObject.SetActive(!_uiCameraApp.gameObject.activeSelf);
+    }
+
+
     /// <summary>
     /// 스크린샷을 찍어주는 함수
     /// </summary>
-    public IEnumerator ScreenshotByAreaImage(float waitTime)
+    /// 
+    public void Screenshot()
+    {
+        StartCoroutine(ScreenshotByAreaImage());
+    }
+
+    private IEnumerator ScreenshotByAreaImage()
     {
         if (_screenshotEnable)
         {
             _screenshotEnable = false;
-
+            
             yield return new WaitForEndOfFrame();
-            Image image = _areaImage;
-            Vector3[] corners = GetIamgeCorners(_areaImage);
+
+            Image image = _shootingRange.GetComponent<Image>();
+            Vector3[] corners = GetIamgeCorners(image);
 
             float startX = corners[0].x;
             float startY = corners[0].y;
@@ -94,9 +98,9 @@ public class CameraApplication : MonoBehaviour
 
             PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
             AddPhotoData(photoData);
+            Debug.Log("실행");
             _photoPrinting.Show(ss);
             OnScreenshotHandler?.Invoke();
-
             Invoke("SceenshotEnable", 2);
 
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
@@ -114,7 +118,7 @@ public class CameraApplication : MonoBehaviour
 
         //월드공간에서 계산된 캔버스의 직사각형의 모서리를 가져와 저장
         //왼쪽하단부터 시계방향으로 배열에 저장
-        RectTransform objToScreenshot = _areaImage.GetComponent<RectTransform>();
+        RectTransform objToScreenshot = image.GetComponent<RectTransform>();
         objToScreenshot.GetWorldCorners(corners);
 
         return corners;
