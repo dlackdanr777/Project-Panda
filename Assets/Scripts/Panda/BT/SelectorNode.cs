@@ -16,15 +16,31 @@ public class SelectorNode : INode
         if (_childs == null)
             return INode.ENodeState.Failure;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 588028c (Revert "Merge pull request #39 from dlackdanr777/hye")
         foreach (INode child in _childs)
         {
             switch(child.Evaluate())
             {
+<<<<<<< HEAD
                 case INode.ENodeState.Running:
                     return INode.ENodeState.Running;
 
                 case INode.ENodeState.Success:
                     return INode.ENodeState.Success;
+=======
+                //자식 상태: Running일 때 -> Running 반환
+                case INode.ENodeState.Running:
+                    return INode.ENodeState.Running;
+
+                //자식 상태: Success 일 때->Success 반환
+                case INode.ENodeState.Success:
+                    return INode.ENodeState.Success;
+
+                //자식 상태: Failure일 때 -> 다음 자식으로 이동
+>>>>>>> parent of 588028c (Revert "Merge pull request #39 from dlackdanr777/hye")
             }
         }
 
