@@ -56,7 +56,34 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToMove.SetDataSequence(tempData);
+            objToMove.AddDataSequence(tempData);
+
+            if (!objToMove.enabled)
+            {
+                objToMove.ElapsedDuration = 0;
+                objToMove.TotalDuration = 0;
+                objToMove.enabled = true;
+            }
+        }
+
+
+        public static void TransformMove(GameObject targetObject, Vector3 targetPosition, float duration, int repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTransformMove objToMove = !targetObject.GetComponent<TweenTransformMove>()
+                ? targetObject.AddComponent<TweenTransformMove>()
+                : targetObject.GetComponent<TweenTransformMove>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetPosition;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToMove.AddDataSequence(tempData);
+            }
 
             if (!objToMove.enabled)
             {
@@ -78,7 +105,34 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToRotate.SetDataSequence(tempData);
+            objToRotate.AddDataSequence(tempData);
+
+            if (!objToRotate.enabled)
+            {
+                objToRotate.ElapsedDuration = 0;
+                objToRotate.TotalDuration = 0;
+                objToRotate.enabled = true;
+            }
+        }
+
+
+        public static void TransformRotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, int repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTransformRotate objToRotate = !targetObject.GetComponent<TweenTransformRotate>()
+                ? targetObject.AddComponent<TweenTransformRotate>()
+                : targetObject.GetComponent<TweenTransformRotate>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetEulerAngles;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToRotate.AddDataSequence(tempData);
+            }
 
             if (!objToRotate.enabled)
             {
@@ -100,7 +154,34 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToScale.SetDataSequence(tempData);
+            objToScale.AddDataSequence(tempData);
+
+            if (!objToScale.enabled)
+            {
+                objToScale.ElapsedDuration = 0;
+                objToScale.TotalDuration = 0;
+                objToScale.enabled = true;
+            }
+        }
+
+
+        public static void TransformScale(GameObject targetObject, Vector3 targetScale, float duration, int repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTransformScale objToScale = !targetObject.GetComponent<TweenTransformScale>()
+                ? targetObject.AddComponent<TweenTransformScale>()
+                : targetObject.GetComponent<TweenTransformScale>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetScale;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToScale.AddDataSequence(tempData);
+            }
 
             if (!objToScale.enabled)
             {
@@ -122,7 +203,33 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToSizeDelta.SetDataSequence(tempData);
+            objToSizeDelta.AddDataSequence(tempData);
+
+            if (!objToSizeDelta.enabled)
+            {
+                objToSizeDelta.ElapsedDuration = 0;
+                objToSizeDelta.TotalDuration = 0;
+                objToSizeDelta.enabled = true;
+            }
+        }
+
+        public static void RectTransfromSizeDelta(GameObject targetObject, Vector2 targetSizeDelta, float duration, int repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenRectTransformSizeDelta objToSizeDelta = !targetObject.GetComponent<TweenRectTransformSizeDelta>()
+                ? targetObject.AddComponent<TweenRectTransformSizeDelta>()
+                : targetObject.GetComponent<TweenRectTransformSizeDelta>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetSizeDelta;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToSizeDelta.AddDataSequence(tempData);
+            }
 
             if (!objToSizeDelta.enabled)
             {
@@ -143,7 +250,33 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToAnchoredPosition.SetDataSequence(tempData);
+            objToAnchoredPosition.AddDataSequence(tempData);
+
+            if (!objToAnchoredPosition.enabled)
+            {
+                objToAnchoredPosition.ElapsedDuration = 0;
+                objToAnchoredPosition.TotalDuration = 0;
+                objToAnchoredPosition.enabled = true;
+            }
+        }
+
+        public static void RectTransfromAnchoredPosition(GameObject targetObject, Vector2 targetAnchoredPosition, float duration, int repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenRectTransformAnchoredPosition objToAnchoredPosition = !targetObject.GetComponent<TweenRectTransformAnchoredPosition>()
+                ? targetObject.AddComponent<TweenRectTransformAnchoredPosition>()
+                : targetObject.GetComponent<TweenRectTransformAnchoredPosition>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetAnchoredPosition;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToAnchoredPosition.AddDataSequence(tempData);
+            }
 
             if (!objToAnchoredPosition.enabled)
             {
@@ -165,7 +298,34 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToColor.SetDataSequence(tempData);
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void IamgeColor(GameObject targetObject, Color targetColor, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenImageColor objToColor = !targetObject.GetComponent<TweenImageColor>()
+                ? targetObject.AddComponent<TweenImageColor>()
+                : targetObject.GetComponent<TweenImageColor>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetColor;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
 
             if (!objToColor.enabled)
             {
@@ -187,7 +347,33 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToColor.SetDataSequence(tempData);
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+        public static void IamgeAlpha(GameObject targetObject, float targetAlpha, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenImageAlpha objToColor = !targetObject.GetComponent<TweenImageAlpha>()
+                ? targetObject.AddComponent<TweenImageAlpha>()
+                : targetObject.GetComponent<TweenImageAlpha>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetAlpha;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
 
             if (!objToColor.enabled)
             {
@@ -209,7 +395,33 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToColor.SetDataSequence(tempData);
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+        public static void TextColor(GameObject targetObject, Color targetColor, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTextColor objToColor = !targetObject.GetComponent<TweenTextColor>()
+                ? targetObject.AddComponent<TweenTextColor>()
+                : targetObject.GetComponent<TweenTextColor>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetColor;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
 
             if (!objToColor.enabled)
             {
@@ -231,7 +443,34 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
-            objToColor.SetDataSequence(tempData);
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+        public static void TextAlpha(GameObject targetObject, float targetAlpha, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTextAlpha objToColor = !targetObject.GetComponent<TweenTextAlpha>()
+                ? targetObject.AddComponent<TweenTextAlpha>()
+                : targetObject.GetComponent<TweenTextAlpha>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetAlpha;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
 
             if (!objToColor.enabled)
             {

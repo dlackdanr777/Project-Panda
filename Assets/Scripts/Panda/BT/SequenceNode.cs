@@ -24,7 +24,6 @@ public class SequenceNode : INode
                 case INode.ENodeState.Running:
                     return INode.ENodeState.Running;
 
-                //자식 상태: Success 일 때->다음 자식으로 이동
                 case INode.ENodeState.Success:
                     continue;
 

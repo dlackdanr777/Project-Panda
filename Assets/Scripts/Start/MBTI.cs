@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MBTIChooice : StartList
+public class MBTI : StartClass
 {
     private StartClassController _uiStart;
 
@@ -120,17 +120,9 @@ public class MBTIChooice : StartList
     //시작 애니메이션
     private void StartAnime()
     {
-<<<<<<< HEAD:Assets/Scripts/Start/MBTI.cs
         _uiLetter.SetActive(true);
         Tween.TransformMove(_uiLetter, new Vector2(0, 5), 5, TweenMode.Smoothstep);
         Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
-=======
-        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 4, TweenMode.Smoothstep);
-        
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0,0,0));
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0, 0, 0));
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 2f, TweenMode.Constant, ButtonAnime);
->>>>>>> develop:Assets/Scripts/Start/MBTIChooice.cs
     }
 
     private void AtivateDialog()
@@ -150,13 +142,6 @@ public class MBTIChooice : StartList
         _letterButton.onClick.AddListener(OnLetterButtonClicked);
     }
 
-    //버튼 클릭 이벤트
-    private void OnLetterButtonClicked()
-    {
-        AtivateDialog();
-        _letterButton.onClick.RemoveAllListeners();
-        _letterButton.gameObject.SetActive(false);
-    }
 
     private void UIChangeAlpha(float alpha, float duration, Action onComplate = null)
     {
@@ -172,6 +157,7 @@ public class MBTIChooice : StartList
     private void ShowDialogue()
     {
         _isButtonClickEnable = true;
+
         if (_dialogueIndex <= _dialogueDic.Count)
         {
             _currentDialogue = GetDialogue(_dialogueIndex);
@@ -182,11 +168,11 @@ public class MBTIChooice : StartList
         }
         else
         {
-            if (!_isEnd)
-            {
-                _isEnd = true;
-                StartCoroutine(CompleteMBTI(1.5f));
-            }
+            if (_isEnd)
+                return;
+
+            _isEnd = true;
+            StartCoroutine(CompleteMBTI(1.5f));
         }
     }
 
@@ -210,7 +196,7 @@ public class MBTIChooice : StartList
 
         _contexts.text = _totalMBTI + "\n입니다.";
 
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(3);
 
         UIEnd();
     }
@@ -255,7 +241,6 @@ public class MBTIChooice : StartList
         });
     }
 
-<<<<<<< HEAD:Assets/Scripts/Start/MBTI.cs
     //버튼 클릭 이벤트
     private void OnLetterButtonClicked()
     {
@@ -277,7 +262,5 @@ public class MBTIChooice : StartList
         });    
     }
 
-=======
->>>>>>> develop:Assets/Scripts/Start/MBTIChooice.cs
 
 }
