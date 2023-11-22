@@ -24,10 +24,6 @@ public class SequenceNode : INode
                 case INode.ENodeState.Running:
                     return INode.ENodeState.Running;
 
-<<<<<<< HEAD
-=======
-                //자식 상태: Success 일 때->다음 자식으로 이동
->>>>>>> parent of 588028c (Revert "Merge pull request #39 from dlackdanr777/hye")
                 case INode.ENodeState.Success:
                     continue;
 
