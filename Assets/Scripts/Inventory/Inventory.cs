@@ -39,7 +39,7 @@ public class Inventory
         }
 
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
+        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.Image);
         Items.Add(addItem); //새로운 인벤토리 생성
     }
 

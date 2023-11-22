@@ -80,7 +80,7 @@ namespace Muks.Tween
             }
         }
 
-        public void AddDataSequence(DataSequence dataSequence)
+        public void SetDataSequence(DataSequence dataSequence)
         {
             DataSequences.Enqueue(dataSequence);
         }
