@@ -6,39 +6,23 @@ using UnityEngine.UI;
 public class StartClassController : MonoBehaviour
 {
     [Tooltip("배경 버튼")]
-    [SerializeField] private Button _backgroundButton;
+    [SerializeField] private Button _startBackgroundButton;
 
     [Tooltip("기존 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartClass> _existingUserStartList;
+    [SerializeField] private List<StartList> _startLoadingList;
 
     [Tooltip("신규 유저 로그인시 나타나게될 UI 순서")]
-    [SerializeField] private List<StartClass> _newUserStartList;
+    [SerializeField] private List<StartList> _firstStartLoadingList;
 
-    [SerializeField] private GameObject _uiStart;
-
-    [SerializeField] private GameObject _mainScene;
-
-    private StartClass _currentClass;
+    private StartList _currentClass;
 
     private int _lastIndex;
-
     private int _nextIndex;
 
     private void Awake()
     {
         Init();
-        _backgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
-
-    }
-
-    private void Start()
-    {
-        if (!UserInfo.IsExistingUser)
-        {
-            _mainScene.SetActive(false);
-            return;
-        }
-            
+        _startBackgroundButton.onClick.AddListener(OnBackgroundButtonClickd);
     }
 
     private void Update()
@@ -49,20 +33,20 @@ public class StartClassController : MonoBehaviour
 
     private void Init()
     {
-        if (!UserInfo.IsExistingUser)
+        if (GameManager.Instance.IsFirstStart)
         {
-            _lastIndex = _newUserStartList.Count;
+            _lastIndex = _firstStartLoadingList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _newUserStartList[i].Init(this);
+                _firstStartLoadingList[i].Init(this);
             }
         }
         else
         {
-            _lastIndex = _existingUserStartList.Count;
+            _lastIndex = _startLoadingList.Count;
             for (int i = 0; i < _lastIndex; i++)
             {
-                _existingUserStartList[i].Init(this);
+                _startLoadingList[i].Init(this);
             }
         }
 
@@ -78,26 +62,18 @@ public class StartClassController : MonoBehaviour
 
     public void ChangeCurrentClass()
     {
-        if (_nextIndex >= _lastIndex) //index를 모두 지나왔다면?
+        if (_nextIndex < _lastIndex)
         {
-            _mainScene.SetActive(true);
-            _uiStart.SetActive(false);
-            enabled = false; //현재 클래스를 끈다.
-
-            return;
+            if (GameManager.Instance.IsFirstStart)
+            {
+                _currentClass = _firstStartLoadingList[_nextIndex];
+            }
+            else
+            {
+                _currentClass = _startLoadingList[_nextIndex];
+            }
+            _nextIndex++;
+            OnBackgroundButtonClickd();
         }
-            
-
-        if (!UserInfo.IsExistingUser)
-        {
-            _currentClass = _newUserStartList[_nextIndex];
-        }
-        else
-        {
-            _currentClass = _existingUserStartList[_nextIndex];
-        }
-
-        _nextIndex++;
-        OnBackgroundButtonClickd();
     }
 }

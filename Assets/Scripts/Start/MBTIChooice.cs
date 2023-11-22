@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MBTI : StartClass
+public class MBTIChooice : StartList
 {
     private StartClassController _uiStart;
 
@@ -108,8 +108,11 @@ public class MBTI : StartClass
     //시작 애니메이션
     private void StartAnime()
     {
-        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 5, TweenMode.Smoothstep);
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
+        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 4, TweenMode.Smoothstep);
+        
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0,0,0));
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 1f, TweenMode.Constant, () => _uiLetter.transform.eulerAngles = new Vector3(0, 0, 0));
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 360), 2f, TweenMode.Constant, ButtonAnime);
     }
 
     private void AtivateDialog()
@@ -129,6 +132,13 @@ public class MBTI : StartClass
         _letterButton.onClick.AddListener(OnLetterButtonClicked);
     }
 
+    //버튼 클릭 이벤트
+    private void OnLetterButtonClicked()
+    {
+        AtivateDialog();
+        _letterButton.onClick.RemoveAllListeners();
+        _letterButton.gameObject.SetActive(false);
+    }
 
     private void UIChangeAlpha(float alpha, float duration, Action onComplate = null)
     {
@@ -144,7 +154,6 @@ public class MBTI : StartClass
     private void ShowDialogue()
     {
         _isButtonClickEnable = true;
-
         if (_dialogueIndex <= _dialogueDic.Count)
         {
             _currentDialogue = GetDialogue(_dialogueIndex);
@@ -155,11 +164,11 @@ public class MBTI : StartClass
         }
         else
         {
-            if (_isEnd)
-                return;
-
-            _isEnd = true;
-            StartCoroutine(CompleteMBTI(1.5f));
+            if (!_isEnd)
+            {
+                _isEnd = true;
+                StartCoroutine(CompleteMBTI(1.5f));
+            }
         }
     }
 
@@ -183,7 +192,7 @@ public class MBTI : StartClass
 
         _contexts.text = _totalMBTI + "\n입니다.";
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(time);
 
         UIEnd();
     }
@@ -226,14 +235,6 @@ public class MBTI : StartClass
             ShowDialogue();
             UIChangeAlpha(1, 0.5f);
         });
-    }
-
-    //버튼 클릭 이벤트
-    private void OnLetterButtonClicked()
-    {
-        AtivateDialog();
-        _letterButton.onClick.RemoveAllListeners();
-        _letterButton.gameObject.SetActive(false);
     }
 
 
