@@ -95,9 +95,9 @@ public class MBTI : StartClass
     public override void UIEnd()
     {
         _uiMBTI.SetActive(false);
-        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 12, TweenMode.Smootherstep, () =>
+        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 11.5f, TweenMode.Smootherstep, () =>
         {
-            Tween.SpriteRendererAlpha(_pandaPaper, 0, 3, TweenMode.Smootherstep);
+            Tween.SpriteRendererAlpha(_pandaPaper, 0, 1, TweenMode.Smootherstep);
         });
         _uiStart.ChangeCurrentClass();
     }
@@ -132,7 +132,7 @@ public class MBTI : StartClass
         _rightButton.gameObject.SetActive(true);
         _leftButton.gameObject.SetActive(true);
         ShowDialogue();
-        UIChangeAlpha(1, 0.5f);
+        UIChangeAlpha(1, 1f);
     }
 
     //버튼의 애니메이션
@@ -258,7 +258,7 @@ public class MBTI : StartClass
         Tween.SpriteRendererAlpha(_pandaPaper, 1, 5, TweenMode.Smootherstep, () =>
         {
             Tween.SpriteRendererAlpha(_uiLetter, 0, 5, TweenMode.Smoothstep);
-            Tween.TransformMove(_pandaPaper, new Vector2(0, 6), 5, TweenMode.Smootherstep, () =>AtivateDialog());
+            Tween.TransformMove(_pandaPaper, new Vector2(0, 7), 5, TweenMode.Smootherstep, () =>AtivateDialog());
         });    
     }
 

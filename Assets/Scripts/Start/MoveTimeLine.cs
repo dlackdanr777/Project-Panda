@@ -39,7 +39,7 @@ public class MoveTimeLine : StartClass
             return;
 
         _isStart = true;
-        Debug.Log(_isStart);
+
         for (int i = 0; i < _timeLines.Length; i++)
         {
             //마지막 순번의 경우만 콜백함수를 쓴다.
