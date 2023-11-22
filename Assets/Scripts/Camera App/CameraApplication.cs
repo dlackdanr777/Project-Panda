@@ -106,6 +106,7 @@ public class CameraApplication : MonoBehaviour
             PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
             AddPhotoData(photoData);
             _photoPrinting.Show(ss);
+
             OnScreenshotHandler?.Invoke();
             Invoke("SceenshotEnable", 2);
 

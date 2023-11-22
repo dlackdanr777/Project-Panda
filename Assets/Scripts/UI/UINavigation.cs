@@ -12,6 +12,8 @@ public struct ViewDicStruct
     public UIView UIView;
 }
 
+
+
 public class UINavigation : MonoBehaviour
 {
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
@@ -21,9 +23,10 @@ public class UINavigation : MonoBehaviour
 
     private Stack<UIView> _uiViews;
 
-    private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
+    private readonly Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
     public int Count => _uiViews.Count;
+
 
     private void Start()
     {
@@ -33,6 +36,7 @@ public class UINavigation : MonoBehaviour
     private void Init()
     {
         _uiViews = new Stack<UIView>();
+
         for(int i = 0, count = _uiViewList.Length; i < count; i++)
         {
             string Name = _uiViewList[i].Name;
@@ -45,12 +49,16 @@ public class UINavigation : MonoBehaviour
     }
 
 
-
     /// <summary>
     /// 이름을 받아 현재 이름의 view를 열어주는 함수
     /// </summary>
     public void Push(string viewName)
     {
+
+        if(_viewDic.TryGetValue(viewName, out var r))
+        {
+
+        }
 
         if (_viewDic.ContainsKey(viewName))
         {
@@ -89,14 +97,13 @@ public class UINavigation : MonoBehaviour
             _currentView = _uiViews.Pop();
             _currentView.Show();
         }
-        else if(_uiViews.Count == 0)
+
+        if (_currentView != null)
         {
-            if (_currentView != null)
-            {
-                _currentView.Hide();
-                _currentView = null;
-            }    
+            _currentView.Hide();
+            _currentView = null;
         }
+
     }
 
 
@@ -105,8 +112,14 @@ public class UINavigation : MonoBehaviour
     /// </summary>
    public void PopToLoot()
     {
+
         if (_uiViews.Count > 0)
         {
+            while (_uiViews.Count > 1)
+            {
+                _uiViews.Pop();
+            }
+
             for (int i = 0, count = _uiViews.Count - 1; i < count; i++)
             {
                 _uiViews.Pop();
@@ -131,6 +144,12 @@ public class UINavigation : MonoBehaviour
         for (int i = 0, count = _uiViews.Count; i < count; i++)
         {
             _uiViews.Pop();
+        }
+
+        if (_currentView!=null)
+        {
+            _currentView.Hide();
+            _currentView = null;
         }
 
         _currentView?.Hide();
