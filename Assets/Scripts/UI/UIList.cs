@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class UIList<T> : MonoBehaviour where T : Item
+//아이템 종류
+//public abstract enum Field;
+
+public abstract class UIList<T> : MonoBehaviour 
 {
     [SerializeField] private GameObject _prefab; //spawn할 prefab
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
@@ -92,7 +95,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
     private void OnClickedFieldButton(bool isOn, Transform toggle)
     {
         GetCurrentField();
-        if (_currentField == Field.Toy || _currentField == Field.Snack)
+        if (_currentField != Field.None)
         {
             UpdateListSlots();
 

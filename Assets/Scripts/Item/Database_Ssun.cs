@@ -6,7 +6,8 @@ public enum Field
 {
     None = -1,
     Toy,
-    Snack
+    Snack,
+    Furniture
 }
 
 public class Database_Ssun : SingletonHandler<Database_Ssun>
