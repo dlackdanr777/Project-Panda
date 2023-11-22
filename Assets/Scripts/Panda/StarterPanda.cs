@@ -13,6 +13,7 @@ namespace BT
         private BehaviorTree _behaviorTree;
 
         private float _feelingTimer;
+        private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
         private void Awake()
         {
@@ -20,20 +21,20 @@ namespace BT
             _uiPanda.gameObject.SetActive(true);
             _happiness = 9;
             _lastHappiness = _happiness;
-            StateHandler?.Invoke(0);
+            StateHandler?.Invoke(StarterStateImage, 0);
         }
 
 
         private void OnEnable()
         {
-            //3초마다 BT를 실행한다.
+            //3초마다 BT를 실행
             InvokeRepeating("StartBT", 1, 1);
         }
 
 
         private void OnDisable()
         {
-            //해당 오브젝트가 꺼졌을경우 반복을 중지한다.
+            //해당 오브젝트가 꺼졌을경우 반복을 중지
             CancelInvoke("StartBT");
         }
 
@@ -114,7 +115,7 @@ namespace BT
             if (_happiness >= 9)
             {
                 //매우 행복함 감정표현 관련 행동을 코드로 작성
-                StateHandler?.Invoke(0);
+                StateHandler?.Invoke(StarterStateImage, 0);
 
                 //Success일경우 해당 이 노드만 실행
                 return INode.ENodeState.Success;
@@ -131,7 +132,7 @@ namespace BT
             if (_happiness >= 5)
             {
                 //행복함 감정표현 관련 행동을 코드로 작성
-                StateHandler?.Invoke(1);
+                StateHandler?.Invoke(StarterStateImage, 1);
 
                 return INode.ENodeState.Success;
             }
@@ -146,7 +147,7 @@ namespace BT
             if (_happiness >= 0)
             {
                 //평범함 감정표현 관련 행동을 코드로 작성
-                StateHandler?.Invoke(2);
+                StateHandler?.Invoke(StarterStateImage, 2);
 
                 return INode.ENodeState.Success;
             }
@@ -161,7 +162,7 @@ namespace BT
             if (_happiness >= -5)
             {
                 //슬픔 감정표현 관련 행동을 코드로 작성
-                StateHandler?.Invoke(3);
+                StateHandler?.Invoke(StarterStateImage, 3);
 
                 return INode.ENodeState.Success;
             }
@@ -176,7 +177,7 @@ namespace BT
             if (_happiness >= -10)
             {
                 //슬픔 감정표현 관련 행동을 코드로 작성
-                StateHandler?.Invoke(4);
+                StateHandler?.Invoke(StarterStateImage, 4);
 
                 return INode.ENodeState.Success;
             }

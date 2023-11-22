@@ -37,9 +37,9 @@ public class UIPanda : MonoBehaviour
     }
 
     // 상태 이미지 변경
-    private void StarterPanda_StateHandler(int currentPandaState)
+    private void StarterPanda_StateHandler(string currentStateImage, int currentPandaState)
     {
-        OnChangeStateImage(currentPandaState);
+        OnChangeStateImage(currentStateImage, currentPandaState);
     }
     private void StarterPanda_UIAlphaHandler(float targetAlpha, float duration, Action onComplate = null)
     {
@@ -52,17 +52,15 @@ public class UIPanda : MonoBehaviour
 
     private void OnClickCameraButton()
     {
-        // 카메라와 연동
         Debug.Log("카메라 실행");
     }
 
     /// <summary>
     /// 현재 판다 상태로 이모티콘 변경
     /// </summary>
-    private void OnChangeStateImage(int currentPandaState)
+    private void OnChangeStateImage(string currentStateImage, int currentPandaState)
     {
-        //(수정) DataID 바꾸기
-        DataBind.SetSpriteValue("941", _stateSprite[currentPandaState]);
+        DataBind.SetSpriteValue(currentStateImage, _stateSprite[currentPandaState]);
     }
 
     /// <summary>

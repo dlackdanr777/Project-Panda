@@ -12,7 +12,7 @@ public abstract class Panda : MonoBehaviour
     protected float _stateImageTimer = 1f;
 
     //상태 이미지 변경 액션
-    public Action<int> StateHandler;
+    public Action<string, int> StateHandler;
     public Action<float, float, Action> UIAlphaHandler;
     public Action<GameObject, float, float, Action> AlphaImageHandler;
 
