@@ -22,16 +22,15 @@ public class UICameraApp : UIView
         OnHideHandler?.Invoke();
     }
 
-    private void Awake()
+
+
+    private void OnEnable()
     {
         DataBind.SetButtonValue("ShootingButton", () => {
-            StartCoroutine(_cameraApp.ScreenshotByAreaImage());
-        }) ;
-    }
+            _cameraApp.Screenshot();
+            _uiNav.Pop();
+        });
 
-    private void Start()
-    {
-        Hide();
+        DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop());
     }
-
 }

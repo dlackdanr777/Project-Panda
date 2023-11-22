@@ -28,15 +28,12 @@ public class CameraApplication : MonoBehaviour
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
     [SerializeField] private ShootingRange _shootingRange;
 
-
-
     private bool _screenshotEnable = true;
 
 
     private void OnEnable()
     {
         _screenshotEnable = true;
-        _photoPrinting.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -44,27 +41,23 @@ public class CameraApplication : MonoBehaviour
         _screenshotEnable = false;
     }
 
-    private void Update()
-    {
-        AA();
-    }
-
-    private void AA()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-            ShowCameraUI();
-    }
 
     public void ShowCameraUI()
     {
-        _uiCameraApp.gameObject.SetActive(true);
+        _uiCameraApp.gameObject.SetActive(!_uiCameraApp.gameObject.activeSelf);
     }
 
 
     /// <summary>
     /// 스크린샷을 찍어주는 함수
     /// </summary>
-    public IEnumerator ScreenshotByAreaImage()
+    /// 
+    public void Screenshot()
+    {
+        StartCoroutine(ScreenshotByAreaImage());
+    }
+
+    private IEnumerator ScreenshotByAreaImage()
     {
         if (_screenshotEnable)
         {
@@ -105,11 +98,10 @@ public class CameraApplication : MonoBehaviour
 
             PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
             AddPhotoData(photoData);
+            Debug.Log("실행");
             _photoPrinting.Show(ss);
             OnScreenshotHandler?.Invoke();
             Invoke("SceenshotEnable", 2);
-
-            _uiCameraApp.gameObject.SetActive(false);
 
             Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
         }

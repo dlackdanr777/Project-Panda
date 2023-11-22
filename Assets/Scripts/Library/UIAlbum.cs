@@ -48,6 +48,7 @@ public class UIAlbum : MonoBehaviour
         UIAlbumSlot uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
                 .GetComponent<UIAlbumSlot>();
         uiAlbumSlot.transform.parent = _layoutGroup.transform;
+        uiAlbumSlot.transform.localScale = Vector3.one;
 
         int index = Database.Instance.Photos.Count - 1;
         uiAlbumSlot.Init(index, Database.Instance.Photos.GetData(index));

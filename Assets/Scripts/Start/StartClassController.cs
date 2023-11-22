@@ -80,22 +80,13 @@ public class StartClassController : MonoBehaviour
     {
         if (_nextIndex >= _lastIndex) //index를 모두 지나왔다면?
         {
-            _mainScene.SetActive(true);
-            _uiStart.SetActive(false);
-            enabled = false; //현재 클래스를 끈다.
-
+            LoadingSceneManager.LoadScene("MainSceneMuksTest");
             return;
         }
-            
 
-        if (!UserInfo.IsExistingUser)
-        {
-            _currentClass = _newUserStartList[_nextIndex];
-        }
-        else
-        {
-            _currentClass = _existingUserStartList[_nextIndex];
-        }
+        _currentClass = !UserInfo.IsExistingUser 
+            ? _newUserStartList[_nextIndex] 
+            : _currentClass = _existingUserStartList[_nextIndex];
 
         _nextIndex++;
         OnBackgroundButtonClickd();

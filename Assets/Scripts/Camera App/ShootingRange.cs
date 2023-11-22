@@ -16,7 +16,6 @@ public class ShootingRange : MonoBehaviour, IDragHandler
         {
             Vector2 mousePos = eventData.position;
             _shootingImage.rectTransform.position = DontMoveCalculator(mousePos);
-
         }
     }
 

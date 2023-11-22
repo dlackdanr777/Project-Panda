@@ -19,7 +19,7 @@ public class PhotoPrinting : MonoBehaviour
 
     Material _tempMat;
 
-    private void Awake()
+    private void Start()
     {
         _tempMat = _image.material;
         gameObject.SetActive(false);
