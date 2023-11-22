@@ -6,7 +6,7 @@ public class InventoryItem : Item
 {
     public int Count;
 
-    public InventoryItem(string id, string name, string description, int price, Sprite image) :base(id, name, description, price, image)
+    public InventoryItem(string id, string name, string description, Sprite image) :base(id, name, description, image)
     {
         Count = 1;
     }
