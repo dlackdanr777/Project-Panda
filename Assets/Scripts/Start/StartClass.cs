@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StartList : MonoBehaviour
+public abstract class StartClass : MonoBehaviour
 {
     public abstract void Init(StartClassController uiStart); 
     public abstract void UIStart();
