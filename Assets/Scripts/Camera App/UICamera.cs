@@ -8,23 +8,32 @@ public class UICameraApp : UIView
     [SerializeField] private CameraApplication _cameraApp;
 
     public event Action OnShowHandler;
+
     public event Action OnHideHandler;
 
     public override void Show()
     {
         gameObject.SetActive(true);
+        CameraController.FriezePos = true;
         OnShowHandler?.Invoke();
     }
 
     public override void Hide()
     {
         gameObject.SetActive(false);
+        CameraController.FriezePos = false;
         OnHideHandler?.Invoke();
     }
 
-    private void Awake()
-    {
-        DataBind.SetButtonValue("ShootingButton", () => StartCoroutine(_cameraApp.ScreenshotByAreaImage(3)));
-    }
 
+
+    private void OnEnable()
+    {
+        DataBind.SetButtonValue("ShootingButton", () => {
+            _cameraApp.Screenshot();
+            _uiNav.Pop();
+        });
+
+        DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop());
+    }
 }

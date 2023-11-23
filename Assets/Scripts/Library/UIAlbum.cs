@@ -26,6 +26,14 @@ public class UIAlbum : MonoBehaviour
     private void OnEnable()
     {
         UpdateUI();
+        CameraController.FriezePos = true;
+        CameraController.FriezeZoom = true;
+    }
+
+    private void OnDisable()
+    {
+        CameraController.FriezePos = false;
+        CameraController.FriezeZoom = false;
     }
 
     private void Init()
@@ -45,10 +53,10 @@ public class UIAlbum : MonoBehaviour
 
     public void CreateSlot()
     {
-        UIAlbumSlot uiAlbumSlot = new UIAlbumSlot();
-        uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
+        UIAlbumSlot uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
                 .GetComponent<UIAlbumSlot>();
         uiAlbumSlot.transform.parent = _layoutGroup.transform;
+        uiAlbumSlot.transform.localScale = Vector3.one;
 
         int index = Database.Instance.Photos.Count - 1;
         uiAlbumSlot.Init(index, Database.Instance.Photos.GetData(index));

@@ -147,9 +147,6 @@ public class ScreenshotCamera : MonoBehaviour
         float ly = (_clampSize.y * 0.5f) - _height;
         float clampY = Mathf.Clamp(cameraPos.y, _clampCenter.y - ly, _clampCenter.y + ly);
 
-        Debug.Log(new Vector3(clampX, clampY, -10));
-        Debug.Log(lx);
-        Debug.Log(ly);
         return new Vector3(clampX, clampY, -10);
     }
 

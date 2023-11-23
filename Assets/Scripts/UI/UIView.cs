@@ -11,6 +11,12 @@ public enum VisibleState
 
 public abstract class UIView : MonoBehaviour
 {
+    protected UINavigation _uiNav;
+
+    public virtual void Init(UINavigation uiNav)
+    {
+        _uiNav = uiNav;
+    }
 
 
     /// <summary>

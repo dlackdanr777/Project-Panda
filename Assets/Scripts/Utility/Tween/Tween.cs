@@ -479,6 +479,103 @@ namespace Muks.Tween
                 objToColor.enabled = true;
             }
         }
+
+
+        public static void SpriteRendererColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenSpriteRendererColor objToColor = !targetObject.GetComponent<TweenSpriteRendererColor>()
+                ? targetObject.AddComponent<TweenSpriteRendererColor>()
+                : targetObject.GetComponent<TweenSpriteRendererColor>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetColor;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void SpriteRendererColor(GameObject targetObject, Color targetColor, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenSpriteRendererColor objToColor = !targetObject.GetComponent<TweenSpriteRendererColor>()
+                ? targetObject.AddComponent<TweenSpriteRendererColor>()
+                : targetObject.GetComponent<TweenSpriteRendererColor>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetColor;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void SpriteRendererAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenSpriteRendererAlpha objToColor = !targetObject.GetComponent<TweenSpriteRendererAlpha>()
+                ? targetObject.AddComponent<TweenSpriteRendererAlpha>()
+                : targetObject.GetComponent<TweenSpriteRendererAlpha>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAlpha;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+        public static void SpriteRendererAlpha(GameObject targetObject, float targetAlpha, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenSpriteRendererAlpha objToColor = !targetObject.GetComponent<TweenSpriteRendererAlpha>()
+                ? targetObject.AddComponent<TweenSpriteRendererAlpha>()
+                : targetObject.GetComponent<TweenSpriteRendererAlpha>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetAlpha;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
     }
 }
 

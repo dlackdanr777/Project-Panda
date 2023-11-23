@@ -36,6 +36,19 @@ public class UIWeather : MonoBehaviour
 
     public event Action OnRewardedHandler;
 
+
+    private void OnEnable()
+    {
+        CameraController.FriezePos = true;
+        CameraController.FriezeZoom = true;
+    }
+
+    private void OnDisable()
+    {
+        CameraController.FriezePos = false;
+        CameraController.FriezeZoom = false;
+    }
+
     public void InitSlot()
     {
         _slots = new List<UIWeatherSlot>();
@@ -61,8 +74,8 @@ public class UIWeather : MonoBehaviour
                 else
                 {
                     //보상획득 이벤트
-                    RewardAnime(_slots[i]);
-
+                    //RewardAnime(_slots[i]);
+                    _slots[i].AttendanceComplated(_attendanceSprite);
                     _todayWeatherData = _weekWeathers[i];
                     //이벤트핸들러 실행
                     OnRewardedHandler?.Invoke();
@@ -82,48 +95,16 @@ public class UIWeather : MonoBehaviour
 
     }
 
+
     public void Init()
     {
         _weekWeathers = _weatherApp.GetWeekWeathers().ToList();
+        _attendanceStamp.gameObject.SetActive(false);
         InitSlot();
-
         SetBind();
+        gameObject.SetActive(false);
     }
 
-   /* public void Init()
-    {
-        _slots = new List<UIWeatherSlot>();
-        _weekWeathers = _weatherApp._weekWeathers.ToList();
-        bool isRewardComplated = false;
-
-        for (int i = 0; i < 7; i++)
-        {
-            GameObject slot;
-            if (_weatherApp.UserInfo.DayCount % 7 == i)
-            {
-                int index = i;
-                slot = Instantiate(_uiTodaySlot, new Vector3(0, 0, 0), Quaternion.identity);
-                _slots.Add(slot.GetComponent<UIWeatherSlot>());
-                _slots[index].Button.onClick.AddListener(() => OnWeatherSlotClicked(_slots[index]));
-                _todayWeatherData = _weekWeathers[index];
-                //_slots[i].AttendanceComplatedAnime(_attendanceSprite);
-                isRewardComplated = true;
-            }
-            else
-            {
-                slot = Instantiate(_uiSlot, new Vector3(0, 0, 0), Quaternion.identity);
-                _slots.Add(slot.GetComponent<UIWeatherSlot>());
-                if (!isRewardComplated)
-                {
-                    _slots[i].AttendanceComplated(_attendanceSprite);
-                }
-            }
-
-            slot.transform.SetParent(_layoutGroup.transform);
-            _slots[i].UpdateUI(_weekWeathers[i], i+1);
-        }
-        SetBind();
-    }*/
 
     private void SetBind()
     {

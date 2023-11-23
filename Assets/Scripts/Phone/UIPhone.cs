@@ -7,8 +7,6 @@ public class UIPhone : MonoBehaviour
 {
     private UINavigation _uiNav;
 
-    private string _value;
-
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();

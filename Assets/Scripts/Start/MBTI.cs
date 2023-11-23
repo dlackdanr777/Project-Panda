@@ -7,16 +7,19 @@ using UnityEngine.UI;
 
 public class MBTI : StartClass
 {
-    private StartClassController _uiStart;
+    private StartClassController _startClass;
 
     [Tooltip("CSV 파일 이름")]
     [SerializeField] string _csvFileName;
 
     [Tooltip("UI 부모 오브젝트")]
-    [SerializeField] GameObject _uiFirstChooice;
+    [SerializeField] GameObject _uiMBTI;
 
     [Tooltip("편지 오브젝트")]
     [SerializeField] private GameObject _uiLetter;
+
+    [Tooltip("판다 오브젝트")]
+    [SerializeField] private GameObject _pandaPaper;
 
     [Tooltip("편지 버튼")]
     [SerializeField] private Button _letterButton;
@@ -37,7 +40,7 @@ public class MBTI : StartClass
     [SerializeField] private Text _rightButtonContexts;
 
 
-    private Dictionary<int, Dialogue> _dialogueDic = new Dictionary<int, Dialogue>();
+    private Dictionary<int, MBTIDialogue> _dialogueDic = new Dictionary<int, MBTIDialogue>();
 
     private int _dialogueIndex = 1;
 
@@ -49,33 +52,32 @@ public class MBTI : StartClass
 
     private bool _isButtonClickEnable;
 
-    private Dialogue _currentDialogue;
+    private MBTIDialogue _currentDialogue;
 
 
-
+    private void OnEnable()
+    {
+        _uiLetter.SetActive(false);
+        _pandaPaper.SetActive(false);
+    }
 
     public override void UIStart()
     {
-        if (!_isStart)
-        {
-            _isStart = true;
-            _uiFirstChooice.SetActive(true);
-            _contexts.gameObject.SetActive(false);
-            _rightButton.gameObject.SetActive(false);
-            _leftButton.gameObject.SetActive(false);
-            _letterButton.gameObject.SetActive(false);
+        if (_isStart)
+            return;
 
-            _leftButton.onClick.AddListener(OnLeftButtonClicked);
-            _rightButton.onClick.AddListener(OnRightButtonClicked);
+        _isStart = true;
+        _uiMBTI.SetActive(true);
+        _contexts.gameObject.SetActive(false);
+        _rightButton.gameObject.SetActive(false);
+        _leftButton.gameObject.SetActive(false);
+        _letterButton.gameObject.SetActive(false);
 
-            StartAnime();
+        _leftButton.onClick.AddListener(OnLeftButtonClicked);
+        _rightButton.onClick.AddListener(OnRightButtonClicked);
 
-            Debug.Log("시작");
-        }
-        else
-        {
-            Debug.Log("이미 실행중 입니다.");
-        } 
+        StartAnime();
+
     }
 
     public override void UIUpdate()
@@ -86,18 +88,22 @@ public class MBTI : StartClass
 
     public override void UIEnd()
     {
-        _uiFirstChooice.SetActive(false);
-        _uiStart.ChangeCurrentClass();
+        _uiMBTI.SetActive(false);
+        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 9, TweenMode.Smootherstep, () =>
+        {
+            Tween.SpriteRendererAlpha(_pandaPaper, 0, 2, TweenMode.Smootherstep);
+        });
+        _startClass.ChangeCurrentClass();
     }
 
 
-    public override void Init(StartClassController uiStart)
+    public override void Init(StartClassController startClass)
     {
-        _uiStart = uiStart;
+        _startClass = startClass;
 
-        DialogueParser theParser = GetComponent<DialogueParser>();
-        Dialogue[] dialogues = theParser.Parse(_csvFileName);
-        _uiFirstChooice.SetActive(false);
+        DialogueParser theParser = new DialogueParser();
+        MBTIDialogue[] dialogues = theParser.MBTIParse(_csvFileName);
+        _uiMBTI.SetActive(false);
 
         for (int i = 0; i < dialogues.Length; i++)
         {
@@ -108,9 +114,11 @@ public class MBTI : StartClass
     //시작 애니메이션
     private void StartAnime()
     {
-        Tween.RectTransfromAnchoredPosition(_uiLetter, new Vector2(0, 0), 5, TweenMode.Smoothstep);
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
+        _uiLetter.SetActive(true);
+        Tween.TransformMove(_uiLetter, new Vector2(0, 5), 4, TweenMode.Smoothstep);
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 360, 0), 4, TweenMode.Smoothstep, ButtonAnime);
     }
+
 
     private void AtivateDialog()
     {
@@ -121,6 +129,7 @@ public class MBTI : StartClass
         ShowDialogue();
         UIChangeAlpha(1, 0.5f);
     }
+
 
     //버튼의 애니메이션
     private void ButtonAnime()
@@ -189,11 +198,11 @@ public class MBTI : StartClass
     }
 
 
-    private Dialogue GetDialogue(int id)
+    private MBTIDialogue GetDialogue(int id)
     {
         if (_dialogueDic.ContainsKey(id))
         {
-            Dialogue dialogue = _dialogueDic[id];
+            MBTIDialogue dialogue = _dialogueDic[id];
             return dialogue;
         }
         return default;
@@ -231,9 +240,22 @@ public class MBTI : StartClass
     //버튼 클릭 이벤트
     private void OnLetterButtonClicked()
     {
-        AtivateDialog();
+        _pandaPaper.SetActive(true);
         _letterButton.onClick.RemoveAllListeners();
         _letterButton.gameObject.SetActive(false);
+
+        if(_pandaPaper.TryGetComponent(out SpriteRenderer renderer))
+        {
+            Color color = renderer.color;
+            color.a = 0;
+            renderer.color = color;
+        }
+
+        Tween.SpriteRendererAlpha(_pandaPaper, 1, 3, TweenMode.Smootherstep, () =>
+        {
+            Tween.SpriteRendererAlpha(_uiLetter, 0, 3, TweenMode.Smoothstep);
+            Tween.TransformMove(_pandaPaper, new Vector2(0, 6.5f), 3, TweenMode.Smootherstep, () =>AtivateDialog());
+        });    
     }
 
 
