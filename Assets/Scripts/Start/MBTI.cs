@@ -40,7 +40,7 @@ public class MBTI : StartClass
     [SerializeField] private Text _rightButtonContexts;
 
 
-    private Dictionary<int, Dialogue> _dialogueDic = new Dictionary<int, Dialogue>();
+    private Dictionary<int, MBTIDialogue> _dialogueDic = new Dictionary<int, MBTIDialogue>();
 
     private int _dialogueIndex = 1;
 
@@ -52,7 +52,7 @@ public class MBTI : StartClass
 
     private bool _isButtonClickEnable;
 
-    private Dialogue _currentDialogue;
+    private MBTIDialogue _currentDialogue;
 
 
     private void OnEnable()
@@ -101,8 +101,8 @@ public class MBTI : StartClass
     {
         _startClass = startClass;
 
-        DialogueParser theParser = GetComponent<DialogueParser>();
-        Dialogue[] dialogues = theParser.Parse(_csvFileName);
+        DialogueParser theParser = new DialogueParser();
+        MBTIDialogue[] dialogues = theParser.MBTIParse(_csvFileName);
         _uiMBTI.SetActive(false);
 
         for (int i = 0; i < dialogues.Length; i++)
@@ -198,11 +198,11 @@ public class MBTI : StartClass
     }
 
 
-    private Dialogue GetDialogue(int id)
+    private MBTIDialogue GetDialogue(int id)
     {
         if (_dialogueDic.ContainsKey(id))
         {
-            Dialogue dialogue = _dialogueDic[id];
+            MBTIDialogue dialogue = _dialogueDic[id];
             return dialogue;
         }
         return default;

@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class Dialogue
+public class MBTIDialogue
 {
     [Tooltip("질문 내용")]
     public string Contexts;
