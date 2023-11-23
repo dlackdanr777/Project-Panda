@@ -37,16 +37,15 @@ public class MessageList
             Messages.RemoveAt(0);
         }
         Messages.Add(message);
+        IsCheckMessage.Add(false);
+        IsReceiveGift.Add(false);
     }
-    public void RemoveById(string id)
+    public void RemoveByIndex(int index)
     {
-        for(int i=0;i<Messages.Count; i++)
+        if(Messages.Count > 0)
         {
-            if (Messages[i].Id.Equals(id)) 
-            {
-                Messages.RemoveAt(i);
-            }
-        }
+            Messages.RemoveAt(index);
+        } 
     }
 
 }

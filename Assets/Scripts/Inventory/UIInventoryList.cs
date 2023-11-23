@@ -21,10 +21,10 @@ public class UIInventoryList : UIList<InventoryItem, ItemField>
     {
 
         //Test
-        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", 100, Test)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", 100, Test)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("1", "n1", "d1", 200, Test2)); //인벤토리에 item add
-        GameManager.Instance.Player.Inventory[0].Add(new Item("2", "n2", "d2", 300, Test2)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", 100, ItemField.Toy, Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("0", "n", "d", 100, ItemField.Toy, Test)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("1", "n1", "d1", 200, ItemField.Toy, Test2)); //인벤토리에 item add
+        GameManager.Instance.Player.Inventory[0].Add(new Item("2", "n2", "d2", 300, ItemField.Toy, Test2)); //인벤토리에 item add
         
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < GameManager.Instance.Player.Inventory.Length; i++)
@@ -41,7 +41,11 @@ public class UIInventoryList : UIList<InventoryItem, ItemField>
         _arrangeButton.GetComponent<DragAndDrop>().OnUseItem += UIInventoryList_OnUseItem;
         _arrangeButton.GetComponent<DragAndDrop>().DontUseItem += UIInventoryList_DontUseItem;
 
-        _sellButton.onClick.AddListener(OnClickSellButton);
+        if(_soldPanel != null)
+        {
+            _sellButton.onClick.AddListener(OnClickSellButton);
+
+        }
     }
 
     private void UIInventoryList_OnUseItem() //아이템 
@@ -97,7 +101,7 @@ public class UIInventoryList : UIList<InventoryItem, ItemField>
     {
         base.OnDisable();
 
-        if (_soldPanel.activeSelf)
+        if (_soldPanel != null && _soldPanel.activeSelf)
         {
             _soldPanel.SetActive(false);
         }

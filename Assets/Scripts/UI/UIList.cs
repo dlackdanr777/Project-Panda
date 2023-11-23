@@ -7,6 +7,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
 {
     [SerializeField] private GameObject _prefab; //spawn할 prefab
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
+    [SerializeField] private int _firstToggleIndex;
 
     [SerializeField] protected ToggleGroup _field; //토글 종류
     [SerializeField] protected GameObject _detailView; //상세설명 창
@@ -28,7 +29,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
 
     void OnEnable()
     {
-        Toggle firstToggle = _field.transform.GetChild(0).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
+        Toggle firstToggle = _field.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
         if (firstToggle != null)
         {
             firstToggle.isOn = true;

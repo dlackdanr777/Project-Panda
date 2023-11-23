@@ -1,21 +1,47 @@
 using System;
+using System.Collections;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class SpawnWishes : MonoBehaviour
 {
     [SerializeField] private GameObject _wishesPf;
+    public Action NoticeHandler; 
+
     // Start is called before the first frame update
     void Start()
     {
+        Predicate<int> _condition1Handler = (int amount) => (amount > 10);
+
         //Test
-        SpawnWish();
+        StartCoroutine(SpawnWish(_condition1Handler, GameManager.Instance.MessageDatabase.Messages[0]));
     }
 
-    private void SpawnWish()
+
+    private IEnumerator SpawnWish(Predicate<int> condition, Message message)
     {
-  
-        GameObject wishes = Instantiate(_wishesPf, GetRandomPosition(), Quaternion.identity);
-        wishes.transform.SetParent(transform, false);
+        while(!message.IsSend)
+        {
+            if (condition(GameManager.Instance.Player.Familiarity))
+            {
+                GameObject wishes = Instantiate(_wishesPf, GetRandomPosition(), Quaternion.identity);
+                wishes.transform.SetParent(transform, false);
+                wishes.GetComponent<Button>().onClick.AddListener(()=>NoticeHandler?.Invoke());
+
+                //Test
+                wishes.GetComponent<Wish>().Message = message;
+                message.IsSend = true;
+                GameManager.Instance.Player.Messages[1].Add(message);
+                NoticeHandler?.Invoke();
+
+                yield break;
+            }
+            yield return null;
+
+        }
+        
     }
 
     private Vector3 GetRandomPosition()

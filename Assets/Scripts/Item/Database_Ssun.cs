@@ -39,6 +39,7 @@ public class Database_Ssun : SingletonHandler<Database_Ssun>
                     DataSnack[j]["Name"].ToString(),
                     DataSnack[j]["Description"].ToString(),
                     (int)DataSnack[i]["Price"],
+                    ItemField.Snack,
                     Test)); //아직 이미지는 받아오지 않음
             }
             ItemCount[i] = ItemList[i].Count;
