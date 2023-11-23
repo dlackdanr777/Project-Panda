@@ -117,13 +117,4 @@ public class UINavigation : MonoBehaviour
             _uiViews.Pop();
         }
     }
-
-    /// <summary>
-    /// 루트ui를 푸시하는 함수
-    /// </summary>
-/*    public void PushRootView()
-    {
-        Clear();
-        Push(_rootUiView.Name);
-    }*/
 }

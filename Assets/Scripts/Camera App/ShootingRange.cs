@@ -5,12 +5,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))] // ´Ù Á¦Èñ Å¿ ÀÔ´Ï´Ù.
-public class ShootingRange : MonoBehaviour, IDragHandler 
+public class ShootingRange : MonoBehaviour //, IDragHandler 
 {
     [SerializeField] private Image _shootingImage;
     [SerializeField] private Canvas _canvas;
 
-    public void OnDrag(PointerEventData eventData) // Á¤Á÷ÇÔÀ¸·Î ½ÂºÎÇÏ´Â ²Û ÀÓÃ¢¹¬ ´ëÇ¥
+   /* public void OnDrag(PointerEventData eventData) // Á¤Á÷ÇÔÀ¸·Î ½ÂºÎÇÏ´Â ²Û ÀÓÃ¢¹¬ ´ëÇ¥
     {
         if(eventData.clickCount > 0)
         {
@@ -30,6 +30,6 @@ public class ShootingRange : MonoBehaviour, IDragHandler
         if(pos.y < 0) pos.y = 0;
 
         return Camera.main.ViewportToScreenPoint(pos);
-    }
+    }*/
 
 }

@@ -26,6 +26,14 @@ public class UIAlbum : MonoBehaviour
     private void OnEnable()
     {
         UpdateUI();
+        CameraController.FriezePos = true;
+        CameraController.FriezeZoom = true;
+    }
+
+    private void OnDisable()
+    {
+        CameraController.FriezePos = false;
+        CameraController.FriezeZoom = false;
     }
 
     private void Init()

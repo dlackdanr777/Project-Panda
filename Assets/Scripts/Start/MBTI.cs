@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class MBTI : StartClass
 {
-    private StartClassController _uiStart;
+    private StartClassController _startClass;
 
     [Tooltip("CSV 파일 이름")]
     [SerializeField] string _csvFileName;
@@ -63,27 +63,21 @@ public class MBTI : StartClass
 
     public override void UIStart()
     {
-        if (!_isStart)
-        {
-            _isStart = true;
-            _uiMBTI.SetActive(true);
-            _contexts.gameObject.SetActive(false);
-            _rightButton.gameObject.SetActive(false);
-            _leftButton.gameObject.SetActive(false);
-            _letterButton.gameObject.SetActive(false);
-            
+        if (_isStart)
+            return;
 
-            _leftButton.onClick.AddListener(OnLeftButtonClicked);
-            _rightButton.onClick.AddListener(OnRightButtonClicked);
+        _isStart = true;
+        _uiMBTI.SetActive(true);
+        _contexts.gameObject.SetActive(false);
+        _rightButton.gameObject.SetActive(false);
+        _leftButton.gameObject.SetActive(false);
+        _letterButton.gameObject.SetActive(false);
 
-            StartAnime();
+        _leftButton.onClick.AddListener(OnLeftButtonClicked);
+        _rightButton.onClick.AddListener(OnRightButtonClicked);
 
-            Debug.Log("시작");
-        }
-        else
-        {
-            Debug.Log("이미 실행중 입니다.");
-        } 
+        StartAnime();
+
     }
 
     public override void UIUpdate()
@@ -95,17 +89,17 @@ public class MBTI : StartClass
     public override void UIEnd()
     {
         _uiMBTI.SetActive(false);
-        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 12, TweenMode.Smootherstep, () =>
+        Tween.TransformMove(_pandaPaper, new Vector2(0, -13), 9, TweenMode.Smootherstep, () =>
         {
-            Tween.SpriteRendererAlpha(_pandaPaper, 0, 3, TweenMode.Smootherstep);
+            Tween.SpriteRendererAlpha(_pandaPaper, 0, 2, TweenMode.Smootherstep);
         });
-        _uiStart.ChangeCurrentClass();
+        _startClass.ChangeCurrentClass();
     }
 
 
-    public override void Init(StartClassController uiStart)
+    public override void Init(StartClassController startClass)
     {
-        _uiStart = uiStart;
+        _startClass = startClass;
 
         DialogueParser theParser = GetComponent<DialogueParser>();
         Dialogue[] dialogues = theParser.Parse(_csvFileName);
@@ -121,9 +115,10 @@ public class MBTI : StartClass
     private void StartAnime()
     {
         _uiLetter.SetActive(true);
-        Tween.TransformMove(_uiLetter, new Vector2(0, 5), 5, TweenMode.Smoothstep);
-        Tween.TransformRotate(_uiLetter, new Vector3(0, 0, 720), 5, TweenMode.Smoothstep, ButtonAnime);
+        Tween.TransformMove(_uiLetter, new Vector2(0, 5), 4, TweenMode.Smoothstep);
+        Tween.TransformRotate(_uiLetter, new Vector3(0, 360, 0), 4, TweenMode.Smoothstep, ButtonAnime);
     }
+
 
     private void AtivateDialog()
     {
@@ -134,6 +129,7 @@ public class MBTI : StartClass
         ShowDialogue();
         UIChangeAlpha(1, 0.5f);
     }
+
 
     //버튼의 애니메이션
     private void ButtonAnime()
@@ -255,10 +251,10 @@ public class MBTI : StartClass
             renderer.color = color;
         }
 
-        Tween.SpriteRendererAlpha(_pandaPaper, 1, 5, TweenMode.Smootherstep, () =>
+        Tween.SpriteRendererAlpha(_pandaPaper, 1, 3, TweenMode.Smootherstep, () =>
         {
-            Tween.SpriteRendererAlpha(_uiLetter, 0, 5, TweenMode.Smoothstep);
-            Tween.TransformMove(_pandaPaper, new Vector2(0, 6), 5, TweenMode.Smootherstep, () =>AtivateDialog());
+            Tween.SpriteRendererAlpha(_uiLetter, 0, 3, TweenMode.Smoothstep);
+            Tween.TransformMove(_pandaPaper, new Vector2(0, 6.5f), 3, TweenMode.Smootherstep, () =>AtivateDialog());
         });    
     }
 
