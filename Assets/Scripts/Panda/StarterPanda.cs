@@ -15,20 +15,28 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
-        public StarterPanda(string mbti)
+        //public StarterPanda(string mbti)
+        //{
+        //    _mbtiData = mbti;
+        //    _happiness = 9;
+        //    _lastHappiness = _happiness;
+        //    SetPreference(_mbtiData);
+        //}
+
+
+        protected override void Awake()
         {
-            _mbtiData = mbti;
+            base.Awake();
+
             _happiness = 9;
             _lastHappiness = _happiness;
-            SetPreference(_mbtiData);
-        }
 
-
-        private void Awake()
-        {
             _behaviorTree = new BehaviorTree(SettingBT());
             _uiPanda.gameObject.SetActive(true);
             StateHandler?.Invoke(StarterStateImage, 0);
+
+            _preference = MbtiData.SetPreference(_mbti);
+            Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
         }
 
 
@@ -208,7 +216,8 @@ namespace BT
         protected override void SetPreference(string mbti)
         {
             //mbti 정보를 통해 판다 취향 설정
-            _preference = new Preference();
+            //_preference = new Preference();
         }
+
     }
 }

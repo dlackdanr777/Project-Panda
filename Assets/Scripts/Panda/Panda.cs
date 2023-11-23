@@ -18,10 +18,12 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected bool _isCameraRequest {  get; private set; }
 
     /// <summary>성향</summary>
-    protected string _mbtiData; // 성향 받아와서 취향 설정
+    [SerializeField] // 나중에 안보이도록 변경
+    protected string _mbti; // 성향 받아와서 취향 설정
 
     /// <summary>친밀도</summary>
     protected int _intimacy;
+    protected MBTIData MbtiData;
 
     /// <summary>행복도</summary>
     [SerializeField]
@@ -38,6 +40,11 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     protected abstract void SetPreference(string mbti);
 
+    protected virtual void Awake()
+    {
+        MbtiData = new MBTIData();
+        MbtiData.SetMBTI();
+    }
 
     /// <summary>
     /// 판다 클릭하면 UI 표시
@@ -54,6 +61,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
             }
         }
     }
+
     public void ToggleUIPandaButton()
     {
         _isUISetActive = !_isUISetActive;
@@ -69,8 +77,8 @@ public abstract class Panda : MonoBehaviour, IInteraction
                 _uiPanda.transform.GetChild(0).gameObject.SetActive(false);
             });
         }
-
     }
+
     /// <summary>
     /// 판다 상태 이미지 표시
     /// </summary>

@@ -8,4 +8,10 @@ public class Preference
     public string _favoriteSnack;
     [SerializeField]
     public string _favoriteToy;
+
+    public Preference(string favoriteSnack, string favoriteToy)
+    {
+        _favoriteSnack = favoriteSnack;
+        _favoriteToy = favoriteToy;
+    }
 }
