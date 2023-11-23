@@ -1,6 +1,7 @@
 using Muks.DataBind;
 using Muks.Tween;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,12 +15,19 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
+        public StarterPanda(string mbti)
+        {
+            _mbtiData = mbti;
+            _happiness = 9;
+            _lastHappiness = _happiness;
+            SetPreference(_mbtiData);
+        }
+
+
         private void Awake()
         {
             _behaviorTree = new BehaviorTree(SettingBT());
             _uiPanda.gameObject.SetActive(true);
-            _happiness = 9;
-            _lastHappiness = _happiness;
             StateHandler?.Invoke(StarterStateImage, 0);
         }
 
@@ -196,9 +204,11 @@ namespace BT
                 //친밀도 하락
             }
         }
+        // mbti에서 설정..?
         protected override void SetPreference(string mbti)
         {
             //mbti 정보를 통해 판다 취향 설정
+            _preference = new Preference();
         }
     }
 }

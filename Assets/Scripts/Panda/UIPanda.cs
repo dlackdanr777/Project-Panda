@@ -24,7 +24,7 @@ public class UIPanda : MonoBehaviour
     {
         _starterPanda.StateHandler += StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
-        _starterPanda.AlphaImageHandler += StarterPanda_AlphaImageHandler;
+        _starterPanda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
 
         _cameraButton.onClick.AddListener(OnClickCameraButton);
 
@@ -33,7 +33,7 @@ public class UIPanda : MonoBehaviour
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
-        _starterPanda.AlphaImageHandler -= StarterPanda_AlphaImageHandler;
+        _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
     }
 
     // 상태 이미지 변경
@@ -45,7 +45,7 @@ public class UIPanda : MonoBehaviour
     {
         OnChangePandaUIAlpha(targetAlpha, duration, onComplate);
     }
-    private void StarterPanda_AlphaImageHandler(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
+    private void StarterPanda_ImageAlphaHandler(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
     {
         OnChangeAlpha(gameObject, targetAlpha, duration, onComplate);
     }
