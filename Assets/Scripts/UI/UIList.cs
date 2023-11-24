@@ -1,33 +1,35 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class UIList<T> : MonoBehaviour where T : Item
+public abstract class UIList<T, Enum> : MonoBehaviour 
 {
-    [SerializeField] private GameObject _prefab; //spawnÇÒ prefab
-    [SerializeField] private Button _closeDetailViewButton; //»ó¼¼¼³¸í Ã¢ ´İ±â
+    [SerializeField] private GameObject _prefab; //spawní•  prefab
+    [SerializeField] private Button _closeDetailViewButton; //ìƒì„¸ì„¤ëª… ì°½ ë‹«ê¸°
+    [SerializeField] private int _firstToggleIndex;
 
-    [SerializeField] protected ToggleGroup _field; //Åä±Û Á¾·ù
-    [SerializeField] protected GameObject _detailView; //»ó¼¼¼³¸í Ã¢
-    [SerializeField] protected Transform[] _spawnPoint; //spawnÇÒ À§Ä¡
-
-    protected List<T>[] _lists = new List<T>[System.Enum.GetValues(typeof(Field)).Length-1]; //Field °³¼ö¸¸Å­ ¸®½ºÆ® Á¸Àç(None Á¦¿Ü) //µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ °ø°£
-    protected Field _currentField;
-    protected int[] _maxCount = new int[System.Enum.GetValues(typeof(Field)).Length - 1];
+    [SerializeField] protected ToggleGroup _field; //í† ê¸€ ì¢…ë¥˜
+    [SerializeField] protected GameObject _detailView; //ìƒì„¸ì„¤ëª… ì°½
+    [SerializeField] protected Transform[] _spawnPoint; //spawní•  ìœ„ì¹˜
+    
+    protected List<T>[] _lists = new List<T>[System.Enum.GetValues(typeof(Enum)).Length-1]; //Field ê°œìˆ˜ë§Œí¼ ë¦¬ìŠ¤íŠ¸ ì¡´ì¬(None ì œì™¸) //ë°ì´í„°ë¥¼ ì €ì¥í•  ê³µê°„
+    protected Enum _currentField;
+    protected int[] _maxCount = new int[System.Enum.GetValues(typeof(Enum)).Length - 1];
 
     /// <summary>
-    /// DetailView Text ¹Ş¾Æ¿À´Â ÇÔ¼ö
+    /// DetailView Text ë°›ì•„ì˜¤ëŠ” í•¨ìˆ˜
     /// </summary>
     protected abstract void GetContent(int index);
 
     /// <summary>
-    /// InventorySlotsÀÇ SetActive(), Count() ui¸¦ updateÇÏ´Â ÇÔ¼ö
+    /// InventorySlotsì˜ SetActive(), Count() uië¥¼ updateí•˜ëŠ” í•¨ìˆ˜
     /// </summary>
     protected abstract void UpdateListSlots();
 
     void OnEnable()
     {
-        Toggle firstToggle = _field.transform.GetChild(0).GetComponent<Toggle>(); //´Ù½Ã µé¾î°¡µµ Ã¹¹øÂ°°¡ È°¼ºÈ­µÇµµ·Ï
+        Toggle firstToggle = _field.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //ë‹¤ì‹œ ë“¤ì–´ê°€ë„ ì²«ë²ˆì§¸ê°€ í™œì„±í™”ë˜ë„ë¡
         if (firstToggle != null)
         {
             firstToggle.isOn = true;
@@ -35,7 +37,7 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         UpdateListSlots();
     }
 
-    //list¸¶´Ù ÇØ´ç spawn À§Ä¡¿¡ InstantiateÇÏ´Â ÇÔ¼ö
+    //listë§ˆë‹¤ í•´ë‹¹ spawn ìœ„ì¹˜ì— Instantiateí•˜ëŠ” í•¨ìˆ˜
     private void CreateSlots()
     {
         for(int i=0;i<_maxCount.Length;i++)
@@ -51,21 +53,21 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
 
     private void GetCurrentField()
     {
-        Toggle selectedField = GetOnToggle(); //¼±ÅÃµÈ Åä±Û
+        Toggle selectedField = GetOnToggle(); //ì„ íƒëœ í† ê¸€
         _currentField = GetFieldByTransform(selectedField);
         SetActiveContent();
     }
 
-    //spawnPosition È°¼ºÈ­ ÇÔ¼ö
+    //spawnPosition í™œì„±í™” í•¨ìˆ˜
     private void SetActiveContent() 
     {
-        for(int i=0;i<_spawnPoint.Length;i++) //content false·Î º¯°æ
+        for(int i=0;i<_spawnPoint.Length;i++) //content falseë¡œ ë³€ê²½
         {
             _spawnPoint[i].gameObject.SetActive(false);
         }
-        if(_currentField >= 0)
+        if((int)(object)_currentField >= 0)
         {
-            _spawnPoint[(int)_currentField].gameObject.SetActive(true);//ÇöÀç Åä±ÛÀÇ content¸¦ setactive 
+            _spawnPoint[(int)(object)_currentField].gameObject.SetActive(true);//í˜„ì¬ í† ê¸€ì˜ contentë¥¼ setactive 
 
         }
     }
@@ -82,42 +84,53 @@ public abstract class UIList<T> : MonoBehaviour where T : Item
         return null;
     }
 
-    //TransformÀ¸·Î Field°ª Ã£±â
-    private Field GetFieldByTransform(Toggle toggle)
-    {
-        for(int i=0; i < _field.transform.childCount; i++)
-        {
-            if(_field.transform.GetChild(i).GetComponent<Toggle>() == toggle)
-            {
-                return (Field)i;
-            }
-        }
-        return Field.None;
-    }
-
-    //SlotClick ÀÌº¥Æ®
+    //SlotClick ì´ë²¤íŠ¸
     private void OnClickSlot(int index)
     {
-        GetContent(index); //ÅØ½ºÆ® ¹ÙÀÎµù
-        _detailView.SetActive(true); //»ó¼¼ ¼³¸í Ã¢ ³ªÅ¸³²
+        GetContent(index); //í…ìŠ¤íŠ¸ ë°”ì¸ë”©
+        _detailView.SetActive(true); //ìƒì„¸ ì„¤ëª… ì°½ ë‚˜íƒ€ë‚¨
     }
 
     private void OnClickedFieldButton(bool isOn, Transform toggle)
     {
         GetCurrentField();
-        if (_currentField == Field.Toy || _currentField == Field.Snack)
+        if ((int)(object)_currentField != -1)
         {
-            UpdateListSlots();
+            UpdateListSlots();  
+        }
+
+    }
+
+    //Transformìœ¼ë¡œ Fieldê°’ ì°¾ê¸°
+    private Enum GetFieldByTransform(Toggle toggle)
+    {
+        for(int i=0; i < _field.transform.childCount; i++)
+        {
+            if(_field.transform.GetChild(i).GetComponent<Toggle>() == toggle)
+            {
+                return (Enum)(object)i;
+            }
+        }
+        return (Enum)(object)-1;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (_detailView.activeSelf)
+        {
+            _detailView.SetActive(false);
 
         }
     }
 
+    
+
     protected void Init()
     {
-        CreateSlots(); //slot »ı¼º
+        CreateSlots(); //slot ìƒì„±
 
-        //¹öÆ° ¸®½º³Ê
-        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //Åä±ÛÀÌ º¯°æµÇ¸é ¹è°æ »ö»óµµ º¯È­
+        //ë²„íŠ¼ ë¦¬ìŠ¤ë„ˆ
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //í† ê¸€ì´ ë³€ê²½ë˜ë©´ ë°°ê²½ ìƒ‰ìƒë„ ë³€í™”
         {
             toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
         }
