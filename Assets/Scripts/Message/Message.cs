@@ -9,6 +9,5 @@ public class Message
     public string From;
     public string Content;
     public bool IsSend;
-    public Sprite GiftImage;
     public Item Gift;
 }

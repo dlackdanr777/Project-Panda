@@ -9,13 +9,13 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     //이미지를 가져오기
     [SerializeField] private GameObject _selectedItem; //선택한 아이템
     [SerializeField] private GameObject _dropPopup;
-    [SerializeField] private GameObject _phone;
+    [SerializeField] private GameObject _moveObject;
     [SerializeField] private GameObject _itemDropZone;
+    [SerializeField] private Transform _itemZone;
     [SerializeField] private Button _itemDropButton;
     [SerializeField] private Button _itemNoDropButton;
 
     private float speed = 20f;
-    private Transform _spawnPoint;
 
     public event Action OnUseItem;
     public event Action DontUseItem;
@@ -27,17 +27,17 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     }
     private void SpawnImage(bool isSpawn) //slot에 spawn하거나 제거 할 때
     {
-        Image spawnImage = _spawnPoint.transform.GetChild(0).GetComponent<Image>();
+        Image spawnImage = _itemZone.GetComponent<Image>();
         Color tempColor = spawnImage.color;
 
         if (isSpawn)
         {
-            spawnImage.gameObject.transform.position = _spawnPoint.position;
+            spawnImage.gameObject.transform.position = _itemZone.position;
             //image setactive
             tempColor.a = 255f;
             spawnImage.color = tempColor;
 
-            _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite = _selectedItem.GetComponent<SpriteRenderer>().sprite;
+            _itemZone.GetComponent<Image>().sprite = _selectedItem.GetComponent<SpriteRenderer>().sprite;
 
         }
         else
@@ -53,24 +53,26 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         _dropPopup.SetActive(false); //popup 사라짐
         _itemDropZone.gameObject.SetActive(false); //map item zone 사라짐
-        MovePhone(1); //폰 올라감
+        MoveObject(1); //폰 올라감
         OnUseItem?.Invoke(); //item 사용 detailview 사라짐
         RemoveSelectedItem(); //selected image 사라짐
+        //_moveObject.SetActive(false); //인벤토리 사라짐
     }
     private void OnClickedNoItemDrop()
     {
         SpawnImage(false); //slot에 아이템 보여짐
         _dropPopup.SetActive(false);//popup 사라짐
         _itemDropZone.gameObject.SetActive(false); //map item zone 사라짐
-        MovePhone(1); //폰 올라감
+        MoveObject(1); //폰 올라감
         DontUseItem?.Invoke(); //detailview 사라짐
         _selectedItem.SetActive(false);
+        //_moveObject.SetActive(false); //인벤토리 사라짐
     }
 
-    private void MovePhone(int gap)
+    private void MoveObject(int gap)
     {
-        _phone.transform.GetChild(0).GetChild(0).gameObject.SetActive(!_phone.transform.GetChild(0).GetChild(0).gameObject.activeSelf); //폰 border button set active false
-        Tween.TransformMove(_phone, new Vector3(_phone.transform.position.x,  gap, _phone.transform.position.z), 1f, TweenMode.Smoothstep);
+        //_moveObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(!_moveObject.transform.GetChild(0).GetChild(0).gameObject.activeSelf); //폰 border button set active false
+        Tween.TransformMove(_moveObject, new Vector3(_moveObject.transform.position.x,  gap, _moveObject.transform.position.z), 1f, TweenMode.Smoothstep);
     }
 
     private void RemoveSelectedItem()//따라다니는 객체 삭제
@@ -85,7 +87,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         _selectedItem.transform.position = Camera.main.ScreenToWorldPoint(pos);
         _selectedItem.SetActive(true);
 
-        MovePhone(-80);
+        MoveObject(-80);
 
         _itemDropZone.gameObject.SetActive(true);
     }
@@ -104,11 +106,11 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         try
         {
-            _spawnPoint = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
-            if (_spawnPoint != null)
+            _itemZone = eventData.pointerCurrentRaycast.gameObject.transform; //누른 지점
+            if (_itemZone != null)
             {
                 //할당된 아이템이 없다면
-                if ( _spawnPoint.transform.GetChild(0).GetComponent<Image>().sprite == null)
+                if ( _itemZone.GetComponent<Image>().sprite == null)
                 {
                     //위치에 놓으면 popup
                     _dropPopup.gameObject.SetActive(true);
@@ -117,7 +119,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 else //할당된 아이템이 있다면, map이 아닌 곳에 
                 {
                     _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
-                    MovePhone(1);
+                    MoveObject(1);
                     _itemDropZone.SetActive(false);
                 }
             }
@@ -125,7 +127,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         catch (Exception) //현재는 배경에 아무것도 없어서 예외 처리해놓음,, 나중에 map 깔리면 삭제
         {
             _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
-            MovePhone(1);
+            MoveObject(1);
             _itemDropZone.SetActive(false);
         }
 

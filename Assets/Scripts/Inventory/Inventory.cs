@@ -39,7 +39,7 @@ public class Inventory
         }
 
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Image);
+        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.ItemField, item.Image);
         Items.Add(addItem); //새로운 인벤토리 생성
     }
 
@@ -49,7 +49,7 @@ public class Inventory
     /// </summary>
     /// <param name="field"></param>
     /// <param name="id"></param>
-    public void AddById(Field field, string id)
+    public void AddById(ItemField field, string id)
     {
         List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
         int listCount = Database_Ssun.Instance.ItemCount[(int)field];
