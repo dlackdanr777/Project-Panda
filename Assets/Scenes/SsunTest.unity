@@ -691,7 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 298bddb712722024b8cdcb6232ab53df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisibleState: 0
 --- !u!114 &26654612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2884,6 +2883,7 @@ GameObject:
   - component: {fileID: 192641140}
   - component: {fileID: 192641142}
   - component: {fileID: 192641141}
+  - component: {fileID: 192641143}
   m_Layer: 5
   m_Name: WishTree
   m_TagString: Untagged
@@ -2945,6 +2945,20 @@ MonoBehaviour:
   _uiViewList:
   - Name: InsideWood
     UIView: {fileID: 882525241}
+  _currentView: {fileID: 0}
+--- !u!114 &192641143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192641139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a61f7f03c204a4fba2114b98582dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiViewList: []
   _currentView: {fileID: 0}
 --- !u!1 &207813469
 GameObject:
@@ -10352,9 +10366,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 882525239}
-  - component: {fileID: 882525242}
   - component: {fileID: 882525241}
   - component: {fileID: 882525243}
+  - component: {fileID: 882525244}
   m_Layer: 5
   m_Name: InsideWood
   m_TagString: Untagged
@@ -10401,27 +10415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VisibleState: 0
---- !u!114 &882525242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 882525238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0625dd0993790b4d9b3ceaa0e40fd11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rootUiView:
-    Name: 
-    UIView: {fileID: 0}
-  _uiViewList:
-  - Name: Inventory
-    UIView: {fileID: 532155913}
-  - Name: Diary
-    UIView: {fileID: 1048198105}
-  _currentView: {fileID: 0}
 --- !u!114 &882525243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10435,6 +10428,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _borderButton: {fileID: 1218759583}
+--- !u!114 &882525244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882525238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a61f7f03c204a4fba2114b98582dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiViewList:
+  - Name: Inventory
+    UIView: {fileID: 532155913}
+  - Name: Diary
+    UIView: {fileID: 1048198105}
+  _currentView: {fileID: 0}
 --- !u!1 &883805643
 GameObject:
   m_ObjectHideFlags: 0
