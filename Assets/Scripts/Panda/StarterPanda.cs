@@ -15,19 +15,9 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
-        //public StarterPanda(string mbti)
-        //{
-        //    _mbtiData = mbti;
-        //    _happiness = 9;
-        //    _lastHappiness = _happiness;
-        //    SetPreference(_mbtiData);
-        //}
-
-
         protected override void Awake()
         {
             base.Awake();
-
             _happiness = 9;
             _lastHappiness = _happiness;
 

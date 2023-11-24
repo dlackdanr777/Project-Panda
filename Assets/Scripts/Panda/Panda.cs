@@ -15,21 +15,23 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected UIPanda _uiPanda;
     protected bool _isUISetActive;
     protected float _stateImageTimer = 1f;
+
     protected bool _isCameraRequest {  get; private set; }
 
+    protected MBTIData MbtiData;
     /// <summary>성향</summary>
     [SerializeField] // 나중에 안보이도록 변경
-    protected string _mbti; // 성향 받아와서 취향 설정
+    protected string _mbti { get; set; } // 성향 받아와서 취향 설정
 
     /// <summary>친밀도</summary>
-    protected int _intimacy;
-    protected MBTIData MbtiData;
+    protected int _intimacy { get; private set; }
 
     /// <summary>행복도</summary>
     [SerializeField]
-    [Range(-10, 10)] protected float _happiness;
+    [Range(-10, 10)] public float _happiness;
     /// <summary>이전 행복도</summary>
     protected float _lastHappiness;
+
     protected Preference _preference;
 
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성
