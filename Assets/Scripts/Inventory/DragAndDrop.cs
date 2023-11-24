@@ -56,7 +56,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         MoveObject(1); //폰 올라감
         OnUseItem?.Invoke(); //item 사용 detailview 사라짐
         RemoveSelectedItem(); //selected image 사라짐
-        _moveObject.SetActive(false); //인벤토리 사라짐
+        //_moveObject.SetActive(false); //인벤토리 사라짐
     }
     private void OnClickedNoItemDrop()
     {
@@ -66,7 +66,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         MoveObject(1); //폰 올라감
         DontUseItem?.Invoke(); //detailview 사라짐
         _selectedItem.SetActive(false);
-        _moveObject.SetActive(false); //인벤토리 사라짐
+        //_moveObject.SetActive(false); //인벤토리 사라짐
     }
 
     private void MoveObject(int gap)

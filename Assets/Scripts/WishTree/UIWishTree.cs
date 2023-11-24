@@ -13,29 +13,13 @@ public class UIWishTree : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation>();
 
-        DataBind.SetButtonValue("HouseButton", OnHouseButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
-        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
+        DataBind.SetButtonValue("WoodButton", OnInsideWoodButtonClicked);
+        DataBind.SetButtonValue("WishTreeBorderButton", OnBorderButtonClicked);
     }
 
-    private void Start()
+    private void OnInsideWoodButtonClicked()
     {
-
-    }
-
-    private void OnHouseButtonClicked()
-    {
-        _uiNav.Push("House");
-    }
-
-    private void OnDiaryButtonClicked()
-    {
-        _uiNav.Push("Diary");
-    }
-    private void OnInventoryButtonClicked()
-    {
-        _uiNav.Push("Inventory");
+        _uiNav.Push("InsideWood");
     }
 
     private void OnBorderButtonClicked()
