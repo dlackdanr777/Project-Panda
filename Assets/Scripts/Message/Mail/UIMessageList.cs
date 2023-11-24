@@ -46,11 +46,11 @@ public class UIMessageList : UIList<Message,MessageField>
         { 
             _player.Messages[0].IsReceiveGift[index] = true;
 
-            //¼±¹° ¹öÆ° Å¬¸¯ÇÏ¸é ÀÎº¥Åä¸®¿¡ Ãß°¡
+            //ì„ ë¬¼ ë²„íŠ¼ í´ë¦­í•˜ë©´ ì¸ë²¤í† ë¦¬ì— ì¶”ê°€
             ItemField itemField = _player.Messages[0].GetMessageList()[index].Gift.ItemField;
             _player.Inventory[(int)itemField].Add(_player.Messages[(int)_currentField].GetMessageList()[index].Gift);
 
-            _detailView.transform.GetChild(3).gameObject.SetActive(false); //¼±¹° ¹öÆ° ¾Èº¸ÀÌ°Ô
+            _detailView.transform.GetChild(3).gameObject.SetActive(false); //ì„ ë¬¼ ë²„íŠ¼ ì•ˆë³´ì´ê²Œ
         }
     }
 
@@ -58,7 +58,7 @@ public class UIMessageList : UIList<Message,MessageField>
     {
         for (int i = 0; i < _maxCount[0]; i++)
         {
-            GameObject message = _spawnPoint[0].GetChild(i).gameObject; //message, À§Ä¡
+            GameObject message = _spawnPoint[0].GetChild(i).gameObject; //message, ìœ„ì¹˜
             if (message.activeSelf)
             {
                 if (message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn)
@@ -73,7 +73,7 @@ public class UIMessageList : UIList<Message,MessageField>
     {
         for (int i = 0; i < _maxCount[0]; i++)
         {
-            GameObject message = _spawnPoint[0].GetChild(i).gameObject; //message, À§Ä¡
+            GameObject message = _spawnPoint[0].GetChild(i).gameObject; //message, ìœ„ì¹˜
             if (message.activeSelf)
             {
                 if (message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn)
@@ -98,7 +98,7 @@ public class UIMessageList : UIList<Message,MessageField>
     {
         _currentItemIndex = index;
 
-        //player ¸Ş½ÃÁö È®ÀÎ
+        //player ë©”ì‹œì§€ í™•ì¸
         _spawnPoint[(int)_currentField].GetChild(index).GetChild(2).gameObject.SetActive(false);
         _player.Messages[(int)_currentField].IsCheckMessage[index] = true;
         NoticeHandler?.Invoke(); 
@@ -120,12 +120,12 @@ public class UIMessageList : UIList<Message,MessageField>
     {
         UpdateList();
 
-        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //ÇöÀç playerÀÇ message¿¡ ÀúÀåµÈ °³¼ö
+        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //í˜„ì¬ playerì˜ messageì— ì €ì¥ëœ ê°œìˆ˜
         {
             if (j < _player.Messages[(int)_currentField].GetMessageList().Count)
             {
                 _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
-                _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].From; //Text º¯°æ
+                _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].From; //Text ë³€ê²½
 
             }
             else

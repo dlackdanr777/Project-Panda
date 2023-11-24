@@ -7,9 +7,6 @@ public class DialogueManager : SingletonHandler<DialogueManager>
 {
     private Dictionary<int, StoryDialogue> _storyDialogueDic;
 
-    //완료된 스토리정보를 모아놓는 곳
-    public List<int> CompleteStoryIndex { get; private set; }
-
     private DialogueParser _parser = new DialogueParser();
 
 
@@ -19,8 +16,8 @@ public class DialogueManager : SingletonHandler<DialogueManager>
 
         _storyDialogueDic = _parser.StroyParse("StoryDialogue");
 
-        
     }
+
 
     public StoryDialogue GetStoryDialogue(int index)
     {
