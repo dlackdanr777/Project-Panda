@@ -37,18 +37,54 @@ public class CameraController : MonoBehaviour
         MouseMovement();
         MouseZoomInOut();
 
+
 #elif PLATFORM_ANDROID
 
         TouchMovement();
         TouchZoomInOut();
         
 #endif
+
+
+        TouchInteraction();
+        _currentInteraction?.UpdateInteraction();
     }
 
     private void Start()
     {
         _height = Camera.main.orthographicSize;
         _width = _height * Screen.width / Screen.height;
+    }
+
+
+    private IInteraction _currentInteraction;
+
+    private void TouchInteraction()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
+
+            if (hit.collider == null)
+            {
+                Debug.Log("아무것도 없다.");
+                return;
+            }
+                
+            if (!hit.collider.TryGetComponent(out IInteraction interaction))
+                return;
+
+            if (_currentInteraction == interaction)
+            {
+                _currentInteraction?.ExitInteraction();
+                _currentInteraction = null;
+                return;
+            }
+                
+            interaction.StartInteraction();
+            _currentInteraction = interaction;
+        }
     }
 
 

@@ -12,10 +12,22 @@ public class UIMainScene : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation>();
         DataBind.SetButtonValue("Camera Button", OnCameraButtonClicked);
+        DataBind.SetAtcionValue("ShowDialogue", OnShowDialogue);
+        DataBind.SetAtcionValue("HideDialogue", OnHideDialogue);
     }
 
     private void OnCameraButtonClicked()
     {
         _uiNav.Push("Camera");
+    }
+
+    private void OnShowDialogue()
+    {
+        _uiNav.Push("Dialogue");
+    }
+
+    private void OnHideDialogue()
+    {
+        _uiNav.Pop();
     }
 }
