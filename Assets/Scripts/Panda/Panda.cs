@@ -20,8 +20,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     protected MBTIData MbtiData;
     /// <summary>성향</summary>
-    [SerializeField] // 나중에 안보이도록 변경
-    protected string _mbti { get; set; } // 성향 받아와서 취향 설정
+    public string _mbti; // 성향 받아와서 취향 설정
 
     /// <summary>친밀도</summary>
     protected int _intimacy { get; private set; }
