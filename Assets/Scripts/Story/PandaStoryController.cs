@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Muks.DataBind;
 
 public class PandaStoryController : MonoBehaviour, IInteraction
 {
@@ -10,10 +13,22 @@ public class PandaStoryController : MonoBehaviour, IInteraction
 
     private StoryDialogue _storyDialogue;
 
+    private Action _startHandler;
+
+    private Action _exitHandler;
+
+    private ActionGetter _startActionGetter;
+
+    private ActionGetter _exitActionGetter;
 
     private void Start()
     {
         _storyDialogue = DialogueManager.Instance.GetStoryDialogue(_storyID);
+
+        _startActionGetter = new ActionGetter("ShowDialogue", ref _startHandler);
+
+        _exitActionGetter = new ActionGetter("HideDialogue", ref _exitHandler);
+
 
         bool isActive = 0 <= _storyDialogue.RequiredIntimacy ? true : false;
 
@@ -22,30 +37,27 @@ public class PandaStoryController : MonoBehaviour, IInteraction
             gameObject.SetActive(false);
             return;
         }
-
-        for (int i = 0; i < _storyDialogue.DialogDatas.Length; i++)
-        {
-            Debug.Log(_storyDialogue.DialogDatas[i].TalkPandaID);
-            Debug.Log(_storyDialogue.DialogDatas[i].Contexts);
-        }
     }
+
+
 
 
     public void StartInteraction()
     {
-        throw new System.NotImplementedException();
+        StoryDialogueManager.CurrentID = _storyID;
+        _startHandler?.Invoke();
     }
 
 
     public void UpdateInteraction()
     {
-        throw new System.NotImplementedException();
+
     }
 
 
     public void ExitInteraction()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("³¡!");
+        _exitHandler?.Invoke();
     }
-
 }
