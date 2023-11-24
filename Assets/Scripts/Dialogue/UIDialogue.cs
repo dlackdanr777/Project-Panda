@@ -1,28 +1,28 @@
-
 using UnityEngine;
 using Muks.Tween;
 using System.Collections;
 using Muks.DataBind;
 
+public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
+
 public class UIDialogue : UIView
 {
-    private StoryDialogueManager _manager;
 
     private RectTransform _rectTransform;
 
     private Vector2 _tempPos;
+
+    public static AddComplateStory AddComplateStory = new AddComplateStory();
 
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
         _rectTransform = GetComponent<RectTransform>();
         _tempPos = _rectTransform.anchoredPosition;
-
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
         DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
     }
-
 
 
     public override void Hide()
@@ -38,17 +38,20 @@ public class UIDialogue : UIView
 
     public override void Show()
     {
+        if(StoryManager.Instance.IsStoryStart)
+        {
+            Debug.LogError("이미 대화가 진행중 입니다.");
+            return;
+        }
+
         gameObject.SetActive(true);
         _currentIndex = 0;
         
-
-
         VisibleState = VisibleState.Appearing;
         Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -700), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
-            dialogue = StoryDialogueManager.CurrentDialogue;
-            Debug.Log(dialogue);
+            _dialogue = StoryManager.Instance.Dialogue;
             OnNextButtonClicked();
         });
     }
@@ -56,7 +59,7 @@ public class UIDialogue : UIView
 
     private bool _isContextRunning;
     private int _currentIndex;
-    private StoryDialogue dialogue;
+    private StoryDialogue _dialogue;
 
 
     private void OnNextButtonClicked()
@@ -66,18 +69,19 @@ public class UIDialogue : UIView
 
         else
         {
-            if(_currentIndex >= dialogue.DialogDatas.Length - 1)
+            if(_currentIndex >= _dialogue.DialogDatas.Length - 1)
             {
                 _uiNav.Pop();
+                AddComplateStory?.Invoke(StoryManager.CurrentDialogueID);
             }
             else
             {
-                StartCoroutine(ContextAnime(dialogue.DialogDatas[_currentIndex]));
+                StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
                _currentIndex++;
-
             }
         }
     }
+
 
     private IEnumerator ContextAnime(DialogData data)
     {
