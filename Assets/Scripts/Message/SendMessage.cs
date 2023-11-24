@@ -49,14 +49,14 @@ public class SendMessage : MonoBehaviour
                 //message 데이터베이스에서 보냈음을 확인
                 message.IsSend = true;
                 yield return new WaitForSeconds(3); //5초후에 문자 오도록
-                Send(message,messageField);
+                Send(message, messageField);
                 yield break;
             }
             yield return null;
         }
     }
 
-    private void Send(Message message ,MessageField messageField)
+    private void Send(Message message, MessageField messageField)
     {
         _player.Messages[(int)messageField].Add(message);
 
@@ -67,7 +67,7 @@ public class SendMessage : MonoBehaviour
     private void SetNotice() //알림 설정, 알림 갯수 설정
     {
         int count = 0;
-        for(int i = 0; i < _player.Messages.Length; i++)
+        for (int i = 0; i < _player.Messages.Length; i++)
         {
             count += _player.Messages[i].CurrentNotCheckedMessage;
             Debug.Log(count);

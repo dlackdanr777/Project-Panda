@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1579,7 +1579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 378.99997, y: -140}
+  m_AnchoredPosition: {x: 378.99994, y: -140}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &105767125
@@ -2939,6 +2939,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0625dd0993790b4d9b3ceaa0e40fd11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rootUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: InsideWood
     UIView: {fileID: 882525241}
@@ -3629,7 +3632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 265.99997, y: -140}
+  m_AnchoredPosition: {x: 265.99994, y: -140}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &292588724
@@ -5119,7 +5122,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 378.99997, y: -240}
+  m_AnchoredPosition: {x: 378.99994, y: -240}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &420677346
@@ -5701,7 +5704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 265.99997, y: -240}
+  m_AnchoredPosition: {x: 265.99994, y: -240}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &470470498
@@ -8386,20 +8389,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 754490315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3edb67dc262ba8648b50e66af601f286, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c656d9174163c840a79c2a4f86da551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 2363590290482915646, guid: c7b3b5cbd42fc794f846fc53b28a2347, type: 3}
-  _closeDetailViewButton: {fileID: 181258712}
+  _prefab: {fileID: 0}
+  _closeDetailViewButton: {fileID: 0}
   _firstToggleIndex: 0
-  _field: {fileID: 1305750554}
-  _detailView: {fileID: 2062047333}
-  _spawnPoint:
-  - {fileID: 81574062}
-  - {fileID: 1639930294}
-  _removeButton: {fileID: 128036763}
-  _notice: {fileID: 753421142}
-  _removePopup: {fileID: 1839031244}
+  _field: {fileID: 0}
+  _detailView: {fileID: 0}
+  _spawnPoint: []
+  _removeButton: {fileID: 0}
+  _notice: {fileID: 0}
+  _removePopup: {fileID: 0}
 --- !u!1 &756717778
 GameObject:
   m_ObjectHideFlags: 0
@@ -10160,7 +10161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 152.99997, y: -140}
+  m_AnchoredPosition: {x: 152.99994, y: -140}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &874006150
@@ -10412,6 +10413,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0625dd0993790b4d9b3ceaa0e40fd11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rootUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: Inventory
     UIView: {fileID: 532155913}
@@ -14092,13 +14096,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0625dd0993790b4d9b3ceaa0e40fd11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rootUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: Inventory
     UIView: {fileID: 833155358}
   - Name: Item
     UIView: {fileID: 649551242}
   - Name: Shop
-    UIView: {fileID: 26654611}
+    UIView: {fileID: 0}
   _currentView: {fileID: 0}
 --- !u!225 &1198032191
 CanvasGroup:
@@ -16691,7 +16698,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 152.99997, y: -40}
+  m_AnchoredPosition: {x: 152.99994, y: -40}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1316929823
@@ -21597,7 +21604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _notice: {fileID: 753421142}
-  _uiMessageList: {fileID: 754490319}
+  _uiMessageList: {fileID: 0}
   _spawnWishes: {fileID: 49850487}
 --- !u!1 &1675915213
 GameObject:
@@ -22340,7 +22347,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStart: 0
-  IsFirstStart: 0
   Player: {fileID: 864224204}
   MessageDatabase: {fileID: 11400000, guid: 35bf09bada7d9b441a64c2776095ccbd, type: 2}
 --- !u!4 &1760155410
@@ -22546,7 +22552,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 265.99997, y: -40}
+  m_AnchoredPosition: {x: 265.99994, y: -40}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1784568259
@@ -25707,7 +25713,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 152.99997, y: -240}
+  m_AnchoredPosition: {x: 152.99994, y: -240}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2099447746
@@ -25967,7 +25973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 378.99997, y: -40}
+  m_AnchoredPosition: {x: 378.99994, y: -40}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132081099
