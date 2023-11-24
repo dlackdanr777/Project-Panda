@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UIWood : MonoBehaviour
 {
-    private UINavigation _uiNav;
+    private UINavigation_origin _uiNav;
 
     private string _value;
 
@@ -13,7 +13,7 @@ public class UIWood : MonoBehaviour
 
     private void Awake()
     {
-        _uiNav = GetComponent<UINavigation>();
+        _uiNav = GetComponent<UINavigation_origin>();
 
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
@@ -39,7 +39,7 @@ public class UIWood : MonoBehaviour
 
     private void OnBorderButtonClicked()
     {
-        if(_uiNav.Count == 0)
+        if (_uiNav.Count == 0)
         {
             _borderButton.SetActive(false);
         }

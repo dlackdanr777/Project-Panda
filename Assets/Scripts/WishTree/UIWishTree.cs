@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class UIWishTree : MonoBehaviour
 {
-    private UINavigation _uiNav;
+    private UINavigation_origin _uiNav;
 
     private string _value;
 
     private void Awake()
     {
-        _uiNav = GetComponent<UINavigation>();
+        _uiNav = GetComponent<UINavigation_origin>();
 
         DataBind.SetButtonValue("WoodButton", OnInsideWoodButtonClicked);
         DataBind.SetButtonValue("WishTreeBorderButton", OnBorderButtonClicked);

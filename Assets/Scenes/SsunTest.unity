@@ -669,7 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b2c316f8ae52a4d85d1af530543a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 997990210351032849, guid: 0d79fc99796e75649bd0c97c6c83945e, type: 3}
+  _prefab: {fileID: 997990210351032849, guid: 31d72a463d1ec52439f074e2d0cb5309, type: 3}
   _closeDetailViewButton: {fileID: 1902617815}
   _firstToggleIndex: 0
   _field: {fileID: 432115417}
@@ -2881,7 +2881,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 192641140}
-  - component: {fileID: 192641142}
   - component: {fileID: 192641141}
   - component: {fileID: 192641143}
   m_Layer: 5
@@ -2927,25 +2926,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4c1d42c832ca4488935f67f81efcdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &192641142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 192641139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0625dd0993790b4d9b3ceaa0e40fd11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rootUiView:
-    Name: 
-    UIView: {fileID: 0}
-  _uiViewList:
-  - Name: InsideWood
-    UIView: {fileID: 882525241}
-  _currentView: {fileID: 0}
 --- !u!114 &192641143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2958,7 +2938,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a61f7f03c204a4fba2114b98582dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiViewList: []
+  _uiViewList:
+  - Name: InsideWood
+    UIView: {fileID: 882525241}
   _currentView: {fileID: 0}
 --- !u!1 &207813469
 GameObject:
@@ -8406,15 +8388,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c656d9174163c840a79c2a4f86da551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 0}
-  _closeDetailViewButton: {fileID: 0}
+  _prefab: {fileID: 2363590290482915646, guid: c7b3b5cbd42fc794f846fc53b28a2347, type: 3}
+  _closeDetailViewButton: {fileID: 181258712}
   _firstToggleIndex: 0
-  _field: {fileID: 0}
-  _detailView: {fileID: 0}
-  _spawnPoint: []
-  _removeButton: {fileID: 0}
-  _notice: {fileID: 0}
-  _removePopup: {fileID: 0}
+  _field: {fileID: 1305750554}
+  _detailView: {fileID: 2062047333}
+  _spawnPoint:
+  - {fileID: 81574062}
+  - {fileID: 1639930294}
+  _removeButton: {fileID: 128036763}
+  _removePopup: {fileID: 1839031244}
 --- !u!1 &756717778
 GameObject:
   m_ObjectHideFlags: 0
@@ -14567,7 +14550,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1218759584
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21615,7 +21598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _notice: {fileID: 753421142}
-  _uiMessageList: {fileID: 0}
+  _uiMessageList: {fileID: 754490319}
   _spawnWishes: {fileID: 49850487}
 --- !u!1 &1675915213
 GameObject:

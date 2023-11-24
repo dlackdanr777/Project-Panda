@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class UIMessageList : UIList<Message,MessageField>
 {
     [SerializeField] private Button _removeButton;
-    [SerializeField] private GameObject _notice;
     [SerializeField] private GameObject _removePopup;
 
     private Player _player;
