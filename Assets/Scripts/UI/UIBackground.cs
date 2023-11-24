@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class UIBackground : MonoBehaviour
 {
     [SerializeField] private Color[] _fieldColor; //panel 색상 변경할 색상 배열
+    [SerializeField] private int _firstToggleIndex;
 
     private ToggleGroup _toggleGroup;
 
@@ -14,7 +15,7 @@ public class UIBackground : MonoBehaviour
     }
     private void OnEnable()
     {
-        Toggle firstToggle = _toggleGroup.transform.GetChild(0).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
+        Toggle firstToggle = _toggleGroup.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
         if(firstToggle != null)
         {
             firstToggle.isOn = true;
