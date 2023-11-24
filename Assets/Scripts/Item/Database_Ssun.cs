@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//¾ÆÀÌÅÛ Á¾·ù
+//ì•„ì´í…œ ì¢…ë¥˜
 public enum ItemField
 {
     None = -1,
@@ -40,7 +40,7 @@ public class Database_Ssun : SingletonHandler<Database_Ssun>
                     DataSnack[j]["Description"].ToString(),
                     (int)DataSnack[i]["Price"],
                     ItemField.Snack,
-                    Test)); //¾ÆÁ÷ ÀÌ¹ÌÁö´Â ¹Ş¾Æ¿ÀÁö ¾ÊÀ½
+                    Test)); //ì•„ì§ ì´ë¯¸ì§€ëŠ” ë°›ì•„ì˜¤ì§€ ì•ŠìŒ
             }
             ItemCount[i] = ItemList[i].Count;
 

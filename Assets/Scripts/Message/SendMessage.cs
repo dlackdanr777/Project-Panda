@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-//Æ¯Á¤ Á¶°Ç ½Ã, ¹®ÀÚ ¹ß¼Û
+//íŠ¹ì • ì¡°ê±´ ì‹œ, ë¬¸ì ë°œì†¡
 public class SendMessage : MonoBehaviour
 {
     private Player _player;
@@ -24,12 +24,12 @@ public class SendMessage : MonoBehaviour
         _spawnWishes.NoticeHandler += UIMessageList_NoticeHandler;
 
 
-        //Á¶°Ç ¿©·¯ °³ ¸¸µé¾î¼­ ÇØ´çÇÏ´Â ¹®ÀÚ º¸³¿(Á¶°Ç ´Ş¶óÁü)
+        //ì¡°ê±´ ì—¬ëŸ¬ ê°œ ë§Œë“¤ì–´ì„œ í•´ë‹¹í•˜ëŠ” ë¬¸ì ë³´ëƒ„(ì¡°ê±´ ë‹¬ë¼ì§)
         _condition1Handler = (int amount) => (amount > 10);
         _condition2Handler = (int amount) => (amount > 20);
         _condition3Handler = (int amount) => (amount > 30);
 
-        //Start¿¡¼­ ÄÚ·çÆ¾
+        //Startì—ì„œ ì½”ë£¨í‹´
         StartCoroutine(SendMessageRoutine(_condition1Handler, GameManager.Instance.MessageDatabase.Messages[0], MessageField.Mail));
         StartCoroutine(SendMessageRoutine(_condition2Handler, GameManager.Instance.MessageDatabase.Messages[1], MessageField.Mail));
         StartCoroutine(SendMessageRoutine(_condition3Handler, GameManager.Instance.MessageDatabase.Messages[2], MessageField.Mail));
@@ -46,28 +46,28 @@ public class SendMessage : MonoBehaviour
         {
             if (condition(_player.Familiarity))
             {
-                //message µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ º¸³ÂÀ½À» È®ÀÎ
+                //message ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ë³´ëƒˆìŒì„ í™•ì¸
                 message.IsSend = true;
-                yield return new WaitForSeconds(3); //5ÃÊÈÄ¿¡ ¹®ÀÚ ¿Àµµ·Ï
-                Send(message,messageField);
+                yield return new WaitForSeconds(3); //5ì´ˆí›„ì— ë¬¸ì ì˜¤ë„ë¡
+                Send(message, messageField);
                 yield break;
             }
             yield return null;
         }
     }
 
-    private void Send(Message message ,MessageField messageField)
+    private void Send(Message message, MessageField messageField)
     {
         _player.Messages[(int)messageField].Add(message);
 
-        //UIº¯È¯
+        //UIë³€í™˜
         SetNotice();
     }
 
-    private void SetNotice() //¾Ë¸² ¼³Á¤, ¾Ë¸² °¹¼ö ¼³Á¤
+    private void SetNotice() //ì•Œë¦¼ ì„¤ì •, ì•Œë¦¼ ê°¯ìˆ˜ ì„¤ì •
     {
         int count = 0;
-        for(int i = 0; i < _player.Messages.Length; i++)
+        for (int i = 0; i < _player.Messages.Length; i++)
         {
             count += _player.Messages[i].CurrentNotCheckedMessage;
             Debug.Log(count);
@@ -78,9 +78,9 @@ public class SendMessage : MonoBehaviour
         }
         else
         {
-            //¾Ë¸² º¸ÀÌ±â
+            //ì•Œë¦¼ ë³´ì´ê¸°
             _notice.SetActive(true);
-            _notice.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = count.ToString();// ¾Ë¸² °¹¼ö º¯°æ
+            _notice.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = count.ToString();// ì•Œë¦¼ ê°¯ìˆ˜ ë³€ê²½
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIShop : UIView
+public class UIInsideWood : UIView
 {
     public override void Hide()
     {
@@ -13,4 +13,5 @@ public class UIShop : UIView
     {
         gameObject.SetActive(true);
     }
+    
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIShop : UIView
+public class UIHouse : UIView
 {
     public override void Hide()
     {

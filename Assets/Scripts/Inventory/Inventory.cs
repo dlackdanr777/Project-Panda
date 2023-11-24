@@ -4,8 +4,8 @@ using System.Collections.Generic;
 [Serializable]
 public class Inventory
 {
-    public int MaxInventoryItem { get; private set; } = 30; //inventory ÃÖ´ë ÀúÀå °³¼ö
-    public int MaxInventoryItemCount { get; private set; } = 10;//ÇÑ ¾ÆÀÌÅÛ´ç ÃÖ´ë °³¼ö
+    public int MaxInventoryItem { get; private set; } = 30; //inventory ìµœëŒ€ ì €ì¥ ê°œìˆ˜
+    public int MaxInventoryItemCount { get; private set; } = 10;//í•œ ì•„ì´í…œë‹¹ ìµœëŒ€ ê°œìˆ˜
 
     public List<InventoryItem> Items = new List<InventoryItem>();
     
@@ -23,9 +23,9 @@ public class Inventory
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Id.Equals(item.Id)) //id°¡ °°Àº ¾ÆÀÌÅÛÀÌ ÀÖ´Ù¸é
+                if (Items[i].Id.Equals(item.Id)) //idê°€ ê°™ì€ ì•„ì´í…œì´ ìˆë‹¤ë©´
                 {
-                    if (Items[i].Count == MaxInventoryItemCount) //°³¼ö°¡ ÃÖ´ë °³¼ö¿Í °°ÀºÁö È®ÀÎ
+                    if (Items[i].Count == MaxInventoryItemCount) //ê°œìˆ˜ê°€ ìµœëŒ€ ê°œìˆ˜ì™€ ê°™ì€ì§€ í™•ì¸
                     {
                         continue;
                     }
@@ -38,14 +38,14 @@ public class Inventory
             }
         }
 
-        //ÃÖ´ë °³¼ö¸¦ °¡Áø ¾ÆÀÌÅÛ¸¸ Á¸ÀçÇÑ´Ù¸é »õ·Î¿î ÀÎº¥Åä¸® ¾ÆÀÌÅÛ »ı¼º
+        //ìµœëŒ€ ê°œìˆ˜ë¥¼ ê°€ì§„ ì•„ì´í…œë§Œ ì¡´ì¬í•œë‹¤ë©´ ìƒˆë¡œìš´ ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ìƒì„±
         InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.ItemField, item.Image);
-        Items.Add(addItem); //»õ·Î¿î ÀÎº¥Åä¸® »ı¼º
+        Items.Add(addItem); //ìƒˆë¡œìš´ ì¸ë²¤í† ë¦¬ ìƒì„±
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾îÀÇ ÀÎº¥Åä¸®¿¡ idÀ» ÀÌ¿ëÇØ¼­ add
-    /// field´Â Á¾·ù Field.Toy, Field.SnackÀÌ ÀÖÀ½
+    /// í”Œë ˆì´ì–´ì˜ ì¸ë²¤í† ë¦¬ì— idì„ ì´ìš©í•´ì„œ add
+    /// fieldëŠ” ì¢…ë¥˜ Field.Toy, Field.Snackì´ ìˆìŒ
     /// </summary>
     /// <param name="field"></param>
     /// <param name="id"></param>
@@ -67,7 +67,7 @@ public class Inventory
     public void RemoveByIndex(int index)
     {
         Items[index].Count--;
-        if (Items[index].Count == 0)//0º¸´Ù ÀÛÀ¸¸é ¾ÆÀÌÅÛ »èÁ¦
+        if (Items[index].Count == 0)//0ë³´ë‹¤ ì‘ìœ¼ë©´ ì•„ì´í…œ ì‚­ì œ
         {
             Items.RemoveAt(index);
             if(Items.Count == 0)
