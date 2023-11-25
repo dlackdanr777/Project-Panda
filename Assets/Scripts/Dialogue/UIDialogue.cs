@@ -30,7 +30,10 @@ public class UIDialogue : UIView
         VisibleState = VisibleState.Disappearing;
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
+            CameraController.FriezePos = false;
+            CameraController.FriezeZoom = false;
             gameObject.SetActive(false);
+
             VisibleState = VisibleState.Disappeared;
             _currentIndex = 0;
         });
@@ -45,6 +48,9 @@ public class UIDialogue : UIView
         }
 
         gameObject.SetActive(true);
+        CameraController.FriezePos = true;
+        CameraController.FriezeZoom = true;
+
         _currentIndex = 0;
         
         VisibleState = VisibleState.Appearing;
@@ -69,15 +75,16 @@ public class UIDialogue : UIView
 
         else
         {
-            if(_currentIndex >= _dialogue.DialogDatas.Length - 1)
-            {
-                _uiNav.Pop();
-                AddComplateStory?.Invoke(StoryManager.CurrentDialogueID);
-            }
-            else
+            if(_currentIndex < _dialogue.DialogDatas.Length)
             {
                 StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
-               _currentIndex++;
+                _currentIndex++;
+            }
+
+            else
+            {
+                AddComplateStory?.Invoke(StoryManager.Instance.CurrentDialogueID);
+                _uiNav.Pop();
             }
         }
     }

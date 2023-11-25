@@ -8,13 +8,16 @@ using System;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public static int CurrentDialogueID { get; private set; }
+    public  int CurrentDialogueID { get; private set; }
 
     public StoryDialogue Dialogue { get; private set; }
 
     public bool IsStoryStart { get; private set; }
 
+    [SerializeField]
     private List<int> _storyCompleteList = new List<int>();
+
+    private Dictionary<int, PandaStoryController> _pandaStoryControllerDic = new Dictionary<int, PandaStoryController>();
 
     private Action _startHandler;
 
@@ -29,6 +32,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     {
         UIDialogue.AddComplateStory.AddListener(AddComplateStory);
         PandaStoryController.StartStroy.AddListener(StartStory);
+        PandaStoryController.SetStroyData.AddListener(SetStroyDic);
     }
 
 
@@ -56,7 +60,7 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void AddComplateStory(int id)
     {
-        if (!_storyCompleteList.Contains(id))
+        if (_storyCompleteList.Contains(id))
         {
             Debug.Log("이미 있는 인덱스 입니다.");
             return;
@@ -64,7 +68,34 @@ public class StoryManager : SingletonHandler<StoryManager>
             
         _storyCompleteList.Add(id);
         _exitHandler?.Invoke();
+        CheckStoryActivate();
         IsStoryStart = false;
+    }
+
+    private void SetStroyDic(int id, PandaStoryController pandaStoryController)
+    {
+
+        if (_pandaStoryControllerDic.ContainsKey(id))
+        {
+            Debug.LogError("이미 딕셔너리에 존재합니다.");
+            return;
+        }
+        _pandaStoryControllerDic.Add(id, pandaStoryController);
+    }
+
+
+    private void CheckStoryActivate()
+    {
+        foreach(int pandaID in  _pandaStoryControllerDic.Keys)
+        {
+            if (_storyCompleteList.Contains(pandaID))
+            {
+                _pandaStoryControllerDic[pandaID].DisableStory();
+                continue;
+            }
+
+            _pandaStoryControllerDic[pandaID].CheckActivateStory();
+        }
     }
 
 }
