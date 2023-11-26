@@ -1,61 +1,86 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
-//Æ¯Á¤ Á¶°Ç ½Ã, ¹®ÀÚ ¹ß¼Û
+//íŠ¹ì • ì¡°ê±´ ì‹œ, ë¬¸ì ë°œì†¡
 public class SendMessage : MonoBehaviour
 {
     private Player _player;
 
+    [SerializeField] private GameObject _notice;
+    [SerializeField] private UIMessageList _uiMessageList;
+    [SerializeField] private SpawnWishes _spawnWishes;
+
+    //Test
     private Predicate<int> _condition1Handler;
     private Predicate<int> _condition2Handler;
     private Predicate<int> _condition3Handler;
 
-    public event Action NoticeHandler;
-
     private void Start()
     {
         _player = GameManager.Instance.Player;
+        _uiMessageList.NoticeHandler += UIMessageList_NoticeHandler;
+        _spawnWishes.NoticeHandler += UIMessageList_NoticeHandler;
 
-        //Á¶°Ç ¿©·¯ °³ ¸¸µé¾î¼­ ÇØ´çÇÏ´Â ¹®ÀÚ º¸³¿(Á¶°Ç ´Ş¶óÁü)
+
+        //ì¡°ê±´ ì—¬ëŸ¬ ê°œ ë§Œë“¤ì–´ì„œ í•´ë‹¹í•˜ëŠ” ë¬¸ì ë³´ëƒ„(ì¡°ê±´ ë‹¬ë¼ì§)
         _condition1Handler = (int amount) => (amount > 10);
         _condition2Handler = (int amount) => (amount > 20);
         _condition3Handler = (int amount) => (amount > 30);
 
-        //Start¿¡¼­ ÄÚ·çÆ¾
-        StartCoroutine(SendMessageRoutine(_condition1Handler, GameManager.Instance.MessageDatabase.Messages[0]));
-        StartCoroutine(SendMessageRoutine(_condition2Handler, GameManager.Instance.MessageDatabase.Messages[1]));
-        StartCoroutine(SendMessageRoutine(_condition3Handler, GameManager.Instance.MessageDatabase.Messages[2]));
+        //Startì—ì„œ ì½”ë£¨í‹´
+        StartCoroutine(SendMessageRoutine(_condition1Handler, GameManager.Instance.MessageDatabase.Messages[0], MessageField.Mail));
+        StartCoroutine(SendMessageRoutine(_condition2Handler, GameManager.Instance.MessageDatabase.Messages[1], MessageField.Mail));
+        StartCoroutine(SendMessageRoutine(_condition3Handler, GameManager.Instance.MessageDatabase.Messages[2], MessageField.Mail));
     }
 
-    private IEnumerator SendMessageRoutine(Predicate<int> condition, Message message)
+    private void UIMessageList_NoticeHandler()
+    {
+        SetNotice();
+    }
+
+    private IEnumerator SendMessageRoutine(Predicate<int> condition, Message message, MessageField messageField)
     {
         while (!message.IsSend)
         {
             if (condition(_player.Familiarity))
             {
-                //message µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ º¸³ÂÀ½À» È®ÀÎ
+                //message ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ë³´ëƒˆìŒì„ í™•ì¸
                 message.IsSend = true;
-                yield return new WaitForSeconds(3); //5ÃÊÈÄ¿¡ ¹®ÀÚ ¿Àµµ·Ï
-                Send(message);
+                yield return new WaitForSeconds(3); //5ì´ˆí›„ì— ë¬¸ì ì˜¤ë„ë¡
+                Send(message, messageField);
                 yield break;
             }
             yield return null;
         }
     }
 
-    private void Send(Message message)
+    private void Send(Message message, MessageField messageField)
     {
-        //¸®½ºÆ®¿¡ ÀúÀå
-        if (_player.Messages.Count == _player.MaxMessageCount) //ÃÑ ¿ë·®ÀÌ Â÷¸é 
-        {
-            _player.Messages.RemoveAt(0);//¸ÕÀú ¿Â ¹®ÀÚ »èÁ¦
-        }
-        _player.Messages.Add(message); //¹®ÀÚ ³Ö±â(FIFO)
-        _player.IsCheckMessage.Add(false); //¹®ÀÚÈ®ÀÎÇß´ÂÁö ¾Ë ¼ö ÀÖ´Â ¸®½ºÆ®¿¡µµ Á¤º¸ ÀúÀå
-        _player.IsReceiveGift.Add(false);
+        _player.Messages[(int)messageField].Add(message);
 
-        //UIº¯È¯
-        NoticeHandler?.Invoke();
+        //UIë³€í™˜
+        SetNotice();
+    }
+
+    private void SetNotice() //ì•Œë¦¼ ì„¤ì •, ì•Œë¦¼ ê°¯ìˆ˜ ì„¤ì •
+    {
+        int count = 0;
+        for (int i = 0; i < _player.Messages.Length; i++)
+        {
+            count += _player.Messages[i].CurrentNotCheckedMessage;
+            Debug.Log(count);
+        }
+        if (count == 0)
+        {
+            _notice.SetActive(false);
+        }
+        else
+        {
+            //ì•Œë¦¼ ë³´ì´ê¸°
+            _notice.SetActive(true);
+            _notice.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = count.ToString();// ì•Œë¦¼ ê°¯ìˆ˜ ë³€ê²½
+        }
     }
 }

@@ -1,14 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//¾ÆÀÌÅÛ Á¾·ù
-public enum Field
+//ì•„ì´í…œ ì¢…ë¥˜
+public enum ItemField
 {
     None = -1,
     Toy,
     Snack,
-    Album,
-    Friend
+    Furniture
+}
+
+public enum MessageField
+{
+    None = -1,
+    Mail,
+    Wish
 }
 
 public class Database_Ssun : SingletonHandler<Database_Ssun>
@@ -32,7 +38,9 @@ public class Database_Ssun : SingletonHandler<Database_Ssun>
                 ItemList[i].Add(new Item(DataSnack[j]["Id"].ToString(),
                     DataSnack[j]["Name"].ToString(),
                     DataSnack[j]["Description"].ToString(),
-                    Test)); //¾ÆÁ÷ ÀÌ¹ÌÁö´Â ¹Ş¾Æ¿ÀÁö ¾ÊÀ½
+                    (int)DataSnack[i]["Price"],
+                    ItemField.Snack,
+                    Test)); //ì•„ì§ ì´ë¯¸ì§€ëŠ” ë°›ì•„ì˜¤ì§€ ì•ŠìŒ
             }
             ItemCount[i] = ItemList[i].Count;
 

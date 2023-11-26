@@ -8,6 +8,8 @@ using System;
 public class UIPanda : MonoBehaviour
 {
     private Button _cameraButton;
+    private Button _giftButton;
+    private bool _isGift;
 
     [SerializeField]
     private Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
@@ -18,22 +20,28 @@ public class UIPanda : MonoBehaviour
     private void Awake()
     {
         _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
+        _giftButton = transform.GetChild(2).gameObject.GetComponent<Button>();
     }
 
     private void OnEnable()
     {
         _starterPanda.StateHandler += StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
-        _starterPanda.AlphaImageHandler += StarterPanda_AlphaImageHandler;
+        _starterPanda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
+        _starterPanda.GiftHandler += StarterPanda_GiftHandler;
 
         _cameraButton.onClick.AddListener(OnClickCameraButton);
+        _giftButton.onClick.AddListener(OnClickGiftButton);
 
     }
+
+
     private void OnDisable()
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
-        _starterPanda.AlphaImageHandler -= StarterPanda_AlphaImageHandler;
+        _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
+        _starterPanda.GiftHandler -= StarterPanda_GiftHandler;
     }
 
     // 상태 이미지 변경
@@ -45,15 +53,25 @@ public class UIPanda : MonoBehaviour
     {
         OnChangePandaUIAlpha(targetAlpha, duration, onComplate);
     }
-    private void StarterPanda_AlphaImageHandler(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
+    private void StarterPanda_ImageAlphaHandler(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
     {
         OnChangeAlpha(gameObject, targetAlpha, duration, onComplate);
+    }
+    private void StarterPanda_GiftHandler()
+    {
+        _giftButton.gameObject.SetActive(true);
+        OnChangeAlpha(_giftButton.gameObject, 1, 1);
     }
 
     private void OnClickCameraButton()
     {
         // 카메라와 연동
-        Debug.Log("카메라 실행");
+    }
+    private void OnClickGiftButton()
+    {
+        // 플레이어에게 선물 들어오는 기능 연결
+
+        OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _starterPanda.TakeAGift());
     }
 
     /// <summary>
@@ -77,6 +95,6 @@ public class UIPanda : MonoBehaviour
 
     private void OnChangeAlpha(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
     {
-        Tween.IamgeAlpha(this.gameObject.transform.GetChild(1).gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
+        Tween.IamgeAlpha(gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
     }
 }

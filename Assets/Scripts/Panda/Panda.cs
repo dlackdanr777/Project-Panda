@@ -4,39 +4,76 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>NPC 판다, 스타터 판다의 부모 클래스</summary>
-public abstract class Panda : MonoBehaviour
+public abstract class Panda : MonoBehaviour, IInteraction
 {
+    //상태 이미지 변경 액션
+    public Action<string, int> StateHandler;
+    public Action<float, float, Action> UIAlphaHandler;
+    public Action<GameObject, float, float, Action> ImageAlphaHandler;
+    public Action GiftHandler;
+
     [SerializeField]
     protected UIPanda _uiPanda;
     protected bool _isUISetActive;
     protected float _stateImageTimer = 1f;
 
-    //상태 이미지 변경 액션
-    public Action<string, int> StateHandler;
-    public Action<float, float, Action> UIAlphaHandler;
-    public Action<GameObject, float, float, Action> AlphaImageHandler;
+    protected string PandaID;
+    protected string PandaName;
+    protected Sprite PandaImage;
 
-    /// <summary>성향</summary>
-    protected string _mbtiData;
+    /// <summary>판다 Mbti</summary>
+    public string Mbti;
+    protected Preference _preference;
 
-    /// <summary>친밀도</summary>
-    protected int _intimacy;
+    /// <summary>판다 친밀도</summary>
+    [SerializeField]
+    [Range(0, 100)] protected float _intimacy;
+    public float Intimacy
+    {
+        get { return _intimacy; }
+        private set { }
+    }
 
-    /// <summary>행복도</summary>
+    /// <summary>판다 행복도</summary>
     [SerializeField]
     [Range(-10, 10)] protected float _happiness;
+    public float Happiness
+    {
+        get { return _happiness; }
+        private set { }
+    }
     /// <summary>이전 행복도</summary>
-    protected float _lastHappiness;
+    [Range(-10, 10)] protected float _lastHappiness;
+
+    protected bool _isCameraRequest {  get; private set; }
+    protected bool _isGift;
+
 
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성
-    protected abstract void ChangeIntimacy(int changeIntimacy);
-
-    protected abstract void SetPreference(string mbti);
-
-
     /// <summary>
-    /// 판다 클릭하면 UI 표시
-    /// </summary>
+    /// 친밀도 변경 </summary>
+    public abstract void ChangeIntimacy(float changeIntimacy);
+    public abstract void ChangeHappiness(float changeHappiness);
+
+    public void GiveAGift()
+    {
+        // 선물 랜덤 조건 설정
+        if (UnityEngine.Random.Range(0, 10) == 9 && _isGift == false)
+        {
+            Debug.Log("판다가 주는 선물");
+            _isGift = true;
+            GiftHandler?.Invoke();
+        }
+        
+    }
+
+    public void TakeAGift()
+    {
+        _isGift = false;
+        _uiPanda.gameObject.transform.GetChild(2).gameObject.SetActive(false);
+    }
+
+    // 나중에 삭제
     protected void PandaMouseClick()
     {
         if (Input.GetMouseButtonDown(0))
@@ -49,6 +86,7 @@ public abstract class Panda : MonoBehaviour
             }
         }
     }
+
     public void ToggleUIPandaButton()
     {
         _isUISetActive = !_isUISetActive;
@@ -64,8 +102,8 @@ public abstract class Panda : MonoBehaviour
                 _uiPanda.transform.GetChild(0).gameObject.SetActive(false);
             });
         }
-
     }
+
     /// <summary>
     /// 판다 상태 이미지 표시
     /// </summary>
@@ -74,13 +112,36 @@ public abstract class Panda : MonoBehaviour
 
         if (Mathf.FloorToInt(_happiness) != Mathf.FloorToInt(_lastHappiness) && _stateImageTimer > 2f)
         {
-            AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 1f, 0.7f, () =>
+            ImageAlphaHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 1f, 0.7f, () =>
             {
-                AlphaImageHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 0f, 0.7f, null);
+                ImageAlphaHandler?.Invoke(_uiPanda.gameObject.transform.GetChild(1).gameObject, 0f, 0.7f, null);
             });
             _stateImageTimer = 0f;
         }
         _lastHappiness = _happiness;
 
+    }
+    protected void SetPandaData(PandaData pandaData)
+    {
+        PandaName = pandaData.PandaName;
+        Mbti = pandaData.MBTI;
+        _intimacy = pandaData.Intimacy;
+        _happiness = pandaData.Happiness;
+        _lastHappiness = _happiness;
+    }
+
+    public void StartInteraction()
+    {
+        ToggleUIPandaButton();
+    }
+
+    public void UpdateInteraction()
+    {
+
+    }
+
+    public void ExitInteraction()
+    {
+        ToggleUIPandaButton();
     }
 }

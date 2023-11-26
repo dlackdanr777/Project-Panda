@@ -97,7 +97,7 @@ public class DialogueParser
 
             do
             {
-                int talkPandaID = int.Parse(row[6]);
+                string talkPandaID = row[6];
                 string contexts = row[7];
                 dialogDataList.Add(new DialogData(talkPandaID, contexts));
                 if (++i < data.Length)
@@ -119,4 +119,22 @@ public class DialogueParser
         return dialogueDic;
     }
 
+    /// <summary>
+    /// 판다 데이터 받아와 저장
+    /// </summary>
+    public PandaData[] PandaParse(string CSVFileName)
+    {
+        List<PandaData> pandaDatas = new List<PandaData>(); // 판다 리스트 생성
+        TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
+        string[] data = csvData.text.Split(new char[] { '\n' });
+
+        for (int i = 1; i < data.Length - 1; i++)
+        {
+
+            string[] row = data[i].Split(new char[] { ',' });
+            pandaDatas.Add(new PandaData(row[0], row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
+
+        }
+        return pandaDatas.ToArray();
+    }
 }
