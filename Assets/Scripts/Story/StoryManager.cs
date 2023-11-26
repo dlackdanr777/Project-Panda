@@ -10,7 +10,9 @@ public class StoryManager : SingletonHandler<StoryManager>
 {
     public  int CurrentDialogueID { get; private set; }
 
-    public StoryDialogue Dialogue { get; private set; }
+    public StoryDialogue CurrentDialogue { get; private set; }
+
+    public PandaStoryController CurrentStroyController { get; private set; }
 
     public bool IsStoryStart { get; private set; }
 
@@ -43,7 +45,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     }
 
 
-    private void StartStory(int id)
+    private void StartStory(int id, PandaStoryController _storyController)
     {
         if(IsStoryStart || _storyCompleteList.Contains(id))
         {
@@ -51,7 +53,8 @@ public class StoryManager : SingletonHandler<StoryManager>
             return;
         }
 
-        Dialogue = DialogueManager.Instance.GetStoryDialogue(id);
+        CurrentDialogue = DialogueManager.Instance.GetStoryDialogue(id);
+        CurrentStroyController = _storyController;
         CurrentDialogueID = id;
         _startHandler?.Invoke();
         IsStoryStart = true;

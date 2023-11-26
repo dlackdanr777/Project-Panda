@@ -5,15 +5,24 @@ using Muks.DataBind;
 
 public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
+public enum DialogueState
+{
+    None,
+    Context,
+    Event,
+    Choice
+}
+
 public class UIDialogue : UIView
 {
 
     private RectTransform _rectTransform;
-
     private Vector2 _tempPos;
-
+    private DialogueState _state;
+    private int _currentIndex;
+    private StoryDialogue _dialogue;
+    private PandaStoryController _pandaController;
     public static AddComplateStory AddComplateStory = new AddComplateStory();
-
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
@@ -28,6 +37,12 @@ public class UIDialogue : UIView
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
+
+        foreach (StoryEventData data in _pandaController.StoryEvents)
+        {
+            data.StoryEvent.IsComplate = false;
+        }
+
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
             CameraController.FriezePos = false;
@@ -57,42 +72,74 @@ public class UIDialogue : UIView
         Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -700), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
-            _dialogue = StoryManager.Instance.Dialogue;
+            _dialogue = StoryManager.Instance.CurrentDialogue;
+            _pandaController = StoryManager.Instance.CurrentStroyController;
             OnNextButtonClicked();
         });
     }
 
 
-    private bool _isContextRunning;
-    private int _currentIndex;
-    private StoryDialogue _dialogue;
 
 
     private void OnNextButtonClicked()
     {
-        if (_isContextRunning)
-            _isContextRunning = false;
+
+        switch (_state)
+        {
+            case DialogueState.Context:
+                _state = DialogueState.None;
+                return;
+
+            case DialogueState.Choice: return;
+
+            case DialogueState.Event: return;
+        }
+
+
+        foreach (StoryEventData data in _pandaController.StoryEvents)
+        {
+            if (_currentIndex == data.InsertIndex)
+            {
+                if (data.StoryEvent.IsComplate)
+                    continue;
+
+                StartStoryEvent(data.StoryEvent);
+                return;
+            }
+        }
+
+        if (_currentIndex < _dialogue.DialogDatas.Length)
+        {
+            StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
+            _currentIndex++;
+        }
 
         else
         {
-            if(_currentIndex < _dialogue.DialogDatas.Length)
-            {
-                StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
-                _currentIndex++;
-            }
-
-            else
-            {
-                AddComplateStory?.Invoke(StoryManager.Instance.CurrentDialogueID);
-                _uiNav.Pop();
-            }
+            AddComplateStory?.Invoke(StoryManager.Instance.CurrentDialogueID);
+            _uiNav.Pop();
         }
+
+    }
+
+    private void StartStoryEvent(StoryEvent storyEvent)
+    {
+        if (_state != DialogueState.None)
+            return;
+
+        storyEvent.EventStart(() =>
+        {
+            _currentIndex++;
+            _state = DialogueState.None;
+            OnNextButtonClicked();
+        });
+
     }
 
 
     private IEnumerator ContextAnime(DialogData data)
     {
-        _isContextRunning = true;
+        _state = DialogueState.Context;
         DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -105,14 +152,14 @@ public class UIDialogue : UIView
 
             yield return new WaitForSeconds(0.1f);
 
-            if (!_isContextRunning)
+            if (_state == DialogueState.None)
             {
                 DataBind.SetTextValue("DialogueContexts", data.Contexts);
                 break;
             }
         }
 
-        _isContextRunning = false;
+        _state = DialogueState.None;
     }
 
 

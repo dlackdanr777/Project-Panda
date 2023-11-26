@@ -4,18 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class StartStory : UnityEngine.Events.UnityEvent<int> { }
+public class StartStory : UnityEvent<int, PandaStoryController> { }
 
-public class SetStroyData : UnityEngine.Events.UnityEvent<int, PandaStoryController> { }
+public class SetStroyData : UnityEvent<int, PandaStoryController> { }
+
+[Serializable]
+public class StoryEventData
+{
+    [Tooltip("몇번 째 대화 창에 이벤트가 들어가는 것인지?")]
+    [SerializeField] private int _insertIndex;
+    [SerializeField] private StoryEvent _storyEvent;
+
+    public int InsertIndex => _insertIndex;
+    public StoryEvent StoryEvent => _storyEvent;
+
+
+}
 
 
 public class PandaStoryController : MonoBehaviour, IInteraction
 {
     [SerializeField] private int _storyID;
 
-    [SerializeField] private UnityEvent _onComplate;
+    [SerializeField] private StoryEventData[] _storyEvents;
 
     private StoryDialogue _storyDialogue;
+
+    public StoryEventData[] StoryEvents => _storyEvents;
 
     public static StartStory StartStroy = new StartStory();
 
@@ -55,7 +70,7 @@ public class PandaStoryController : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        StartStroy?.Invoke(_storyID);
+        StartStroy?.Invoke(_storyID, this);
     }
 
 

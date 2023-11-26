@@ -36,11 +36,11 @@ public class StoryDialogue
 
 public class DialogData
 {
-    public int TalkPandaID { get; private set; }
+    public string TalkPandaID { get; private set; }
 
     public string Contexts { get; private set; }
 
-    public DialogData(int talkPandaID, string contexts)
+    public DialogData(string talkPandaID, string contexts)
     {
         TalkPandaID = talkPandaID;
         Contexts = contexts;
