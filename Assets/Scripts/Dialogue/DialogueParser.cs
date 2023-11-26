@@ -97,7 +97,7 @@ public class DialogueParser
 
             do
             {
-                int talkPandaID = int.Parse(row[6]);
+                string talkPandaID = row[6];
                 string contexts = row[7];
                 dialogDataList.Add(new DialogData(talkPandaID, contexts));
                 if (++i < data.Length)
