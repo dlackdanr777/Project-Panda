@@ -10,46 +10,70 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public Action<string, int> StateHandler;
     public Action<float, float, Action> UIAlphaHandler;
     public Action<GameObject, float, float, Action> ImageAlphaHandler;
+    public Action GiftHandler;
 
     [SerializeField]
     protected UIPanda _uiPanda;
     protected bool _isUISetActive;
     protected float _stateImageTimer = 1f;
 
-    protected bool _isCameraRequest {  get; private set; }
+    protected string PandaID;
+    protected string PandaName;
+    protected Sprite PandaImage;
 
-    protected MBTIData MbtiData;
-    /// <summary>성향</summary>
-    public string _mbti; // 성향 받아와서 취향 설정
-
-    /// <summary>친밀도</summary>
-    protected int _intimacy { get; private set; }
-
-    /// <summary>행복도</summary>
-    [SerializeField]
-    [Range(-10, 10)] public float _happiness;
-    /// <summary>이전 행복도</summary>
-    protected float _lastHappiness;
-
+    /// <summary>판다 Mbti</summary>
+    public string Mbti;
     protected Preference _preference;
+
+    /// <summary>판다 친밀도</summary>
+    [SerializeField]
+    [Range(0, 100)] protected float _intimacy;
+    public float Intimacy
+    {
+        get { return _intimacy; }
+        private set { }
+    }
+
+    /// <summary>판다 행복도</summary>
+    [SerializeField]
+    [Range(-10, 10)] protected float _happiness;
+    public float Happiness
+    {
+        get { return _happiness; }
+        private set { }
+    }
+    /// <summary>이전 행복도</summary>
+    [Range(-10, 10)] protected float _lastHappiness;
+
+    protected bool _isCameraRequest {  get; private set; }
+    protected bool _isGift;
+
 
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성
     /// <summary>
-    /// 친밀도 변경
-    /// </summary>
-    protected abstract void ChangeIntimacy(int changeIntimacy);
+    /// 친밀도 변경 </summary>
+    public abstract void ChangeIntimacy(float changeIntimacy);
+    public abstract void ChangeHappiness(float changeHappiness);
 
-    protected abstract void SetPreference(string mbti);
-
-    protected virtual void Awake()
+    public void GiveAGift()
     {
-        MbtiData = new MBTIData();
-        MbtiData.SetMBTI();
+        // 선물 랜덤 조건 설정
+        if (UnityEngine.Random.Range(0, 10) == 9 && _isGift == false)
+        {
+            Debug.Log("판다가 주는 선물");
+            _isGift = true;
+            GiftHandler?.Invoke();
+        }
+        
     }
 
-    /// <summary>
-    /// 판다 클릭하면 UI 표시
-    /// </summary>
+    public void TakeAGift()
+    {
+        _isGift = false;
+        _uiPanda.gameObject.transform.GetChild(2).gameObject.SetActive(false);
+    }
+
+    // 나중에 삭제
     protected void PandaMouseClick()
     {
         if (Input.GetMouseButtonDown(0))
@@ -97,8 +121,15 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _lastHappiness = _happiness;
 
     }
+    protected void SetPandaData(PandaData pandaData)
+    {
+        PandaName = pandaData.PandaName;
+        Mbti = pandaData.MBTI;
+        _intimacy = pandaData.Intimacy;
+        _happiness = pandaData.Happiness;
+        _lastHappiness = _happiness;
+    }
 
-    
     public void StartInteraction()
     {
         ToggleUIPandaButton();

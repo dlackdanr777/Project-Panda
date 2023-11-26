@@ -1,8 +1,4 @@
-using Muks.DataBind;
-using Muks.Tween;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -15,17 +11,24 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
-        protected override void Awake()
+        // 판다 생성 정리하기
+        private void Start()
         {
-            base.Awake();
-            _happiness = 9;
-            _lastHappiness = _happiness;
+            // 판다 세팅
+            PandaID = "0";
+            PandaData pandaData = PandaManager.Instance.GetPandaData(PandaID);
+            //스타터 판다 mbti를 판다 데이터에 저장
+            PandaManager.Instance.SetStarterMBTI(Mbti);
+            SetPandaData(pandaData);
 
             _behaviorTree = new BehaviorTree(SettingBT());
             _uiPanda.gameObject.SetActive(true);
             StateHandler?.Invoke(StarterStateImage, 0);
 
-            _preference = MbtiData.SetPreference(_mbti);
+            _preference = MBTIManager.Instance.SetPreference(Mbti);
+
+            //test - 나중에 지우기
+            Debug.Log("판다ID: " + PandaID + "판다 이름: " + PandaName + "판다 행복도: " + _happiness);
             Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
         }
 
@@ -48,10 +51,13 @@ namespace BT
         {
             PandaMouseClick();
             ShowStateImage();
+            GiveAGift();
 
+
+            // 판다 행복도 지속적으로 감소
             if (_happiness > -10)
             {
-                _happiness -= Time.deltaTime * 0.1f;
+                _happiness -= Time.deltaTime * 0.001f;
             }
             else
             {
@@ -91,7 +97,6 @@ namespace BT
 
             //Debug.Log("시간이 충족되지 않았습니다.");
             return false;
-
         }
 
 
@@ -136,7 +141,6 @@ namespace BT
         {
             if (_happiness >= 5)
             {
-                //행복함 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(StarterStateImage, 1);
 
                 return INode.ENodeState.Success;
@@ -151,8 +155,8 @@ namespace BT
         {
             if (_happiness >= 0)
             {
-                //평범함 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(StarterStateImage, 2);
+                ChangeIntimacy(-0.001f);
 
                 return INode.ENodeState.Success;
             }
@@ -166,8 +170,8 @@ namespace BT
         {
             if (_happiness >= -5)
             {
-                //슬픔 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(StarterStateImage, 3);
+                ChangeIntimacy(-0.002f);
 
                 return INode.ENodeState.Success;
             }
@@ -181,8 +185,8 @@ namespace BT
         {
             if (_happiness >= -10)
             {
-                //슬픔 감정표현 관련 행동을 코드로 작성
                 StateHandler?.Invoke(StarterStateImage, 4);
+                ChangeIntimacy(-0.003f);
 
                 return INode.ENodeState.Success;
             }
@@ -191,22 +195,24 @@ namespace BT
         }
         #endregion
 
-        protected override void ChangeIntimacy(int changeIntimacy)
+        public override void ChangeIntimacy(float changeIntimacy)
         {
             if (changeIntimacy > 0)
             {
-                //친밀도 상승
+                _intimacy += changeIntimacy;
             }
             else
             {
-                //친밀도 하락
+                _intimacy += changeIntimacy;
             }
+            //판다 데이터도 변경
+            PandaManager.Instance.UpdatePandaIntimacy(PandaID, _intimacy);
         }
-        // mbti에서 설정..?
-        protected override void SetPreference(string mbti)
+
+        public override void ChangeHappiness(float changeHappiness)
         {
-            //mbti 정보를 통해 판다 취향 설정
-            //_preference = new Preference();
+            _happiness += changeHappiness;
+            PandaManager.Instance.UpdatePandaHappiness(PandaID, _happiness);
         }
 
     }
