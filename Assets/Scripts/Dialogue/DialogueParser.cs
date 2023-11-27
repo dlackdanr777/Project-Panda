@@ -31,51 +31,6 @@ public class DialogueParser
     }
 
 
-/*    //스토리 정보를 변환하여 반환하는 함수
-    public StoryDialogue[] StroyParse(string CSVFileName)
-    {
-        List<StoryDialogue> dialogueList = new List<StoryDialogue>(); //리스트 생성
-        TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
-        string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
-
-        for (int i = 1; i < data.Length; i++)
-        {
-            string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
-
-            int storyID = int.Parse(row[1]);
-            string storyName = row[1];
-            int requiredIntimacy = int.Parse(row[2]);
-            int priorStoryID = int.Parse(row[3]);
-            int nextStoryID = int.Parse(row[4]);
-            int pandaID = int.Parse(row[5]);
-
-            List<DialogData> dialogDataList = new List<DialogData>();
-
-            do
-            {
-                int talkPandaID = int.Parse(row[6]);
-                string contexts = row[7];
-
-                if (++i < data.Length)
-                {
-                    row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
-                }
-                else
-                {
-                    break;
-                }
-                dialogDataList.Add(new DialogData(talkPandaID, contexts));
-
-            } while (row[0].ToString() == "");
-
-            StoryDialogue dialogue = new StoryDialogue(storyID, storyName, requiredIntimacy, priorStoryID, nextStoryID, pandaID, dialogDataList.ToArray());
-            dialogueList.Add(dialogue);
-        }
-
-        return dialogueList.ToArray();
-    }*/
-
-
     public Dictionary<int, StoryDialogue> StroyParse(string CSVFileName)
     {
         Dictionary<int, StoryDialogue> dialogueDic = new Dictionary<int, StoryDialogue>();
@@ -99,7 +54,10 @@ public class DialogueParser
             {
                 string talkPandaID = row[6];
                 string contexts = row[7];
-                dialogDataList.Add(new DialogData(talkPandaID, contexts));
+                string choiceContext1 = row[8];
+                string choiceContext2 = row[9];
+
+                dialogDataList.Add(new DialogData(talkPandaID, contexts, choiceContext1, choiceContext2));
                 if (++i < data.Length)
                 {
                     row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.

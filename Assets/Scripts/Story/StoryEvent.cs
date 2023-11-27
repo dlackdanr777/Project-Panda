@@ -12,6 +12,10 @@ public abstract class StoryEvent : MonoBehaviour
     public bool IsComplate;
 
 
+    //해당 이벤트가 시작됬을때 실행될 함수
     public abstract void EventStart(Action onComplate);
+
+    //해당 이벤트가 캔슬됬을때 실행될 함수
+    public abstract void EventCancel(Action onComplate = null);
 
 }
