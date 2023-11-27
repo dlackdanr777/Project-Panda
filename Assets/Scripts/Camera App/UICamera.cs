@@ -34,6 +34,6 @@ public class UICameraApp : UIView
             _uiNav.Pop();
         });
 
-        DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop());
+        DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop("Camera"));
     }
 }

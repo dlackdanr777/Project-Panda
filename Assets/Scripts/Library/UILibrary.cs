@@ -29,13 +29,11 @@ public class UILibrary : UIView
     private void Init()
     {
         DataBind.SetButtonValue("ExitAlbumButton", OnAlbumButtonClicked);
-        //DataBind.SetButtonValue("IllustratedGuideButton", OnIllustratedGuideButtonClicked);
     }
 
     private void OnAlbumButtonClicked()
     {
-        _uiNav.Pop();
-        //UiIllustratedGuide.gameObject.SetActive(false);
+        _uiNav.Pop("Library");
     }
 
 }

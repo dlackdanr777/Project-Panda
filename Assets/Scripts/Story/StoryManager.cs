@@ -8,56 +8,29 @@ using System;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public  int CurrentDialogueID { get; private set; }
-
-    public StoryDialogue CurrentDialogue { get; private set; }
-
-    public PandaStoryController CurrentStroyController { get; private set; }
-
-    public bool IsStoryStart { get; private set; }
-
-    [SerializeField]
-    private List<int> _storyCompleteList = new List<int>();
+    public List<int> _storyCompleteList { get; private set; }
 
     private Dictionary<int, PandaStoryController> _pandaStoryControllerDic = new Dictionary<int, PandaStoryController>();
-
-    private Action _startHandler;
-
-    private Action _exitHandler;
-
-    private ActionGetter _startActionGetter;
-
-    private ActionGetter _exitActionGetter;
 
 
     public override void Awake()
     {
-        UIDialogue.AddComplateStory.AddListener(AddComplateStory);
-        PandaStoryController.StartStroy.AddListener(StartStory);
-        PandaStoryController.SetStroyData.AddListener(SetStroyDic);
+        Init();
+
+    }
+
+
+    private void Init()
+    {
+        _storyCompleteList = new List<int>();
+        UIDialogue.OnComplateHandler += AddComplateStory;
+        PandaStoryController.OnStartHandler += SetStroyDic;
     }
 
 
     private void Start()
     {
-        _startActionGetter = new ActionGetter("ShowDialogue", ref _startHandler);
-        _exitActionGetter = new ActionGetter("HideDialogue", ref _exitHandler);
-    }
-
-
-    private void StartStory(int id, PandaStoryController _storyController)
-    {
-        if(IsStoryStart || _storyCompleteList.Contains(id))
-        {
-            Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
-            return;
-        }
-
-        CurrentDialogue = DialogueManager.Instance.GetStoryDialogue(id);
-        CurrentStroyController = _storyController;
-        CurrentDialogueID = id;
-        _startHandler?.Invoke();
-        IsStoryStart = true;
+        CheckStoryActivate();
     }
 
 
@@ -70,10 +43,9 @@ public class StoryManager : SingletonHandler<StoryManager>
         }
             
         _storyCompleteList.Add(id);
-        _exitHandler?.Invoke();
         CheckStoryActivate();
-        IsStoryStart = false;
     }
+
 
     private void SetStroyDic(int id, PandaStoryController pandaStoryController)
     {
@@ -89,15 +61,18 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void CheckStoryActivate()
     {
-        foreach(int pandaID in  _pandaStoryControllerDic.Keys)
+        foreach(PandaStoryController panda in  _pandaStoryControllerDic.Values)
         {
-            if (_storyCompleteList.Contains(pandaID))
-            {
-                _pandaStoryControllerDic[pandaID].DisableStory();
+            if (panda == null)
                 continue;
-            }
 
-            _pandaStoryControllerDic[pandaID].CheckActivateStory();
+            if (!_storyCompleteList.Contains(panda.StoryDialogue.StoryID))
+                continue;
+
+            if (_storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999)
+                continue;
+
+            panda.gameObject.SetActive(false);
         }
     }
 

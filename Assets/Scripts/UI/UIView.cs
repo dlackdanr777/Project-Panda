@@ -13,9 +13,12 @@ public abstract class UIView : MonoBehaviour
 {
     protected UINavigation _uiNav;
 
+    [HideInInspector] public RectTransform RectTransform;
+
     public virtual void Init(UINavigation uiNav)
     {
         _uiNav = uiNav;
+        RectTransform = GetComponent<RectTransform>();
     }
 
 

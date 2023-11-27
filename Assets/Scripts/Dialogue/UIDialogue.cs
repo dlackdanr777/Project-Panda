@@ -2,6 +2,8 @@ using UnityEngine;
 using Muks.Tween;
 using System.Collections;
 using Muks.DataBind;
+using System.Linq;
+using System;
 
 public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
@@ -15,30 +17,39 @@ public enum DialogueState
 
 public class UIDialogue : UIView
 {
-
-    private RectTransform _rectTransform;
     private Vector2 _tempPos;
     private DialogueState _state;
     private int _currentIndex;
+
     private StoryDialogue _dialogue;
-    private PandaStoryController _pandaController;
-    public static AddComplateStory AddComplateStory = new AddComplateStory();
+    private StoryEventData[] _eventDatas;
+
+    private bool _isStoryStart;
+    private bool _isSkipEnabled;
+
+    public static event Action<int> OnComplateHandler;
+
+
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        _rectTransform = GetComponent<RectTransform>();
-        _tempPos = _rectTransform.anchoredPosition;
+        RectTransform = GetComponent<RectTransform>();
+        _tempPos = RectTransform.anchoredPosition;
+
+        PandaStoryController.OnStartInteractionHandler += StartStory;
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
         DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
     }
 
 
+
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
+        CancelInvoke("SkipDisable");
 
-        foreach (StoryEventData data in _pandaController.StoryEvents)
+        foreach (StoryEventData data in _eventDatas)
         {
             data.StoryEvent.IsComplate = false;
         }
@@ -56,13 +67,15 @@ public class UIDialogue : UIView
 
     public override void Show()
     {
-        if(StoryManager.Instance.IsStoryStart)
+        if(_isStoryStart)
         {
             Debug.LogError("이미 대화가 진행중 입니다.");
             return;
         }
 
         gameObject.SetActive(true);
+        _isSkipEnabled = true;
+
         CameraController.FriezePos = true;
         CameraController.FriezeZoom = true;
 
@@ -72,8 +85,6 @@ public class UIDialogue : UIView
         Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -700), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
-            _dialogue = StoryManager.Instance.CurrentDialogue;
-            _pandaController = StoryManager.Instance.CurrentStroyController;
             OnNextButtonClicked();
         });
     }
@@ -83,6 +94,9 @@ public class UIDialogue : UIView
 
     private void OnNextButtonClicked()
     {
+        if (!_isSkipEnabled)
+            return;
+
 
         switch (_state)
         {
@@ -96,7 +110,7 @@ public class UIDialogue : UIView
         }
 
 
-        foreach (StoryEventData data in _pandaController.StoryEvents)
+        foreach (StoryEventData data in _eventDatas)
         {
             if (_currentIndex == data.InsertIndex)
             {
@@ -116,11 +130,12 @@ public class UIDialogue : UIView
 
         else
         {
-            AddComplateStory?.Invoke(StoryManager.Instance.CurrentDialogueID);
+            OnComplateHandler?.Invoke(_dialogue.StoryID);
             _uiNav.Pop();
         }
 
     }
+
 
     private void StartStoryEvent(StoryEvent storyEvent)
     {
@@ -134,6 +149,21 @@ public class UIDialogue : UIView
             OnNextButtonClicked();
         });
 
+    }
+
+
+    private void StartStory(StoryDialogue storyDialogue, StoryEventData[] eventDatas)
+    {
+        if (_isStoryStart || StoryManager.Instance._storyCompleteList.Contains(storyDialogue.StoryID))
+        {
+            Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
+            return;
+        }
+
+        _dialogue = storyDialogue;
+        _eventDatas = eventDatas;
+        _uiNav.Push("Dialogue");
+        _isStoryStart = true;
     }
 
 
@@ -158,10 +188,15 @@ public class UIDialogue : UIView
                 break;
             }
         }
-
+        _isSkipEnabled = false;
+        Invoke("SkipDisable", 0.5f);
         _state = DialogueState.None;
     }
 
 
+    private void SkipDisable()
+    {
+        _isSkipEnabled = true;
+    }
 
 }
