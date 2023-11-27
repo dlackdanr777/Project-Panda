@@ -17,6 +17,9 @@ public enum DialogueState
 
 public class UIDialogue : UIView
 {
+    [SerializeField] private UIDialogueButton _leftButton;
+    [SerializeField] private UIDialogueButton _rightButton;
+
     private Vector2 _tempPos;
     private DialogueState _state;
     private int _currentIndex;
@@ -26,6 +29,7 @@ public class UIDialogue : UIView
 
     private bool _isStoryStart;
     private bool _isSkipEnabled;
+    private Coroutine _contextAnimeRoutine;
 
     public static event Action<int> OnComplateHandler;
 
@@ -40,6 +44,9 @@ public class UIDialogue : UIView
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
         DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
+
+        _leftButton.Init();
+        _rightButton.Init();
     }
 
 
@@ -48,22 +55,31 @@ public class UIDialogue : UIView
     {
         VisibleState = VisibleState.Disappearing;
         CancelInvoke("SkipDisable");
-
-        foreach (StoryEventData data in _eventDatas)
-        {
-            data.StoryEvent.IsComplate = false;
-        }
+        if (_contextAnimeRoutine != null)
+            StopCoroutine(_contextAnimeRoutine);
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
             CameraController.FriezePos = false;
             CameraController.FriezeZoom = false;
             gameObject.SetActive(false);
-
+            _isStoryStart = false;
             VisibleState = VisibleState.Disappeared;
             _currentIndex = 0;
         });
+
+        if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
+        {
+            foreach (StoryEventData data in _eventDatas)
+            {
+                if(data.StoryEvent.IsComplate)
+                    data.StoryEvent.EventCancel();
+
+                data.StoryEvent.IsComplate = false;
+            }
+        }
     }
+
 
     public override void Show()
     {
@@ -76,20 +92,21 @@ public class UIDialogue : UIView
         gameObject.SetActive(true);
         _isSkipEnabled = true;
 
+        DataBind.SetTextValue("DialogueName", " ");
+        DataBind.SetTextValue("DialogueContexts", " ");
+
         CameraController.FriezePos = true;
         CameraController.FriezeZoom = true;
 
         _currentIndex = 0;
         
         VisibleState = VisibleState.Appearing;
-        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -700), 1f, TweenMode.EaseInOutBack, () => 
+        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -900), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
             OnNextButtonClicked();
         });
     }
-
-
 
 
     private void OnNextButtonClicked()
@@ -112,11 +129,11 @@ public class UIDialogue : UIView
 
         foreach (StoryEventData data in _eventDatas)
         {
-            if (_currentIndex == data.InsertIndex)
-            {
-                if (data.StoryEvent.IsComplate)
-                    continue;
+            if (_currentIndex != data.InsertIndex)
+                continue;
 
+            if (!data.StoryEvent.IsComplate)
+            {
                 StartStoryEvent(data.StoryEvent);
                 return;
             }
@@ -124,7 +141,10 @@ public class UIDialogue : UIView
 
         if (_currentIndex < _dialogue.DialogDatas.Length)
         {
-            StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
+            if (_contextAnimeRoutine != null)
+                StopCoroutine(_contextAnimeRoutine);
+
+            _contextAnimeRoutine = StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
             _currentIndex++;
         }
 
@@ -142,10 +162,12 @@ public class UIDialogue : UIView
         if (_state != DialogueState.None)
             return;
 
+        _state = DialogueState.Event;
+
         storyEvent.EventStart(() =>
         {
-            _currentIndex++;
             _state = DialogueState.None;
+            storyEvent.IsComplate = true;
             OnNextButtonClicked();
         });
 
@@ -170,6 +192,8 @@ public class UIDialogue : UIView
     private IEnumerator ContextAnime(DialogData data)
     {
         _state = DialogueState.Context;
+        _isSkipEnabled = false;
+        Invoke("SkipDisable", 0.5f);
         DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -188,9 +212,32 @@ public class UIDialogue : UIView
                 break;
             }
         }
-        _isSkipEnabled = false;
-        Invoke("SkipDisable", 0.5f);
-        _state = DialogueState.None;
+
+        if (data.CanChoice)
+        {
+            _state = DialogueState.Choice;
+            _leftButton.ShowButton(data.ChoiceContext1, () => { _leftButton.Button.onClick.AddListener(OnButtonClicked); });
+            _rightButton.ShowButton(data.ChoiceContext2, () => { _rightButton.Button.onClick.AddListener(OnButtonClicked); });
+        }
+
+        else
+        {
+            _state = DialogueState.None;
+        }
+    }
+
+    private void OnButtonClicked()
+    {
+        _leftButton.HideButton();
+        _rightButton.HideButton(() => 
+        {
+            _state = DialogueState.None;
+            _leftButton.Button.onClick.RemoveListener(OnButtonClicked);
+            _rightButton.Button.onClick.RemoveListener(OnButtonClicked);
+            _isSkipEnabled = true;
+            OnNextButtonClicked();
+        });
+
     }
 
 

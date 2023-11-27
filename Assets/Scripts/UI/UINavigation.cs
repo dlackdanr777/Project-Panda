@@ -35,10 +35,10 @@ public class UINavigation : MonoBehaviour
 
     private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Pop();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pop();
+        }
     }
 
     private void Init()
@@ -61,8 +61,19 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Push(string viewName)
     {
+
+            
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
         {
+            if(Count > 0)
+            {
+                if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+                {
+                    Debug.Log("UI가 열리거나 닫히는 중 입니다.");
+                    return;
+                }
+            }
+
             if (!_uiViews.Contains(uiView))
             {
                 _uiViews.Add(uiView);
@@ -88,6 +99,15 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Pop()
     {
+        if (Count > 0)
+        {
+            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            {
+                Debug.Log("UI가 열리거나 닫히는 중 입니다.");
+                return;
+            }
+        }
+
         if (_uiViews.Count <= 0)
             return;
 
@@ -105,6 +125,15 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Pop(string viewName)
     {
+        if (Count > 0)
+        {
+            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            {
+                Debug.Log("UI가 열리거나 닫히는 중 입니다.");
+                return;
+            }
+        }
+
         if (_uiViews.Count <= 0)
             return;
 
@@ -125,7 +154,16 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        while(_uiViews.Count > 0)
+        if (Count > 0)
+        {
+            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            {
+                Debug.Log("UI가 열리거나 닫히는 중 입니다.");
+                return;
+            }
+        }
+
+        while (_uiViews.Count > 0)
         {
             _uiViews.Last().Hide();
             _uiViews.Remove(_uiViews.Last());
