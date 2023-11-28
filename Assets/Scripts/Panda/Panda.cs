@@ -12,18 +12,21 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public Action<GameObject, float, float, Action> ImageAlphaHandler;
     public Action GiftHandler;
 
-    [SerializeField]
-    protected UIPanda _uiPanda;
+    /// <summary>판다 Mbti</summary>
+    public string Mbti;
+    public bool IsCameraRequest;
+
     protected bool _isUISetActive;
     protected float _stateImageTimer = 1f;
 
-    protected string PandaID;
-    protected string PandaName;
-    protected Sprite PandaImage;
-
-    /// <summary>판다 Mbti</summary>
-    public string Mbti;
+    protected string _pandaID;
+    protected string _pandaName;
+    protected Sprite _pandaImage;
     protected Preference _preference;
+    protected bool _isGift;
+
+    [SerializeField]
+    protected UIPanda _uiPanda;
 
     /// <summary>판다 친밀도</summary>
     [SerializeField]
@@ -44,10 +47,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
     /// <summary>이전 행복도</summary>
     [Range(-10, 10)] protected float _lastHappiness;
-
-    protected bool _isCameraRequest {  get; private set; }
-    protected bool _isGift;
-
 
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성
     /// <summary>
@@ -123,7 +122,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
     protected void SetPandaData(PandaData pandaData)
     {
-        PandaName = pandaData.PandaName;
+        _pandaName = pandaData.PandaName;
         Mbti = pandaData.MBTI;
         _intimacy = pandaData.Intimacy;
         _happiness = pandaData.Happiness;
