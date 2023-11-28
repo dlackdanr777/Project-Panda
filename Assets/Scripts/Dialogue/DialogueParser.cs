@@ -37,16 +37,16 @@ public class DialogueParser
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
         string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
 
-        for (int i = 1; i < data.Length; i++)
+        for (int i = 1; i < data.Length;)
         {
             string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
-
             int storyID = int.Parse(row[0]);
             string storyName = row[1];
             int requiredIntimacy = int.Parse(row[2]);
             int priorStoryID = int.Parse(row[3]);
             int nextStoryID = int.Parse(row[4]);
             int pandaID = int.Parse(row[5]);
+
 
             List<DialogData> dialogDataList = new List<DialogData>();
 
@@ -66,12 +66,11 @@ public class DialogueParser
                 {
                     break;
                 }
-                
 
             } while (row[0].ToString() == "");
-
             StoryDialogue dialogue = new StoryDialogue(storyID, storyName, requiredIntimacy, priorStoryID, nextStoryID, pandaID, dialogDataList.ToArray());
             dialogueDic.Add(storyID, dialogue);
+
         }
 
         return dialogueDic;
