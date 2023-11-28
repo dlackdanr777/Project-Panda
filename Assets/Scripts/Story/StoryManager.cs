@@ -64,14 +64,27 @@ public class StoryManager : SingletonHandler<StoryManager>
         foreach(PandaStoryController panda in  _pandaStoryControllerDic.Values)
         {
             if (panda == null)
+            {
+                Debug.Log(panda.name);
                 continue;
+            }
+                
 
             if (!_storyCompleteList.Contains(panda.StoryDialogue.StoryID))
+            {
+                Debug.Log(panda.name);
                 continue;
+            }
+                
 
             if (_storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999)
+            {
+                Debug.Log(panda.name);
                 continue;
+            }
+                
 
+            Debug.Log(panda.name);
             panda.gameObject.SetActive(false);
         }
     }
