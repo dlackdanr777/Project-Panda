@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 {
-    [SerializeField] private GameObject _itemDrop;
+    [SerializeField] private Transform _itemSlot;
 
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
@@ -31,16 +31,17 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
             _maxCount[i] = GameManager.Instance.Player.Inventory[2].MaxInventoryItem;
         }
 
-        Init();
         UpdateList();
+        Init();
 
     }
 
     private void Start()
     {
-        for(int i = 0; i < _itemDrop.transform.childCount; i++)
+        foreach(ItemSlot slot in _itemSlot.GetComponentsInChildren<ItemSlot>())
         {
-            _itemDrop.transform.GetChild(i).GetComponent<DragDrop>().OnUseItem += UIInventoryList_OnUseItem;
+            slot.OnUseItem += ItemSlot_OnUseItem;
+            slot.OnPutInItem += ItemSlot_OnPutInItem;
 
         }
     }
@@ -56,23 +57,25 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         return FurnitureType.None;
     }
 
-    private void UIInventoryList_OnUseItem() //아이템 
+    private void ItemSlot_OnUseItem() //아이템 
     {
-        UseItem();    
-    }
-
-    private void UseItem()
-    {
-        GameManager.Instance.Player.Inventory[2].RemoveByIndex(_currentItemIndex);
+        GameManager.Instance.Player.Inventory[2].RemoveById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
         UpdateListSlots();
     }
 
-    private void UpdateList()
+    private void ItemSlot_OnPutInItem()
+    {
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
+        UpdateListSlots();
+    }
+
+    //가구 인벤토리 받아와서 가구 종류별로 저장
+    private void UpdateList() 
     {
         List<InventoryItem> furnitureInventory = GameManager.Instance.Player.Inventory[2].GetInventoryList();
-        Inventory list = new Inventory();
         for (int i = 0; i < System.Enum.GetValues(typeof(FurnitureType)).Length-1; i++)
         {
+            Inventory list = new Inventory();
 
             for (int j = 0; j < furnitureInventory.Count; j++) //가구 종류별로 나누기
             {
@@ -92,14 +95,14 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     {
         UpdateList();
 
-        for (int j = 0; j < GameManager.Instance.Player.Inventory[2].ItemsCount; j++) //현재 player의 가구 인벤토리에 저장된 아이템 갯수
+        for (int j = 0; j < _maxCount[(int)_currentField]; j++)
         {
             if (j < _lists[(int)_currentField].Count) //현재 가구 종류의 spawn 개수
             {
                 _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
                 _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
                 _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
-                _spawnPoint[(int)_currentField].GetChild(j).GetComponent<DragDrop>().OnUseItem += UIInventoryList_OnUseItem;
+                _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Id.ToString();
             }
             else
             {
@@ -115,9 +118,6 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
-
-        //배치아이템 data bind
-        DataBind.SetSpriteValue("ArrangeItemSprite", GameManager.Instance.Player.Inventory[(int)_currentField].GetInventoryList()[_currentItemIndex].Image);
 
     }
 }

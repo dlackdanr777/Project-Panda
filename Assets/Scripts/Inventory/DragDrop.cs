@@ -1,18 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    public event Action OnUseItem;
-    public event Action DontUseItem;
 
     private Canvas _canvas;
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
-    private Transform _beforeTransform;
+    private Transform _oldParent;
+    private Vector3 _oldPosition;
 
     private void Awake()
     {
@@ -23,17 +23,22 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _beforeTransform = eventData.pointerDrag.transform;
+        _oldParent = transform.parent;
+        _oldPosition = transform.position;
         _canvasGroup.blocksRaycasts = false;
     }
     public void OnDrag(PointerEventData eventData)
     {
+        transform.parent = transform.root; //맨 위로 가도록
         _rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
+
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         _canvasGroup.blocksRaycasts = true;
+        transform.parent = _oldParent;
+        transform.position = _oldPosition;
         
     }
 }
