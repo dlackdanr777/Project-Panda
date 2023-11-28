@@ -47,8 +47,6 @@ public class Event1_8 : StoryEvent
                     Tween.TransformMove(gameObject, transform.position + transform.up, 2, TweenMode.Smootherstep, () =>
                     {
                         onComplate?.Invoke();
-                        _uiNav.Push("Library");
-                        _uiNav.Push("Dialogue");
                     });
                 }
             }
