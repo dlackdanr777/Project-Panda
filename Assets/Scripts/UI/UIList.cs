@@ -88,7 +88,11 @@ public abstract class UIList<T, Enum> : MonoBehaviour
     private void OnClickSlot(int index)
     {
         GetContent(index); //텍스트 바인딩
-        _detailView.SetActive(true); //상세 설명 창 나타남
+        if(_detailView != null)
+        {
+            _detailView.SetActive(true); //상세 설명 창 나타남
+
+        }
     }
 
     private void OnClickedFieldButton(bool isOn, Transform toggle)
@@ -116,7 +120,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        if (_detailView.activeSelf)
+        if (_detailView != null && _detailView.activeSelf)
         {
             _detailView.SetActive(false);
 
@@ -134,6 +138,11 @@ public abstract class UIList<T, Enum> : MonoBehaviour
         {
             toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
         }
-        _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
+
+        if(_detailView != null)
+        {
+            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
+
+        }
     }
 }

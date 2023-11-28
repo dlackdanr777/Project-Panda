@@ -53,7 +53,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         _dropPopup.SetActive(false); //popup 사라짐
         _itemDropZone.gameObject.SetActive(false); //map item zone 사라짐
-        MoveObject(1); //폰 올라감
+        //MoveObject(1); //폰 올라감
         OnUseItem?.Invoke(); //item 사용 detailview 사라짐
         RemoveSelectedItem(); //selected image 사라짐
         //_moveObject.SetActive(false); //인벤토리 사라짐
@@ -63,7 +63,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         SpawnImage(false); //slot에 아이템 보여짐
         _dropPopup.SetActive(false);//popup 사라짐
         _itemDropZone.gameObject.SetActive(false); //map item zone 사라짐
-        MoveObject(1); //폰 올라감
+        //MoveObject(1); //폰 올라감
         DontUseItem?.Invoke(); //detailview 사라짐
         _selectedItem.SetActive(false);
         //_moveObject.SetActive(false); //인벤토리 사라짐
@@ -87,7 +87,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         _selectedItem.transform.position = Camera.main.ScreenToWorldPoint(pos);
         _selectedItem.SetActive(true);
 
-        MoveObject(-80);
+        //MoveObject(-80);
 
         _itemDropZone.gameObject.SetActive(true);
     }
@@ -119,7 +119,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 else //할당된 아이템이 있다면, map이 아닌 곳에 
                 {
                     _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
-                    MoveObject(1);
+                    //MoveObject(1);
                     _itemDropZone.SetActive(false);
                 }
             }
@@ -127,7 +127,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         catch (Exception) //현재는 배경에 아무것도 없어서 예외 처리해놓음,, 나중에 map 깔리면 삭제
         {
             _selectedItem.GetComponent<SpriteRenderer>().sprite = null;
-            MoveObject(1);
+            //MoveObject(1);
             _itemDropZone.SetActive(false);
         }
 
