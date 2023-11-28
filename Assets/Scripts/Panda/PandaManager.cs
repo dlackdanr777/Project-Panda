@@ -9,6 +9,7 @@ public class PandaManager : SingletonHandler<PandaManager>
     /// 모든 판다 데이터
     /// </summary>
     private PandaData[] _pandaDatas;
+    private Dictionary<int, PandaData> _pandaDic;
 
     private DialogueParser _parser = new DialogueParser();
 
@@ -16,7 +17,7 @@ public class PandaManager : SingletonHandler<PandaManager>
     {
         base.Awake();
 
-        _pandaDatas = _parser.PandaParse("Panda");
+        _pandaDic = _parser.PandaParse("Panda");
         Debug.Log("pandaDAta: " + _pandaDatas[0].PandaName);
     }
 

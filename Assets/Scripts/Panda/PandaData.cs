@@ -5,7 +5,7 @@ using UnityEngine;
 public class PandaData
 {
     [SerializeField]
-    public string PandaID { get; private set; }
+    public int PandaID { get; private set; }
 
     public string PandaName { get; private set; }
     public string MBTI { get; set; }
@@ -16,7 +16,7 @@ public class PandaData
     [SerializeField]
     public float Happiness;
 
-    public PandaData(string pandaID, string pandaName, string mbti, float intermacy, float happiness)
+    public PandaData(int pandaID, string pandaName, string mbti, float intermacy, float happiness)
     {
         PandaID = pandaID;
         PandaName = pandaName;
