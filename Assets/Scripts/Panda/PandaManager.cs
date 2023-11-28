@@ -6,11 +6,13 @@ using UnityEngine;
 public class PandaManager : SingletonHandler<PandaManager>
 {
     /// <summary>
-    /// 모든 판다 데이터
-    /// </summary>
-    private PandaData[] _pandaDatas;
+    /// 모든 판다 데이터</summary>
     private Dictionary<int, PandaData> _pandaDic;
-
+    [SerializeField]
+    private PandaImage _pandaImage;
+    /// <summary>
+    /// 모든 판다 이미지 데이터</summary>
+    private Dictionary<int, PandaStateImage> _pandaImageDic;
     private DialogueParser _parser = new DialogueParser();
 
     public override void Awake()
@@ -18,32 +20,43 @@ public class PandaManager : SingletonHandler<PandaManager>
         base.Awake();
 
         _pandaDic = _parser.PandaParse("Panda");
-        Debug.Log("pandaDAta: " + _pandaDatas[0].PandaName);
+        _pandaImageDic = new Dictionary<int, PandaStateImage>();
+        // 판다 이미지 저장
+        for(int i = 0; i < _pandaDic.Count; i++)
+        {
+            _pandaImageDic.Add(_pandaDic[i].PandaID, _pandaImage.pandaImage[_pandaDic[i].PandaID]);
+        }
     }
 
     /// <summary>
-    /// 판다 ID로 판다 찾아 PandaData 반환
-    /// </summary>
-    public PandaData GetPandaData(string pandaID)
+    /// 판다 ID로 판다 찾아 PandaData 반환</summary>
+    public PandaData GetPandaData(int pandaID)
     {
-        PandaData findPandaData = _pandaDatas[int.Parse(pandaID)];
+        PandaData findPandaData = _pandaDic[pandaID];
         return findPandaData;
     }
 
-    public void UpdatePandaIntimacy(string pandaID, float intimacy)
+    /// <summary>
+    /// 판다 ID로 판다 찾아 PandaImage 반환</summary>
+    public PandaStateImage GetPandaImage(int pandaID)
     {
-        _pandaDatas[int.Parse(pandaID)].Intimacy = intimacy;
+        PandaStateImage findPandaImage = _pandaImageDic[pandaID];
+        return findPandaImage;
     }
-    public void UpdatePandaHappiness(string pandaID, float happiness)
+
+    public void UpdatePandaIntimacy(int pandaID, float intimacy)
     {
-        _pandaDatas[int.Parse(pandaID)].Happiness = happiness;
+        _pandaDic[pandaID].Intimacy = intimacy;
+    }
+    public void UpdatePandaHappiness(int pandaID, float happiness)
+    {
+        _pandaDic[pandaID].Happiness = happiness;
     }
 
     /// <summary>
-    /// 스타터 판다 mbti 설정
-    /// </summary>
+    /// 스타터 판다 mbti 설정</summary>
     public void SetStarterMBTI(string mbti)
     {
-        _pandaDatas[0].MBTI = mbti;
+        _pandaDic[0].MBTI = mbti;
     }
 }

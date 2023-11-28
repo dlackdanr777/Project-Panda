@@ -577,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbb4aeea8ef9dd7489724cf3b3e21403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
 --- !u!1 &1142457836
 GameObject:
@@ -683,6 +684,51 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1145376506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1145376507}
+  - component: {fileID: 1145376508}
+  m_Layer: 0
+  m_Name: PandaManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1145376507
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145376506}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 303.3338, y: 173.10352, z: 0.17469648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1145376508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145376506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe140256f96518479898fc000152a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pandaImage: {fileID: 11400000, guid: 73b1ac22c520def4981df1c6a4beff6c, type: 2}
 --- !u!1 &1281381609
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +800,6 @@ MonoBehaviour:
   _uiViewList:
   - Name: Camera
     UIView: {fileID: 1422876340}
-  _currentView: {fileID: 0}
 --- !u!1 &1368514844
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8dd2a5031663a9489b36b29c685cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
   _cameraApp: {fileID: 733106405}
 --- !u!1 &1715957861
@@ -935,37 +981,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1750791313
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1750791314}
-  m_Layer: 0
-  m_Name: test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1750791314
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750791313}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.57280016, y: 0.26267654, z: -0.007681732}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1768665153
 GameObject:
   m_ObjectHideFlags: 0
@@ -3316,8 +3331,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73cd92d3bde11345a2aa587e0092f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiPanda: {fileID: 6953393934537691532}
   Mbti: ENFP
+  IsCameraRequest: 0
+  _uiPanda: {fileID: 6953393934537691532}
   _intimacy: 0
   _happiness: 0
 --- !u!1 &3091895380010348208
@@ -3450,6 +3466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8dd2a5031663a9489b36b29c685cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
   _cameraApp: {fileID: 7574650482097733206}
 --- !u!114 &3252634931361393855
@@ -5171,6 +5188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d352684d09f4b1743a69776c4822d267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
   UiAlbum: {fileID: 7384998756605437851}
 --- !u!222 &6633037470840229537
@@ -6575,4 +6593,4 @@ SceneRoots:
   - {fileID: 7054334436503008127}
   - {fileID: 1368514845}
   - {fileID: 733106406}
-  - {fileID: 1750791314}
+  - {fileID: 1145376507}

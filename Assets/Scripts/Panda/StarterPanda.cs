@@ -15,7 +15,7 @@ namespace BT
         private void Start()
         {
             // 판다 세팅
-            _pandaID = "0";
+            _pandaID = 0;
             PandaData pandaData = PandaManager.Instance.GetPandaData(_pandaID);
             //스타터 판다 mbti를 판다 데이터에 저장
             PandaManager.Instance.SetStarterMBTI(Mbti);

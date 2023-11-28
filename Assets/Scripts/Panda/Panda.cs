@@ -19,7 +19,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected bool _isUISetActive;
     protected float _stateImageTimer = 1f;
 
-    protected string _pandaID;
+    protected int _pandaID;
     protected string _pandaName;
     protected Sprite _pandaImage;
     protected Preference _preference;
@@ -63,7 +63,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
             _isGift = true;
             GiftHandler?.Invoke();
         }
-        
     }
 
     public void TakeAGift()
