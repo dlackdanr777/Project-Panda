@@ -15,8 +15,8 @@ namespace BT
         private void Start()
         {
             // 판다 세팅
-            PandaID = "0";
-            PandaData pandaData = PandaManager.Instance.GetPandaData(PandaID);
+            _pandaID = "0";
+            PandaData pandaData = PandaManager.Instance.GetPandaData(_pandaID);
             //스타터 판다 mbti를 판다 데이터에 저장
             PandaManager.Instance.SetStarterMBTI(Mbti);
             SetPandaData(pandaData);
@@ -28,7 +28,7 @@ namespace BT
             _preference = MBTIManager.Instance.SetPreference(Mbti);
 
             //test - 나중에 지우기
-            Debug.Log("판다ID: " + PandaID + "판다 이름: " + PandaName + "판다 행복도: " + _happiness);
+            Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);
             Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
         }
 
@@ -206,13 +206,13 @@ namespace BT
                 _intimacy += changeIntimacy;
             }
             //판다 데이터도 변경
-            PandaManager.Instance.UpdatePandaIntimacy(PandaID, _intimacy);
+            PandaManager.Instance.UpdatePandaIntimacy(_pandaID, _intimacy);
         }
 
         public override void ChangeHappiness(float changeHappiness)
         {
             _happiness += changeHappiness;
-            PandaManager.Instance.UpdatePandaHappiness(PandaID, _happiness);
+            PandaManager.Instance.UpdatePandaHappiness(_pandaID, _happiness);
         }
 
     }
