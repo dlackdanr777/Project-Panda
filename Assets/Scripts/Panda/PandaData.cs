@@ -5,23 +5,23 @@ using UnityEngine;
 public class PandaData
 {
     [SerializeField]
-    public string PandaID { get; private set; }
+    public int PandaID { get; private set; }
 
     public string PandaName { get; private set; }
     public string MBTI { get; set; }
 
-    [SerializeField]
     public float Intimacy;
-
-    [SerializeField]
     public float Happiness;
+    public Sprite CurrrentImage;
 
-    public PandaData(string pandaID, string pandaName, string mbti, float intermacy, float happiness)
+
+    public PandaData(int pandaID, string pandaName, string mbti, float intermacy, float happiness, Sprite currrentImage = null)
     {
         PandaID = pandaID;
         PandaName = pandaName;
         MBTI = mbti;
         Intimacy = intermacy;
         Happiness = happiness;
+        CurrrentImage = currrentImage;
     }
 }
