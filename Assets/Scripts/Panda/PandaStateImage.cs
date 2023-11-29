@@ -4,9 +4,9 @@ using UnityEngine;
 [Serializable]
 public class PandaStateImage
 {
-    public Sprite _ecstaticImage;
-    public Sprite _pleasedImage;
-    public Sprite _nomalImage;
-    public Sprite _sadImage;
-    public Sprite _lonelyImage;
+    public Sprite EcstaticImage;
+    public Sprite PleasedImage;
+    public Sprite NomalImage;
+    public Sprite SadImage;
+    public Sprite LonelyImage;
 }

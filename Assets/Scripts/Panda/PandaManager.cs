@@ -21,10 +21,12 @@ public class PandaManager : SingletonHandler<PandaManager>
 
         _pandaDic = _parser.PandaParse("Panda");
         _pandaImageDic = new Dictionary<int, PandaStateImage>();
+
         // 판다 이미지 저장
         for(int i = 0; i < _pandaDic.Count; i++)
         {
-            _pandaImageDic.Add(_pandaDic[i].PandaID, _pandaImage.pandaImage[_pandaDic[i].PandaID]);
+            _pandaImageDic.Add(_pandaDic[i].PandaID, _pandaImage.PandaImages[_pandaDic[i].PandaID]);
+            _pandaDic[i].CurrrentImage = _pandaImageDic[i].NomalImage; // 판다 처음 이미지는 일반 상태로 설정
         }
     }
 

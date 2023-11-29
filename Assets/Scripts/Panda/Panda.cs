@@ -71,19 +71,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _uiPanda.gameObject.transform.GetChild(2).gameObject.SetActive(false);
     }
 
-    // 나중에 삭제
-    protected void PandaMouseClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider == GetComponent<Collider2D>())
-            {
-                ToggleUIPandaButton();
-            }
-        }
-    }
 
     public void ToggleUIPandaButton()
     {
@@ -119,14 +106,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _lastHappiness = _happiness;
 
     }
-    protected void SetPandaData(PandaData pandaData)
-    {
-        _pandaName = pandaData.PandaName;
-        Mbti = pandaData.MBTI;
-        _intimacy = pandaData.Intimacy;
-        _happiness = pandaData.Happiness;
-        _lastHappiness = _happiness;
-    }
 
     public void StartInteraction()
     {
@@ -142,4 +121,29 @@ public abstract class Panda : MonoBehaviour, IInteraction
     {
         ToggleUIPandaButton();
     }
+
+    // 나중에 삭제
+    protected void PandaMouseClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            if (hit.collider == GetComponent<Collider2D>())
+            {
+                ToggleUIPandaButton();
+            }
+        }
+    }
+    protected void SetPandaData(PandaData pandaData)
+    {
+        _pandaName = pandaData.PandaName;
+        Mbti = pandaData.MBTI;
+        _intimacy = pandaData.Intimacy;
+        _happiness = pandaData.Happiness;
+        _lastHappiness = _happiness;
+        _pandaImage = pandaData.CurrrentImage;
+        GetComponent<SpriteRenderer>().sprite = _pandaImage;
+    }
+
 }
