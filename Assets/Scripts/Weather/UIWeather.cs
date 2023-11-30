@@ -110,7 +110,7 @@ public class UIWeather : MonoBehaviour
     {
         DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
         DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
-        DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.WeatherSprite);
+        DataBind.SetSpriteValue("TodayWeatherImage", _todayWeatherData.WeatherSprite);
     }
 
 
