@@ -60,8 +60,6 @@ public class UIDialogue : UIView
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
-            CameraController.FriezePos = false;
-            CameraController.FriezeZoom = false;
             gameObject.SetActive(false);
             _isStoryStart = false;
             VisibleState = VisibleState.Disappeared;
@@ -94,9 +92,6 @@ public class UIDialogue : UIView
 
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
-
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
 
         _currentIndex = 0;
         

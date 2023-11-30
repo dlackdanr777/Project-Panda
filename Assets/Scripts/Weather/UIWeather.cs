@@ -39,14 +39,14 @@ public class UIWeather : MonoBehaviour
 
     private void OnEnable()
     {
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
+        GameManager.Instance.FriezeCameraMove = true;
+        GameManager.Instance.FriezeCameraZoom = true;
     }
 
     private void OnDisable()
     {
-        CameraController.FriezePos = false;
-        CameraController.FriezeZoom = false;
+        GameManager.Instance.FriezeCameraMove = false;
+        GameManager.Instance.FriezeCameraZoom = false;
     }
 
     public void InitSlot()

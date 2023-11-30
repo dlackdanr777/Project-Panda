@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class SpawnWishes : MonoBehaviour
 {
