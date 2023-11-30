@@ -96,7 +96,7 @@ public class UIDialogue : UIView
         _currentIndex = 0;
         
         VisibleState = VisibleState.Appearing;
-        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -900), 1f, TweenMode.EaseInOutBack, () => 
+        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, 10), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
             OnNextButtonClicked();
