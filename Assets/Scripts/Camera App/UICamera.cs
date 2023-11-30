@@ -14,14 +14,12 @@ public class UICameraApp : UIView
     public override void Show()
     {
         gameObject.SetActive(true);
-        CameraController.FriezePos = true;
         OnShowHandler?.Invoke();
     }
 
     public override void Hide()
     {
         gameObject.SetActive(false);
-        CameraController.FriezePos = false;
         OnHideHandler?.Invoke();
     }
 
