@@ -54,14 +54,14 @@ public class CameraController : MonoBehaviour
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
 
-        if (!GameManager.Instance.FirezeInteraction)
+     /*   if (!GameManager.Instance.FirezeInteraction)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 _currentInteraction?.ExitInteraction();
                 _currentInteraction = null;
             }
-        }
+        }*/
 
 
     }
@@ -100,7 +100,6 @@ public class CameraController : MonoBehaviour
                 return;
             }
                 
-
             Debug.Log("´­·È½À´Ï´Ù.");
             _tempInteaction = interaction;
         }
@@ -108,14 +107,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-
-            if (_currentInteraction != null)
-            {
-                _tempInteaction = null;
-                return;
-            }
-
-
             Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
 
@@ -128,17 +119,10 @@ public class CameraController : MonoBehaviour
             if (!hit.collider.TryGetComponent(out IInteraction interaction))
                 return;
 
-/*            if (_currentInteraction == interaction)
-            {             
-                _currentInteraction?.ExitInteraction();
-                _currentInteraction = null;
-                return;
-            }*/
-
             if(_tempInteaction == interaction)
             {
                 interaction.StartInteraction();
-                _currentInteraction = interaction;
+               // _currentInteraction = interaction;
                 _tempInteaction = null;
             }
         }
@@ -164,9 +148,6 @@ public class CameraController : MonoBehaviour
 
         if(touch.phase == TouchPhase.Moved)
         {
-         /*   Vector2 move = position * Time.deltaTime * _dragSpeed;
-            Camera.main.transform.Translate(-move);*/
-
             Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
             transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
         }
@@ -222,11 +203,7 @@ public class CameraController : MonoBehaviour
         if (!_isBegan)
             return;
 
-        /* Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition - _tempTouchPos);
-         Vector2 move = position * Time.deltaTime * _dragSpeed;*/
-
         Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition );
-        //Camera.main.transform.Translate(-move);
         transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
     }
 
@@ -244,9 +221,7 @@ public class CameraController : MonoBehaviour
             _camera.orthographicSize += -scrollWheel * 100 * Time.deltaTime * _zoomSpeed;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
             transform.position = LimitPos(transform.position);
-        }
-            
-
+        }     
     }
 
 
@@ -263,6 +238,7 @@ public class CameraController : MonoBehaviour
 
         return new Vector3(clampX, clampY, -10f);
     }
+
 
     private void OnDrawGizmos()
     {

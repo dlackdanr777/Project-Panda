@@ -6,8 +6,6 @@ using Muks.Tween;
 
 public class UIWeatherSlot : MonoBehaviour
 {
-    [SerializeField] private Text _dayText;
-
     [SerializeField] private Text _amountText;
 
     [SerializeField] private Image _weatherImage;
@@ -24,7 +22,6 @@ public class UIWeatherSlot : MonoBehaviour
         _weatherData = weatherData;
         if (_weatherData != null)
         {
-            _dayText.text = day.ToString() + "ÀÏ Â÷";
             _amountText.text = _weatherData.Amount.ToString();
             _weatherImage.sprite = _weatherData.WeatherSprite;
             _rewardImage.sprite = _weatherData.RewardSprite;
@@ -32,7 +29,6 @@ public class UIWeatherSlot : MonoBehaviour
 
         else
         {
-            _dayText.text = string.Empty;
             _amountText.text = string.Empty;
             _weatherImage.sprite = null;
             _rewardImage.sprite = null;
