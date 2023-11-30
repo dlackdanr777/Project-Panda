@@ -80,13 +80,12 @@ public class CameraController : MonoBehaviour
         if (GameManager.Instance.FirezeInteraction)
             return;
 
+        Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
         //마우스를 눌렀을때 레이를 쏘고 레이를 쏜곳에 IInteraction을 가진 오브젝트가 있을때 
         //IInteraction을 임시 변수에 담아놓고 마우스 버튼을 땟을때 임시 변수와 같은 오브젝트 일 경우 실행하게 했습니다.
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
-
             if (hit.collider == null)
             {
                 Debug.Log("아무것도 없다.");
@@ -107,8 +106,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
 
             if (hit.collider == null)
             {

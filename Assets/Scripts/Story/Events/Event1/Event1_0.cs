@@ -7,7 +7,7 @@ public class Event1_0 : StoryEvent
 {
     public override void EventStart(Action onComplate)
     {
-        Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+        Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + Camera.main.orthographicSize * 0.5f, Camera.main.transform.position.z);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 2, TweenMode.Smootherstep, () =>
         {
             Tween.SpriteRendererAlpha(gameObject, 1, 2, TweenMode.Quadratic, onComplate);

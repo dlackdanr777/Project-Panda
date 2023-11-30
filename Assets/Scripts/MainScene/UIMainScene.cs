@@ -12,6 +12,10 @@ public class UIMainScene : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation>();
         DataBind.SetButtonValue("Camera Button", OnCameraButtonClicked);
+        DataBind.SetButtonValue("ShowMailButton", OnShowMailButtonClicked);
+        DataBind.SetButtonValue("HideMailButton", OnHideMailButtonClicked);
+        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
     }
 
     private void OnCameraButtonClicked()
@@ -28,4 +32,25 @@ public class UIMainScene : MonoBehaviour
     {
         _uiNav.Pop();
     }
+
+    private void OnShowMailButtonClicked()
+    {
+        _uiNav.Push("Mail");
+    }
+
+    private void OnHideMailButtonClicked()
+    {
+        _uiNav.Pop("Mail");
+    }
+
+    private void OnDiaryButtonClicked()
+    {
+        _uiNav.Push("Diary");
+    }
+    private void OnInventoryButtonClicked()
+    {
+        _uiNav.Push("Inventory");
+    }
+
+
 }

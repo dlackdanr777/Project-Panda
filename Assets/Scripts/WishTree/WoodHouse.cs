@@ -25,8 +25,6 @@ public class WoodHouse : MonoBehaviour, IInteraction
 
     public void UpdateInteraction()
     {
-
-
     }
 
 
