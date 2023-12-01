@@ -11,7 +11,6 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
-        // 판다 생성 정리하기
         private void Start()
         {
             // 판다 세팅
@@ -22,8 +21,9 @@ namespace BT
             SetPandaData(pandaData);
 
             _behaviorTree = new BehaviorTree(SettingBT());
-            _uiPanda.gameObject.SetActive(true);
-            StateHandler?.Invoke(StarterStateImage, 0);
+
+            SetUIPanda();
+            StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
             _preference = MBTIManager.Instance.SetPreference(Mbti);
 

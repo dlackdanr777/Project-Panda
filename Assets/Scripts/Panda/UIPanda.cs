@@ -7,6 +7,14 @@ using System;
 
 public class UIPanda : MonoBehaviour
 {
+    #region UIPanda 위치 지정 관련 변수
+    private Canvas _canvas;
+    private RectTransform _rectTransform;
+    private Vector2 _localPosition; // 변환된 canvas 내 좌표
+    private Transform _uiPandaTransform;
+    private RectTransform _rtUIPanda;
+    #endregion
+
     private Button _cameraButton;
     private Button _giftButton;
     private bool _isGift;
@@ -21,6 +29,14 @@ public class UIPanda : MonoBehaviour
     {
         _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
         _giftButton = transform.GetChild(2).gameObject.GetComponent<Button>();
+
+        // uiPanda 판다 머리 위에 뜨도록 설정
+        _canvas = GetComponentInParent<Canvas>();
+        _rectTransform = _canvas.transform as RectTransform;
+        _uiPandaTransform = _starterPanda.gameObject.transform.GetChild(1);
+        _rtUIPanda = transform as RectTransform;
+
+        UpdateUIPandaPosition();
     }
 
     private void OnEnable()
@@ -35,13 +51,17 @@ public class UIPanda : MonoBehaviour
 
     }
 
-
     private void OnDisable()
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
         _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
         _starterPanda.GiftHandler -= StarterPanda_GiftHandler;
+    }
+
+    private void Update()
+    {
+        UpdateUIPandaPosition();
     }
 
     // 상태 이미지 변경
@@ -96,5 +116,12 @@ public class UIPanda : MonoBehaviour
     private void OnChangeAlpha(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
     {
         Tween.IamgeAlpha(gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
+    }
+
+    private void UpdateUIPandaPosition()
+    {
+        Vector3 pandaScreenPos = Camera.main.WorldToScreenPoint(_uiPandaTransform.position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, pandaScreenPos, Camera.main, out _localPosition);
+        _rtUIPanda.anchoredPosition = _localPosition;
     }
 }
