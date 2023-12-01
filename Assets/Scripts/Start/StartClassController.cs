@@ -80,7 +80,7 @@ public class StartClassController : MonoBehaviour
     {
         if (_nextIndex >= _lastIndex) //index를 모두 지나왔다면?
         {
-            LoadingSceneManager.LoadScene("MainSceneMuksTest");
+            LoadingSceneManager.LoadScene("IntegratedMainScene");
             return;
         }
 

@@ -12,18 +12,21 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public Action<GameObject, float, float, Action> ImageAlphaHandler;
     public Action GiftHandler;
 
-    [SerializeField]
-    protected UIPanda _uiPanda;
-    protected bool _isUISetActive;
-    protected float _stateImageTimer = 1f;
-
-    protected string PandaID;
-    protected string PandaName;
-    protected Sprite PandaImage;
-
     /// <summary>판다 Mbti</summary>
     public string Mbti;
+    public bool IsCameraRequest;
+
+    [SerializeField] protected UIPanda _uiPanda;
+
+    protected bool _isUISetActive;
+    protected bool _isGift;
+    protected float _stateImageTimer = 1f;
+
+    protected int _pandaID;
+    protected string _pandaName;
+    protected Sprite _pandaImage;
     protected Preference _preference;
+
 
     /// <summary>판다 친밀도</summary>
     [SerializeField]
@@ -45,10 +48,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
     /// <summary>이전 행복도</summary>
     [Range(-10, 10)] protected float _lastHappiness;
 
-    protected bool _isCameraRequest {  get; private set; }
-    protected bool _isGift;
-
-
     //아래에 성향 관련, 친밀도 관련 함수를 추상함수로 작성
     /// <summary>
     /// 친밀도 변경 </summary>
@@ -64,7 +63,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
             _isGift = true;
             GiftHandler?.Invoke();
         }
-        
     }
 
     public void TakeAGift()
@@ -73,19 +71,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _uiPanda.gameObject.transform.GetChild(2).gameObject.SetActive(false);
     }
 
-    // 나중에 삭제
-    protected void PandaMouseClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider == GetComponent<Collider2D>())
-            {
-                ToggleUIPandaButton();
-            }
-        }
-    }
 
     public void ToggleUIPandaButton()
     {
@@ -121,14 +106,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _lastHappiness = _happiness;
 
     }
-    protected void SetPandaData(PandaData pandaData)
-    {
-        PandaName = pandaData.PandaName;
-        Mbti = pandaData.MBTI;
-        _intimacy = pandaData.Intimacy;
-        _happiness = pandaData.Happiness;
-        _lastHappiness = _happiness;
-    }
 
     public void StartInteraction()
     {
@@ -144,4 +121,42 @@ public abstract class Panda : MonoBehaviour, IInteraction
     {
         ToggleUIPandaButton();
     }
+
+    // 나중에 삭제
+    protected void PandaMouseClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            if (hit.collider == GetComponent<Collider2D>())
+            {
+                ToggleUIPandaButton();
+            }
+        }
+    }
+    protected void SetPandaData(PandaData pandaData)
+    {
+        _pandaName = pandaData.PandaName;
+        Mbti = pandaData.MBTI;
+        _intimacy = pandaData.Intimacy;
+        _happiness = pandaData.Happiness;
+        _lastHappiness = _happiness;
+        _pandaImage = pandaData.CurrrentImage;
+        GetComponent<SpriteRenderer>().sprite = _pandaImage;
+    }
+
+    /// <summary>
+    /// 판다의 UI 생성 후 세팅
+    /// </summary>
+    protected void SetUIPanda()
+    {
+        //UIPanda 프리팹 불러오기
+        GameObject tmp = GameObject.Find("MainScene").transform.GetChild(1).transform.GetChild(0).gameObject;
+
+        GameObject uiPandaObject = Instantiate(tmp, transform.position, Quaternion.identity, tmp.transform.parent.gameObject.transform);
+        _uiPanda = uiPandaObject.GetComponent<UIPanda>();
+        _uiPanda.gameObject.SetActive(true);
+    }
+
 }

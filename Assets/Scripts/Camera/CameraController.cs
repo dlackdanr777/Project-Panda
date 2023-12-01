@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _tempTouchPos;
 
+    private Vector3 _tempCameraPos;
+
     private float _height;
 
     private float _width;
@@ -29,11 +31,6 @@ public class CameraController : MonoBehaviour
     private IInteraction _tempInteaction;
 
     private bool _isBegan = false;
-
-    public static bool FriezePos;
-
-    public static bool FriezeZoom;
-
     
 
 
@@ -56,6 +53,17 @@ public class CameraController : MonoBehaviour
 
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
+
+     /*   if (!GameManager.Instance.FirezeInteraction)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                _currentInteraction?.ExitInteraction();
+                _currentInteraction = null;
+            }
+        }*/
+
+
     }
 
     private void Start()
@@ -69,13 +77,15 @@ public class CameraController : MonoBehaviour
 
     private void TouchInteraction()
     {
+        if (GameManager.Instance.FirezeInteraction)
+            return;
+
+        Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
         //마우스를 눌렀을때 레이를 쏘고 레이를 쏜곳에 IInteraction을 가진 오브젝트가 있을때 
         //IInteraction을 임시 변수에 담아놓고 마우스 버튼을 땟을때 임시 변수와 같은 오브젝트 일 경우 실행하게 했습니다.
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
-
             if (hit.collider == null)
             {
                 Debug.Log("아무것도 없다.");
@@ -89,7 +99,6 @@ public class CameraController : MonoBehaviour
                 return;
             }
                 
-
             Debug.Log("눌렸습니다.");
             _tempInteaction = interaction;
         }
@@ -97,8 +106,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
 
             if (hit.collider == null)
             {
@@ -109,17 +116,10 @@ public class CameraController : MonoBehaviour
             if (!hit.collider.TryGetComponent(out IInteraction interaction))
                 return;
 
-            if (_currentInteraction == interaction)
-            {             
-                _currentInteraction?.ExitInteraction();
-                _currentInteraction = null;
-                return;
-            }
-
             if(_tempInteaction == interaction)
             {
                 interaction.StartInteraction();
-                _currentInteraction = interaction;
+               // _currentInteraction = interaction;
                 _tempInteaction = null;
             }
         }
@@ -128,7 +128,7 @@ public class CameraController : MonoBehaviour
 
     private void TouchMovement()
     {
-        if (FriezePos)
+        if (GameManager.Instance.FriezeCameraMove)
             return;
 
         if (Input.touchCount != 1)
@@ -137,21 +137,23 @@ public class CameraController : MonoBehaviour
         Touch touch = Input.GetTouch(0);
 
         if (touch.phase == TouchPhase.Began)
+        {
             _tempTouchPos = touch.position;
+            _tempCameraPos = _camera.transform.position;
+        }
+
 
         if(touch.phase == TouchPhase.Moved)
         {
-            Vector2 position = Camera.main.ScreenToViewportPoint((Vector3)touch.position - _tempTouchPos);
-         /*   Vector2 move = position * Time.deltaTime * _dragSpeed;
-            Camera.main.transform.Translate(-move);*/
-            transform.position = LimitPos(transform.position + ((Vector3)position - _tempTouchPos));
+            Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
+            transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
         }
     }
 
 
     private void TouchZoomInOut()
     {
-        if (FriezeZoom)
+        if (GameManager.Instance.FriezeCameraZoom)
             return;
 
         if (Input.touchCount != 2)
@@ -181,13 +183,14 @@ public class CameraController : MonoBehaviour
 
     private void MouseMovement()
     {
-        if (FriezePos)
+        if (GameManager.Instance.FriezeCameraMove)
             return;
 
         if (Input.GetMouseButtonDown(0))
         {
             _isBegan = true;
             _tempTouchPos = Input.mousePosition;
+            _tempCameraPos = _camera.transform.position;
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -197,17 +200,14 @@ public class CameraController : MonoBehaviour
         if (!_isBegan)
             return;
 
-        Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition - _tempTouchPos);
-        Vector2 move = position * Time.deltaTime * _dragSpeed;
-
-        Camera.main.transform.Translate(-move);
-        transform.position = LimitPos(transform.position);
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition );
+        transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
     }
 
 
     private void MouseZoomInOut()
     {
-        if (FriezeZoom)
+        if (GameManager.Instance.FriezeCameraZoom)
             return;
 
         float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
@@ -218,9 +218,7 @@ public class CameraController : MonoBehaviour
             _camera.orthographicSize += -scrollWheel * 100 * Time.deltaTime * _zoomSpeed;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
             transform.position = LimitPos(transform.position);
-        }
-            
-
+        }     
     }
 
 
@@ -237,6 +235,7 @@ public class CameraController : MonoBehaviour
 
         return new Vector3(clampX, clampY, -10f);
     }
+
 
     private void OnDrawGizmos()
     {

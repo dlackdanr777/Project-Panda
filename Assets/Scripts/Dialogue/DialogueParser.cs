@@ -37,16 +37,16 @@ public class DialogueParser
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
         string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
 
-        for (int i = 1; i < data.Length; i++)
+        for (int i = 1; i < data.Length;)
         {
             string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
-
             int storyID = int.Parse(row[0]);
             string storyName = row[1];
             int requiredIntimacy = int.Parse(row[2]);
             int priorStoryID = int.Parse(row[3]);
             int nextStoryID = int.Parse(row[4]);
             int pandaID = int.Parse(row[5]);
+
 
             List<DialogData> dialogDataList = new List<DialogData>();
 
@@ -66,12 +66,11 @@ public class DialogueParser
                 {
                     break;
                 }
-                
 
             } while (row[0].ToString() == "");
-
             StoryDialogue dialogue = new StoryDialogue(storyID, storyName, requiredIntimacy, priorStoryID, nextStoryID, pandaID, dialogDataList.ToArray());
             dialogueDic.Add(storyID, dialogue);
+
         }
 
         return dialogueDic;
@@ -80,9 +79,11 @@ public class DialogueParser
     /// <summary>
     /// 판다 데이터 받아와 저장
     /// </summary>
-    public PandaData[] PandaParse(string CSVFileName)
+    public Dictionary<int, PandaData> PandaParse(string CSVFileName)
     {
-        List<PandaData> pandaDatas = new List<PandaData>(); // 판다 리스트 생성
+        Dictionary<int, PandaData> pandaDic = new Dictionary<int, PandaData>(); // 판다 딕셔너리 생성
+
+        //List<PandaData> pandaDatas = new List<PandaData>(); // 판다 리스트 생성
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
         string[] data = csvData.text.Split(new char[] { '\n' });
 
@@ -90,9 +91,9 @@ public class DialogueParser
         {
 
             string[] row = data[i].Split(new char[] { ',' });
-            pandaDatas.Add(new PandaData(row[0], row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
-
+            //pandaDatas.Add(new PandaData(int.Parse(row[0]), row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
+            pandaDic.Add(int.Parse(row[0]), new PandaData(int.Parse(row[0]), row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
         }
-        return pandaDatas.ToArray();
+        return pandaDic;
     }
 }

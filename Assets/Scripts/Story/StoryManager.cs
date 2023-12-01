@@ -1,9 +1,5 @@
-using Muks.DataBind;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-
-
 
 
 public class StoryManager : SingletonHandler<StoryManager>
@@ -64,13 +60,20 @@ public class StoryManager : SingletonHandler<StoryManager>
         foreach(PandaStoryController panda in  _pandaStoryControllerDic.Values)
         {
             if (panda == null)
+            {
+                Debug.Log(panda.name);
                 continue;
+            }
 
-            if (!_storyCompleteList.Contains(panda.StoryDialogue.StoryID))
-                continue;
+            //현재 panda스토리 스크립트의 등록된 storyID가 클리어되지 않았거나, 선행 스토리를 진행했을경우 오브젝트를 킨다.
+            bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
+            bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999;
 
-            if (_storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999)
+            if (checkClear && checkPriorStoryID)
+            {
+                panda.gameObject.SetActive(true);
                 continue;
+            }   
 
             panda.gameObject.SetActive(false);
         }

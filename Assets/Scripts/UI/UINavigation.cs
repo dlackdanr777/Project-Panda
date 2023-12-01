@@ -28,6 +28,8 @@ public class UINavigation : MonoBehaviour
 
     public int Count => _uiViews.Count;
 
+
+
     private void Start()
     {
         Init();
@@ -86,6 +88,7 @@ public class UINavigation : MonoBehaviour
             }
             
             uiView.RectTransform.SetAsLastSibling();
+            CheckViewListCount();
         }
         else
         {
@@ -118,6 +121,8 @@ public class UINavigation : MonoBehaviour
         if (1 <= _uiViews.Count)
             _uiViews.Last().RectTransform.SetAsLastSibling();
 
+        CheckViewListCount();
+
     }
 
     /// <summary>
@@ -146,6 +151,8 @@ public class UINavigation : MonoBehaviour
 
         if (1 <= _uiViews.Count)
             _uiViews.Last().RectTransform.SetAsLastSibling();
+
+        CheckViewListCount();
     }
 
 
@@ -167,6 +174,24 @@ public class UINavigation : MonoBehaviour
         {
             _uiViews.Last().Hide();
             _uiViews.Remove(_uiViews.Last());
+        }
+        CheckViewListCount();
+    }
+
+
+    public void CheckViewListCount()
+    {
+        if(0 < _uiViews.Count)
+        {
+            GameManager.Instance.FriezeCameraMove = true;
+            GameManager.Instance.FriezeCameraZoom = true;
+            GameManager.Instance.FirezeInteraction = true;
+        }
+        else
+        {
+            GameManager.Instance.FriezeCameraMove = false;
+            GameManager.Instance.FriezeCameraZoom = false;
+            GameManager.Instance.FirezeInteraction = false;
         }
     }
 }
