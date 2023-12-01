@@ -16,8 +16,6 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public string Mbti;
     public bool IsCameraRequest;
 
-    [SerializeField] protected UIPanda _uiPanda;
-
     protected bool _isUISetActive;
     protected bool _isGift;
     protected float _stateImageTimer = 1f;
@@ -26,7 +24,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected string _pandaName;
     protected Sprite _pandaImage;
     protected Preference _preference;
-
+    protected UIPanda _uiPanda;
 
     /// <summary>판다 친밀도</summary>
     [SerializeField]
