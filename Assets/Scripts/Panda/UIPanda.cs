@@ -15,8 +15,8 @@ public class UIPanda : MonoBehaviour
     private RectTransform _rtUIPanda;
     #endregion
 
-    private Button _cameraButton;
-    private Button _giftButton;
+    [SerializeField] private Button _cameraButton;
+    [SerializeField] private Button _giftButton;
     private bool _isGift;
 
     [SerializeField]
@@ -30,9 +30,6 @@ public class UIPanda : MonoBehaviour
     public void Init(Panda panda)
     {
         _panda = panda;
-
-        _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
-        _giftButton = transform.GetChild(2).gameObject.GetComponent<Button>();
 
         // uiPanda 판다 머리 위에 뜨도록 설정
         _canvas = GetComponentInParent<Canvas>();
