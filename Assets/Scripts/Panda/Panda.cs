@@ -24,6 +24,9 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected string _pandaName;
     protected Sprite _pandaImage;
     protected Preference _preference;
+
+    [SerializeField] protected GameObject _uiPandaParent;
+    [SerializeField] protected UIPanda _uiPandaPrefab;
     protected UIPanda _uiPanda;
 
     /// <summary>판다 친밀도</summary>
@@ -150,10 +153,9 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected void SetUIPanda()
     {
         //UIPanda 프리팹 불러오기
-        GameObject tmp = GameObject.Find("MainScene").transform.GetChild(1).transform.GetChild(0).gameObject;
-
-        GameObject uiPandaObject = Instantiate(tmp, transform.position, Quaternion.identity, tmp.transform.parent.gameObject.transform);
-        _uiPanda = uiPandaObject.GetComponent<UIPanda>();
+        Debug.Log(_uiPandaParent);
+        _uiPanda = Instantiate(_uiPandaPrefab, transform.position, Quaternion.identity, _uiPandaParent.transform);
+        _uiPanda.Init(this);
         _uiPanda.gameObject.SetActive(true);
     }
 
