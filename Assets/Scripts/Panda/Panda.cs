@@ -17,15 +17,13 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public bool IsCameraRequest;
 
     protected bool _isUISetActive;
+    protected bool _isGift;
     protected float _stateImageTimer = 1f;
 
     protected int _pandaID;
     protected string _pandaName;
     protected Sprite _pandaImage;
     protected Preference _preference;
-    protected bool _isGift;
-
-    [SerializeField]
     protected UIPanda _uiPanda;
 
     /// <summary>판다 친밀도</summary>
@@ -144,6 +142,19 @@ public abstract class Panda : MonoBehaviour, IInteraction
         _lastHappiness = _happiness;
         _pandaImage = pandaData.CurrrentImage;
         GetComponent<SpriteRenderer>().sprite = _pandaImage;
+    }
+
+    /// <summary>
+    /// 판다의 UI 생성 후 세팅
+    /// </summary>
+    protected void SetUIPanda()
+    {
+        //UIPanda 프리팹 불러오기
+        GameObject tmp = GameObject.Find("MainScene").transform.GetChild(1).transform.GetChild(0).gameObject;
+
+        GameObject uiPandaObject = Instantiate(tmp, transform.position, Quaternion.identity, tmp.transform.parent.gameObject.transform);
+        _uiPanda = uiPandaObject.GetComponent<UIPanda>();
+        _uiPanda.gameObject.SetActive(true);
     }
 
 }
