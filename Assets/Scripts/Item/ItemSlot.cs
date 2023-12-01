@@ -11,6 +11,7 @@ public class ItemSlot : MonoBehaviour, IDropHandler
     
     [SerializeField] private GameObject _itemDropPopup;
     [SerializeField] private GameObject _itemPf;
+    [SerializeField] private Transform _dropItemSpawnPoint;
 
     private int _currentItemIndex;
     private Image _selectImage;
@@ -46,27 +47,14 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
                 _currentItemIndex = transform.parent.GetComponent<DropZone>().CurrentItemIndex;
 
-                //_itemPf.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = eventData.pointerDrag.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text; //id
-
                 ChangeAlpha(GetComponent<Image>(), 1f);
 
-                //Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(transform.position.x, transform.position.y, 10));
+                Vector3 targetPosition = transform.position;
+                
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
 
-                //Canva canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
-                //Vector3 itemScreenPos = Camera.main.ScreenToWorldPoint(new Vector3(_itemPf.transform.position.x, _itemPf.transform.position.y, 10));
-
-                //itemScreenPos = transform.position;
-                //_itemPf.transform.position = itemScreenPos;
-
-                //Vector3 targetPosition = GetComponent<RectTransform>().position;
-                //Debug.Log("targetPostion" + targetPosition);
-                //Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
-                //Debug.Log("wPostion" + worldPosition);
-
-                //Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera.main,  )
-
-                GameObject spawnItem = Instantiate(_itemPf);
-                spawnItem.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint, true);
+                spawnItem.transform.position = worldPosition;
                 
 
             }
