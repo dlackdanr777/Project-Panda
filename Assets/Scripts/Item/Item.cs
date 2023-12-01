@@ -18,7 +18,7 @@ public class Item
         Name = name;
         Description = description;
         Price = price;
-        ItemField = itemField;  
+        ItemField = itemField;
         Image = image;
     }
 }

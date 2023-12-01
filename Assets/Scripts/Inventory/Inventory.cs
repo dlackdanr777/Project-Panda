@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 [Serializable]
 public class Inventory
@@ -64,15 +65,53 @@ public class Inventory
         }
     }
 
+    public void Remove(Item item)
+    {
+        
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (Items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
+            {
+                Items[i].Count--;
+                if (Items[i].Count == 0) //개수가 최대 개수와 같은지 확인
+                {
+                    Items.RemoveAt(i);
+                    if(Items.Count == 0)
+                    {
+                        Items.Clear();
+
+                    }
+                }
+            }
+        }
+        
+    }
+
     public void RemoveByIndex(int index)
     {
         Items[index].Count--;
         if (Items[index].Count == 0)//0보다 작으면 아이템 삭제
         {
             Items.RemoveAt(index);
-            if(Items.Count == 0)
+            if (Items.Count == 0)
             {
                 Items.Clear();
+            }
+
+        }
+    }
+
+    public void RemoveById(ItemField field, string id)
+    {
+        List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
+        int listCount = Database_Ssun.Instance.ItemCount[(int)field];
+
+        for (int i = 0; i < listCount; i++)
+        {
+            if (database[i].Id.Equals(id))
+            {
+                Remove(database[i]);
+                database[i].IsReceived = true;
             }
         }
     }

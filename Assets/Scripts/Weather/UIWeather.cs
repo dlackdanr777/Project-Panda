@@ -39,14 +39,14 @@ public class UIWeather : MonoBehaviour
 
     private void OnEnable()
     {
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
+        GameManager.Instance.FriezeCameraMove = true;
+        GameManager.Instance.FriezeCameraZoom = true;
     }
 
     private void OnDisable()
     {
-        CameraController.FriezePos = false;
-        CameraController.FriezeZoom = false;
+        GameManager.Instance.FriezeCameraMove = false;
+        GameManager.Instance.FriezeCameraZoom = false;
     }
 
     public void InitSlot()
@@ -110,7 +110,7 @@ public class UIWeather : MonoBehaviour
     {
         DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
         DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
-        DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.WeatherSprite);
+        DataBind.SetSpriteValue("TodayWeatherImage", _todayWeatherData.WeatherSprite);
     }
 
 
