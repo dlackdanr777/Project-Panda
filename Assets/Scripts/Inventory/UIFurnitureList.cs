@@ -1,8 +1,10 @@
 using Muks.DataBind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
@@ -19,7 +21,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     private void Awake()
     {
         _dataBase = Database_Ssun.Instance;
-        
+
         //Test
         GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "2"); //player가 아이템 하나를 얻음
         GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "5"); //player가 아이템 하나를 얻음
@@ -38,14 +40,12 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 
     private void Start()
     {
-        foreach(ItemSlot slot in _itemSlot.GetComponentsInChildren<ItemSlot>())
-        {
-            slot.OnUseItem += ItemSlot_OnUseItem;
-            slot.OnPutInItem += ItemSlot_OnPutInItem;
 
-        }
+        _itemSlot.GetComponent<DropZone>().OnUseItem += ItemSlot_OnUseItem;
+        _itemSlot.GetComponent<DropZone>().OnPutInItem += ItemSlot_OnPutInItem;
+
+        
     }
-
     private FurnitureType GetFurniture(string id)
     {
         for(int i=0;i<_dataBase.FurnitureTypeList.Length;i++)
@@ -57,15 +57,16 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         return FurnitureType.None;
     }
 
-    private void ItemSlot_OnUseItem() //아이템 
+    private void ItemSlot_OnUseItem(string id) //아이템 
     {
-        GameManager.Instance.Player.Inventory[2].RemoveById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
+        GameManager.Instance.Player.Inventory[2].RemoveById(id);
         UpdateListSlots();
+        Debug.Log("확인");
     }
 
-    private void ItemSlot_OnPutInItem()
+    private void ItemSlot_OnPutInItem(string id)
     {
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, id);
         UpdateListSlots();
     }
 
