@@ -15,7 +15,6 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
     private int _currentItemIndex;
     private Image _selectImage;
-    private Button _itemSlotButton;
 
 
     //Test 
@@ -54,7 +53,7 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
 
                 GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint, true);
-                spawnItem.transform.position = worldPosition;
+                spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
                 
 
             }
