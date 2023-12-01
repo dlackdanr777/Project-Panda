@@ -40,10 +40,15 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 _selectImage = eventData.pointerDrag.GetComponent<Image>();
                 
 
+
+                //UI
+                GetComponent<Image>().sprite = _selectImage.sprite;
+                transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = eventData.pointerDrag.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text; //UI
+                
+                //Prefab
                 _itemPf.GetComponent<SpriteRenderer>().sprite = _selectImage.sprite; //¿ÃπÃ¡ˆ
                 
                 _selectImage.sprite = null;
-
                 _currentItemIndex = transform.parent.GetComponent<DropZone>().CurrentItemIndex;
 
                 ChangeAlpha(GetComponent<Image>(), 1f);

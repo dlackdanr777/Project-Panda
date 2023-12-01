@@ -71,6 +71,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     }
 
     //가구 인벤토리 받아와서 가구 종류별로 저장
+    //인벤토리의 count 받아오지 않음
     private void UpdateList() 
     {
         List<InventoryItem> furnitureInventory = GameManager.Instance.Player.Inventory[2].GetInventoryList();
