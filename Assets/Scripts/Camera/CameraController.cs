@@ -142,11 +142,10 @@ public class CameraController : MonoBehaviour
             _tempCameraPos = _camera.transform.position;
         }
 
-
         if(touch.phase == TouchPhase.Moved)
         {
             Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
-            transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
+            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
         }
     }
 
@@ -201,7 +200,7 @@ public class CameraController : MonoBehaviour
             return;
 
         Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition );
-        transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
+        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
     }
 
 

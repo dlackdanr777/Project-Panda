@@ -54,7 +54,13 @@ public class UIDialogue : UIView
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
+
+        _leftButton.Disabled();
+        _rightButton.Disabled();
+
+        _currentIndex = 0;
         CancelInvoke("SkipDisable");
+
         if (_contextAnimeRoutine != null)
             StopCoroutine(_contextAnimeRoutine);
 
@@ -63,7 +69,7 @@ public class UIDialogue : UIView
             gameObject.SetActive(false);
             _isStoryStart = false;
             VisibleState = VisibleState.Disappeared;
-            _currentIndex = 0;
+
         });
 
         if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))

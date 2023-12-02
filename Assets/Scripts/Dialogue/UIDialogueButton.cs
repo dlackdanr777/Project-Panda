@@ -35,4 +35,10 @@ public class UIDialogueButton : MonoBehaviour
             gameObject.SetActive(false);
         });
     }
+
+    public void Disabled()
+    {
+        _button.image.color = new Color(_button.image.color.r, _button.image.color.g, _button.image.color.b, 0);
+        _buttonText.color = new Color(_buttonText.color.r, _buttonText.color.g, _buttonText.color.b, 0);
+    }
 }
