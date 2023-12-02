@@ -7,20 +7,21 @@ using System;
 
 public class UIPanda : MonoBehaviour
 {
-    #region UIPanda À§Ä¡ ÁöÁ¤ °ü·Ã º¯¼ö
+    #region UIPanda ìœ„ì¹˜ ì§€ì • ê´€ë ¨ ë³€ìˆ˜
     private Canvas _canvas;
     private RectTransform _rectTransform;
-    private Vector2 _localPosition; // º¯È¯µÈ canvas ³» ÁÂÇ¥
+    private Vector2 _localPosition; // ë³€í™˜ëœ canvas ë‚´ ì¢Œí‘œ
     private Transform _uiPandaTransform;
     private RectTransform _rtUIPanda;
     #endregion
 
     [SerializeField] private Button _cameraButton;
     [SerializeField] private Button _giftButton;
+
     private bool _isGift;
 
     [SerializeField]
-    private Sprite[] _stateSprite = new Sprite[5]; //»óÅÂ ÀÌ¹ÌÁö
+    private Sprite[] _stateSprite = new Sprite[5]; //ìƒíƒœ ì´ë¯¸ì§€
 
     private Panda _panda;
 
@@ -31,7 +32,7 @@ public class UIPanda : MonoBehaviour
     {
         _panda = panda;
 
-        // uiPanda ÆÇ´Ù ¸Ó¸® À§¿¡ ¶ßµµ·Ï ¼³Á¤
+        // uiPanda íŒë‹¤ ë¨¸ë¦¬ ìœ„ì— ëœ¨ë„ë¡ ì„¤ì •
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = _canvas.transform as RectTransform;
         _uiPandaTransform = _panda.gameObject.transform.GetChild(1);
@@ -51,6 +52,7 @@ public class UIPanda : MonoBehaviour
         _isStart = true;
     }
 
+
 /*    private void OnDisable()
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
@@ -67,7 +69,12 @@ public class UIPanda : MonoBehaviour
         UpdateUIPandaPosition();
     }
 
-    // »óÅÂ ÀÌ¹ÌÁö º¯°æ
+    private void Update()
+    {
+        UpdateUIPandaPosition();
+    }
+
+    // ìƒíƒœ ì´ë¯¸ì§€ ë³€ê²½
     private void StarterPanda_StateHandler(string dataID,int currentPandaState)
     {
         OnChangeStateImage(dataID, currentPandaState);
@@ -88,26 +95,26 @@ public class UIPanda : MonoBehaviour
 
     private void OnClickCameraButton()
     {
-        // Ä«¸Ş¶ó¿Í ¿¬µ¿
+        // ì¹´ë©”ë¼ì™€ ì—°ë™
     }
     private void OnClickGiftButton()
     {
-        // ÇÃ·¹ÀÌ¾î¿¡°Ô ¼±¹° µé¾î¿À´Â ±â´É ¿¬°á
+        // í”Œë ˆì´ì–´ì—ê²Œ ì„ ë¬¼ ë“¤ì–´ì˜¤ëŠ” ê¸°ëŠ¥ ì—°ê²°
 
         OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _panda.TakeAGift());
     }
 
     /// <summary>
-    /// ÇöÀç ÆÇ´Ù »óÅÂ·Î ÀÌ¸ğÆ¼ÄÜ º¯°æ
+    /// í˜„ì¬ íŒë‹¤ ìƒíƒœë¡œ ì´ëª¨í‹°ì½˜ ë³€ê²½
     /// </summary>
     private void OnChangeStateImage(string dataID, int currentPandaState)
     {
-        //(¼öÁ¤) DataID ¹Ù²Ù±â
+        //(ìˆ˜ì •) DataID ë°”ê¾¸ê¸°
         DataBind.SetSpriteValue(dataID, _stateSprite[currentPandaState]);
     }
 
     /// <summary>
-    /// ÆÇ´Ù UI Alpha °ª º¯°æ
+    /// íŒë‹¤ UI Alpha ê°’ ë³€ê²½
     /// </summary>
     private void OnChangePandaUIAlpha(float targetAlpha, float duration, Action onComplate = null)
     {
