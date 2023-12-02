@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 [Serializable]
 public class Inventory
@@ -45,8 +44,8 @@ public class Inventory
     }
 
     /// <summary>
-    /// 플레이어의 인벤토리에 id을 이용해서 add
-    /// field는 종류 Field.Toy, Field.Snack이 있음
+    /// 플레이어의 인벤토리에 있는 아이템 id을 이용해서 add
+    /// field는 종류 Field.Toy, Field.Snack Field.Furniture가 있음
     /// </summary>
     /// <param name="field"></param>
     /// <param name="id"></param>
@@ -68,7 +67,7 @@ public class Inventory
     public void Remove(Item item)
     {
         
-        for (int i = 0; i < Items.Count; i++)
+        for (int i = 0; i < ItemsCount; i++)
         {
             if (Items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
             {
@@ -76,7 +75,7 @@ public class Inventory
                 if (Items[i].Count == 0) //개수가 최대 개수와 같은지 확인
                 {
                     Items.RemoveAt(i);
-                    if(Items.Count == 0)
+                    if(ItemsCount == 0)
                     {
                         Items.Clear();
 
@@ -101,17 +100,22 @@ public class Inventory
         }
     }
 
-    public void RemoveById(ItemField field, string id)
+    public void RemoveById(string id)
     {
-        List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
-        int listCount = Database_Ssun.Instance.ItemCount[(int)field];
-
-        for (int i = 0; i < listCount; i++)
+        for (int i = 0; i < ItemsCount; i++)
         {
-            if (database[i].Id.Equals(id))
+            if (Items[i].Id.Equals(id)) //id가 같은 아이템이 있다면
             {
-                Remove(database[i]);
-                database[i].IsReceived = true;
+                Items[i].Count--;
+                if (Items[i].Count == 0) //0인지 확인
+                {
+                    Items.RemoveAt(i);
+                    if (Items.Count == 0)
+                    {
+                        Items.Clear();
+
+                    }
+                }
             }
         }
     }

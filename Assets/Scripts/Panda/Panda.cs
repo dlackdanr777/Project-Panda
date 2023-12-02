@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>NPC ÆÇ´Ù, ½ºÅ¸ÅÍ ÆÇ´ÙÀÇ ºÎ¸ğ Å¬·¡½º</summary>
+/// <summary>NPC íŒë‹¤, ìŠ¤íƒ€í„° íŒë‹¤ì˜ ë¶€ëª¨ í´ë˜ìŠ¤</summary>
 public abstract class Panda : MonoBehaviour, IInteraction
 {
-    //»óÅÂ ÀÌ¹ÌÁö º¯°æ ¾×¼Ç
+    //ìƒíƒœ ì´ë¯¸ì§€ ë³€ê²½ ì•¡ì…˜
     public Action<string, int> StateHandler;
     public Action<float, float, Action> UIAlphaHandler;
     public Action<GameObject, float, float, Action> ImageAlphaHandler;
     public Action GiftHandler;
 
-    /// <summary>ÆÇ´Ù Mbti</summary>
+    /// <summary>íŒë‹¤ Mbti</summary>
     public string Mbti;
     public bool IsCameraRequest;
 
@@ -24,9 +24,13 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected string _pandaName;
     protected Sprite _pandaImage;
     protected Preference _preference;
+    
+    [SerializeField] protected GameObject _uiPandaParent;
+    [SerializeField] protected UIPanda _uiPandaPrefab;
+
     protected UIPanda _uiPanda;
 
-    /// <summary>ÆÇ´Ù Ä£¹Ğµµ</summary>
+    /// <summary>íŒë‹¤ ì¹œë°€ë„</summary>
     [SerializeField]
     [Range(0, 100)] protected float _intimacy;
     public float Intimacy
@@ -35,7 +39,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
         private set { }
     }
 
-    /// <summary>ÆÇ´Ù Çàº¹µµ</summary>
+    /// <summary>íŒë‹¤ í–‰ë³µë„</summary>
     [SerializeField]
     [Range(-10, 10)] protected float _happiness;
     public float Happiness
@@ -43,21 +47,21 @@ public abstract class Panda : MonoBehaviour, IInteraction
         get { return _happiness; }
         private set { }
     }
-    /// <summary>ÀÌÀü Çàº¹µµ</summary>
+    /// <summary>ì´ì „ í–‰ë³µë„</summary>
     [Range(-10, 10)] protected float _lastHappiness;
 
-    //¾Æ·¡¿¡ ¼ºÇâ °ü·Ã, Ä£¹Ğµµ °ü·Ã ÇÔ¼ö¸¦ Ãß»óÇÔ¼ö·Î ÀÛ¼º
+    //ì•„ë˜ì— ì„±í–¥ ê´€ë ¨, ì¹œë°€ë„ ê´€ë ¨ í•¨ìˆ˜ë¥¼ ì¶”ìƒí•¨ìˆ˜ë¡œ ì‘ì„±
     /// <summary>
-    /// Ä£¹Ğµµ º¯°æ </summary>
+    /// ì¹œë°€ë„ ë³€ê²½ </summary>
     public abstract void ChangeIntimacy(float changeIntimacy);
     public abstract void ChangeHappiness(float changeHappiness);
 
     public void GiveAGift()
     {
-        // ¼±¹° ·£´ı Á¶°Ç ¼³Á¤
+        // ì„ ë¬¼ ëœë¤ ì¡°ê±´ ì„¤ì •
         if (UnityEngine.Random.Range(0, 10) == 9 && _isGift == false)
         {
-            Debug.Log("ÆÇ´Ù°¡ ÁÖ´Â ¼±¹°");
+            Debug.Log("íŒë‹¤ê°€ ì£¼ëŠ” ì„ ë¬¼");
             _isGift = true;
             GiftHandler?.Invoke();
         }
@@ -88,7 +92,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// ÆÇ´Ù »óÅÂ ÀÌ¹ÌÁö Ç¥½Ã
+    /// íŒë‹¤ ìƒíƒœ ì´ë¯¸ì§€ í‘œì‹œ
     /// </summary>
     public void ShowStateImage()
     {
@@ -120,7 +124,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
         ToggleUIPandaButton();
     }
 
-    // ³ªÁß¿¡ »èÁ¦
+    // ë‚˜ì¤‘ì— ì‚­ì œ
     protected void PandaMouseClick()
     {
         if (Input.GetMouseButtonDown(0))
@@ -145,15 +149,16 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// ÆÇ´ÙÀÇ UI »ı¼º ÈÄ ¼¼ÆÃ
+    /// íŒë‹¤ì˜ UI ìƒì„± í›„ ì„¸íŒ…
     /// </summary>
     protected void SetUIPanda()
     {
-        //UIPanda ÇÁ¸®ÆÕ ºÒ·¯¿À±â
-        GameObject tmp = GameObject.Find("MainScene").transform.GetChild(1).transform.GetChild(0).gameObject;
+        //UIPanda í”„ë¦¬íŒ¹ ë¶ˆëŸ¬ì˜¤ê¸°
 
-        GameObject uiPandaObject = Instantiate(tmp, transform.position, Quaternion.identity, tmp.transform.parent.gameObject.transform);
-        _uiPanda = uiPandaObject.GetComponent<UIPanda>();
+        Debug.Log(_uiPandaParent);
+        _uiPanda = Instantiate(_uiPandaPrefab, transform.position, Quaternion.identity, _uiPandaParent.transform);
+        _uiPanda.Init(this);
+
         _uiPanda.gameObject.SetActive(true);
     }
 

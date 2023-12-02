@@ -1,44 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlot : MonoBehaviour, IDropHandler
+public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
 {
-    public event Action OnUseItem;
-    public event Action OnPutInItem;
-
-    //Drop
+    public Transform _dropItemSpawnPoint;
+    
     [SerializeField] private GameObject _itemDropPopup;
-    [SerializeField] private Button _itemDropButton;
-    [SerializeField] private Button _itemNoDropButton;
+    [SerializeField] private GameObject _itemPf;
 
-    //Scoop
-    [SerializeField] private GameObject _itemScoopPopup;
-    [SerializeField] private Button _itemScoopButton;
-    [SerializeField] private Button _itemNoScoopButton;
-
+    private int _currentItemIndex;
     private Image _selectImage;
-    private Button _itemSlotButton;
+
 
     //Test 
     public Sprite Image;
-
-
-    private void Start()
-    {
-        _itemSlotButton = GetComponent<Button>();
-
-        _itemSlotButton.onClick.AddListener(OnClickedItemSlot);
-
-        _itemDropButton.onClick.AddListener(OnClickedItemDrop);
-        _itemNoDropButton.onClick.AddListener(OnClickedNoItemDrop);
-
-        _itemScoopButton.onClick.AddListener(OnClickedItemScoop);
-        _itemNoScoopButton.onClick.AddListener(OnClickedItemNoScoop);
-    }
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -50,6 +27,8 @@ public class ItemSlot : MonoBehaviour, IDropHandler
             eventData.pointerDrag.GetComponent<Image>().sprite = Image;
 
 
+            //이미지로 적용 -> 2d 오브젝트로 변경
+            //카메라 위치 변경해서 해당 위치에 스폰
 
             if (GetComponent<Image>().sprite == null)
             {
@@ -57,9 +36,30 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
                 _selectImage = eventData.pointerDrag.GetComponent<Image>();
                 
+
+
+                //UI
                 GetComponent<Image>().sprite = _selectImage.sprite;
+                transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = eventData.pointerDrag.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text; //id
+                
+                //Prefab
+                _itemPf.GetComponent<SpriteRenderer>().sprite = _selectImage.sprite; //이미지
+                
                 _selectImage.sprite = null;
+
+                _currentItemIndex =  FindChildIndex();
+                transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
+
                 ChangeAlpha(GetComponent<Image>(), 1f);
+
+                Vector3 targetPosition = transform.position;
+                
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
+
+                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint.GetChild(_currentItemIndex), true);
+                spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
+                
+
             }
 
 
@@ -72,46 +72,22 @@ public class ItemSlot : MonoBehaviour, IDropHandler
         image.color = tempColor;
     }
 
-    private void OnClickedItemDrop()
+    private int FindChildIndex()
     {
-        _itemDropPopup.SetActive(false); //popup 사라짐
-         OnUseItem?.Invoke();
-        
-
-    }
-    private void OnClickedNoItemDrop()
-    {
-        _itemDropPopup.SetActive(false); //popup 사라짐
-        DeleteItemSprite();
-
-    }
-    private void OnClickedItemSlot()
-    {
-        _itemScoopPopup.SetActive(true);
-    }
-
-    private void OnClickedItemScoop()
-    {
-        if (GetComponent<Image>() != null)
+        //현재 내가 몇번째 자식인지 확인
+        for (int i = 0; i < transform.parent.childCount; i++)
         {
-            _itemScoopPopup.SetActive(false);
-
-            OnPutInItem?.Invoke();
-
-            DeleteItemSprite();
+            if (transform.parent.GetChild(i) == transform)
+            {
+                return i;
+            }
         }
-
-    }
-    private void OnClickedItemNoScoop()
-    {
-        _itemScoopPopup.SetActive(false);
-
+        return -1;
     }
 
-    private void DeleteItemSprite()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        //지우기
-        GetComponent<Image>().sprite = null;
-        ChangeAlpha(GetComponent<Image>(), 0f);
+        _currentItemIndex = FindChildIndex();
+        transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
     }
 }

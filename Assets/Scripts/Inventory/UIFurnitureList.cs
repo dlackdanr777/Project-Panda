@@ -1,5 +1,3 @@
-using Muks.DataBind;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,6 +6,7 @@ using UnityEngine.UI;
 public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 {
     [SerializeField] private Transform _itemSlot;
+    [SerializeField] private GameObject _itempDropZone;
 
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
@@ -19,7 +18,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     private void Awake()
     {
         _dataBase = Database_Ssun.Instance;
-        
+
         //Test
         GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "2"); //player가 아이템 하나를 얻음
         GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "5"); //player가 아이템 하나를 얻음
@@ -38,14 +37,23 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 
     private void Start()
     {
-        foreach(ItemSlot slot in _itemSlot.GetComponentsInChildren<ItemSlot>())
-        {
-            slot.OnUseItem += ItemSlot_OnUseItem;
-            slot.OnPutInItem += ItemSlot_OnPutInItem;
 
-        }
+        _itemSlot.GetComponent<DropZone>().OnUseItem += ItemSlot_OnUseItem;
+        _itemSlot.GetComponent<DropZone>().OnPutInItem += ItemSlot_OnPutInItem;
+
+        
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        _itempDropZone.SetActive(true);
+        
     }
 
+    protected override void OnDisable()
+    {
+        _itempDropZone.SetActive(false);
+    }
     private FurnitureType GetFurniture(string id)
     {
         for(int i=0;i<_dataBase.FurnitureTypeList.Length;i++)
@@ -57,36 +65,37 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         return FurnitureType.None;
     }
 
-    private void ItemSlot_OnUseItem() //아이템 
+    private void ItemSlot_OnUseItem(string id) //아이템 
     {
-        GameManager.Instance.Player.Inventory[2].RemoveById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
+        GameManager.Instance.Player.Inventory[2].RemoveById(id);
         UpdateListSlots();
     }
 
-    private void ItemSlot_OnPutInItem()
+    private void ItemSlot_OnPutInItem(string id)
     {
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, _spawnPoint[(int)_currentField].GetChild(_currentItemIndex).GetChild(1).GetComponent<TextMeshProUGUI>().text.ToString());
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, id);
         UpdateListSlots();
     }
 
     //가구 인벤토리 받아와서 가구 종류별로 저장
+    //인벤토리의 count 받아오지 않음
     private void UpdateList() 
     {
         List<InventoryItem> furnitureInventory = GameManager.Instance.Player.Inventory[2].GetInventoryList();
         for (int i = 0; i < System.Enum.GetValues(typeof(FurnitureType)).Length-1; i++)
         {
-            Inventory list = new Inventory();
+            List<InventoryItem> inventory = new List<InventoryItem>();
 
             for (int j = 0; j < furnitureInventory.Count; j++) //가구 종류별로 나누기
             {
                 if (GetFurniture(furnitureInventory[j].Id) == (FurnitureType)i) //가구의 종류가 현재 field 와 같으면 
                 {
-                    list.AddById(ItemField.Furniture, furnitureInventory[j].Id);
+                    inventory.Add(furnitureInventory[j]);
 
                 }
 
             }
-            _lists[i] = list.GetInventoryList();
+            _lists[i] = inventory;
         }
 
     }
