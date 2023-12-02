@@ -101,7 +101,6 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void OnClickedItemScoop()
     {
-        Debug.Log(transform.GetChild(CurrentItemIndex));
         if (transform.GetChild(CurrentItemIndex).GetComponent<Image>() != null)
         {
             _itemScoopPopup.SetActive(false);
@@ -121,7 +120,11 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void OnClickItemSlot(int index)
     {
-        _itemScoopPopup.SetActive(true);
+        if(transform.GetChild(index).GetComponent<Image>() != null)
+        {
+            _itemScoopPopup.SetActive(true);
+
+        }
     }
 
 
@@ -131,7 +134,11 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         transform.GetChild(CurrentItemIndex).GetComponent<Image>().sprite = null;
         ChangeAlpha(transform.GetChild(CurrentItemIndex).GetComponent<Image>(), 0f);
 
-        transform.GetChild(CurrentItemIndex).GetChild(0).GetComponent<TextMeshProUGUI>().text = null;
+        transform.GetChild(CurrentItemIndex).GetChild(0).GetComponent<TextMeshProUGUI>().text = null; //id
+
+        //worldPosition의 object 지우기
+        GameObject spawnItem = transform.GetChild(CurrentItemIndex).GetComponent<ItemSlot>()._dropItemSpawnPoint.GetChild(CurrentItemIndex).GetChild(0).gameObject;
+        Destroy(spawnItem);
     }
 
 }

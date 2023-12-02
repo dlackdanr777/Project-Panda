@@ -1,21 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlot : MonoBehaviour, IDropHandler
+public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
 {
+    public Transform _dropItemSpawnPoint;
     
     [SerializeField] private GameObject _itemDropPopup;
     [SerializeField] private GameObject _itemPf;
-    [SerializeField] private Transform _dropItemSpawnPoint;
 
     private int _currentItemIndex;
     private Image _selectImage;
-    private Button _itemSlotButton;
 
 
     //Test 
@@ -41,11 +37,18 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 _selectImage = eventData.pointerDrag.GetComponent<Image>();
                 
 
+
+                //UI
+                GetComponent<Image>().sprite = _selectImage.sprite;
+                transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = eventData.pointerDrag.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text; //id
+                
+                //Prefab
                 _itemPf.GetComponent<SpriteRenderer>().sprite = _selectImage.sprite; //이미지
                 
                 _selectImage.sprite = null;
 
-                _currentItemIndex = transform.parent.GetComponent<DropZone>().CurrentItemIndex;
+                _currentItemIndex =  FindChildIndex();
+                transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
 
                 ChangeAlpha(GetComponent<Image>(), 1f);
 
@@ -53,8 +56,8 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
 
-                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint, true);
-                spawnItem.transform.position = worldPosition;
+                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint.GetChild(_currentItemIndex), true);
+                spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
                 
 
             }
@@ -67,5 +70,24 @@ public class ItemSlot : MonoBehaviour, IDropHandler
         Color tempColor = image.color;
         tempColor.a = alpha;
         image.color = tempColor;
+    }
+
+    private int FindChildIndex()
+    {
+        //현재 내가 몇번째 자식인지 확인
+        for (int i = 0; i < transform.parent.childCount; i++)
+        {
+            if (transform.parent.GetChild(i) == transform)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _currentItemIndex = FindChildIndex();
+        transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
     }
 }
