@@ -43,35 +43,22 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
-        //if () //ÇöÀç 
+        foreach (Image item in transform.GetComponentsInChildren<Image>())
         {
-
-            foreach (Image item in transform.GetComponentsInChildren<Image>())
+            if (item.sprite == null)
             {
-                if (item.sprite == null)
-                {
-                    ChangeAlpha(item, 0.6f);
-                    
-                }
-
+                ChangeAlpha(item, 0.6f);      
             }
-
-        }
+        } 
     } 
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //if (this.GetComponent<ItemSlot>() != null)
+        foreach (Image item in transform.GetComponentsInChildren<Image>())
         {
-            foreach (Image item in transform.GetComponentsInChildren<Image>())
+            if (item.sprite == null)
             {
-                if (item.sprite == null)
-                {
-                    ChangeAlpha(item, 0f);
-
-                }
-
+                ChangeAlpha(item, 0f);
             }
         }
     }
