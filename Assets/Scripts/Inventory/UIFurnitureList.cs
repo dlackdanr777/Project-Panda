@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 {
     [SerializeField] private Transform _itemSlot;
+    [SerializeField] private GameObject _itempDropZone;
 
     private int _currentItemIndex;
     private Database_Ssun _dataBase;
@@ -41,6 +42,17 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         _itemSlot.GetComponent<DropZone>().OnPutInItem += ItemSlot_OnPutInItem;
 
         
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        _itempDropZone.SetActive(true);
+        
+    }
+
+    protected override void OnDisable()
+    {
+        _itempDropZone.SetActive(false);
     }
     private FurnitureType GetFurniture(string id)
     {

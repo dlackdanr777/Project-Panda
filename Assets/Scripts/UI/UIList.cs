@@ -27,7 +27,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
     /// </summary>
     protected abstract void UpdateListSlots();
 
-    void OnEnable()
+    protected virtual void OnEnable()
     {
         Toggle firstToggle = _field.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
         if (firstToggle != null)
@@ -35,6 +35,31 @@ public abstract class UIList<T, Enum> : MonoBehaviour
             firstToggle.isOn = true;
         }
         UpdateListSlots();
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (_detailView != null && _detailView.activeSelf)
+        {
+            _detailView.SetActive(false);
+
+        }
+    }
+    protected void Init()
+    {
+        CreateSlots(); //slot 생성
+
+        //버튼 리스너
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
+        {
+            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
+        }
+
+        if (_detailView != null)
+        {
+            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
+
+        }
     }
 
     //list마다 해당 spawn 위치에 Instantiate하는 함수
@@ -118,31 +143,5 @@ public abstract class UIList<T, Enum> : MonoBehaviour
         return (Enum)(object)-1;
     }
 
-    protected virtual void OnDisable()
-    {
-        if (_detailView != null && _detailView.activeSelf)
-        {
-            _detailView.SetActive(false);
 
-        }
-    }
-
-    
-
-    protected void Init()
-    {
-        CreateSlots(); //slot 생성
-
-        //버튼 리스너
-        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
-        {
-            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
-        }
-
-        if(_detailView != null)
-        {
-            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
-
-        }
-    }
 }
