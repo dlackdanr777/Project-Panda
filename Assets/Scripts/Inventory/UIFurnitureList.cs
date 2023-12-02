@@ -1,10 +1,6 @@
-using Muks.DataBind;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
@@ -61,7 +57,6 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     {
         GameManager.Instance.Player.Inventory[2].RemoveById(id);
         UpdateListSlots();
-        Debug.Log("확인");
     }
 
     private void ItemSlot_OnPutInItem(string id)
@@ -77,18 +72,18 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         List<InventoryItem> furnitureInventory = GameManager.Instance.Player.Inventory[2].GetInventoryList();
         for (int i = 0; i < System.Enum.GetValues(typeof(FurnitureType)).Length-1; i++)
         {
-            Inventory list = new Inventory();
+            List<InventoryItem> inventory = new List<InventoryItem>();
 
             for (int j = 0; j < furnitureInventory.Count; j++) //가구 종류별로 나누기
             {
                 if (GetFurniture(furnitureInventory[j].Id) == (FurnitureType)i) //가구의 종류가 현재 field 와 같으면 
                 {
-                    list.AddById(ItemField.Furniture, furnitureInventory[j].Id);
+                    inventory.Add(furnitureInventory[j]);
 
                 }
 
             }
-            _lists[i] = list.GetInventoryList();
+            _lists[i] = inventory;
         }
 
     }

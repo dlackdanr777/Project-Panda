@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using static UnityEditor.Progress;
 
 [Serializable]
 public class Inventory
@@ -77,7 +75,7 @@ public class Inventory
                 if (Items[i].Count == 0) //개수가 최대 개수와 같은지 확인
                 {
                     Items.RemoveAt(i);
-                    if(Items.Count == 0)
+                    if(ItemsCount == 0)
                     {
                         Items.Clear();
 
@@ -109,7 +107,7 @@ public class Inventory
             if (Items[i].Id.Equals(id)) //id가 같은 아이템이 있다면
             {
                 Items[i].Count--;
-                if (Items[i].Count == 0) //개수가 최대 개수와 같은지 확인
+                if (Items[i].Count == 0) //0인지 확인
                 {
                     Items.RemoveAt(i);
                     if (Items.Count == 0)
