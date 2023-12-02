@@ -15,52 +15,55 @@ public class UIPanda : MonoBehaviour
     private RectTransform _rtUIPanda;
     #endregion
 
-    private Button _cameraButton;
-    private Button _giftButton;
+    [SerializeField] private Button _cameraButton;
+    [SerializeField] private Button _giftButton;
     private bool _isGift;
 
     [SerializeField]
     private Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
 
-    [SerializeField]
-    private StarterPanda _starterPanda;
+    private Panda _panda;
 
-    private void Awake()
+    private bool _isStart;
+
+
+    public void Init(Panda panda)
     {
-        _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
-        _giftButton = transform.GetChild(2).gameObject.GetComponent<Button>();
+        _panda = panda;
 
         // uiPanda 판다 머리 위에 뜨도록 설정
         _canvas = GetComponentInParent<Canvas>();
         _rectTransform = _canvas.transform as RectTransform;
-        _uiPandaTransform = _starterPanda.gameObject.transform.GetChild(1);
+        _uiPandaTransform = _panda.gameObject.transform.GetChild(1);
         _rtUIPanda = transform as RectTransform;
 
         UpdateUIPandaPosition();
-    }
 
-    private void OnEnable()
-    {
-        _starterPanda.StateHandler += StarterPanda_StateHandler;
-        _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
-        _starterPanda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
-        _starterPanda.GiftHandler += StarterPanda_GiftHandler;
+
+        _panda.StateHandler += StarterPanda_StateHandler;
+        _panda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
+        _panda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
+        _panda.GiftHandler += StarterPanda_GiftHandler;
 
         _cameraButton.onClick.AddListener(OnClickCameraButton);
         _giftButton.onClick.AddListener(OnClickGiftButton);
 
+        _isStart = true;
     }
 
-    private void OnDisable()
+/*    private void OnDisable()
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
         _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
         _starterPanda.GiftHandler -= StarterPanda_GiftHandler;
-    }
+    }*/
 
     private void Update()
     {
+        if (!_isStart)
+            return;
+
         UpdateUIPandaPosition();
     }
 
@@ -91,7 +94,7 @@ public class UIPanda : MonoBehaviour
     {
         // 플레이어에게 선물 들어오는 기능 연결
 
-        OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _starterPanda.TakeAGift());
+        OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _panda.TakeAGift());
     }
 
     /// <summary>
@@ -120,8 +123,9 @@ public class UIPanda : MonoBehaviour
 
     private void UpdateUIPandaPosition()
     {
-        Vector3 pandaScreenPos = Camera.main.WorldToScreenPoint(_uiPandaTransform.position);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, pandaScreenPos, Camera.main, out _localPosition);
-        _rtUIPanda.anchoredPosition = _localPosition;
+        Vector3 pandaScreenPos = Camera.main.WorldToScreenPoint(_uiPandaTransform.position + Vector3.up);
+        transform.position = pandaScreenPos;
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, pandaScreenPos, Camera.main, out _localPosition);
+        //_rtUIPanda.anchoredPosition = _localPosition;
     }
 }
