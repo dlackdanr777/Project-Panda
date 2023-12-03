@@ -16,6 +16,9 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("HideMailButton", OnHideMailButtonClicked);
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
+
+        DataBind.SetButtonValue("ShowPhotoButton", OnShowPhotoButtonClicked);
+        DataBind.SetButtonValue("HidePhotoButton", OnHidePhotoButtonClicked);
     }
 
     private void OnCameraButtonClicked()
@@ -30,7 +33,7 @@ public class UIMainScene : MonoBehaviour
 
     private void OnHideDialogue()
     {
-        _uiNav.Pop();
+        _uiNav.Pop("Dialogue");
     }
 
     private void OnShowMailButtonClicked()
@@ -52,5 +55,15 @@ public class UIMainScene : MonoBehaviour
         _uiNav.Push("Inventory");
     }
 
+
+    private void OnShowPhotoButtonClicked()
+    {
+        _uiNav.Push("Photo");
+    }
+
+    private void OnHidePhotoButtonClicked()
+    {
+        _uiNav.Pop("Photo");
+    }
 
 }

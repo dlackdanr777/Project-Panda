@@ -3,11 +3,24 @@ using Muks.DataBind;
 
 public class UILibrary : UIView
 {
-    [Tooltip("앨범 메뉴 스크립트 넣는 곳")]
-    public UIAlbum UiAlbum;
+    [Tooltip("라이브러리를 넣는 곳")]
+    [SerializeField] private Library _library;
+    public Library Library => _library;
 
-    /*[Tooltip("도감 메뉴 스크립트 넣는 곳")]
-    public UIIllustratedGuide UiIllustratedGuide;*/
+
+    [Tooltip("앨범 메뉴 스크립트 넣는 곳")]
+    [SerializeField] private UIAlbum _uiAlbum;
+    public UIAlbum UIAlbum => _uiAlbum;
+
+
+    public override void Init(UINavigation uiNav)
+    {
+        base.Init(uiNav);
+        DataBind.SetButtonValue("ExitAlbumButton", OnAlbumButtonClicked);
+        
+        _uiAlbum.Init();
+        
+    }
 
     public override void Hide()
     {
@@ -19,17 +32,6 @@ public class UILibrary : UIView
         gameObject.SetActive(true);
     }
 
-
-
-    private void OnEnable()
-    {
-        Init();
-    }
-
-    private void Init()
-    {
-        DataBind.SetButtonValue("ExitAlbumButton", OnAlbumButtonClicked);
-    }
 
     private void OnAlbumButtonClicked()
     {

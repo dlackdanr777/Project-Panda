@@ -11,9 +11,8 @@ public class Library : MonoBehaviour
     [Tooltip("UIAlbum 스크립트 넣는 곳")]
     [SerializeField] private UILibrary _uiLibrary;
 
-    private void Awake()
+    public void Start()
     {
-        _cameraApp.OnScreenshotHandler += _uiLibrary.UiAlbum.CreateSlot;
+        _cameraApp.OnSavePhotoHandler += _uiLibrary.UIAlbum.CreateSlot;
     }
-
 }

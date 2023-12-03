@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))] // ¥Ÿ ¡¶»Ò ≈ø ¿‘¥œ¥Ÿ.
-public class ShootingRange : MonoBehaviour //, IDragHandler 
+public class ShootingRange : MonoBehaviour //,IDragHandler 
 {
     [SerializeField] private Image _shootingImage;
     [SerializeField] private Canvas _canvas;
