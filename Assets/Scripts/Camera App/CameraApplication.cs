@@ -29,24 +29,12 @@ public class CameraApplication : MonoBehaviour
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
     [SerializeField] private ShootingRange _shootingRange;
 
-    private bool _screenshotEnable = true;
-
     /// <summary> 현재 찍은 캡처 이미지를 보관해두는 변수 </summary>
     private Texture2D _currentCaptureTexture;
 
     private void Awake()
     {
         DataBind.SetButtonValue("PhotoSaveButton", SavePhoto);
-    }
-
-    private void OnEnable()
-    {
-        _screenshotEnable = true;
-    }
-
-    private void OnDisable()
-    {
-        _screenshotEnable = false;
     }
 
 

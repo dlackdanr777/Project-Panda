@@ -33,7 +33,6 @@ public class UIPhoto : UIView
 
     public void Show(Texture2D texture)
     {
-        _uiNav.Pop("Camera");
         _uiNav.Push("Photo");
         _tempMat.mainTexture = texture;
         _image.material = _tempMat;

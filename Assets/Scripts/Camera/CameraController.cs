@@ -6,17 +6,20 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
 
-    [SerializeField] private float _dragSpeed;
-
     [SerializeField] private float _zoomSpeed;
+    public float ZoomSpeed => _zoomSpeed;
 
     [SerializeField] private float _maxZoomSize;
+    public float MaxZoomSize => _maxZoomSize;
 
     [SerializeField] private float _minZoomSize;
+    public float MinZoomSize => _minZoomSize;
 
     [SerializeField] private Vector2 _mapSize;
+    public Vector2 MapSize => _mapSize;
 
     [SerializeField] private Vector2 _mapCenter;
+    public Vector2 MapCenter => _mapCenter;
 
     private Vector3 _tempTouchPos;
 
@@ -53,17 +56,6 @@ public class CameraController : MonoBehaviour
 
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
-
-     /*   if (!GameManager.Instance.FirezeInteraction)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                _currentInteraction?.ExitInteraction();
-                _currentInteraction = null;
-            }
-        }*/
-
-
     }
 
     private void Start()
