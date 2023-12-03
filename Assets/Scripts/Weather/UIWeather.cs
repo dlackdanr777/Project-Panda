@@ -61,12 +61,12 @@ public class UIWeather : MonoBehaviour
         {
 
             //만약 보상 지급 슬롯이라면?
-            if ((UserInfo.DayCount % 7) == i)
+            if ((UserInfo.DayCount % 7) - 1 == i)
             {
                 _todayWeatherData = _weekWeathers[i];
                 _daySlots[i].Init(true);
 
-                //보상이 지급되는 날이 아니면?
+                //보상이 지급되는 날이면?
                 if (_weatherApp.IsCanReward)
                 {
 
@@ -102,6 +102,8 @@ public class UIWeather : MonoBehaviour
         DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
         DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
         DataBind.SetSpriteValue("TodayWeatherImage", _todayWeatherData.WeatherSprite);
+        string dayText = UserInfo.TODAY.DayOfWeek.ToString().Substring(0, 3);
+        DataBind.SetTextValue("DayText", dayText);
     }
 
 
