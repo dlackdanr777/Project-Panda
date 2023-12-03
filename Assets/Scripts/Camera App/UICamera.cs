@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using Muks.DataBind;
+using Muks.Tween;
+using Unity.VisualScripting;
 
 public class UICameraApp : UIView
 {
@@ -10,6 +12,7 @@ public class UICameraApp : UIView
     public event Action OnShowHandler;
 
     public event Action OnHideHandler;
+
 
     public override void Show()
     {
@@ -29,7 +32,7 @@ public class UICameraApp : UIView
     {
         DataBind.SetButtonValue("ShootingButton", () => {
             _cameraApp.Screenshot();
-            _uiNav.Pop();
+            _uiNav.Pop("Camera");
         });
 
         DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop("Camera"));

@@ -3,46 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhotoPrinting : MonoBehaviour
+public class UIPhoto : UIView
 {
     [Tooltip("인화된 사진을 출력할 이미지 오브젝트")]
     [SerializeField] private Image _image;
 
-    [Tooltip("인화된 사진이 나타날 위치")]
-    [SerializeField] private Transform _transform;
-
-    [Tooltip("회전할 각도")]
-    [SerializeField] private float _angle;
-
-    [Tooltip("몇 초 동안 지속되고 사라질 것인가?")]
-    [SerializeField] private float _duration;
-
     Material _tempMat;
 
-    private void Awake()
+    public override void Init(UINavigation uiNav)
     {
+        base.Init(uiNav);
         _tempMat = _image.material;
+
     }
 
-
-    private void Start()
+    public override void Show()
     {
-        
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+        VisibleState = VisibleState.Appeared;
+
     }
+
+    public override void Hide()
+    {
+        gameObject.SetActive(false);
+        VisibleState = VisibleState.Disappeared;
+    }
+
 
     public void Show(Texture2D texture)
     {
-        gameObject.SetActive(true);
-        _image.material.mainTexture = texture;
-        _image.material = null;
+        _uiNav.Pop("Camera");
+        _uiNav.Push("Photo");
+        _tempMat.mainTexture = texture;
         _image.material = _tempMat;
 
-        if(gameObject.activeSelf)
-            StartCoroutine(StartPrinting());
     }
 
-    private IEnumerator StartPrinting()
+
+   /* private IEnumerator StartPrinting()
     {
         transform.position = _transform.position;
         Vector3 tempAngles = transform.eulerAngles;
@@ -58,7 +57,7 @@ public class PhotoPrinting : MonoBehaviour
         yield return new WaitForSeconds(_duration);
 
         transform.eulerAngles = new Vector3(0, 0, 0);
-        gameObject.SetActive(false);
-    }
-    
+    }*/
+
+
 }
