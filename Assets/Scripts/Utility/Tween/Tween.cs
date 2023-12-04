@@ -499,6 +499,105 @@ namespace Muks.Tween
         }
 
 
+        public static void TMPColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTMPColor objToColor = !targetObject.GetComponent<TweenTMPColor>()
+                ? targetObject.AddComponent<TweenTMPColor>()
+                : targetObject.GetComponent<TweenTMPColor>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetColor;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void TMPColor(GameObject targetObject, Color targetColor, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTMPColor objToColor = !targetObject.GetComponent<TweenTMPColor>()
+                ? targetObject.AddComponent<TweenTMPColor>()
+                : targetObject.GetComponent<TweenTMPColor>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetColor;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void TMPAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTMPAlpha objToColor = !targetObject.GetComponent<TweenTMPAlpha>()
+                ? targetObject.AddComponent<TweenTMPAlpha>()
+                : targetObject.GetComponent<TweenTMPAlpha>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAlpha;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
+        public static void TMPAlpha(GameObject targetObject, float targetAlpha, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenTMPAlpha objToColor = !targetObject.GetComponent<TweenTMPAlpha>()
+                ? targetObject.AddComponent<TweenTMPAlpha>()
+                : targetObject.GetComponent<TweenTMPAlpha>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetAlpha;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                tempData.OnComplete = onComplete;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+
         public static void SpriteRendererColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
             TweenSpriteRendererColor objToColor = !targetObject.GetComponent<TweenSpriteRendererColor>()
