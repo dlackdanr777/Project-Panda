@@ -10,6 +10,7 @@ public class Event5_6 : StoryEvent
     private Coroutine _clickCoroutine;
 
     [SerializeField] private GameObject _mapButton;
+    [SerializeField] private GameObject _mapImage;
     public override void EventStart(Action onComplate)
     {
         _mapButton.SetActive(true);
@@ -32,13 +33,11 @@ public class Event5_6 : StoryEvent
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 mousePos = Input.mousePosition;
-                Debug.Log("mousepos: " + mousePos);
-                Debug.Log("mapbutton: " + _mapButton.transform.position);
                 RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.one, 10);
 
                 foreach (RaycastHit2D hit in hits)
                 {
-                    if (hit.transform.gameObject != _mapButton.gameObject)
+                    if (hit.transform.gameObject != _mapImage.gameObject)
                         continue;
                     Debug.Log("Ω£¿∏∑Œ ¿Ãµø");
                     _clickEnable = false;
