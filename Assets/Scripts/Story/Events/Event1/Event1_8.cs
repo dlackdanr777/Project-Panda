@@ -7,12 +7,17 @@ using System.Collections;
 public class Event1_8 : StoryEvent
 {
     [SerializeField] private UINavigation _uiNav;
+
     private bool _clickEnable;
+
+    private Vector3 _tempPos;
 
     private Coroutine _clickCoroutine;
 
+
     public override void EventStart(Action onComplate)
     {
+        _tempPos = gameObject.transform.position;
         Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 3, TweenMode.Smootherstep, () =>
         {
@@ -23,9 +28,11 @@ public class Event1_8 : StoryEvent
 
     public override void EventCancel(Action onComplate = null)
     {
-        _clickEnable = false;
+        Tween.Stop(gameObject);
 
-        if(_clickCoroutine != null)
+        _clickEnable = false;
+        transform.position = _tempPos;
+        if (_clickCoroutine != null)
         StopCoroutine(_clickCoroutine);
     }
 

@@ -5,14 +5,35 @@ using UnityEngine.UI;
 
 public class Event1_0 : StoryEvent
 {
+    Vector3 _tempObjPos;
+
+    private void Start()
+    {
+        _tempObjPos = gameObject.transform.position;
+    }
+
+
     public override void EventStart(Action onComplate)
     {
         Debug.Log("½ÃÀÛ");
         Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + Camera.main.orthographicSize * 0.5f, Camera.main.transform.position.z);
+        Vector3 tempObjPos = gameObject.transform.position;
+
         Tween.TransformMove(Camera.main.gameObject, targetPos, 2, TweenMode.Smootherstep, () =>
         {
-            Tween.SpriteRendererAlpha(gameObject, 1, 2, TweenMode.Quadratic, onComplate);
-            Tween.TransformMove(gameObject,  new Vector3(-2.10f, -14, 0), 2, TweenMode.Spike);
+            Tween.SpriteRendererAlpha(gameObject, 1, 1, TweenMode.Quadratic, () =>
+            {
+                Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, -14.1f, 0), 0.5f, TweenMode.Smoothstep, () =>
+                {
+                    GetComponent<SpriteRenderer>().sortingOrder = 5;
+                    Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, tempObjPos.y, 0), 0.5f, TweenMode.Quadratic, () =>
+                    {
+                        Tween.TransformMove(gameObject, gameObject.transform.position, 0.5f, TweenMode.Constant, onComplate);
+
+                    });
+                });
+            });
+            //Tween.TransformMove(gameObject,  new Vector3(-2.10f, -14, 0), 2, TweenMode.Spike);
         });
 
     }
@@ -24,6 +45,8 @@ public class Event1_0 : StoryEvent
         Tween.Stop(Camera.main.gameObject);
         SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
         renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 0);
+        renderer.sortingOrder = 1;
+        gameObject.transform.position = _tempObjPos;
     }
 
 }

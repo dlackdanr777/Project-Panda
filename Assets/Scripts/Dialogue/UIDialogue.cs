@@ -4,6 +4,7 @@ using System.Collections;
 using Muks.DataBind;
 using System.Linq;
 using System;
+using UnityEngine.UI;
 
 public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
@@ -17,6 +18,7 @@ public enum DialogueState
 
 public class UIDialogue : UIView
 {
+    [SerializeField] private Image _pandaImage;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -98,6 +100,7 @@ public class UIDialogue : UIView
 
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
+        _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
 
         _currentIndex = 0;
         
@@ -194,6 +197,10 @@ public class UIDialogue : UIView
     {
         _state = DialogueState.Context;
         _isSkipEnabled = false;
+
+        _pandaImage.sprite = PandaManager.Instance.GetPandaImage(1).NomalImage;
+        _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
+
         Invoke("SkipDisable", 0.5f);
         DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
 
