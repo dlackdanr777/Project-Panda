@@ -60,6 +60,8 @@ public class UIDialogue : UIView
 
         _currentIndex = 0;
         CancelInvoke("SkipDisable");
+        _isSkipEnabled = false;
+
 
         if (_contextAnimeRoutine != null)
             StopCoroutine(_contextAnimeRoutine);
@@ -68,17 +70,15 @@ public class UIDialogue : UIView
         {
             gameObject.SetActive(false);
             _isStoryStart = false;
+            _state = DialogueState.None;
             VisibleState = VisibleState.Disappeared;
-
         });
 
         if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
         {
             foreach (StoryEventData data in _eventDatas)
             {
-                if(data.StoryEvent.IsComplate)
-                    data.StoryEvent.EventCancel();
-
+                data.StoryEvent.EventCancel();
                 data.StoryEvent.IsComplate = false;
             }
         }
@@ -112,9 +112,9 @@ public class UIDialogue : UIView
 
     private void OnNextButtonClicked()
     {
+
         if (!_isSkipEnabled)
             return;
-
 
         switch (_state)
         {
@@ -205,7 +205,7 @@ public class UIDialogue : UIView
             tempString += tempChars[j];
             DataBind.SetTextValue("DialogueContexts", tempString);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
 
             if (_state == DialogueState.None)
             {

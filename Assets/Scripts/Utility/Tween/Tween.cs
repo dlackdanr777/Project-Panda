@@ -42,9 +42,27 @@ namespace Muks.Tween
 {
     public static class Tween
     {
+
+        public static void Stop(GameObject gameObject)
+        {
+            TweenData[] tweens = gameObject.GetComponents<TweenData>();
+
+            Debug.Log(tweens.Length);
+            foreach(TweenData tween in tweens)
+            {
+                tween.enabled = false;
+            }
+
+        }
+
+
+
+
+
         /// <summary>
         /// 지속시간만큼 오브젝트를 이동시키는 함수
         /// </summary>
+        /// 
         public static void TransformMove(GameObject targetObject, Vector3 targetPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
         {
             TweenTransformMove objToMove = !targetObject.GetComponent<TweenTransformMove>()
