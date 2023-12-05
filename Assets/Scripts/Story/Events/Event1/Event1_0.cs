@@ -23,15 +23,19 @@ public class Event1_0 : StoryEvent
         {
             Tween.SpriteRendererAlpha(gameObject, 1, 1, TweenMode.Quadratic, () =>
             {
-                Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, -14.1f, 0), 0.5f, TweenMode.Smoothstep, () =>
+                Tween.SpriteRendererAlpha(gameObject, 1, 1, TweenMode.Quadratic, () =>
                 {
-                    GetComponent<SpriteRenderer>().sortingOrder = 5;
-                    Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, tempObjPos.y, 0), 0.5f, TweenMode.Quadratic, () =>
+                    Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, -14.1f, 0), 0.5f, TweenMode.Smoothstep, () =>
                     {
-                        Tween.TransformMove(gameObject, gameObject.transform.position, 0.5f, TweenMode.Constant, onComplate);
+                        GetComponent<SpriteRenderer>().sortingOrder = 5;
+                        Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, tempObjPos.y, 0), 0.5f, TweenMode.Quadratic, () =>
+                        {
+                            Tween.TransformMove(gameObject, gameObject.transform.position, 0.5f, TweenMode.Constant, onComplate);
 
+                        });
                     });
                 });
+                
             });
             //Tween.TransformMove(gameObject,  new Vector3(-2.10f, -14, 0), 2, TweenMode.Spike);
         });

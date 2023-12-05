@@ -21,12 +21,13 @@ public class StoryManager : SingletonHandler<StoryManager>
         _storyCompleteList = new List<int>();
         UIDialogue.OnComplateHandler += AddComplateStory;
         PandaStoryController.OnStartHandler += SetStroyDic;
+        PandaStoryController.OnCheckActivateHandler += CheckStoryActivate;
     }
 
 
     private void Start()
     {
-        CheckStoryActivate();
+        CheckStoryActivates();
     }
 
 
@@ -39,7 +40,7 @@ public class StoryManager : SingletonHandler<StoryManager>
         }
             
         _storyCompleteList.Add(id);
-        CheckStoryActivate();
+        CheckStoryActivates();
     }
 
 
@@ -55,7 +56,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     }
 
 
-    private void CheckStoryActivate()
+    private void CheckStoryActivates()
     {
         foreach(PandaStoryController panda in  _pandaStoryControllerDic.Values)
         {
@@ -65,18 +66,24 @@ public class StoryManager : SingletonHandler<StoryManager>
                 continue;
             }
 
-            //현재 panda스토리 스크립트의 등록된 storyID가 클리어되지 않았거나, 선행 스토리를 진행했을경우 오브젝트를 킨다.
-            bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
-            bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999;
-
-            if (checkClear && checkPriorStoryID)
-            {
-                panda.gameObject.SetActive(true);
-                continue;
-            }   
-
-            panda.gameObject.SetActive(false);
+            CheckStoryActivate(panda);
         }
+    }
+
+
+    private void CheckStoryActivate(PandaStoryController panda)
+    {
+        bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
+        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999;
+
+        if (checkClear && checkPriorStoryID)
+        {
+            panda.gameObject.SetActive(true);
+            return;
+        }
+
+        panda.gameObject.SetActive(false);
+        Debug.Log(panda.name + "꺼짐");
     }
 
 }

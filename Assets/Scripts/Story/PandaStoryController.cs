@@ -34,12 +34,15 @@ public class PandaStoryController : MonoBehaviour, IInteraction
 
     public static event Action<int, PandaStoryController> OnStartHandler;
 
+    public static event Action<PandaStoryController> OnCheckActivateHandler;
+
 
     private void Start()
     {
         StoryDialogue = DialogueManager.Instance.GetStoryDialogue(_storyID);
 
         OnStartHandler?.Invoke(_storyID, this);
+        OnCheckActivateHandler?.Invoke(this);
     }
 
 
