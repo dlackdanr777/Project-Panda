@@ -27,7 +27,6 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     {
         transform.parent = transform.root; //맨 위로 가도록
         _rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
-
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -35,6 +34,5 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         _canvasGroup.blocksRaycasts = true;
         transform.parent = _oldParent;
         transform.position = _oldPosition;
-        
     }
 }

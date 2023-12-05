@@ -12,11 +12,20 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
 
     private int _currentItemIndex;
     private Image _selectImage;
+    private Vector3 _worldPosition;
 
 
     //Test 
     public Sprite Image;
 
+    private void Start()
+    {
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(transform as RectTransform, transform.position, Camera.main, out var offset))
+        {
+            _worldPosition = Camera.main.ScreenToWorldPoint(transform.position);
+        }
+    }
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null && eventData.pointerDrag.GetComponent<DragDrop>() != null) //드래그를 가지고 있는 객체만 drop
@@ -54,12 +63,11 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
 
                 Vector3 targetPosition = transform.position;
                 
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
+                //Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
 
-                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint.GetChild(_currentItemIndex), true);
-                spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
-                
-
+                //GameObject spawnItem = Instantiate(_itemPf);
+                //spawnItem.transform.SetParent(_dropItemSpawnPoint.GetChild(_currentItemIndex));
+                //spawnItem.transform.position = new Vector3(_worldPosition.x, _worldPosition.y, 0);
             }
 
 
