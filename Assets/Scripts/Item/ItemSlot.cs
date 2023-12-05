@@ -17,6 +17,10 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
     //Test 
     public Sprite Image;
 
+    private void Start()
+    {
+
+    }
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null && eventData.pointerDrag.GetComponent<DragDrop>() != null) //드래그를 가지고 있는 객체만 drop
@@ -56,8 +60,9 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
                 
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(targetPosition);
 
-                GameObject spawnItem = Instantiate(_itemPf, _dropItemSpawnPoint.GetChild(_currentItemIndex), true);
-                spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
+                GameObject spawnItem = Instantiate(_itemPf);
+                spawnItem.transform.SetParent(_dropItemSpawnPoint.GetChild(_currentItemIndex));
+               spawnItem.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
                 
 
             }

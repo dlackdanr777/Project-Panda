@@ -40,7 +40,6 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     }
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         foreach (Image item in transform.GetComponentsInChildren<Image>())
