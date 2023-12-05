@@ -46,13 +46,13 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     protected override void OnEnable()
     {
         base.OnEnable();
-        _itempDropZone.SetActive(true);
+        //_itempDropZone.SetActive(true);
         
     }
 
     protected override void OnDisable()
     {
-        _itempDropZone.SetActive(false);
+        //_itempDropZone.SetActive(false);
     }
     private FurnitureType GetFurniture(string id)
     {
