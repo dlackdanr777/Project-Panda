@@ -22,6 +22,7 @@ public class UIWeatherSlot : MonoBehaviour
         {
             _amountText.text = _weatherData.Amount.ToString();
             _rewardImage.sprite = _weatherData.RewardSprite;
+            _rewardImage.preserveAspect = true;
         }
 
         else

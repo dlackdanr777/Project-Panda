@@ -6,17 +6,20 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
 
-    [SerializeField] private float _dragSpeed;
-
     [SerializeField] private float _zoomSpeed;
+    public float ZoomSpeed => _zoomSpeed;
 
     [SerializeField] private float _maxZoomSize;
+    public float MaxZoomSize => _maxZoomSize;
 
     [SerializeField] private float _minZoomSize;
+    public float MinZoomSize => _minZoomSize;
 
     [SerializeField] private Vector2 _mapSize;
+    public Vector2 MapSize => _mapSize;
 
     [SerializeField] private Vector2 _mapCenter;
+    public Vector2 MapCenter => _mapCenter;
 
     private Vector3 _tempTouchPos;
 
@@ -53,17 +56,6 @@ public class CameraController : MonoBehaviour
 
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
-
-     /*   if (!GameManager.Instance.FirezeInteraction)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                _currentInteraction?.ExitInteraction();
-                _currentInteraction = null;
-            }
-        }*/
-
-
     }
 
     private void Start()
@@ -73,27 +65,32 @@ public class CameraController : MonoBehaviour
     }
 
 
-    
+
+    RaycastHit2D _hit;
 
     private void TouchInteraction()
     {
         if (GameManager.Instance.FirezeInteraction)
             return;
 
-        Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.one, 10f);
+        if (Input.GetMouseButton(0))
+        {
+            Vector2 touchPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            _hit = Physics2D.Raycast(touchPos, Vector2.zero, 10f);
+        }
+
         //마우스를 눌렀을때 레이를 쏘고 레이를 쏜곳에 IInteraction을 가진 오브젝트가 있을때 
         //IInteraction을 임시 변수에 담아놓고 마우스 버튼을 땟을때 임시 변수와 같은 오브젝트 일 경우 실행하게 했습니다.
         if (Input.GetMouseButtonDown(0))
         {
-            if (hit.collider == null)
+            if (_hit.collider == null)
             {
                 Debug.Log("아무것도 없다.");
                 _tempInteaction = null;
                 return;
             }
 
-            if (!hit.collider.TryGetComponent(out IInteraction interaction))
+            if (!_hit.collider.TryGetComponent(out IInteraction interaction))
             {
                 _tempInteaction = null;
                 return;
@@ -107,13 +104,13 @@ public class CameraController : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
 
-            if (hit.collider == null)
+            if (_hit.collider == null)
             {
                 Debug.Log("아무것도 없다.");
                 return;
             }
                 
-            if (!hit.collider.TryGetComponent(out IInteraction interaction))
+            if (!_hit.collider.TryGetComponent(out IInteraction interaction))
                 return;
 
             if(_tempInteaction == interaction)
@@ -142,11 +139,10 @@ public class CameraController : MonoBehaviour
             _tempCameraPos = _camera.transform.position;
         }
 
-
         if(touch.phase == TouchPhase.Moved)
         {
             Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
-            transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
+            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
         }
     }
 
@@ -201,7 +197,7 @@ public class CameraController : MonoBehaviour
             return;
 
         Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition );
-        transform.position = LimitPos(_tempCameraPos + position * _dragSpeed);
+        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
     }
 
 
