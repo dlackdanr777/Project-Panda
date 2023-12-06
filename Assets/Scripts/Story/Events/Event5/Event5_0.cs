@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Event5_0 : StoryEvent
 {
+    [SerializeField] private GameObject _exclamationMark;
     [SerializeField] private GameObject _starterPanda;
     public override void EventStart(Action onComplate)
     {
+        Tween.SpriteRendererAlpha(_exclamationMark, 0, 1, TweenMode.Quadratic);
         Vector3 targetPos = new Vector3(_starterPanda.transform.position.x, _starterPanda.transform.position.y, Camera.main.transform.position.z);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 3, TweenMode.Smootherstep, () =>
         {

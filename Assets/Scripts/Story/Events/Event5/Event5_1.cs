@@ -19,7 +19,7 @@ public class Event5_1 : StoryEvent
 
     public override void EventCancel(Action onComplate = null)
     {
-        SpriteRenderer renderer = _dragonfly.gameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer renderer = _dragonfly.GetComponent<SpriteRenderer>();
         renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1);
     }
 }
