@@ -19,6 +19,9 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetButtonValue("ShowPhotoButton", OnShowPhotoButtonClicked);
         DataBind.SetButtonValue("HidePhotoButton", OnHidePhotoButtonClicked);
+
+        DataBind.SetButtonValue("ShowWeatherButton", OnShowWeatherButtonClicked);
+        DataBind.SetButtonValue("HideWeatherButton", OnHideWeatherButtonClicked);
     }
 
     private void OnCameraButtonClicked()
@@ -64,6 +67,16 @@ public class UIMainScene : MonoBehaviour
     private void OnHidePhotoButtonClicked()
     {
         _uiNav.Pop("Photo");
+    }
+
+    private void OnShowWeatherButtonClicked()
+    {
+        _uiNav.Push("Weather");
+    }
+
+    private void OnHideWeatherButtonClicked()
+    {
+        _uiNav.Pop("Weather");
     }
 
 }
