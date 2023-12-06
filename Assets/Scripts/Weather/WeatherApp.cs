@@ -59,7 +59,7 @@ public class WeatherApp : MonoBehaviour
 
     //===========================================================
 
-    private void Awake()
+    public void Awake()
     {
         Login();
         Init();

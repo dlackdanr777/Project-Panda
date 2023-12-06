@@ -83,7 +83,6 @@ public class DialogueParser
     {
         Dictionary<int, PandaData> pandaDic = new Dictionary<int, PandaData>(); // 판다 딕셔너리 생성
 
-        //List<PandaData> pandaDatas = new List<PandaData>(); // 판다 리스트 생성
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
         string[] data = csvData.text.Split(new char[] { '\n' });
 
@@ -91,7 +90,6 @@ public class DialogueParser
         {
 
             string[] row = data[i].Split(new char[] { ',' });
-            //pandaDatas.Add(new PandaData(int.Parse(row[0]), row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
             pandaDic.Add(int.Parse(row[0]), new PandaData(int.Parse(row[0]), row[1], row[2], float.Parse(row[3]), float.Parse(row[4])));
         }
         return pandaDic;
