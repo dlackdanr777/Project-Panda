@@ -21,4 +21,10 @@ public class GameManager : SingletonHandler<GameManager>
     /// <summary> 참일 경우 상호작용을 막는다. </summary>
     public bool FirezeInteraction;
 
+    public override void Awake()
+    {
+        base.Awake();
+        Application.targetFrameRate = 60;
+    }
+
 }
