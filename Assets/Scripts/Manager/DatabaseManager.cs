@@ -15,11 +15,18 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public override void Awake()
     {
         base.Awake();
-        _dialogueDatabase.Awake();
-        _weatherDatabase.Awake();
-        _mbtiDatabase.Awake();
-        _pandaDatabase.Awake();
-        _itemDatabase.Awake();    
+
+        //_dialogueDatabase = new DialogueManager();
+        //_weatherDatabase = new WeatherApp();
+        //_mbtiDatabase = new MBTIManager();
+        //_pandaDatabase = new PandaManager();
+        //_itemDatabase = new Database_Ssun();
+
+        //_dialogueDatabase.Register();
+        //_weatherDatabase.Register();
+        //_mbtiDatabase.Register();
+        //_pandaDatabase.Register();
+        //_itemDatabase.Register();
 
         _photoDatabase = new DataList<PhotoData>();
     }
