@@ -20,6 +20,8 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
     [SerializeField] private Image _areaImage;
 
+    [SerializeField] private ShootingRange _shootingImage;
+
     [Tooltip("랜더 텍스쳐")]
     [SerializeField] private RenderTexture _renderTexture;
 
@@ -37,9 +39,9 @@ public class ScreenshotCamera : MonoBehaviour
 
     private float _zoomSpeed => _cameraController.ZoomSpeed;
 
-    private float _maxZoomSize => _cameraController.MaxZoomSize;
+    private float _maxZoomSize => _cameraController.MaxZoomSize - 4;
 
-    private float _minZoomSize => _cameraController.MinZoomSize;
+    private float _minZoomSize => _cameraController.MinZoomSize - 4;
 
     private Vector2 _mapSize => _cameraController.MapSize;
 
@@ -68,7 +70,7 @@ public class ScreenshotCamera : MonoBehaviour
 
     private void OnEnable()
     {
-        _camera.orthographicSize = _cameraController.GetComponent<Camera>().orthographicSize;
+        _camera.orthographicSize = _cameraController.GetComponent<Camera>().orthographicSize - 4;
         _camera.transform.position = _cameraController.transform.position;
 
         _renderTexture.Release();
