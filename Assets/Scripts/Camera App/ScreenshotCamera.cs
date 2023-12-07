@@ -18,9 +18,6 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
 
-    [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
-    [SerializeField] private Image _areaImage;
-
     [SerializeField] private ShootingRange _shootingImage;
 
     [Tooltip("랜더 텍스쳐")]
@@ -37,6 +34,7 @@ public class ScreenshotCamera : MonoBehaviour
     [SerializeField] private Vector3 _boxSize;
 
 
+    private Image _areaImage;
 
     private float _zoomSpeed => _cameraController.ZoomSpeed;
 
@@ -62,9 +60,15 @@ public class ScreenshotCamera : MonoBehaviour
 
     private bool _isBegan = false;
 
-    private void Start()
+    private void Awake()
     {
         Init();
+    }
+
+
+    private void Start()
+    {
+        
 #if UNITY_EDITOR
 
         _shootingImage.OnDragehandler += MouseMovement;
@@ -80,16 +84,21 @@ public class ScreenshotCamera : MonoBehaviour
 #endif
 
         gameObject.SetActive(false);
+
     }
 
     private void OnEnable()
     {
-        _camera.orthographicSize = _cameraController.GetComponent<Camera>().orthographicSize - 4;
         _camera.transform.position = _cameraController.transform.position;
-
         _renderTexture.Release();
-        _renderTexture.width = (int)_areaImage.rectTransform.rect.width;
-        _renderTexture.height = (int)_areaImage.rectTransform.rect.height;
+        Graphics.Blit(_areaImage.mainTexture, _renderTexture);
+
+        _camera.orthographicSize = Camera.main.orthographicSize - 4;
+    }
+
+    private void OnDisable()
+    {
+        _renderTexture.Release();
     }
 
     private void Update()
@@ -110,6 +119,7 @@ public class ScreenshotCamera : MonoBehaviour
     private void Init()
     {
         _camera = GetComponent<Camera>();
+        _areaImage = _shootingImage.GetComponent<Image>();
         DataBind.SetButtonValue("ShowScreenshotCameraButton", () => gameObject.SetActive(true));
         DataBind.SetButtonValue("HideScreenshotCameraButton", () => gameObject.SetActive(false));
     }

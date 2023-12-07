@@ -11,11 +11,15 @@ public class UIAlbumSlot : MonoBehaviour
     private int _slotIndex;
 
     private Material _tempMat;
+
+    private RectTransform _albumRect;
+
     public void Init(int slotIndex, PhotoData photoData)
     {
         _slotIndex = slotIndex;
         _photoData = photoData;
         _tempMat = new Material(_image.material);
+        _albumRect = GetComponent<RectTransform>();
         SetImageByPhotoData(photoData);
     }
 
@@ -33,18 +37,23 @@ public class UIAlbumSlot : MonoBehaviour
             byte[] bytes = File.ReadAllBytes(path);
 
             Texture2D tex = new Texture2D(2, 2);
-            
+
             //byte[]로 변환된 PNG파일을 읽어 이미지로 변환
             tex.LoadImage(bytes);
 
+            float heightMul =  (float)tex.height / (float)tex.width;
             if (_image != null)
             {
                 //재질의 메인 텍스처를 위에서 읽어들인 이미지로 변경
                 _tempMat.mainTexture = tex;
 
+                _image.rectTransform.sizeDelta = new Vector2(0, (_albumRect.rect.height * heightMul) - _albumRect.rect.height);
                 //재질을 null로 변경했다 다시 원래대로 변경한다. 이렇게 새로고침을 해야 이미지를 바꾼게 적용됨
                 _image.material = null;
                 _image.material = _tempMat;
+
+                Debug.Log((tex.height / tex.width));
+
 
             }
             else
