@@ -21,6 +21,7 @@ public class Event5_0 : StoryEvent
 
     public override void EventCancel(Action onComplate = null)
     {
-
+        SpriteRenderer renderer = _exclamationMark.GetComponent<SpriteRenderer>();
+        renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1);
     }
 }
