@@ -1,4 +1,3 @@
-using Muks.Tween;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,7 +5,6 @@ using UnityEngine;
 public class Event5_6 : StoryEvent
 {
     private bool _clickEnable;
-
     private Coroutine _clickCoroutine;
 
     [SerializeField] private GameObject _mapButton;
@@ -23,6 +21,7 @@ public class Event5_6 : StoryEvent
     {
         _mapButton.SetActive(false);
 
+        _clickEnable = false;
         if (_clickCoroutine != null)
             StopCoroutine(_clickCoroutine);
     }
