@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Event7_25 : StoryEvent
+public class Event8_16 : StoryEvent
 {
     [SerializeField] private GameObject _bait;
     [SerializeField] private GameObject _starterPanda;

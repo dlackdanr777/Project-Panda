@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Event7_17 : StoryEvent
+public class Event8_8 : StoryEvent
 {
     private bool _clickEnable;
     [SerializeField] private GameObject _fish;

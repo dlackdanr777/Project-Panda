@@ -8,7 +8,7 @@ public class Event6_4 : StoryEvent
     public override void EventStart(Action onComplate)
     {
         Vector3 targetPos = new Vector3(_darkPanda.transform.position.x, _darkPanda.transform.position.y, Camera.main.transform.position.z);
-        Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smootherstep, () =>
+        Tween.TransformMove(Camera.main.gameObject, targetPos, 1.5f, TweenMode.Smootherstep, () =>
         {
             Tween.SpriteRendererAlpha(_darkPanda, 1, 2, TweenMode.Quadratic, onComplate);
         });

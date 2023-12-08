@@ -2,7 +2,7 @@ using Muks.Tween;
 using System;
 using UnityEngine;
 
-public class Event7_30 : StoryEvent
+public class Event8_21 : StoryEvent
 {
     [SerializeField] private GameObject _starterPanda;
     [SerializeField] private GameObject _Jiji;

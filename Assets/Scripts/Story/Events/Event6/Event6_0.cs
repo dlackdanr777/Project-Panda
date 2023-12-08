@@ -13,8 +13,8 @@ public class Event6_0 : StoryEvent
         Vector3 targetPos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, Camera.main.transform.position.z);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smootherstep, () =>
         {
-            Tween.SpriteRendererAlpha(_starterPanda.gameObject, 1, 1.5f, TweenMode.Quadratic, onComplate);
-            Tween.SpriteRendererAlpha(_Jiji.gameObject, 1, 1.5f, TweenMode.Quadratic, onComplate);
+            Tween.SpriteRendererAlpha(_starterPanda.gameObject, 1, 1f, TweenMode.Quadratic, onComplate);
+            Tween.SpriteRendererAlpha(_Jiji.gameObject, 1, 1f, TweenMode.Quadratic, onComplate);
         });
         onComplate?.Invoke();
     }

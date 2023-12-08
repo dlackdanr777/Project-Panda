@@ -3,21 +3,26 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Event7_23 : StoryEvent
+public class Event8_1 : StoryEvent
 {
     private bool _clickEnable;
+
+    [SerializeField] private GameObject _fishingButton;
+
 
     private Coroutine _clickCoroutine;
     public override void EventStart(Action onComplate)
     {
-        Tween.SpriteRendererAlpha(gameObject, 1, 1, TweenMode.Quadratic);
-        _clickEnable = true;
-        _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
+        Tween.SpriteRendererAlpha(_fishingButton, 1, 0.7f, TweenMode.Quadratic, () =>
+        {
+            _clickEnable = true;
+            _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
+        });
     }
 
     public override void EventCancel(Action onComplate = null)
     {
-        SpriteRenderer fishButtonRenderer = base.gameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer fishButtonRenderer = _fishingButton.GetComponent<SpriteRenderer>();
         fishButtonRenderer.color = new Color(fishButtonRenderer.color.r, fishButtonRenderer.color.g, fishButtonRenderer.color.b, 0);
         _clickEnable = false;
 
@@ -37,12 +42,12 @@ public class Event7_23 : StoryEvent
 
                 foreach (RaycastHit2D hit in hits)
                 {
-                    if (hit.transform.gameObject != gameObject.gameObject)
+                    if (hit.transform.gameObject != _fishingButton.gameObject)
                         continue;
 
                     // 낚시버튼 클릭
                     _clickEnable = false;
-                    Tween.SpriteRendererAlpha(gameObject, 0, 1, TweenMode.Quadratic, onComplate);
+                    Tween.SpriteRendererAlpha(_fishingButton, 0, 1, TweenMode.Quadratic, onComplate);
                 }
             }
 
