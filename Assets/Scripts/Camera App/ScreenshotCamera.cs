@@ -200,7 +200,6 @@ public class ScreenshotCamera : MonoBehaviour
         Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)_touch.position);
         transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
 
-        if (_isMagnetEnable) _isMagnetMode = true;
     }
 
 

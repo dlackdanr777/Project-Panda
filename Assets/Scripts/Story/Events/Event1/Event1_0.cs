@@ -25,7 +25,7 @@ public class Event1_0 : StoryEvent
             {
                 Tween.SpriteRendererAlpha(gameObject, 1, 1, TweenMode.Quadratic, () =>
                 {
-                    Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, -14.1f, 0), 0.5f, TweenMode.Smoothstep, () =>
+                    Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, -13.9f, 0), 0.5f, TweenMode.Smoothstep, () =>
                     {
                         GetComponent<SpriteRenderer>().sortingOrder = 5;
                         Tween.TransformMove(gameObject, new Vector3(tempObjPos.x, tempObjPos.y, 0), 0.5f, TweenMode.Quadratic, () =>

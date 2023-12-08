@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,12 +8,17 @@ using UnityEngine.UI;
 public class UIAlbumSlot : MonoBehaviour
 {
     [SerializeField] private Image _image;
+
+    [SerializeField] private Button _button;
+
     private PhotoData _photoData;
     private int _slotIndex;
 
     private Material _tempMat;
 
     private RectTransform _albumRect;
+
+    public static event Action<PhotoData> OnButtonClickHandler;
 
     public void Init(int slotIndex, PhotoData photoData)
     {
@@ -21,6 +27,8 @@ public class UIAlbumSlot : MonoBehaviour
         _tempMat = new Material(_image.material);
         _albumRect = GetComponent<RectTransform>();
         SetImageByPhotoData(photoData);
+
+        _button.onClick.AddListener(() => OnButtonClickHandler(_photoData));
     }
 
     /// <summary>
