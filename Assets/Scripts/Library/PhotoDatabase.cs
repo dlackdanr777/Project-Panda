@@ -16,7 +16,7 @@ public class PhotoDatabase
     private List<Texture2D> _photo = new List<Texture2D>();
     public void Register()
     {
-        
+        Load();
     }
 
 
@@ -40,7 +40,9 @@ public class PhotoDatabase
         string loadJson = File.ReadAllText(UserInfo.PhotoPath);
         photoDatas = JsonUtility.FromJson<PhotoDatas>(loadJson);
 
-        foreach (PhotoData data in photoDatas)
+        foreach (PhotoData data in photoDatas.PhotoDataList)
+        {
+            _photoData.Add(data);
         }
     }
 
@@ -62,4 +64,5 @@ public class PhotoDatabase
 
         _photo.Add(tex);
     }
+
 }
