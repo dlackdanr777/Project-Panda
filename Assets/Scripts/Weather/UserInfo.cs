@@ -12,7 +12,6 @@ public class UserInfo
     //==========================================================================================================
 
     public string UserId;    //아이디
-
     public static DateTime TODAY => DateTime.Now;    //컴퓨터의 현재 날짜와 시간을 가져옴(추후 서버 시간으로 변경해야함)
 
     public static DateTime _lastAccessDay; //마지막 접속일
@@ -33,6 +32,8 @@ public class UserInfo
 
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
+
+    public static string PhotoPath => Application.persistentDataPath;
 
     //유저의 데이터를 가져오는 함수
     public void LoadUserInfoData()
