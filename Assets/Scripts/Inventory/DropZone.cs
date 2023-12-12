@@ -22,7 +22,7 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Button _itemNoScoopButton;
 
     //Camera
-    [SerializeField] private GameObject _wood;
+    //[SerializeField] private GameObject _wood;
 
     public int CurrentItemIndex;
 
@@ -45,7 +45,7 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Update()
     {
-        transform.position = Camera.main.WorldToScreenPoint(_wood.transform.position);
+        //transform.position = Camera.main.WorldToScreenPoint(_wood.transform.position);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
