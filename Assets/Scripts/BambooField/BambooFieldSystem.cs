@@ -1,3 +1,4 @@
+using Muks.Tween;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,48 +22,7 @@ public class BambooFieldSystem : MonoBehaviour
     //차후 FieldSlot 클래스로 변경해야할것입니다.
     private FieldSlot[] _fieldSlots;
 
-    // 플레이어의 접속 시간 확인 후 성장 여부 판별
-    public DateTime ConnectionTerminationTime;
-    
-    /// <summary>
-    /// 게임 연결 종료 시 시간 저장 </summary>
-    public void ConnectionTermination()
-    {
-        ConnectionTerminationTime = DateTime.Now;
-    }
-
-    /// <summary>
-    /// 게임 시작 시 시간 체크 후 작물 성장 </summary>
-    private void CheckTime()
-    {
-        DateTime now = DateTime.Now;
-        TimeSpan timeDif = now - ConnectionTerminationTime;
-
-        // 나중에 조건 변경
-        if(timeDif.Days == 0)
-        {
-            //지난번 마지막 접속이 오늘인 경우 - 작물 성장하지 않음
-            Debug.Log("시간 차이: " + timeDif.Hours);
-        }
-        else if(timeDif.Days > 0)
-        {
-            //지난번 마지막 접속이 1일 초과인 경우 - 작물 성장
-            Debug.Log("24시간 지난 후: "+ timeDif.Days);
-            for(int i = 0; i< _fieldSlots.Length; i++)
-            {
-                _fieldSlots[i].GrowingCrops(1);
-            }
-        }
-        else if(timeDif.Days > 1)
-        {
-            // 작물 2단계 성장
-            Debug.Log("작물 2단계 성장");
-            for (int i = 0; i < _fieldSlots.Length; i++)
-            {
-                _fieldSlots[i].GrowingCrops(2);
-            }
-        }
-    }
+    [SerializeField] private HarvestButton _harvestButton;
 
     private void Awake()
     {
@@ -75,20 +35,42 @@ public class BambooFieldSystem : MonoBehaviour
         _fieldSlots = _fieldSlotParent.GetComponentsInChildren<FieldSlot>();
     }
 
+    /// <summary>
+    /// 작물 수확 버튼 클릭 </summary>
+    public void ClickHavestButton()
+    {
+        // 수확
+        for(int i = 0; i < _fieldSlots.Length; i++)
+        {
+            // 애니메이션 - 죽순이 수집되며 우측 상단의 죽순보유량으로 빨려들어가는 느낌의 애니메이션, 하나씩 빨려들어갈 때마다 죽순량이 동적으로 변화
+            _player.GainBamboo(_fieldSlots[i].Yield);
+            _fieldSlots[i].Yield = 0;
 
+            // 성장 단계 초기화
+            _fieldSlots[i].GrowthStage = 0;
+            _fieldSlots[i].ChangeGrowthStageImage(_fieldSlots[i].GrowthStage);
+        }
+        Tween.SpriteRendererAlpha(_harvestButton.gameObject, 0, 0.5f, TweenMode.Quadratic, () => { _harvestButton.IsSet = false; });
+    }
 
-    //접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장시간을 지났나 확인하는 함수
-    private bool FirstCheckGrowth()
+    /// <summary>
+    /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>
+    private void FirstCheckGrowth()
     {
         for(int i = 0; i< _fieldSlots.Length; i++)
         {
-            //현재 접속 시간과 마지막 접속 시간을 비교한다.
-            if ((UserInfo.TODAY - UserInfo._lastAccessDay).Minutes <= _fieldSlots[i].HarvestItem.HarvestTime) // 작물 성장시간 기입
-                return false;
+            //현재 접속 시간과 마지막 접속 시간을 비교
+            if ((UserInfo.TODAY - UserInfo._lastAccessDay).Minutes >= _fieldSlots[i].HarvestItem.HarvestTime * 10)
+            {
+                Debug.Log("작물 2단계 성장");
+                _fieldSlots[i].GrowingCrops(2);
+            }
+            else if ((UserInfo.TODAY - UserInfo._lastAccessDay).Minutes >= _fieldSlots[i].HarvestItem.HarvestTime * 5)
+            {
+                Debug.Log("작물 1단계 성장");
+                _fieldSlots[i].GrowingCrops(1);
+            }
         }
-
-        return true;
     }
-
 
 }

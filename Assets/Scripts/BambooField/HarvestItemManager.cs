@@ -5,7 +5,7 @@ using UnityEngine;
 public class HarvestItemManager : SingletonHandler<HarvestItemManager>
 {
     private Dictionary<int, HarvestItem> _harvestItemDic;
-    private HarvestItemImage _harvestItemImage;
+    [SerializeField] private HarvestItemImage _harvestItemImage;
 
     public override void Awake()
     {
@@ -16,8 +16,8 @@ public class HarvestItemManager : SingletonHandler<HarvestItemManager>
         for(int i = 0; i < _harvestItemDic.Count; i++)
         {
             _harvestItemDic[i].Image[0] = _harvestItemImage.GrowthStageImages[i].ZeroStepImage;
-            _harvestItemDic[i].Image[0] = _harvestItemImage.GrowthStageImages[i].OneStepImage;
-            _harvestItemDic[i].Image[0] = _harvestItemImage.GrowthStageImages[i].TwoStepImage;
+            _harvestItemDic[i].Image[1] = _harvestItemImage.GrowthStageImages[i].OneStepImage;
+            _harvestItemDic[i].Image[2] = _harvestItemImage.GrowthStageImages[i].TwoStepImage;
         }
     }
 
@@ -32,9 +32,8 @@ public class HarvestItemManager : SingletonHandler<HarvestItemManager>
 
         for (int i = 1; i < data.Length - 1; i++)
         {
-
             string[] row = data[i].Split(new char[] { ',' });
-            harvestItemDic.Add(int.Parse(row[0]), new HarvestItem(int.Parse(row[0]), row[1], float.Parse(row[2]), float.Parse(row[3]), float.Parse(row[4]), row[5]));
+            harvestItemDic.Add(int.Parse(row[0]), new HarvestItem(int.Parse(row[0]), row[1], float.Parse(row[2]), int.Parse(row[3]), int.Parse(row[4]), row[5]));
         }
         return harvestItemDic;
     }

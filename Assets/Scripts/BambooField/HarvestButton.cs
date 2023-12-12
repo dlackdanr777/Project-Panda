@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class HarvestButton : MonoBehaviour, IInteraction
 {
-    public FieldSlot FieldSlot;
+    //public FieldSlot FieldSlot;
+    public BambooFieldSystem BambooFieldSystem;
+    public bool IsSet;
+
     public void StartInteraction()
     {
-        FieldSlot.ClickHavestButton();
+        if (IsSet)
+        {
+            Debug.Log("작물 수확 버튼 클릭");
+            BambooFieldSystem.ClickHavestButton();
+        }
     }
     public void UpdateInteraction()
     {
@@ -15,7 +22,7 @@ public class HarvestButton : MonoBehaviour, IInteraction
     }
     public void ExitInteraction()
     {
-        gameObject.SetActive(false);
+
     }
 
 }

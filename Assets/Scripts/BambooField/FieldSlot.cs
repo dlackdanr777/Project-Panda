@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using Muks.Tween;
 
 public class FieldSlot : MonoBehaviour, IInteraction
 {
@@ -10,32 +7,25 @@ public class FieldSlot : MonoBehaviour, IInteraction
     public int GrowthStage;
 
     public HarvestItem HarvestItem;
-    [SerializeField] private GameObject _harvestButton;
+    [SerializeField] private HarvestButton _harvestButton;
     [SerializeField] private int _growingCropID;
-    private Sprite _growingCropImage;
+    [SerializeField] private GameObject _growingCropImage;
     private float _time;
+    public int Yield;
 
     private void Start()
     {
         // 우선 죽순ID로 설정
         _growingCropID = 0;
-
+        Debug.Log("시작");
         HarvestItem = HarvestItemManager.Instance.GetHarvestItemdata(_growingCropID);
-        _growingCropImage = HarvestItem.Image[0];
+        _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
     }
 
     private void Update()
     {
         _time += Time.deltaTime;
-    }
-
-
-    /// <summary>
-    /// 작물 수확 버튼 클릭 </summary>
-    public void ClickHavestButton()
-    {
-        // 수확
-        // 애니메이션 - 죽순이 수집되며 우측 상단의 죽순보유량으로 빨려들어가는 느낌의 애니메이션, 하나씩 빨려들어갈 때마다 죽순량이 동적으로 변화
+        IsIncreaseYields();
     }
 
     public void StartInteraction()
@@ -64,28 +54,48 @@ public class FieldSlot : MonoBehaviour, IInteraction
         {
             GrowthStage = 2; // 최대 성장단계로 설정
         }
-        // 이미지 변경
-        _growingCropImage = HarvestItem.Image[growthStage];
+
+        ChangeGrowthStageImage(GrowthStage);
 
         // 버튼 생성
-        _harvestButton.SetActive(true);
+        if (!_harvestButton.IsSet)
+        {
+            _harvestButton.IsSet = true;
+            Tween.SpriteRendererAlpha(_harvestButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
+        }
+    }
+
+    /// <summary>
+    /// 성장 단계에 맞춰 이미지 변경 </summary>
+    public void ChangeGrowthStageImage(int growthStage)
+    {
+        _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[growthStage];
+    }
+
+    private void IsIncreaseYields()
+    {
+        if(_time > HarvestItem.HarvestTime *2)// 나중에 수정 *60
+        {
+            IncreaseYields();
+            _time = 0;
+        }
     }
 
     private void IncreaseYields()
     {
-        // 1분당 1 수확
-        HarvestItem.Yield += Time.deltaTime / 60;
-        if(HarvestItem.Yield > HarvestItem.MaxYield)
+        Yield++; //Yield += HarvestItem.Yield; // 바꾸기
+        if(Yield > HarvestItem.MaxYield)
         {
-            HarvestItem.Yield = HarvestItem.MaxYield;
+            Yield = HarvestItem.MaxYield;
         }
 
+        Debug.Log("수확량: " + Yield);
         //일정 시간이 지나면 버튼 생성 후 수확
-        if (HarvestItem.Yield > 10)
+        if (Yield == 10) //HarvestItem.Yield * 10 수정
         {
             GrowingCrops(2);
         }
-        else if (HarvestItem.Yield > 5)
+        else if (Yield == 5)
         {
             GrowingCrops(1);
         }
