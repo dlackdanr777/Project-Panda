@@ -7,41 +7,64 @@ using System;
 
 public class UIPanda : MonoBehaviour
 {
-    private Button _cameraButton;
-    private Button _giftButton;
+    #region UIPanda 위치 지정 관련 변수
+    private Canvas _canvas;
+    private RectTransform _rectTransform;
+    private Vector2 _localPosition; // 변환된 canvas 내 좌표
+    private Transform _uiPandaTransform;
+    private RectTransform _rtUIPanda;
+    #endregion
+
+    [SerializeField] private Button _cameraButton;
+    [SerializeField] private Button _giftButton;
     private bool _isGift;
 
     [SerializeField]
     private Sprite[] _stateSprite = new Sprite[5]; //상태 이미지
 
-    [SerializeField]
-    private StarterPanda _starterPanda;
+    private Panda _panda;
 
-    private void Awake()
-    {
-        _cameraButton = transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<Button>();
-        _giftButton = transform.GetChild(2).gameObject.GetComponent<Button>();
-    }
+    private bool _isStart;
 
-    private void OnEnable()
+
+    public void Init(Panda panda)
     {
-        _starterPanda.StateHandler += StarterPanda_StateHandler;
-        _starterPanda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
-        _starterPanda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
-        _starterPanda.GiftHandler += StarterPanda_GiftHandler;
+        _panda = panda;
+
+        // uiPanda 판다 머리 위에 뜨도록 설정
+        _canvas = GetComponentInParent<Canvas>();
+        _rectTransform = _canvas.transform as RectTransform;
+        _uiPandaTransform = _panda.gameObject.transform.GetChild(1);
+        _rtUIPanda = transform as RectTransform;
+
+        UpdateUIPandaPosition();
+
+
+        _panda.StateHandler += StarterPanda_StateHandler;
+        _panda.UIAlphaHandler += StarterPanda_UIAlphaHandler;
+        _panda.ImageAlphaHandler += StarterPanda_ImageAlphaHandler;
+        _panda.GiftHandler += StarterPanda_GiftHandler;
 
         _cameraButton.onClick.AddListener(OnClickCameraButton);
         _giftButton.onClick.AddListener(OnClickGiftButton);
 
+        _isStart = true;
     }
 
-
-    private void OnDisable()
+/*    private void OnDisable()
     {
         _starterPanda.StateHandler -= StarterPanda_StateHandler;
         _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
         _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
         _starterPanda.GiftHandler -= StarterPanda_GiftHandler;
+    }*/
+
+    private void Update()
+    {
+        if (!_isStart)
+            return;
+
+        UpdateUIPandaPosition();
     }
 
     // 상태 이미지 변경
@@ -71,7 +94,7 @@ public class UIPanda : MonoBehaviour
     {
         // 플레이어에게 선물 들어오는 기능 연결
 
-        OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _starterPanda.TakeAGift());
+        OnChangeAlpha(_giftButton.gameObject, 0, 1, () => _panda.TakeAGift());
     }
 
     /// <summary>
@@ -89,12 +112,20 @@ public class UIPanda : MonoBehaviour
     private void OnChangePandaUIAlpha(float targetAlpha, float duration, Action onComplate = null)
     {
         Tween.IamgeAlpha(gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep);
-        Tween.IamgeAlpha(_cameraButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep);
+        //Tween.IamgeAlpha(_cameraButton.gameObject, targetAlpha, duration, TweenMode.Smoothstep);
         Tween.IamgeAlpha(_cameraButton.gameObject.transform.GetChild(0).gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
     }
 
     private void OnChangeAlpha(GameObject gameObject, float targetAlpha, float duration, Action onComplate = null)
     {
         Tween.IamgeAlpha(gameObject, targetAlpha, duration, TweenMode.Smoothstep, onComplate);
+    }
+
+    private void UpdateUIPandaPosition()
+    {
+        Vector3 pandaScreenPos = Camera.main.WorldToScreenPoint(_uiPandaTransform.position + Vector3.up);
+        transform.position = pandaScreenPos;
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, pandaScreenPos, Camera.main, out _localPosition);
+        //_rtUIPanda.anchoredPosition = _localPosition;
     }
 }

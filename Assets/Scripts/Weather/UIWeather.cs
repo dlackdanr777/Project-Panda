@@ -10,25 +10,18 @@ using UnityEngine.U2D;
 using Unity.VisualScripting;
 using System.Reflection;
 
-public class UIWeather : MonoBehaviour
+public class UIWeather : UIView
 {
     [SerializeField] private WeatherApp _weatherApp;
 
     //레이아웃을 넣는 곳
-    [SerializeField] private GameObject _layoutGroup;
+    [SerializeField] private GameObject _slotLayoutGroup;
 
-    //날씨를 보여주는 일반적인 슬롯
-    [SerializeField] private GameObject _uiSlot;
+    [SerializeField] private GameObject _daySlotLayoutGroup;
 
-    //현재 날짜를 보여주는 슬롯
-    [SerializeField] private GameObject _uiTodaySlot;
-
-    [SerializeField] private Image _attendanceStamp;
-
-    [SerializeField] private Sprite _attendanceSprite;
-
-    [SerializeField]
     private List<UIWeatherSlot> _slots;
+
+    private List<UIDaySlot> _daySlots;
 
     private List<WeatherData> _weekWeathers;
 
@@ -36,51 +29,48 @@ public class UIWeather : MonoBehaviour
 
     public event Action OnRewardedHandler;
 
-
-    private void OnEnable()
+    public override void Show()
     {
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
+        gameObject.SetActive(true);
     }
 
-    private void OnDisable()
+    public override void Hide()
     {
-        CameraController.FriezePos = false;
-        CameraController.FriezeZoom = false;
+        gameObject.SetActive(false);
     }
+
 
     public void InitSlot()
     {
         _slots = new List<UIWeatherSlot>();
-        _slots = _layoutGroup.GetComponentsInChildren<UIWeatherSlot>().ToList();
+        _slots = _slotLayoutGroup.GetComponentsInChildren<UIWeatherSlot>().ToList();
+        _daySlots = _daySlotLayoutGroup.GetComponentsInChildren<UIDaySlot>().ToList();
 
-        for(int i = 0, count = _slots.Count; i < count; i++)
+        for (int i = 0, count = _slots.Count; i < count; i++)
         {
             _slots[i].UpdateUI(_weekWeathers[i], i + 1);
+            _daySlots[i].SetDayText(i + 1);
         }
 
         //슬롯들을 세팅해준다.
         for (int i = 0, count = _slots.Count; i < count; i++)
         {
 
+            int weekCount = UserInfo.DayCount / 6;
+
             //만약 보상 지급 슬롯이라면?
-            if ((UserInfo.DayCount % 7) -1 == i)
+            if ((UserInfo.DayCount % 6) - 1 == i)
             {
-                //보상이 지급되는 날이 아니면?
-                if (!_weatherApp.IsCanReward)
+                _todayWeatherData = _weekWeathers[i];
+                _daySlots[i].Init(true);
+
+                //보상이 지급되는 날이면?
+                if (_weatherApp.IsCanReward)
                 {
-                    _slots[i].AttendanceComplated(_attendanceSprite);
-                }
-                else
-                {
-                    //보상획득 이벤트
-                    //RewardAnime(_slots[i]);
-                    _slots[i].AttendanceComplated(_attendanceSprite);
-                    _todayWeatherData = _weekWeathers[i];
+
                     //이벤트핸들러 실행
                     OnRewardedHandler?.Invoke();
                 }
-
                 //반복문을 빠져나온다.
                 break;
             }
@@ -89,9 +79,10 @@ public class UIWeather : MonoBehaviour
             else
             {
                 //출석도장을 찍어준다.
-                _slots[i].AttendanceComplated(_attendanceSprite);
+                _daySlots[i].Init(true);
             }
         }
+
 
     }
 
@@ -99,7 +90,6 @@ public class UIWeather : MonoBehaviour
     public void Init()
     {
         _weekWeathers = _weatherApp.GetWeekWeathers().ToList();
-        _attendanceStamp.gameObject.SetActive(false);
         InitSlot();
         SetBind();
         gameObject.SetActive(false);
@@ -108,38 +98,40 @@ public class UIWeather : MonoBehaviour
 
     private void SetBind()
     {
-        DataBind.SetButtonValue("UI Weather Exit Button", () => gameObject.SetActive(false));
-        DataBind.SetButtonValue("UI Weather Open Button", () => gameObject.SetActive(!gameObject.activeSelf));
-        DataBind.SetSpriteValue("Today Weather Image", _todayWeatherData.WeatherSprite);
+        DataBind.SetSpriteValue("TodayWeatherImage", _todayWeatherData.WeatherSprite);
+        string weekText = UserInfo.TODAY.DayOfWeek.ToString().Substring(0, 3);
+        DataBind.SetTextValue("WeekText", weekText);
     }
 
 
-    //출석체크를 눌렀을때 발생될 이벤트
-    private void RewardAnime(UIWeatherSlot uiWeatherSlot)
-    {
-        _attendanceStamp.gameObject.SetActive(true);
-
-        RectTransform rectTransform = !_attendanceStamp.GetComponent<RectTransform>()
-            ? _attendanceStamp.AddComponent<RectTransform>()
-            : _attendanceStamp.GetComponent<RectTransform>();
-
-        _attendanceStamp.transform.position = uiWeatherSlot.AttendanceStamp.transform.position;
-        _attendanceStamp.transform.rotation = uiWeatherSlot.AttendanceStamp.transform.rotation;
-        _attendanceStamp.sprite = _attendanceSprite;
-
-        Vector2 tmepSizeDelta = rectTransform.sizeDelta;
-        rectTransform.sizeDelta = new Vector2(200, 200);
 
 
-        Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, rectTransform.sizeDelta, 0.1f);
-        Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, tmepSizeDelta, 0.5f, TweenMode.Quadratic, () =>
-        {
-            uiWeatherSlot.AttendanceStamp.gameObject.SetActive(true);
-            uiWeatherSlot.AttendanceStamp.sprite = _attendanceSprite;
-            _attendanceStamp.gameObject.SetActive(false);
-            
-            //이쪽에 보상을 획득할 수 있도록 해야함
-        });
+    /* //출석체크를 눌렀을때 발생될 이벤트
+     private void RewardAnime(UIWeatherSlot uiWeatherSlot)
+     {
+         _attendanceStamp.gameObject.SetActive(true);
 
-    }
+         RectTransform rectTransform = !_attendanceStamp.GetComponent<RectTransform>()
+             ? _attendanceStamp.AddComponent<RectTransform>()
+             : _attendanceStamp.GetComponent<RectTransform>();
+
+         _attendanceStamp.transform.position = uiWeatherSlot.AttendanceStamp.transform.position;
+         _attendanceStamp.transform.rotation = uiWeatherSlot.AttendanceStamp.transform.rotation;
+         _attendanceStamp.sprite = _attendanceSprite;
+
+         Vector2 tmepSizeDelta = rectTransform.sizeDelta;
+         rectTransform.sizeDelta = new Vector2(200, 200);
+
+
+         Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, rectTransform.sizeDelta, 0.1f);
+         Tween.RectTransfromSizeDelta(_attendanceStamp.gameObject, tmepSizeDelta, 0.5f, TweenMode.Quadratic, () =>
+         {
+             uiWeatherSlot.AttendanceStamp.gameObject.SetActive(true);
+             uiWeatherSlot.AttendanceStamp.sprite = _attendanceSprite;
+             _attendanceStamp.gameObject.SetActive(false);
+
+             //이쪽에 보상을 획득할 수 있도록 해야함
+         });
+ */
 }
+

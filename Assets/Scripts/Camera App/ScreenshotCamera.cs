@@ -1,6 +1,9 @@
+using Muks.DataBind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -12,23 +15,13 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("카메라 어플 스크립트를 연결")]
     [SerializeField] private CameraApplication _cameraApp;
 
-    [Tooltip("촬영할 카메라")]
-    [SerializeField] private Camera _screenshotCamera;
+    [Tooltip("메인 카메라 연결")]
+    [SerializeField] private CameraController _cameraController;
 
-    [Tooltip("카메라 기본 위치")]
-    [SerializeField] private Vector3 _defaultPos;
+    [SerializeField] private ShootingRange _shootingImage;
 
-    [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
-    [SerializeField] private Image _areaImage;
-
-    [Tooltip("화면을 드래그했을때의 카메라 이동속도")]
-    [SerializeField] private float _dragSpeed = 30f;
-
-    [Tooltip("카메라 제한 범위")]
-    [SerializeField] private Vector2 _clampSize;
-
-    //카메라 제한 범위의 중앙
-    [SerializeField] private Vector2 _clampCenter;
+    [Tooltip("랜더 텍스쳐")]
+    [SerializeField] private RenderTexture _renderTexture;
 
 
 
@@ -40,58 +33,95 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("자석 기능의 감지 범위")]
     [SerializeField] private Vector3 _boxSize;
 
+
+    private Image _areaImage;
+
+    private float _zoomSpeed => _cameraController.ZoomSpeed;
+
+    private float _maxZoomSize => _cameraController.MaxZoomSize - 4;
+
+    private float _minZoomSize => _cameraController.MinZoomSize - 4;
+
+    private Vector2 _mapSize => _cameraController.MapSize;
+
+    private Vector2 _mapCenter => _cameraController.MapCenter;
+
+    private Camera _camera;
+
+    private Vector3 _tempTouchPos;
+
+    private Vector3 _tempCameraPos;
+
     private float _height;
 
     private float _width;
 
     private bool _isMagnetMode;
 
-    private Vector2 _clickPoint;
+    private bool _isBegan = false;
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
 
+
+    private void Start()
+    {
+        
+#if UNITY_EDITOR
+
+        _shootingImage.OnDragehandler += MouseMovement;
+        _shootingImage.OnPointerDownHandler += MouseDown;
+        _shootingImage.OnPointerUpHandler += MouseUp;
+
+#elif PLATFORM_ANDROID
+
+        _shootingImage.OnDragehandler += TouchMovement;
+        _shootingImage.OnPointerDownHandler += TouchDown;
+        _shootingImage.OnPointerUpHandler += TouchUp;
+        
+#endif
+
+        gameObject.SetActive(false);
+
+    }
+
     private void OnEnable()
     {
-        _screenshotCamera.transform.position = _defaultPos;
+        _camera.transform.position = _cameraController.transform.position;
+        _renderTexture.Release();
+        Graphics.Blit(_areaImage.mainTexture, _renderTexture);
+
+        _camera.orthographicSize = Camera.main.orthographicSize - 4;
+    }
+
+    private void OnDisable()
+    {
+        _renderTexture.Release();
     }
 
     private void Update()
     {
-        MoveCamera();
+#if UNITY_EDITOR
+
+        MouseZoomInOut();
+
+#elif PLATFORM_ANDROID
+
+        TouchZoomInOut();
+        
+#endif
+
         MagnetFunction();
     }
 
     private void Init()
     {
-        _height = _screenshotCamera.orthographicSize;
-        _width = _height * _areaImage.rectTransform.rect.width / _areaImage.rectTransform.rect.height;
-    }
-
-
-    private void MoveCamera()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _clickPoint = Input.mousePosition;
-            if (_isMagnetEnable) _isMagnetMode = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (_isMagnetEnable) _isMagnetMode = true;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 pos = _screenshotCamera.ScreenToViewportPoint((Vector2)Input.mousePosition - _clickPoint);
-
-            Vector3 move = -pos * (Time.deltaTime * _dragSpeed);
-            _screenshotCamera.transform.Translate(move);
-
-            _screenshotCamera.transform.position = ClampedPos(_screenshotCamera.transform.position);
-        }
+        _camera = GetComponent<Camera>();
+        _areaImage = _shootingImage.GetComponent<Image>();
+        DataBind.SetButtonValue("ShowScreenshotCameraButton", () => gameObject.SetActive(true));
+        DataBind.SetButtonValue("HideScreenshotCameraButton", () => gameObject.SetActive(false));
     }
 
 
@@ -104,15 +134,18 @@ public class ScreenshotCamera : MonoBehaviour
         if (!_isMagnetMode || !_isMagnetEnable)
             return;
 
-        RaycastHit2D hit = Physics2D.BoxCast(_screenshotCamera.transform.position, _boxSize, 0, _screenshotCamera.transform.forward);
-
-        if (hit.collider != null)
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, _boxSize, 0, transform.forward);
+        Debug.Log(hits.Length);
+        foreach(RaycastHit2D hit in hits)
         {
-            if (hit.transform.gameObject.TryGetComponent(out ScreenshotObject screenshotObject))
+            Debug.Log(hit.transform.name);
+            if (hit.transform.TryGetComponent(out Panda panda))
             {
 
-                if (Vector2.Distance(_screenshotCamera.transform.position, screenshotObject.transform.position) > 0.5f)
-                    StartCoroutine(ImagePosLerp(_screenshotCamera.transform.position, screenshotObject.transform.position, 0.3f));
+                if (Vector2.Distance(transform.position, panda.transform.position) > 0.5f)
+                    StartCoroutine(ImagePosLerp(transform.position, panda.transform.position, 0.3f));
+
+                return;
             }
         }
     }
@@ -132,28 +165,126 @@ public class ScreenshotCamera : MonoBehaviour
                 float t = timer / duration;
                 t = t * t * (3f - 2f * t);
 
-                _screenshotCamera.transform.position = Vector3.Lerp(startPos, endPos, t);
+                transform.position = Vector3.Lerp(startPos, endPos, t);
 
                 yield return null;
             }
         }
     }
 
-    private Vector3 ClampedPos(Vector3 cameraPos)
+
+    Touch _touch;
+    private void TouchDown(PointerEventData data)
     {
-        float lx = (_clampSize.x * 0.5f) - _width;
-        float clampX = Mathf.Clamp(cameraPos.x, _clampCenter.x - lx, _clampCenter.x + lx ) ;
+        if (_isMagnetEnable) _isMagnetMode = false;
 
-        float ly = (_clampSize.y * 0.5f) - _height;
-        float clampY = Mathf.Clamp(cameraPos.y, _clampCenter.y - ly, _clampCenter.y + ly);
-
-        return new Vector3(clampX, clampY, -10);
+        _touch = Input.GetTouch(0);
+        _tempTouchPos = _touch.position;
+        _tempCameraPos = _camera.transform.position;
     }
 
-    private void OnDrawGizmos()
+
+    private void TouchUp(PointerEventData data)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_clampCenter, _clampSize);
+        if (_isMagnetEnable) _isMagnetMode = true;
     }
 
+
+    private void TouchMovement(PointerEventData data)
+    {
+        if (Input.touchCount != 1)
+            return;
+
+        _touch = Input.GetTouch(0);
+
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)_touch.position);
+        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+
+    }
+
+
+    private void TouchZoomInOut()
+    {
+        if (Input.touchCount != 2)
+            return;
+
+        Touch touchZero = Input.GetTouch(0); //첫번째 손가락 터치를 저장
+        Touch touchOne = Input.GetTouch(1); //두번째 손가락 터치를 저장
+
+        //터치에 대한 이전 위치값을 각각 저장함
+        //처음 터치한 위치(touchZero.position)에서 이전 프레임에서의 터치 위치와 이번 프로임에서 터치 위치의 차이를 뺌
+        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition; //deltaPosition는 이동방향 추적할 때 사용
+        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+        // 각 프레임에서 터치 사이의 벡터 거리 구함
+        float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude; //magnitude는 두 점간의 거리 비교(벡터)
+        float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+        // 거리 차이 구함(거리가 이전보다 크면(마이너스가 나오면)손가락을 벌린 상태_줌인 상태)
+        float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+        _camera.orthographicSize += deltaMagnitudeDiff * 0.1f * _zoomSpeed * Time.deltaTime;
+        _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
+
+        transform.position = LimitPos(transform.position);
+    }
+
+    private void MouseDown(PointerEventData data)
+    {
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        if (_isMagnetEnable) _isMagnetMode = false;
+        _isBegan = true;
+        _tempTouchPos = Input.mousePosition;
+        _tempCameraPos = _camera.transform.position;
+    }
+
+    private void MouseUp(PointerEventData data)
+    {
+        if (!Input.GetMouseButtonUp(0))
+            return;
+
+        if (_isMagnetEnable) _isMagnetMode = true;
+            _isBegan = false;
+    }
+
+    private void MouseMovement(PointerEventData data)
+    {
+
+        if (!_isBegan)
+            return;
+
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition);
+        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+    }
+
+
+    private void MouseZoomInOut()
+    {
+        float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scrollWheel != 0)
+        {
+            _camera.orthographicSize += -scrollWheel * 100 * Time.deltaTime * _zoomSpeed;
+            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
+            transform.position = LimitPos(transform.position);
+        }
+    }
+
+
+    private Vector3 LimitPos(Vector3 pos)
+    {
+        _height = _camera.orthographicSize;
+        Debug.Log(Screen.width / Screen.height);
+        _width = _height * 0.6848f;
+
+        float lx = _mapSize.x - _width;
+        float clampX = Mathf.Clamp(pos.x, -lx + _mapCenter.x, lx + _mapCenter.x);
+
+        float ly = _mapSize.y - _height;
+        float clampY = Mathf.Clamp(pos.y, -ly + _mapCenter.y, ly + _mapCenter.y);
+
+        return new Vector3(clampX, clampY, -10f);
+    }
 }

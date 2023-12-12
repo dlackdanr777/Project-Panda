@@ -1,11 +1,11 @@
+using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UIAlbum : MonoBehaviour
 {
-    [Tooltip(" 저장소 스크립트를 넣는 곳")]
-    [SerializeField] private Library _library;
+    private Library _library;
 
     [Tooltip("슬롯들의 부모 오브젝트를 넣는 곳")]
     [SerializeField] private GameObject _layoutGroup;
@@ -17,28 +17,17 @@ public class UIAlbum : MonoBehaviour
 
     private List<UIAlbumSlot> _slot;
      
-    private void Awake()
-    {
-        Init();
-        UpdateUI();
-    }
 
     private void OnEnable()
     {
         UpdateUI();
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
     }
 
-    private void OnDisable()
-    {
-        CameraController.FriezePos = false;
-        CameraController.FriezeZoom = false;
-    }
 
-    private void Init()
+    public void Init()
     {
         _slot = new List<UIAlbumSlot>();
+        UpdateUI();
     }
 
     private void UpdateUI()

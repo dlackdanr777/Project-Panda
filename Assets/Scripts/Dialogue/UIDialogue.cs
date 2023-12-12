@@ -2,6 +2,9 @@ using UnityEngine;
 using Muks.Tween;
 using System.Collections;
 using Muks.DataBind;
+using System.Linq;
+using System;
+using UnityEngine.UI;
 
 public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
@@ -15,74 +18,106 @@ public enum DialogueState
 
 public class UIDialogue : UIView
 {
+    [SerializeField] private Image _pandaImage;
+    [SerializeField] private UIDialogueButton _leftButton;
+    [SerializeField] private UIDialogueButton _rightButton;
 
-    private RectTransform _rectTransform;
     private Vector2 _tempPos;
     private DialogueState _state;
     private int _currentIndex;
+
     private StoryDialogue _dialogue;
-    private PandaStoryController _pandaController;
-    public static AddComplateStory AddComplateStory = new AddComplateStory();
+    private StoryEventData[] _eventDatas;
+
+    private bool _isStoryStart;
+    private bool _isSkipEnabled;
+    private Coroutine _contextAnimeRoutine;
+
+    public static event Action<int> OnComplateHandler;
+
+
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        _rectTransform = GetComponent<RectTransform>();
-        _tempPos = _rectTransform.anchoredPosition;
+        RectTransform = GetComponent<RectTransform>();
+        _tempPos = RectTransform.anchoredPosition;
+
+        PandaStoryController.OnStartInteractionHandler += StartStory;
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
         DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
+
+        _leftButton.Init();
+        _rightButton.Init();
     }
+
 
 
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
 
-        foreach (StoryEventData data in _pandaController.StoryEvents)
-        {
-            data.StoryEvent.IsComplate = false;
-        }
+        _leftButton.Disabled();
+        _rightButton.Disabled();
+
+        _currentIndex = 0;
+        CancelInvoke("SkipDisable");
+        _isSkipEnabled = false;
+
+
+        if (_contextAnimeRoutine != null)
+            StopCoroutine(_contextAnimeRoutine);
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
-            CameraController.FriezePos = false;
-            CameraController.FriezeZoom = false;
             gameObject.SetActive(false);
-
+            _isStoryStart = false;
+            _state = DialogueState.None;
             VisibleState = VisibleState.Disappeared;
-            _currentIndex = 0;
         });
+
+        if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
+        {
+            foreach (StoryEventData data in _eventDatas)
+            {
+                data.StoryEvent.EventCancel();
+                data.StoryEvent.IsComplate = false;
+            }
+        }
     }
+
 
     public override void Show()
     {
-        if(StoryManager.Instance.IsStoryStart)
+        if(_isStoryStart)
         {
             Debug.LogError("이미 대화가 진행중 입니다.");
             return;
         }
 
         gameObject.SetActive(true);
-        CameraController.FriezePos = true;
-        CameraController.FriezeZoom = true;
+        _isSkipEnabled = true;
+
+        DataBind.SetTextValue("DialogueName", " ");
+        DataBind.SetTextValue("DialogueContexts", " ");
+        _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
 
         _currentIndex = 0;
         
         VisibleState = VisibleState.Appearing;
-        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, -700), 1f, TweenMode.EaseInOutBack, () => 
+        Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, 10), 1f, TweenMode.EaseInOutBack, () => 
         {
             VisibleState = VisibleState.Appeared;
-            _dialogue = StoryManager.Instance.CurrentDialogue;
-            _pandaController = StoryManager.Instance.CurrentStroyController;
             OnNextButtonClicked();
         });
     }
 
 
-
-
     private void OnNextButtonClicked()
     {
+
+        if (!_isSkipEnabled)
+            return;
 
         switch (_state)
         {
@@ -96,13 +131,13 @@ public class UIDialogue : UIView
         }
 
 
-        foreach (StoryEventData data in _pandaController.StoryEvents)
+        foreach (StoryEventData data in _eventDatas)
         {
-            if (_currentIndex == data.InsertIndex)
-            {
-                if (data.StoryEvent.IsComplate)
-                    continue;
+            if (_currentIndex != data.InsertIndex)
+                continue;
 
+            if (!data.StoryEvent.IsComplate)
+            {
                 StartStoryEvent(data.StoryEvent);
                 return;
             }
@@ -110,36 +145,63 @@ public class UIDialogue : UIView
 
         if (_currentIndex < _dialogue.DialogDatas.Length)
         {
-            StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
+            if (_contextAnimeRoutine != null)
+                StopCoroutine(_contextAnimeRoutine);
+
+            _contextAnimeRoutine = StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
             _currentIndex++;
         }
 
         else
         {
-            AddComplateStory?.Invoke(StoryManager.Instance.CurrentDialogueID);
+            OnComplateHandler?.Invoke(_dialogue.StoryID);
             _uiNav.Pop();
         }
 
     }
+
 
     private void StartStoryEvent(StoryEvent storyEvent)
     {
         if (_state != DialogueState.None)
             return;
 
+        _state = DialogueState.Event;
+
         storyEvent.EventStart(() =>
         {
-            _currentIndex++;
             _state = DialogueState.None;
+            storyEvent.IsComplate = true;
             OnNextButtonClicked();
         });
 
     }
 
 
+    private void StartStory(StoryDialogue storyDialogue, StoryEventData[] eventDatas)
+    {
+        if (_isStoryStart || StoryManager.Instance._storyCompleteList.Contains(storyDialogue.StoryID))
+        {
+            Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
+            return;
+        }
+
+        _dialogue = storyDialogue;
+        _eventDatas = eventDatas;
+        _uiNav.Push("Dialogue");
+        _isStoryStart = true;
+    }
+
+
     private IEnumerator ContextAnime(DialogData data)
     {
         _state = DialogueState.Context;
+        _isSkipEnabled = false;
+
+        _pandaImage.sprite = PandaManager.Instance.GetPandaImage(1).NomalImage;
+        _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
+
+        Invoke("SkipDisable", 0.5f);
         DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -150,7 +212,7 @@ public class UIDialogue : UIView
             tempString += tempChars[j];
             DataBind.SetTextValue("DialogueContexts", tempString);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
 
             if (_state == DialogueState.None)
             {
@@ -159,9 +221,37 @@ public class UIDialogue : UIView
             }
         }
 
-        _state = DialogueState.None;
+        if (data.CanChoice)
+        {
+            _state = DialogueState.Choice;
+            _leftButton.ShowButton(data.ChoiceContext1, () => { _leftButton.Button.onClick.AddListener(OnButtonClicked); });
+            _rightButton.ShowButton(data.ChoiceContext2, () => { _rightButton.Button.onClick.AddListener(OnButtonClicked); });
+        }
+
+        else
+        {
+            _state = DialogueState.None;
+        }
+    }
+
+    private void OnButtonClicked()
+    {
+        _leftButton.HideButton();
+        _rightButton.HideButton(() => 
+        {
+            _state = DialogueState.None;
+            _leftButton.Button.onClick.RemoveListener(OnButtonClicked);
+            _rightButton.Button.onClick.RemoveListener(OnButtonClicked);
+            _isSkipEnabled = true;
+            OnNextButtonClicked();
+        });
+
     }
 
 
+    private void SkipDisable()
+    {
+        _isSkipEnabled = true;
+    }
 
 }
