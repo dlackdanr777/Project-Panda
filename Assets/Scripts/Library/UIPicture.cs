@@ -11,8 +11,9 @@ public class UIPicture : UIView
 
     [SerializeField] private Button _backgroundButton;
 
-    private Material _tempMat;
+    [SerializeField] private float _animeDuration;
 
+    private Material _tempMat;
 
     public override void Init(UINavigation uiNav)
     {
@@ -30,7 +31,8 @@ public class UIPicture : UIView
         _backgroundButton.gameObject.SetActive(true);
         gameObject.SetActive(true);
         VisibleState = VisibleState.Appearing;
-        Tween.TransformScale(gameObject, new Vector3(1, 1, 1), 0.3f, TweenMode.Smootherstep, () =>
+
+        Tween.TransformScale(gameObject, new Vector3(1, 1, 1), _animeDuration, TweenMode.Smootherstep, () =>
         {
             VisibleState = VisibleState.Appeared;
         });
@@ -40,9 +42,9 @@ public class UIPicture : UIView
     public override void Hide()
     {
         Tween.Stop(gameObject);
-
         VisibleState = VisibleState.Disappearing;
-        Tween.TransformScale(gameObject, new Vector3(0.1f, 0.1f, 0.1f), 0.3f, TweenMode.Smootherstep, () =>
+
+        Tween.TransformScale(gameObject, new Vector3(0.2f, 0.2f, 0.2f), _animeDuration, TweenMode.Smootherstep, () =>
         {
             VisibleState = VisibleState.Disappeared;
 
@@ -54,6 +56,9 @@ public class UIPicture : UIView
 
     private void OnAlbumButtonClicked(PhotoData photoData)
     {
+        if (VisibleState == VisibleState.Appearing || VisibleState == VisibleState.Disappearing)
+            return;
+
         SetImageByPhotoData(photoData);
         _uiNav.Push("Picture");
     }
