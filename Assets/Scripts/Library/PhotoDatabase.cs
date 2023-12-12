@@ -14,6 +14,8 @@ public class PhotoDatabase
     private List<PhotoData> _photoData = new List<PhotoData>();
 
     private List<Texture2D> _photo = new List<Texture2D>();
+
+    private string _fileName => "PhotoData.json";
     public void Register()
     {
         Load();
@@ -30,14 +32,17 @@ public class PhotoDatabase
 
         string json = JsonUtility.ToJson(saveDatas, true);
 
-        File.WriteAllText(UserInfo.PhotoPath, json);
+        if (!Directory.Exists(UserInfo.PhotoPath))
+            Directory.CreateDirectory(UserInfo.PhotoPath);
+
+        File.WriteAllText(UserInfo.PhotoPath + _fileName, json);
     }
 
     public void Load()
     {
         PhotoDatas photoDatas = new PhotoDatas();
 
-        string loadJson = File.ReadAllText(UserInfo.PhotoPath);
+        string loadJson = File.ReadAllText(UserInfo.PhotoPath + _fileName);
         photoDatas = JsonUtility.FromJson<PhotoDatas>(loadJson);
 
         foreach (PhotoData data in photoDatas.PhotoDataList)
@@ -46,7 +51,7 @@ public class PhotoDatabase
         }
     }
 
-    private void SetImageByPhotoData(PhotoData photoData)
+    public void SavePhotoData(PhotoData photoData)
     {
         if (photoData == null)
             return;
@@ -63,6 +68,7 @@ public class PhotoDatabase
         tex.LoadImage(bytes);
 
         _photo.Add(tex);
+        _photoData.Add(photoData);
     }
 
 }

@@ -20,6 +20,8 @@ public class PhotoData
         _fileName = fileName;
         _date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         _pathFloder = pathFloder;
+
+        DatabaseManager.Instance.SavePhotoData(this);
     }
 
 }

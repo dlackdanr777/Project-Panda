@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
-    private DataList<PhotoData> _photoDatabase;
+    //private DataList<PhotoData> _photoDatabase;
+    private PhotoDatabase _photoDatabase;
 
     private DialogueManager _dialogueDatabase;
     private WeatherApp _weatherDatabase;
@@ -28,7 +29,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_pandaDatabase.Register();
         //_itemDatabase.Register();
 
-        _photoDatabase = new DataList<PhotoData>();
+        _photoDatabase = new PhotoDatabase();
     }
 
 
@@ -46,10 +47,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// </summary>
     /// <param name="index">inde¤¼</param>
     /// <returns></returns>
-    public DataList<PhotoData> GetPhotoData(int index)
+   /* public DataList<PhotoData> GetPhotoData(int index)
     {
-        return _photoDatabase;
-    }
+        //return PhotoDatabase;
+    }*/
 
     /// <summary>
     /// weekWeather data
@@ -126,4 +127,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.FurnitureTypeList;
     }
 
+    public void SavePhotoData(PhotoData photoData)
+    {
+        _photoDatabase.SavePhotoData(photoData);
+    }
+
+
+    public void OnApplicationQuit()
+    {
+        _photoDatabase.Save();
+    }
 }

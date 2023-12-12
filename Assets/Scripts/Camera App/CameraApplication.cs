@@ -119,6 +119,9 @@ public class CameraApplication : MonoBehaviour
         string savePath = UserInfo.PhotoPath;
         string fileName = "/Screenshot" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
 
+        if (!Directory.Exists(UserInfo.PhotoPath))
+            Directory.CreateDirectory(UserInfo.PhotoPath);
+
         //새 파일을 만들고 지정된 바이트 배열을 savePath위치에 파일로 저장
         //대상 파일이 이미 있으면 덮어씀
         File.WriteAllBytes(savePath + fileName, byteArray);

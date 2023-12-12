@@ -33,7 +33,9 @@ public class UserInfo
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
 
-    public static string PhotoPath => Application.persistentDataPath;
+    //public static string PhotoPath => Application.persistentDataPath;
+
+    public static string PhotoPath => "Data/";
 
     //유저의 데이터를 가져오는 함수
     public void LoadUserInfoData()
