@@ -39,7 +39,7 @@ public class PandaStoryController : MonoBehaviour, IInteraction
 
     private void Start()
     {
-        DatabaseManager.Instance.GetDialogueData(_storyID);
+        StoryDialogue = DatabaseManager.Instance.GetDialogueData(_storyID);
         OnStartHandler?.Invoke(_storyID, this);
         OnCheckActivateHandler?.Invoke(this);
     }

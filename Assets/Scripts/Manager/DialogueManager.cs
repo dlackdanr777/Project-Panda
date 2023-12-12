@@ -13,7 +13,6 @@ public class DialogueManager
 
     public void Register()
     {
-        Debug.Log("Ω√¿€");
         _storyDialogueDic = _parser.StroyParse("StoryDialogue");
     }
 
