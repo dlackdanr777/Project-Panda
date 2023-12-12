@@ -4974,6 +4974,7 @@ GameObject:
   - component: {fileID: 686897983}
   - component: {fileID: 686897985}
   - component: {fileID: 686897984}
+  - component: {fileID: 686897986}
   m_Layer: 0
   m_Name: Kitchen
   m_TagString: Kitchen
@@ -5093,6 +5094,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &686897986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686897982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5d15dab5776524886fc6e5d6600d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemDropPopup: {fileID: 8321301972724282913}
+  _itemPf: {fileID: 4869920912575792425, guid: 5f3fd303398acdc45bd9abb114990516, type: 3}
+  Image: {fileID: -771706126, guid: 1efd879c3281fbf459716b1d7794db05, type: 3}
 --- !u!1 &691938149
 GameObject:
   m_ObjectHideFlags: 0
@@ -8150,7 +8166,7 @@ GameObject:
   - component: {fileID: 1163679249}
   m_Layer: 0
   m_Name: InsideWood
-  m_TagString: Untagged
+  m_TagString: DropZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8179,7 +8195,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163679247}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 195c13da4f532eb47955dfc13564d4b4, type: 3}
   m_Name: 
@@ -8190,7 +8206,6 @@ MonoBehaviour:
   _itemScoopPopup: {fileID: 435845731}
   _itemScoopButton: {fileID: 1858504687}
   _itemNoScoopButton: {fileID: 1323756316}
-  _wood: {fileID: 1353519489}
   CurrentItemIndex: 0
 --- !u!1 &1168790973
 GameObject:
@@ -13716,6 +13731,7 @@ GameObject:
   - component: {fileID: 1799954117}
   - component: {fileID: 1799954119}
   - component: {fileID: 1799954118}
+  - component: {fileID: 1799954120}
   m_Layer: 0
   m_Name: Room
   m_TagString: Room
@@ -13835,6 +13851,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1799954120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799954116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5d15dab5776524886fc6e5d6600d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemDropPopup: {fileID: 8321301972724282913}
+  _itemPf: {fileID: 4869920912575792425, guid: 5f3fd303398acdc45bd9abb114990516, type: 3}
+  Image: {fileID: -771706126, guid: 1efd879c3281fbf459716b1d7794db05, type: 3}
 --- !u!1 &1814187995
 GameObject:
   m_ObjectHideFlags: 0
@@ -15834,6 +15865,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map
       objectReference: {fileID: 0}
+    - target: {fileID: 1659184170400697504, guid: 32bf5c43117b4b144a4f21775a7cb34c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2957164007483664321, guid: 32bf5c43117b4b144a4f21775a7cb34c, type: 3}
       propertyPath: _dropItemSpawnPoint
       value: 
@@ -15948,6 +15983,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6205645858200793155, guid: 32bf5c43117b4b144a4f21775a7cb34c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6432908174039856108, guid: 32bf5c43117b4b144a4f21775a7cb34c, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6988870913224829439, guid: 32bf5c43117b4b144a4f21775a7cb34c, type: 3}
