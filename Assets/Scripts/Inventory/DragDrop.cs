@@ -1,33 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+    [SerializeField] private GameObject _dropItemPf;
 
     private Canvas _canvas;
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
     private Transform _oldParent;
-    private Vector2 _originalLocalPos;
     private Vector3 _oldPosition;
-    private GameObject _worldObject;
-
-    private Vector3 _originalWorldPos;
-    private Vector2 _originalMousePos;
-    private Vector3 _offset;
-
 
     private void Awake()
     {
         _canvas = transform.root.GetComponent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
-        _originalLocalPos = _rectTransform.localPosition;
-        _worldObject = GameObject.FindGameObjectWithTag("DropZone");
-
-        // ÃÊ±â World ÁÂÇ¥¿Í ¸¶¿ì½º À§Ä¡ ÀúÀå
-        _originalWorldPos = transform.position;
-        _originalMousePos = Input.mousePosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -35,49 +23,117 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         _oldParent = transform.parent;
         _oldPosition = transform.position;
         _canvasGroup.blocksRaycasts = false;
-
-        transform.parent = transform.root; //¸Ç À§·Î °¡µµ·Ï
-
-        // µå·¡±×°¡ ½ÃÀÛµÉ ¶§ÀÇ Ã³¸®
-        Vector3 mousePos = GetMousePosInWorld(eventData.position);
-        _offset = _rectTransform.position - mousePos;
     }
     public void OnDrag(PointerEventData eventData)
     {
-        //_rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
-
-        //Vector2 viewportPosition = Camera.main.WorldToViewportPoint(_worldObject.transform.position);
-
-        //Vector2 worldObject_ScreenPosition = new Vector2(
-        //((viewportPosition.x * _rectTransform.sizeDelta.x) - (_rectTransform.sizeDelta.x * 0.5f)),
-        //((viewportPosition.y * _rectTransform.sizeDelta.y) - (_rectTransform.sizeDelta.y * 0.5f)));
-
-        ////now you can set the position of the ui element
-        //_rectTransform.anchoredPosition = worldObject_ScreenPosition;
-
-        MoveWithMouse(eventData);
+        transform.parent = transform.root; //ë§¨ ì•ìœ¼ë¡œ ë³´ë‚´ê¸°
+        _rectTransform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+
+        DropObjectInWorld(eventData); //í˜„ì¬ í”„ë¦¬í©ì˜ rayê°ì§€ëª»í•˜ë„ë¡ ë¨¼ì € ì‹¤í–‰
         _canvasGroup.blocksRaycasts = true;
         transform.parent = _oldParent;
         transform.position = _oldPosition;
+
     }
 
-    private void MoveWithMouse(PointerEventData eventData)
+    private void DropObjectInWorld(PointerEventData eventData)
     {
+        if (_dropItemPf == null)
+        {
+            return;
+        }
 
-        // ÇöÀç ¸¶¿ì½º À§Ä¡¸¦ World ÁÂÇ¥·Î º¯È¯
-        Vector3 mousePos = GetMousePosInWorld(eventData.position);
+        // UIì—ì„œ ë“œë˜ê·¸í•œ ìœ„ì¹˜ë¥¼ World ì¢Œí‘œë¡œ ë³€í™˜
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0));
+        worldPosition.z = 0;
 
-        // World ÁÂÇ¥·Î º¯È¯µÈ ¸¶¿ì½º À§Ä¡¸¦ ±â¹İÀ¸·Î UI¸¦ ÀÌµ¿
-        _rectTransform.position = mousePos + _offset;
-    }
+        //Vector3 rayOrigin = worldPosition;
+        //Vector2 rayDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - worldPosition; //ì¹´ë©”ë¼ì—ì„œ worldPositionì„ í–¥í–ë„ë¡
+        //rayDirection.Normalize();
 
-    private Vector3 GetMousePosInWorld(Vector3 screenPos)
-    {
-        // ¸¶¿ì½ºÀÇ ½ºÅ©¸° À§Ä¡¸¦ World ÁÂÇ¥·Î º¯È¯
-        return Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, _rectTransform.position.z));
+        //RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection);
+
+        GameObject dropObject = Instantiate(_dropItemPf, worldPosition, Quaternion.identity);
+
+        Collider2D dropCollider = dropObject.GetComponent<Collider2D>();
+        if(dropCollider == null)
+        {
+            Destroy(dropObject);
+            return;
+        }
+
+        //ë°•ìŠ¤ ë ˆì´ìºìŠ¤íŠ¸ í¬ê¸° ì„¤ì •
+        Vector2 boxSize = dropCollider.bounds.size;
+
+
+        //Vector2 rayOrigin = worldPosition;
+        //Vector2 boxDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - worldPosition;
+
+        //Vector2 boxRayStart = rayOrigin;
+
+        Collider2D[] overlaps = Physics2D.OverlapBoxAll(worldPosition, boxSize, 0f);
+        bool isFullyInsideRoom = false;
+        //Debug.DrawRay(boxRayStart, boxDirection, Color.red, 2f);
+
+
+        bool isCollideingWithRoom = false;
+        foreach (var overlap in overlaps) //ëª¨ë“  ì¶©ëŒ ê²€ì‚¬
+        {
+            Debug.Log(overlap);
+            //if(overlap == dropCollider ) //ë‚˜ ìì‹ ê³¼ ì¶©ëŒ
+            //{
+            //    continue;
+            //}
+            //if (overlap != null && overlap.CompareTag("Room") && overlap == dropCollider && overlap.CompareTag("DropZone"))//ë°©íƒœê·¸ì™€ ì¶©ëŒ
+            //{
+            //    isCollideingWithRoom = true;
+            //}
+            //else if(overlap == null || !overlap.CompareTag("Room"))
+            //{
+            //    isCollideingWithRoom = false;
+            //    break;
+
+            //}
+            if(overlap.CompareTag("Room") && overlap != dropCollider)
+            {
+
+                if (!dropCollider.bounds.Contains(overlap.bounds.min) || !dropCollider.bounds.Contains(overlap.bounds.max))
+                {
+                    isFullyInsideRoom = true;
+                    break;
+                }
+            }
+        }
+
+        //ë‚˜ ìì‹ ê³¼ ì¶©ëŒ -> ë¬´ì¡°ê±´
+        //ë‚˜ ìì‹ ì„ ì œì™¸í•œ ë‹¤ë¥¸ ì¶©ëŒ ê²€ì‚¬ -> room -> instantiate
+
+        if (isFullyInsideRoom)
+        {
+            Debug.Log("ê°€êµ¬ ë°°ì¹˜!");
+        }
+        else
+        {
+            Debug.Log("ë†“ì„ ìˆ˜ ì—†ëŠ” ê³µê°„");
+            Destroy(dropObject);
+        }
+
+
+        //if (hit.collider.CompareTag("Room"))
+        //{
+
+        //    Debug.Log("Room tagë¥¼ ê°€ì§€ê³  ìˆëŠ” ê°ì²´");
+        //    Instantiate(_dropItemPf, hit.point, Quaternion.identity);
+
+        //}
+        //else
+        //{
+        //    Debug.Log("ë†“ì„ ìˆ˜ ì—†ëŠ” ê³µê°„!");
+        //}
+
     }
 }
