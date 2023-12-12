@@ -6,6 +6,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
     //private DataList<PhotoData> _photoDatabase;
     private PhotoDatabase _photoDatabase;
+    public PhotoDatabase PhotoDatabase => _photoDatabase;
 
     private DialogueManager _dialogueDatabase;
     private WeatherApp _weatherDatabase;
@@ -30,6 +31,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_itemDatabase.Register();
 
         _photoDatabase = new PhotoDatabase();
+        _photoDatabase.Register();
     }
 
 

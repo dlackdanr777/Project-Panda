@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CameraApplication : MonoBehaviour
 {
     //스크린샷 찍는 함수를 실행하면 이 이벤트도 실행
-    public event Action OnSavePhotoHandler;
+    public event Action<PhotoData> OnSavePhotoHandler;
 
     [Tooltip("UI카메라 앱 스크립트를 넣는곳")]
     [SerializeField] private UICameraApp _uiCameraApp;
@@ -130,6 +130,6 @@ public class CameraApplication : MonoBehaviour
         AddPhotoData(photoData);
 
         Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
-        OnSavePhotoHandler?.Invoke();
+        OnSavePhotoHandler?.Invoke(photoData);
     }
 }

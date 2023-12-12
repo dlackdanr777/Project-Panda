@@ -24,7 +24,14 @@ public class PhotoDatabase
 
     public void Save()
     {
+        if(_photoData.Count == 0)
+        {
+            Debug.Log("사진 데이터가 존재하지 않습니다.");
+            return;
+        }
+
         PhotoDatas saveDatas = new PhotoDatas();
+
         foreach(PhotoData data in _photoData)
         {
             saveDatas.PhotoDataList.Add(data);
@@ -40,9 +47,16 @@ public class PhotoDatabase
 
     public void Load()
     {
+        if (!File.Exists(UserInfo.PhotoPath + _fileName))
+        {
+            Debug.Log("사진 데이터 저장 문서가 존재하지 않습니다.");
+            return;
+        }
+            
         PhotoDatas photoDatas = new PhotoDatas();
 
         string loadJson = File.ReadAllText(UserInfo.PhotoPath + _fileName);
+        Debug.Log(loadJson);
         photoDatas = JsonUtility.FromJson<PhotoDatas>(loadJson);
 
         foreach (PhotoData data in photoDatas.PhotoDataList)
@@ -50,6 +64,12 @@ public class PhotoDatabase
             _photoData.Add(data);
         }
     }
+
+    public List<PhotoData> GetPhotoDataList()
+    {
+        return _photoData;
+    }
+
 
     public void SavePhotoData(PhotoData photoData)
     {
