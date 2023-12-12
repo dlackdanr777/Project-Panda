@@ -11,6 +11,8 @@ using UnityEngine.UI;
 /// </summary>
 public class ScreenshotCamera : MonoBehaviour
 {
+    public static event Action<int, int> OnStartHandler;
+
 
     [Tooltip("카메라 어플 스크립트를 연결")]
     [SerializeField] private CameraApplication _cameraApp;
@@ -19,6 +21,7 @@ public class ScreenshotCamera : MonoBehaviour
     [SerializeField] private CameraController _cameraController;
 
     [SerializeField] private ShootingRange _shootingImage;
+
 
     [Tooltip("랜더 텍스쳐")]
     [SerializeField] private RenderTexture _renderTexture;
@@ -63,6 +66,7 @@ public class ScreenshotCamera : MonoBehaviour
     private void Awake()
     {
         Init();
+        RenderTextuereResize();
     }
 
 
@@ -83,6 +87,10 @@ public class ScreenshotCamera : MonoBehaviour
         
 #endif
 
+        int width = (int)_shootingImage.GetComponent<Image>().rectTransform.rect.width;
+        int height = (int)_shootingImage.GetComponent<Image>().rectTransform.rect.height;
+
+        OnStartHandler?.Invoke(width, height);
         gameObject.SetActive(false);
 
     }
@@ -90,15 +98,28 @@ public class ScreenshotCamera : MonoBehaviour
     private void OnEnable()
     {
         _camera.transform.position = _cameraController.transform.position;
-        _renderTexture.Release();
+
         Graphics.Blit(_areaImage.mainTexture, _renderTexture);
 
         _camera.orthographicSize = Camera.main.orthographicSize - 4;
     }
 
-    private void OnDisable()
+    private void RenderTextuereResize()
     {
         _renderTexture.Release();
+        
+        int width = (int)_shootingImage.GetComponent<Image>().rectTransform.rect.width;
+        int height = (int)_shootingImage.GetComponent<Image>().rectTransform.rect.height;
+
+        _renderTexture.width = width;
+        _renderTexture.height = height;
+    }
+
+
+
+    private void OnDisable()
+    {
+        RenderTextuereResize();
     }
 
     private void Update()
@@ -276,7 +297,6 @@ public class ScreenshotCamera : MonoBehaviour
     private Vector3 LimitPos(Vector3 pos)
     {
         _height = _camera.orthographicSize;
-        Debug.Log(Screen.width / Screen.height);
         _width = _height * 0.6848f;
 
         float lx = _mapSize.x - _width;
