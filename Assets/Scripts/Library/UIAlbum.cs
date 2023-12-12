@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 
 public class UIAlbum : MonoBehaviour
 {
-    private Library _library;
-
     [Tooltip("슬롯들의 부모 오브젝트를 넣는 곳")]
     [SerializeField] private GameObject _layoutGroup;
 
@@ -22,9 +20,7 @@ public class UIAlbum : MonoBehaviour
 
     private void OnEnable()
     {
-
         UpdateUI();
-
     }
 
 
@@ -36,6 +32,7 @@ public class UIAlbum : MonoBehaviour
         UpdateUI();
     }
 
+
     private void UpdateUI()
     {
         int count = Database.Instance.Photos.Count - 1;
@@ -45,6 +42,7 @@ public class UIAlbum : MonoBehaviour
             _slot[i].Init(i, Database.Instance.Photos.GetData(i));
         }
     }
+
 
     public void CreateSlot()
     {
@@ -57,6 +55,7 @@ public class UIAlbum : MonoBehaviour
         uiAlbumSlot.Init(index, Database.Instance.Photos.GetData(index));
         _slot.Add(uiAlbumSlot);
     }
+
 
     public void ResizeImage(int width, int height)
     {
