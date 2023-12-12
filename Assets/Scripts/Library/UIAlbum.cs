@@ -2,6 +2,7 @@ using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class UIAlbum : MonoBehaviour
 {
@@ -16,17 +17,22 @@ public class UIAlbum : MonoBehaviour
     public int _slotCount => _slot.Count;
 
     private List<UIAlbumSlot> _slot;
-     
+
+    private RectTransform _thisRectTransform;
 
     private void OnEnable()
     {
+
         UpdateUI();
+
     }
 
 
     public void Init()
     {
         _slot = new List<UIAlbumSlot>();
+        _thisRectTransform = GetComponent<RectTransform>();
+        ScreenshotCamera.OnStartHandler += ResizeImage;
         UpdateUI();
     }
 
@@ -51,4 +57,15 @@ public class UIAlbum : MonoBehaviour
         uiAlbumSlot.Init(index, Database.Instance.Photos.GetData(index));
         _slot.Add(uiAlbumSlot);
     }
+
+    public void ResizeImage(int width, int height)
+    {
+        float heightRatio = (float)height / width;
+
+        float imageWidth = _thisRectTransform.rect.width;
+
+        _thisRectTransform.sizeDelta = new Vector2(imageWidth, imageWidth * heightRatio);
+    }
+
+
 }
