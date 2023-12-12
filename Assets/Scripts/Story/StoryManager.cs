@@ -18,6 +18,7 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void Init()
     {
+        Debug.Log("Init");
         _storyCompleteList = new List<int>();
         UIDialogue.OnComplateHandler += AddComplateStory;
         PandaStoryController.OnStartHandler += SetStroyDic;

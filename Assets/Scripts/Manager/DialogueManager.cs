@@ -3,19 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueManager : SingletonHandler<DialogueManager>
+public class DialogueManager
 {
     private Dictionary<int, StoryDialogue> _storyDialogueDic;
 
     private DialogueParser _parser = new DialogueParser();
 
 
-    public override void Awake()
+
+    public void Register()
     {
-        base.Awake();
-
+        Debug.Log("Ω√¿€");
         _storyDialogueDic = _parser.StroyParse("StoryDialogue");
-
     }
 
 

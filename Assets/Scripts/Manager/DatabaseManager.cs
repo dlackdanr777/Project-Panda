@@ -16,13 +16,13 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     {
         base.Awake();
 
-        //_dialogueDatabase = new DialogueManager();
+        _dialogueDatabase = new DialogueManager();
         //_weatherDatabase = new WeatherApp();
         //_mbtiDatabase = new MBTIManager();
         //_pandaDatabase = new PandaManager();
         //_itemDatabase = new Database_Ssun();
 
-        //_dialogueDatabase.Register();
+        _dialogueDatabase.Register();
         //_weatherDatabase.Register();
         //_mbtiDatabase.Register();
         //_pandaDatabase.Register();
