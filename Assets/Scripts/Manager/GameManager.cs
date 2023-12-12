@@ -9,9 +9,6 @@ public class GameManager : SingletonHandler<GameManager>
     public Player Player;
     public MessageDatabase MessageDatabase;
 
-    public StoryManager StoryManager;
-    public DialogueManager DialogueManager;
-
     /// <summary> 참일 경우 카메라 이동을 막는다. </summary>
     public bool FriezeCameraMove;
 

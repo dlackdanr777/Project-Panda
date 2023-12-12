@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -17,8 +18,7 @@ public class ScreenshotCamera : MonoBehaviour
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
 
-    [Tooltip("캡쳐 영역을 표시할 이미지 오브젝트")]
-    [SerializeField] private Image _areaImage;
+    [SerializeField] private ShootingRange _shootingImage;
 
     [Tooltip("랜더 텍스쳐")]
     [SerializeField] private RenderTexture _renderTexture;
@@ -34,12 +34,13 @@ public class ScreenshotCamera : MonoBehaviour
     [SerializeField] private Vector3 _boxSize;
 
 
+    private Image _areaImage;
 
     private float _zoomSpeed => _cameraController.ZoomSpeed;
 
-    private float _maxZoomSize => _cameraController.MaxZoomSize;
+    private float _maxZoomSize => _cameraController.MaxZoomSize - 4;
 
-    private float _minZoomSize => _cameraController.MinZoomSize;
+    private float _minZoomSize => _cameraController.MinZoomSize - 4;
 
     private Vector2 _mapSize => _cameraController.MapSize;
 
@@ -59,34 +60,55 @@ public class ScreenshotCamera : MonoBehaviour
 
     private bool _isBegan = false;
 
-    private void Start()
+    private void Awake()
     {
         Init();
+    }
+
+
+    private void Start()
+    {
+        
+#if UNITY_EDITOR
+
+        _shootingImage.OnDragehandler += MouseMovement;
+        _shootingImage.OnPointerDownHandler += MouseDown;
+        _shootingImage.OnPointerUpHandler += MouseUp;
+
+#elif PLATFORM_ANDROID
+
+        _shootingImage.OnDragehandler += TouchMovement;
+        _shootingImage.OnPointerDownHandler += TouchDown;
+        _shootingImage.OnPointerUpHandler += TouchUp;
+        
+#endif
 
         gameObject.SetActive(false);
+
     }
 
     private void OnEnable()
     {
-        _camera.orthographicSize = _cameraController.GetComponent<Camera>().orthographicSize;
         _camera.transform.position = _cameraController.transform.position;
-
         _renderTexture.Release();
-        _renderTexture.width = (int)_areaImage.rectTransform.rect.width;
-        _renderTexture.height = (int)_areaImage.rectTransform.rect.height;
+        Graphics.Blit(_areaImage.mainTexture, _renderTexture);
+
+        _camera.orthographicSize = Camera.main.orthographicSize - 4;
+    }
+
+    private void OnDisable()
+    {
+        _renderTexture.Release();
     }
 
     private void Update()
     {
 #if UNITY_EDITOR
 
-        MouseMovement();
         MouseZoomInOut();
-
 
 #elif PLATFORM_ANDROID
 
-        TouchMovement();
         TouchZoomInOut();
         
 #endif
@@ -97,33 +119,10 @@ public class ScreenshotCamera : MonoBehaviour
     private void Init()
     {
         _camera = GetComponent<Camera>();
+        _areaImage = _shootingImage.GetComponent<Image>();
         DataBind.SetButtonValue("ShowScreenshotCameraButton", () => gameObject.SetActive(true));
         DataBind.SetButtonValue("HideScreenshotCameraButton", () => gameObject.SetActive(false));
     }
-
-
-   /* private void MoveCamera()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            _clickPoint = Input.mousePosition;
-            if (_isMagnetEnable) _isMagnetMode = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (_isMagnetEnable) _isMagnetMode = true;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 pos = _screenshotCamera.ScreenToViewportPoint((Vector2)Input.mousePosition - _clickPoint);
-
-            Vector3 move = -pos * (Time.deltaTime * _dragSpeed);
-            _screenshotCamera.transform.Translate(move);
-
-            _screenshotCamera.transform.position = ClampedPos(_screenshotCamera.transform.position);
-        }
-    }*/
 
 
     /// <summary>
@@ -149,7 +148,6 @@ public class ScreenshotCamera : MonoBehaviour
                 return;
             }
         }
-
     }
 
 
@@ -175,42 +173,33 @@ public class ScreenshotCamera : MonoBehaviour
     }
 
 
-/*    private Vector3 ClampedPos(Vector3 cameraPos)
+    Touch _touch;
+    private void TouchDown(PointerEventData data)
     {
-        float lx = (_clampSize.x * 0.5f) - _width;
-        float clampX = Mathf.Clamp(cameraPos.x, _clampCenter.x - lx, _clampCenter.x + lx ) ;
+        if (_isMagnetEnable) _isMagnetMode = false;
 
-        float ly = (_clampSize.y * 0.5f) - _height;
-        float clampY = Mathf.Clamp(cameraPos.y, _clampCenter.y - ly, _clampCenter.y + ly);
-
-        return new Vector3(clampX, clampY, -10);
+        _touch = Input.GetTouch(0);
+        _tempTouchPos = _touch.position;
+        _tempCameraPos = _camera.transform.position;
     }
-*/
 
-    private void TouchMovement()
+
+    private void TouchUp(PointerEventData data)
+    {
+        if (_isMagnetEnable) _isMagnetMode = true;
+    }
+
+
+    private void TouchMovement(PointerEventData data)
     {
         if (Input.touchCount != 1)
             return;
 
-        Touch touch = Input.GetTouch(0);
+        _touch = Input.GetTouch(0);
 
-        if (touch.phase == TouchPhase.Began)
-        {
-            if (_isMagnetEnable) _isMagnetMode = false;
-            _tempTouchPos = touch.position;
-            _tempCameraPos = _camera.transform.position;
-        }
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)_touch.position);
+        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
 
-        if (touch.phase == TouchPhase.Moved)
-        {
-            Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
-            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
-        }
-
-        if(touch.phase == TouchPhase.Ended)
-        {
-            if (_isMagnetEnable) _isMagnetMode = true;
-        }
     }
 
 
@@ -240,23 +229,28 @@ public class ScreenshotCamera : MonoBehaviour
         transform.position = LimitPos(transform.position);
     }
 
-
-    private void MouseMovement()
+    private void MouseDown(PointerEventData data)
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (_isMagnetEnable) _isMagnetMode = false;
+        if (!Input.GetMouseButtonDown(0))
+            return;
 
-            _isBegan = true;
-            _tempTouchPos = Input.mousePosition;
-            _tempCameraPos = _camera.transform.position;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (_isMagnetEnable) _isMagnetMode = true;
+        if (_isMagnetEnable) _isMagnetMode = false;
+        _isBegan = true;
+        _tempTouchPos = Input.mousePosition;
+        _tempCameraPos = _camera.transform.position;
+    }
 
+    private void MouseUp(PointerEventData data)
+    {
+        if (!Input.GetMouseButtonUp(0))
+            return;
+
+        if (_isMagnetEnable) _isMagnetMode = true;
             _isBegan = false;
-        }
+    }
+
+    private void MouseMovement(PointerEventData data)
+    {
 
         if (!_isBegan)
             return;
