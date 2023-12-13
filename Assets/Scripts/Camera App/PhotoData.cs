@@ -22,7 +22,7 @@ public class PhotoData
         _date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
 
-        DatabaseManager.Instance.SavePhotoData(this);
+        DatabaseManager.Instance.PhotoDatabase.SavePhotoData(this);
     }
 
 }

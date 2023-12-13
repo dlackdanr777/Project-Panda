@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using System.IO;
 
@@ -15,7 +14,10 @@ public class PhotoDatabase
 
     private List<Texture2D> _photo = new List<Texture2D>();
 
+    [Tooltip("데이터가 저장된 파일의 이름 지정")]
     private string _fileName => "PhotoData.json";
+
+
     public void Register()
     {
         Load();
@@ -45,6 +47,7 @@ public class PhotoDatabase
         File.WriteAllText(UserInfo.PhotoPath + _fileName, json);
     }
 
+
     public void Load()
     {
         if (!File.Exists(UserInfo.PhotoPath + _fileName))
@@ -60,10 +63,16 @@ public class PhotoDatabase
         photoDatas = JsonUtility.FromJson<PhotoDatas>(loadJson);
 
         foreach (PhotoData data in photoDatas.PhotoDataList)
-        {
-            _photoData.Add(data);
+        {         
+            if(!File.Exists(data.PathFloder + data.FileName))
+            {
+                Debug.Log(data.FileName + " 이 존재하지 않습니다.");
+                continue;
+            }
+                _photoData.Add(data);
         }
     }
+
 
     public List<PhotoData> GetPhotoDataList()
     {

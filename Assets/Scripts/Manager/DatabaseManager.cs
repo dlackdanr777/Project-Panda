@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
-    //private DataList<PhotoData> _photoDatabase;
+    private UserInfo _userInfo;
+    public UserInfo UserInfo;
+
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
 
     private DialogueManager _dialogueDatabase;
+    public DialogueManager DialogueDatabase => _dialogueDatabase;
+
     private WeatherApp _weatherDatabase;
+    public WeatherApp WeatherDatabase => _weatherDatabase;
+
     private MBTIManager _mbtiDatabase;
     private PandaManager _pandaDatabase;
     private Database_Ssun _itemDatabase;
@@ -18,41 +24,26 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     {
         base.Awake();
 
+        _userInfo = new UserInfo();
         _dialogueDatabase = new DialogueManager();
+        _photoDatabase = new PhotoDatabase();
         //_weatherDatabase = new WeatherApp();
         //_mbtiDatabase = new MBTIManager();
         //_pandaDatabase = new PandaManager();
         //_itemDatabase = new Database_Ssun();
 
+        _userInfo.Register();
         _dialogueDatabase.Register();
+        _photoDatabase.Register();
         //_weatherDatabase.Register();
         //_mbtiDatabase.Register();
         //_pandaDatabase.Register();
         //_itemDatabase.Register();
 
-        _photoDatabase = new PhotoDatabase();
-        _photoDatabase.Register();
-    }
 
 
-    /// <summary>
-    /// 해당 ID의 Dialogue를 가져옴
-    /// </summary>
-    /// <param name="index">story ID</param>
-    public StoryDialogue GetDialogueData(int index)
-    {
-        return _dialogueDatabase.GetStoryDialogue(index);
     }
-    
-    /// <summary>
-    /// photo data
-    /// </summary>
-    /// <param name="index">indeㅌ</param>
-    /// <returns></returns>
-   /* public DataList<PhotoData> GetPhotoData(int index)
-    {
-        //return PhotoDatabase;
-    }*/
+
 
     /// <summary>
     /// weekWeather data
@@ -129,14 +120,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.FurnitureTypeList;
     }
 
-    public void SavePhotoData(PhotoData photoData)
-    {
-        _photoDatabase.SavePhotoData(photoData);
-    }
-
 
     public void OnApplicationQuit()
     {
         _photoDatabase.Save();
+        _userInfo.SaveUserInfoData();
     }
 }

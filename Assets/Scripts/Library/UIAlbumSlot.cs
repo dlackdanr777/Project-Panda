@@ -18,7 +18,7 @@ public class UIAlbumSlot : MonoBehaviour
 
     private RectTransform _albumRect;
 
-    public static event Action<PhotoData> OnButtonClickHandler;
+    public static event Action<PhotoData, Vector3> OnButtonClickHandler;
 
     public void Init(int slotIndex, PhotoData photoData)
     {
@@ -28,7 +28,7 @@ public class UIAlbumSlot : MonoBehaviour
         _albumRect = GetComponent<RectTransform>();
         SetImageByPhotoData(photoData);
 
-        _button.onClick.AddListener(() => OnButtonClickHandler(_photoData));
+        _button.onClick.AddListener(() => OnButtonClickHandler(_photoData, transform.position));
     }
 
     /// <summary>
