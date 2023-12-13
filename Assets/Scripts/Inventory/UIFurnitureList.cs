@@ -33,27 +33,35 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         UpdateList();
         Init();
 
+        ItemSlotWithCollider.OnUseItem += ItemSlot_OnUseItem;
+        ItemSlotWithCollider.OnPutInItem += ItemSlot_OnPutInItem;
+
+    }
+    private void OnDestroy()
+    {
+        ItemSlotWithCollider.OnUseItem -= ItemSlot_OnUseItem;
+        ItemSlotWithCollider.OnPutInItem -= ItemSlot_OnPutInItem;
     }
 
-    private void Start()
-    {
+    //private void Start()
+    //{
 
-        _itemSlot.GetComponent<DropZone>().OnUseItem += ItemSlot_OnUseItem;
-        _itemSlot.GetComponent<DropZone>().OnPutInItem += ItemSlot_OnPutInItem;
+    //    _itemSlot.GetComponent<DropZone>().OnUseItem += ItemSlot_OnUseItem;
+    //    _itemSlot.GetComponent<DropZone>().OnPutInItem += ItemSlot_OnPutInItem;
 
         
-    }
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        //_itempDropZone.SetActive(true);
+    //}
+    //protected override void OnEnable()
+    //{
+    //    base.OnEnable();
+    //    //_itempDropZone.SetActive(true);
         
-    }
+    //}
 
-    protected override void OnDisable()
-    {
-        //_itempDropZone.SetActive(false);
-    }
+    //protected override void OnDisable()
+    //{
+    //    //_itempDropZone.SetActive(false);
+    //}
     private FurnitureType GetFurniture(string id)
     {
         for(int i=0;i<_dataBase.FurnitureTypeList.Length;i++)
@@ -67,6 +75,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 
     private void ItemSlot_OnUseItem(string id) //아이템 
     {
+        Debug.Log("OnUseItem");
         GameManager.Instance.Player.Inventory[2].RemoveById(id);
         UpdateListSlots();
     }
@@ -104,24 +113,23 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     {
         UpdateList();
 
-        for (int j = 0; j < _maxCount[(int)_currentField]; j++)
+        if (_currentField != FurnitureType.None)
         {
-            if (j < _lists[(int)_currentField].Count) //현재 가구 종류의 spawn 개수
+            for (int j = 0; j < _maxCount[(int)_currentField]; j++)
             {
-                _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
-                _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
-                _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
-                _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Id.ToString();
+                if (j < _lists[(int)_currentField].Count) //현재 가구 종류의 spawn 개수
+                {
+                    _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
+                    _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
+                    _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
+                    _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Id.ToString();
+                }
+                else
+                {
+                    _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(false);
+                }
             }
-            else
-            {
-
-                _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(false);
-
-
-            }
-        }
-
+        }        
     }
 
     protected override void GetContent(int index)

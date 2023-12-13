@@ -1,25 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    [SerializeField] private GameObject _dropItemPf;
+    public static Action<GameObject> OnDropEvent = delegate { };
 
+    [SerializeField] private GameObject _dropItemPf;
+    
     private Canvas _canvas;
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
     private Transform _oldParent;
     private Vector3 _oldPosition;
+    private string _id;
 
     private void Awake()
     {
         _canvas = transform.root.GetComponent<Canvas>();
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
+
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        _id = transform.Find("Id").GetComponent<TextMeshProUGUI>().text;
         _oldParent = transform.parent;
         _oldPosition = transform.position;
         _canvasGroup.blocksRaycasts = false;
@@ -33,10 +40,10 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnEndDrag(PointerEventData eventData)
     {
 
-        DropObjectInWorld(eventData); //현재 프리펩의 ray감지못하도록 먼저 실행
         _canvasGroup.blocksRaycasts = true;
         transform.parent = _oldParent;
         transform.position = _oldPosition;
+        DropObjectInWorld(eventData);
 
     }
 
@@ -51,16 +58,17 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0));
         worldPosition.z = 0;
 
-        //Vector3 rayOrigin = worldPosition;
-        //Vector2 rayDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - worldPosition; //카메라에서 worldPosition을 향햐도록
-        //rayDirection.Normalize();
+        CheckCollider(worldPosition);
 
-        //RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection);
+ 
+    }
 
+    private void CheckCollider(Vector3 worldPosition)
+    {
         GameObject dropObject = Instantiate(_dropItemPf, worldPosition, Quaternion.identity);
 
         Collider2D dropCollider = dropObject.GetComponent<Collider2D>();
-        if(dropCollider == null)
+        if (dropCollider == null)
         {
             Destroy(dropObject);
             return;
@@ -69,48 +77,36 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         //박스 레이캐스트 크기 설정
         Vector2 boxSize = dropCollider.bounds.size;
 
-
-        //Vector2 rayOrigin = worldPosition;
-        //Vector2 boxDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - worldPosition;
-
-        //Vector2 boxRayStart = rayOrigin;
-
         Collider2D[] overlaps = Physics2D.OverlapBoxAll(worldPosition, boxSize, 0f);
         bool isFullyInsideRoom = false;
-        //Debug.DrawRay(boxRayStart, boxDirection, Color.red, 2f);
 
 
-        bool isCollideingWithRoom = false;
         foreach (var overlap in overlaps) //모든 충돌 검사
         {
-            Debug.Log(overlap);
-            //if(overlap == dropCollider ) //나 자신과 충돌
-            //{
-            //    continue;
-            //}
-            //if (overlap != null && overlap.CompareTag("Room") && overlap == dropCollider && overlap.CompareTag("DropZone"))//방태그와 충돌
-            //{
-            //    isCollideingWithRoom = true;
-            //}
-            //else if(overlap == null || !overlap.CompareTag("Room"))
-            //{
-            //    isCollideingWithRoom = false;
-            //    break;
 
-            //}
-            if(overlap.CompareTag("Room") && overlap != dropCollider)
+            if (overlap.CompareTag("Item") && overlap.gameObject != dropCollider.gameObject) //현재 아이템이 아니면서 생성된 아이템이 있으면
             {
+                break;
+            }
 
-                if (!dropCollider.bounds.Contains(overlap.bounds.min) || !dropCollider.bounds.Contains(overlap.bounds.max))
+            if (overlap.CompareTag("Room") && overlap.gameObject != dropCollider.gameObject) //room tag를 가지고, 현재 오브젝트가 아니면
+            {
+                if (overlap.bounds.Contains(dropCollider.bounds.min) && overlap.bounds.Contains(dropCollider.bounds.max)) //생성되는 물체의 최소 지점과 최대 지점이 spawn될 위치의 콜라이더가 포합하는지
                 {
+                    Debug.Log(overlap.name);
                     isFullyInsideRoom = true;
+                    dropObject.transform.SetParent(overlap.transform);
+
+                    dropObject.transform.Find("Id").GetComponent<TextMeshProUGUI>().text = _id;
+                    Debug.Log(_id);
+                    OnDropEvent?.Invoke(dropObject);
+                    //해당 내용 저장해서 로컬로 자료 빼기
                     break;
+
+
                 }
             }
         }
-
-        //나 자신과 충돌 -> 무조건
-        //나 자신을 제외한 다른 충돌 검사 -> room -> instantiate
 
         if (isFullyInsideRoom)
         {
@@ -121,19 +117,5 @@ public class DragDrop : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
             Debug.Log("놓을 수 없는 공간");
             Destroy(dropObject);
         }
-
-
-        //if (hit.collider.CompareTag("Room"))
-        //{
-
-        //    Debug.Log("Room tag를 가지고 있는 객체");
-        //    Instantiate(_dropItemPf, hit.point, Quaternion.identity);
-
-        //}
-        //else
-        //{
-        //    Debug.Log("놓을 수 없는 공간!");
-        //}
-
     }
 }

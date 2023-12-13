@@ -1,62 +1,98 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlotWithCollider : MonoBehaviour, IDropHandler, IPointerDownHandler
+public class ItemSlotWithCollider : MonoBehaviour
 {
+    public static Action<string> OnUseItem = delegate { };
+    public static Action<string> OnPutInItem = delegate { };
+
+    //Drop
     [SerializeField] private GameObject _itemDropPopup;
-    [SerializeField] private GameObject _itemPf;
+    [SerializeField] private Button _itemDropButton;
+    [SerializeField] private Button _itemNoDropButton;
 
-    private int _currentItemIndex;
-    private Image _selectImage;
-    private Vector3 _worldPosition;
+    //Scoop
+    [SerializeField] private GameObject _itemScoopPopup;
+    [SerializeField] private Button _itemScoopButton;
+    [SerializeField] private Button _itemNoScoopButton;
 
+    private GameObject _currentItem;
+    private string _id;
 
-    //Test 
-    public Sprite Image;
-
-    public void OnDrop(PointerEventData eventData)
+    private void Awake()
     {
-        if (eventData.pointerDrag != null && eventData.pointerDrag.GetComponent<DragDrop>() != null) //드래그를 가지고 있는 객체만 drop
+        DragDrop.OnDropEvent += HandleDropPopup;
+        ScoopItem.OnScoop += HandleScoopItem;
+
+        _itemDropButton.onClick.AddListener(OnClickedItemDrop);
+        _itemNoDropButton.onClick.AddListener(OnClickedNoItemDrop);
+
+        _itemScoopButton.onClick.AddListener(OnClickedItemScoop);
+        _itemNoScoopButton.onClick.AddListener(OnClickedItemNoScoop);
+    }
+    private void OnDestroy()
+    {
+        DragDrop.OnDropEvent -= HandleDropPopup;
+        ScoopItem.OnScoop -= HandleScoopItem;
+    }
+
+    private void HandleDropPopup(GameObject currentItem)
+    {
+        _itemDropPopup.SetActive(true);
+        _currentItem = currentItem;
+        _id = _currentItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+    }
+    private void HandleScoopItem(GameObject currentItem)
+    {   
+        if (currentItem!= null)
         {
-            Debug.Log("drag를 가지고 있는 객체");
-            if (eventData.pointerCurrentRaycast.gameObject.CompareTag("Room"))
-            {
-                Debug.Log("Room tag를 가지고 있는 객체");
-                Instantiate(_itemPf, transform);
-            }
-            else
-            {
-                Debug.Log("놓을 수 없는 공간!");
-            }
+            _currentItem = currentItem;
+            _id = currentItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+            _itemScoopPopup.SetActive(true);
 
         }
-
-    }
-    private void ChangeAlpha(Image image, float alpha)
-    {
-        Color tempColor = image.color;
-        tempColor.a = alpha;
-        image.color = tempColor;
     }
 
-    private int FindChildIndex()
+    private void OnClickedItemDrop()
     {
-        //현재 내가 몇번째 자식인지 확인
-        for (int i = 0; i < transform.parent.childCount; i++)
+        _itemDropPopup.SetActive(false); //popup 사라짐
+
+        OnUseItem?.Invoke(_id);
+
+
+    }
+    private void OnClickedNoItemDrop()
+    {
+        _itemDropPopup.SetActive(false); //popup 사라짐
+        Destroy(_currentItem);
+
+    }
+
+    private void OnClickedItemScoop()
+    {
+   
+        _itemScoopPopup.SetActive(false);
+
+        OnPutInItem?.Invoke(_id);
+
+        Destroy(_currentItem);
+
+    }
+    private void OnClickedItemNoScoop()
+    {
+        _itemScoopPopup.SetActive(false);
+
+    }
+
+    private void OnClickItemSlot(int index)
+    {
+        if (transform.GetChild(index).GetComponent<Image>() != null)
         {
-            if (transform.parent.GetChild(i) == transform)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
+            _itemScoopPopup.SetActive(true);
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        _currentItemIndex = FindChildIndex();
-        transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
+        }
     }
 }
