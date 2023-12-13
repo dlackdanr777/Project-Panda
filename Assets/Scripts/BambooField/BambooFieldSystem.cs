@@ -32,26 +32,26 @@ public class BambooFieldSystem : MonoBehaviour
     private Vector3 _targetPos;
 
     [SerializeField] private GameObject _harvestBamboo;
-    private GameObject[] _bambooPrefabs = new GameObject[20];
+    private GameObject[] _bambooPrefabs = new GameObject[50];
     private int _bambooPrefabCount;
 
     private void Awake()
     {
+        _fieldIndex = 3; // 나중에 수정
         Init();
     }
 
     private void Start()
     {
-        _fieldIndex = 3; // 나중에 수정
         FirstCheckGrowth();
     }
 
     private void Init()
     {
         _fieldSlots = _fieldSlotParent.GetComponentsInChildren<FieldSlot>();
-        for(int i = 0; i < _fieldIndex; i++)
+        for(int i = 0; i <= _fieldIndex; i++)
         {
-            _fieldSlots[i].Init(this);
+            _fieldSlots[i].Init(this, 0);// 0: 우선 죽순ID로 설정
         }
     }
 
@@ -71,21 +71,21 @@ public class BambooFieldSystem : MonoBehaviour
         {
 
             // 애니메이션 - 죽순이 수집되며 우측 상단의 죽순보유량으로 빨려들어가는 느낌의 애니메이션, 하나씩 빨려들어갈 때마다 죽순량이 동적으로 변화
-            for (int j = 0; j < _fieldSlots[i].Yield; j++)
-            {
-                int count = _bambooPrefabCount;
-                _bambooPrefabs[count] = Instantiate(_harvestBamboo);
-                _bambooPrefabs[count].transform.position = _fieldSlots[i].transform.position + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
-                _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
+            //for (int j = 0; j < _fieldSlots[i].Yield; j++)
+            //{
+            //    int count = _bambooPrefabCount;
+            //    _bambooPrefabs[count] = Instantiate(_harvestBamboo);
+            //    _bambooPrefabs[count].transform.position = _fieldSlots[i].transform.position + new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
+            //    _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
 
-                Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
-                {
-                    _player.GainBamboo(1);
-                    Destroy(_bambooPrefabs[count]);
-                });
-                _bambooPrefabCount = (_bambooPrefabCount + 1) % 20;
-            }
-            //HarvestBamboo(0, _fieldSlots[i].Yield, i);
+            //    Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
+            //    {
+            //        _player.GainBamboo(1);
+            //        Destroy(_bambooPrefabs[count]);
+            //    });
+            //    _bambooPrefabCount = (_bambooPrefabCount + 1) % 20;
+            //}
+            HarvestBamboo(0, _fieldSlots[i].Yield, i);
             _fieldSlots[i].Yield = 0;
 
             // 성장 단계 초기화
@@ -95,31 +95,32 @@ public class BambooFieldSystem : MonoBehaviour
         Tween.SpriteRendererAlpha(HarvestButton.gameObject, 0, 0.5f, TweenMode.Quadratic, () => { HarvestButton.IsSet = false; });
     }
 
-    // 버리든가 고치든가 하기
-    //private void HarvestBamboo(int currentCount, int totalCount, int fieldSlotNum)
-    //{
-    //    int count = _bambooPrefabCount;
-    //    _bambooPrefabs[count] = Instantiate(_harvestBamboo);
-    //    _bambooPrefabs[count].transform.position = _fieldSlots[fieldSlotNum].transform.position;
-    //    Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
-    //    _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
+    /// <summary>
+    /// 대나무 수확 </summary>
+    private void HarvestBamboo(int currentCount, int totalCount, int fieldSlotNum)
+    {
+        int count = _bambooPrefabCount;
+        _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
+        _bambooPrefabs[count] = Instantiate(_harvestBamboo);//처음 한 번만 하기
+        _bambooPrefabs[count].transform.position = _fieldSlots[fieldSlotNum].transform.position;
+        Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
+        _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
 
 
-    //    Tween.TransformMove(_harvestBamboo, _fieldSlots[fieldSlotNum].transform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
-    //    {
-    //        if(currentCount != totalCount)
-    //        {
-    //            _bambooPrefabCount = (_bambooPrefabCount + 1) % 20;
-    //            HarvestBamboo(currentCount+1, totalCount, fieldSlotNum);
-    //        }
-    //    });
+        Tween.TransformMove(_bambooPrefabs[count], _fieldSlots[fieldSlotNum].transform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
+        {
+            if (currentCount != totalCount)
+            { 
+                HarvestBamboo(currentCount + 1, totalCount, fieldSlotNum);
+            }
+        });
 
-    //    Tween.TransformMove(_bambooPrefabs[count], _targetPos, 3, TweenMode.Quadratic, () =>
-    //    {
-    //        _player.GainBamboo(1);
-    //        Destroy(_bambooPrefabs[count]);
-    //    });
-    //}
+        Tween.TransformMove(_bambooPrefabs[count], _targetPos, 2, TweenMode.Quadratic, () =>
+        {
+            _player.GainBamboo(1);
+            Destroy(_bambooPrefabs[count]);//SetActive로 변경
+        });
+    }
 
     /// <summary>
     /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>

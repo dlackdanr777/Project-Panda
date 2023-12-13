@@ -21,16 +21,12 @@ public class FieldSlot : MonoBehaviour, IInteraction
     private bool _isGrowthComplete;
     private bool _isShowHavestItemDescription;
 
-
     private void Start()
     {
-        // 우선 죽순ID로 설정
-        _growingCropID = 0;
         HarvestItem = HarvestItemManager.Instance.GetHarvestItemdata(_growingCropID);
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
         GrowthTime = HarvestItem.HarvestTime * 5;
     }
-
 
     private void Update()
     {
@@ -38,9 +34,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
         IsIncreaseYields();
     }
 
-    public void Init(BambooFieldSystem bambooFieldSystem)
+    public void Init(BambooFieldSystem bambooFieldSystem, int growingCropID)
     {
         BFieldSystem = bambooFieldSystem;
+        _growingCropID = growingCropID;
     }
 
     public void StartInteraction()
@@ -134,14 +131,17 @@ public class FieldSlot : MonoBehaviour, IInteraction
         _isShowHavestItemDescription = !_isShowHavestItemDescription;
         if (_isShowHavestItemDescription)
         {
-            Debug.Log(HarvestItem.Description);
             BFieldSystem._UIBambooField.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-            BFieldSystem._UIBambooField.SetActive(_isShowHavestItemDescription);
-            DataBind.SetTextValue("BambooDescription", HarvestItem.Description);
+            BFieldSystem._UIBambooField.SetActive(true);
+            Tween.IamgeAlpha(BFieldSystem._UIBambooField, 0.5f, 0.2f, TweenMode.Quadratic);
+            DataBind.SetTextValue("CropDescription", HarvestItem.Description);
         }
         else
         {
-            BFieldSystem._UIBambooField.SetActive(_isShowHavestItemDescription);
+            Tween.IamgeAlpha(BFieldSystem._UIBambooField, 0, 0.2f, TweenMode.Quadratic, () =>
+            {
+                BFieldSystem._UIBambooField.SetActive(false);
+            });
         }
 
     }
