@@ -29,6 +29,7 @@ public class UIAlbum : MonoBehaviour
         _slot = new List<UIAlbumSlot>();
         _thisRectTransform = GetComponent<RectTransform>();
         ScreenshotCamera.OnStartHandler += ResizeImage;
+        LoadPhotoData();
         UpdateUI();
     }
 
@@ -44,16 +45,26 @@ public class UIAlbum : MonoBehaviour
     }
 
 
-    public void CreateSlot()
+    public void CreateSlot(PhotoData photoData)
     {
         UIAlbumSlot uiAlbumSlot = Instantiate(_slotPrefab, Vector3.zero, Quaternion.identity)
                 .GetComponent<UIAlbumSlot>();
         uiAlbumSlot.transform.parent = _layoutGroup.transform;
         uiAlbumSlot.transform.localScale = Vector3.one;
 
-        int index = Database.Instance.Photos.Count - 1;
-        uiAlbumSlot.Init(index, Database.Instance.Photos.GetData(index));
+        int index = _slot.Count;
+        uiAlbumSlot.Init(index, photoData);
         _slot.Add(uiAlbumSlot);
+    }
+
+    public void LoadPhotoData()
+    {
+        List<PhotoData> photoDatas = DatabaseManager.Instance.PhotoDatabase.GetPhotoDataList();
+
+        foreach(PhotoData photoData in photoDatas)
+        {
+            CreateSlot(photoData);
+        }
     }
 
 
