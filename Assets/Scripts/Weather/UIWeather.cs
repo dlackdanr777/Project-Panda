@@ -55,10 +55,11 @@ public class UIWeather : UIView
         //슬롯들을 세팅해준다.
         for (int i = 0, count = _slots.Count; i < count; i++)
         {
-            int weekCount = DatabaseManager.Instance.UserInfo.DayCount / 6;
+
+            int weekCount = UserInfo.DayCount / 6;
 
             //만약 보상 지급 슬롯이라면?
-            if ((DatabaseManager.Instance.UserInfo.DayCount % 6) - 1 == i)
+            if ((UserInfo.DayCount % 6) - 1 == i)
             {
                 _todayWeatherData = _weekWeathers[i];
                 _daySlots[i].Init(true);
@@ -98,7 +99,7 @@ public class UIWeather : UIView
     private void SetBind()
     {
         DataBind.SetSpriteValue("TodayWeatherImage", _todayWeatherData.WeatherSprite);
-        string weekText = DatabaseManager.Instance.UserInfo.TODAY.DayOfWeek.ToString().Substring(0, 3);
+        string weekText = UserInfo.TODAY.DayOfWeek.ToString().Substring(0, 3);
         DataBind.SetTextValue("WeekText", weekText);
     }
 

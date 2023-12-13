@@ -12,17 +12,14 @@ public class PhotoData
     [SerializeField] private string _date;
     public string Date => _date;
 
-    [SerializeField] private string _pathFloder;
+    private string _pathFloder;
     public string PathFloder => _pathFloder;
 
     public PhotoData(string fileName, string pathFloder)
     {
         _fileName = fileName;
-        _pathFloder = pathFloder;
         _date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-
-
-        DatabaseManager.Instance.PhotoDatabase.SavePhotoData(this);
+        _pathFloder = pathFloder;
     }
 
 }

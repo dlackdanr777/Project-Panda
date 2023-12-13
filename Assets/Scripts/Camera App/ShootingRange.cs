@@ -1,34 +1,35 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))] // ¥Ÿ ¡¶»Ò ≈ø ¿‘¥œ¥Ÿ.
-public class ShootingRange : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class ShootingRange : MonoBehaviour //,IDragHandler 
 {
     [SerializeField] private Image _shootingImage;
     [SerializeField] private Canvas _canvas;
 
-    public event Action<PointerEventData> OnPointerDownHandler;
-    public event Action<PointerEventData> OnPointerUpHandler;
-    public event Action<PointerEventData> OnDragehandler;
-
-
-    public void OnPointerDown(PointerEventData eventData)
+   /* public void OnDrag(PointerEventData eventData) // ¡§¡˜«‘¿∏∑Œ Ω¬∫Œ«œ¥¬ ≤€ ¿”√¢π¨ ¥Î«•
     {
-        OnPointerDownHandler?.Invoke(eventData);
+        if(eventData.clickCount > 0)
+        {
+            Vector2 mousePos = eventData.position;
+            _shootingImage.rectTransform.position = DontMoveCalculator(mousePos);
+        }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        OnPointerUpHandler?.Invoke(eventData);
-    }
 
-    public void OnDrag(PointerEventData eventData)
+    private Vector2 DontMoveCalculator(Vector2 clickPos) 
     {
-        OnDragehandler?.Invoke(eventData);
-    }
+        Vector2 pos = Camera.main.ScreenToViewportPoint(clickPos);
+
+        if (pos.x > 1) pos.x = 1;
+        if(pos.x < 0) pos.x = 0;
+        if(pos.y > 1) pos.y = 1;
+        if(pos.y < 0) pos.y = 0;
+
+        return Camera.main.ViewportToScreenPoint(pos);
+    }*/
+
 }

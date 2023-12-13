@@ -15,15 +15,8 @@ public class Event3_13 : StoryEvent
     private Coroutine _clickCoroutine;
     public override void EventStart(Action onComplate)
     {
-        //Ã¢¹¬ ¼öÁ¤
-        Vector3 targetPos = _uiShop.transform.position + Vector3.up;
-        targetPos.z = Camera.main.transform.position.z;
-        Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smoothstep, () =>
-        {
-            _clickEnable = true;
-            _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
-        });
-        //Ã¢¹¬ ¼öÁ¤
+        _clickEnable = true;
+        _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
     }
 
     public override void EventCancel(Action onComplate = null)

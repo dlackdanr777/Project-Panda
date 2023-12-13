@@ -110,10 +110,10 @@ public class WeatherApp : MonoBehaviour
     private bool RewardedCheck()
     {
         //만약 현재 날짜 전날에 접속했다면?
-        if (UserInfo.TODAY.Day > UserInfo.LastAccessDay.Day)
+        if (UserInfo.TODAY.Day > UserInfo._lastAccessDay.Day)
         {
 
-            //UserInfo.LastAccessDay = DateTime.Now;
+            UserInfo._lastAccessDay = DateTime.Now;
             UserInfo.DayCount++;
             _uiWeather.OnRewardedHandler += GiveReward;
             _isCanReward = true;

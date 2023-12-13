@@ -47,6 +47,7 @@ namespace Muks.Tween
         {
             TweenData[] tweens = gameObject.GetComponents<TweenData>();
 
+            Debug.Log(tweens.Length);
             foreach(TweenData tween in tweens)
             {
                 tween.enabled = false;
