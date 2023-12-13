@@ -12,7 +12,6 @@ public class StoryManager : SingletonHandler<StoryManager>
     public override void Awake()
     {
         Init();
-
     }
 
 
