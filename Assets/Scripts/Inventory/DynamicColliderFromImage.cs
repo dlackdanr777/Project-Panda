@@ -20,11 +20,20 @@ public class DynamicColliderFromImage : MonoBehaviour
             return;
         }
 
-        // 이미지의 크기 얻기
-        Vector2 imageSize = spriteRenderer.bounds.size;
+        // 이미지의 텍스처 가져오기
+        Texture2D texture = spriteRenderer.sprite.texture;
 
-        // BoxCollider 컴포넌트 추가
-        BoxCollider2D boxCollider = gameObject.AddComponent<BoxCollider2D>();
+        // 텍스처 크기 얻기
+        Vector2 imageSize = new Vector2(texture.width, texture.height) / spriteRenderer.sprite.pixelsPerUnit;
+
+        // BoxCollider2D 컴포넌트 가져오기
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+
+        if (boxCollider == null)
+        {
+            Debug.LogError("BoxCollider2D component not found!");
+            return;
+        }
 
         // 콜라이더의 크기 설정
         boxCollider.size = imageSize;

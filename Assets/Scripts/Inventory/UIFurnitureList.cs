@@ -20,9 +20,9 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         _dataBase = Database_Ssun.Instance;
 
         //Test
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "2"); //player가 아이템 하나를 얻음
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "5"); //player가 아이템 하나를 얻음
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "5"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F2"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
 
         for(int i=0;i<System.Enum.GetValues(typeof(FurnitureType)).Length - 1; i++)
         {
@@ -33,14 +33,14 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         UpdateList();
         Init();
 
-        ItemSlotWithCollider.OnUseItem += ItemSlot_OnUseItem;
-        ItemSlotWithCollider.OnPutInItem += ItemSlot_OnPutInItem;
+        DropZone.OnUseItem += ItemSlot_OnUseItem;
+        DropZone.OnPutInItem += ItemSlot_OnPutInItem;
 
     }
     private void OnDestroy()
     {
-        ItemSlotWithCollider.OnUseItem -= ItemSlot_OnUseItem;
-        ItemSlotWithCollider.OnPutInItem -= ItemSlot_OnPutInItem;
+        DropZone.OnUseItem -= ItemSlot_OnUseItem;
+        DropZone.OnPutInItem -= ItemSlot_OnPutInItem;
     }
 
     //private void Start()
