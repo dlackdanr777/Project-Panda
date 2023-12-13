@@ -6,7 +6,7 @@ public class HarvestItem
 {
     public int ID;
     public string Name;
-    public float HarvestTime; // 작물 성장 시간
+    public float HarvestTime; // 작물 수확 시간
     public int Yield;
     public int MaxYield;
     public string Description;
