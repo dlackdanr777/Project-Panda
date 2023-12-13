@@ -19,6 +19,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private MBTIManager _mbtiDatabase;
     private PandaManager _pandaDatabase;
     private Database_Ssun _itemDatabase;
+    private FurniturePositionDatabase _furniturePosDatabase;
+    public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
     public override void Awake()
     {
@@ -31,6 +33,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_mbtiDatabase = new MBTIManager();
         //_pandaDatabase = new PandaManager();
         //_itemDatabase = new Database_Ssun();
+        _furniturePosDatabase = new FurniturePositionDatabase();
 
         _userInfo.Register();
         _dialogueDatabase.Register();
@@ -39,7 +42,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_mbtiDatabase.Register();
         //_pandaDatabase.Register();
         //_itemDatabase.Register();
-
+        _furniturePosDatabase.Register();
 
 
     }
@@ -124,6 +127,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public void OnApplicationQuit()
     {
         _photoDatabase.Save();
+        _furniturePosDatabase.Save();
         _userInfo.SaveUserInfoData();
     }
 }

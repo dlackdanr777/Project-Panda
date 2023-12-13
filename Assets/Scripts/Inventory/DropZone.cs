@@ -61,7 +61,7 @@ public class DropZone : MonoBehaviour
         _itemDropPopup.SetActive(false); //popup »ç¶óÁü
 
         OnUseItem?.Invoke(_id);
-
+        DatabaseManager.Instance.FurniturePosDatabase.AddFurniturePosition(_id, _currentItem.transform.position);
 
     }
     private void OnClickedNoItemDrop()
@@ -78,6 +78,7 @@ public class DropZone : MonoBehaviour
 
         OnPutInItem?.Invoke(_id);
 
+        DatabaseManager.Instance.FurniturePosDatabase.RemoveFurniturePosition(_currentItem.transform.position);
         Destroy(_currentItem);
 
     }
@@ -85,14 +86,5 @@ public class DropZone : MonoBehaviour
     {
         _itemScoopPopup.SetActive(false);
 
-    }
-
-    private void OnClickItemSlot(int index)
-    {
-        if (transform.GetChild(index).GetComponent<Image>() != null)
-        {
-            _itemScoopPopup.SetActive(true);
-
-        }
     }
 }
