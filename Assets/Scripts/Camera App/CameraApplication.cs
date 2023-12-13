@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CameraApplication : MonoBehaviour
 {
     //스크린샷 찍는 함수를 실행하면 이 이벤트도 실행
-    public event Action OnSavePhotoHandler;
+    public event Action<PhotoData> OnSavePhotoHandler;
 
     [Tooltip("UI카메라 앱 스크립트를 넣는곳")]
     [SerializeField] private UICameraApp _uiCameraApp;
@@ -116,17 +116,20 @@ public class CameraApplication : MonoBehaviour
         byte[] byteArray = _currentCaptureTexture.EncodeToPNG();
 
         //저장 위치 지정
-        string savePath = Application.persistentDataPath;
+        string savePath = UserInfo.PhotoPath;
         string fileName = "/Screenshot" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+
+        if (!Directory.Exists(UserInfo.PhotoPath))
+            Directory.CreateDirectory(UserInfo.PhotoPath);
 
         //새 파일을 만들고 지정된 바이트 배열을 savePath위치에 파일로 저장
         //대상 파일이 이미 있으면 덮어씀
         File.WriteAllBytes(savePath + fileName, byteArray);
 
-        PhotoData photoData = new PhotoData(fileName, Application.persistentDataPath);
+        PhotoData photoData = new PhotoData(fileName, savePath);
         AddPhotoData(photoData);
 
         Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
-        OnSavePhotoHandler?.Invoke();
+        OnSavePhotoHandler?.Invoke(photoData);
     }
 }

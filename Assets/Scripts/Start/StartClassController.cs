@@ -33,7 +33,7 @@ public class StartClassController : MonoBehaviour
 
     private void Start()
     {
-        if (!UserInfo.IsExistingUser)
+        if (! DatabaseManager.Instance.UserInfo.IsExistingUser)
         {
             _mainScene.SetActive(false);
             return;
@@ -49,7 +49,7 @@ public class StartClassController : MonoBehaviour
 
     private void Init()
     {
-        if (!UserInfo.IsExistingUser)
+        if (!DatabaseManager.Instance.UserInfo.IsExistingUser)
         {
             _lastIndex = _newUserStartList.Count;
             for (int i = 0; i < _lastIndex; i++)
@@ -84,7 +84,7 @@ public class StartClassController : MonoBehaviour
             return;
         }
 
-        _currentClass = !UserInfo.IsExistingUser 
+        _currentClass = !DatabaseManager.Instance.UserInfo.IsExistingUser 
             ? _newUserStartList[_nextIndex] 
             : _currentClass = _existingUserStartList[_nextIndex];
 
