@@ -5,7 +5,7 @@ using UnityEngine;
 public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
     private UserInfo _userInfo;
-    public UserInfo UserInfo;
+    public UserInfo UserInfo => _userInfo;
 
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
@@ -24,7 +24,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     {
         base.Awake();
 
-        UserInfo = new UserInfo();
+        _userInfo = new UserInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         //_weatherDatabase = new WeatherApp();
