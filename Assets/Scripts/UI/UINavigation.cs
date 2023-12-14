@@ -45,7 +45,7 @@ public class UINavigation : MonoBehaviour
 
     private void Init()
     {
-        _rootUiView.UIView.Init(this);
+        //_rootUiView.UIView.Init(this);
 
         for (int i = 0, count = _uiViewList.Length; i < count; i++)
         {
@@ -55,6 +55,17 @@ public class UINavigation : MonoBehaviour
             uiView.Init(this);
             uiView.gameObject.SetActive(false);
         }
+    }
+
+    public bool Check(string viewName)
+    {
+        if (_viewDic.TryGetValue(viewName, out UIView uiView))
+        {
+            if(_uiViews.Contains(uiView))
+                return true;
+        }
+        return false;
+
     }
 
 
