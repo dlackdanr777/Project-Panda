@@ -24,7 +24,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     {
         base.Awake();
 
-        _userInfo = new UserInfo();
+        UserInfo = new UserInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         //_weatherDatabase = new WeatherApp();
@@ -32,7 +32,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_pandaDatabase = new PandaManager();
         //_itemDatabase = new Database_Ssun();
 
-        _userInfo.Register();
+        UserInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
         //_weatherDatabase.Register();

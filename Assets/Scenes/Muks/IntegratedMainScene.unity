@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37089851, g: 0.3783701, b: 0.3572253, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -17823,6 +17823,8 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _moveUI: {fileID: 0}
+  _showButton: {fileID: 0}
+  _hideButton: {fileID: 0}
   _duration: 0
 --- !u!114 &1235428686
 MonoBehaviour:
@@ -25858,6 +25860,8 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _moveUI: {fileID: 319941691}
+  _showButton: {fileID: 0}
+  _hideButton: {fileID: 0}
   _duration: 1
 --- !u!1 &1718538854
 GameObject:
@@ -30773,7 +30777,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1942182567}
-  - component: {fileID: 1942182566}
   - component: {fileID: 1942182568}
   m_Layer: 0
   m_Name: DatabaseManager
@@ -30782,20 +30785,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1942182566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1942182565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1acdeac6523bea45af22d269c08aaf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Photos:
-    _data: []
 --- !u!4 &1942182567
 Transform:
   m_ObjectHideFlags: 0

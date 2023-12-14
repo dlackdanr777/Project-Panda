@@ -1,7 +1,6 @@
 using Muks.WeightedRandom;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -48,25 +47,50 @@ public class UserInfo
         if (!File.Exists(_path))
         {
             Debug.Log("유저 저장 문서가 존재하지 않습니다.");
+
+            CreateUserInfoData();
             return;
         }
 
         UserInfo userInfo = new UserInfo();
 
         string loadJson = File.ReadAllText(_path);
-        Debug.Log(loadJson);
         userInfo = JsonUtility.FromJson<UserInfo>(loadJson);
 
         UserId = userInfo.UserId;
+        string paser = userInfo._lastAccessDay.ToString();
+        _lastAccessDay = paser;
+        DayCount = userInfo.DayCount;  
+        IsExistingUser = userInfo.IsExistingUser;
+
+        IsTodayRewardReceipt = true;
+
+        if (TODAY.Day > LastAccessDay.Day)
+        {
+            Debug.Log("실행");
+            DayCount++;
+            IsTodayRewardReceipt = false;
+        }
+    }
+
+    private void CreateUserInfoData()
+    {
+        IsExistingUser = false;
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
-        DayCount = userInfo.DayCount;
-        IsTodayRewardReceipt = userInfo.IsTodayRewardReceipt;
-        IsExistingUser = userInfo.IsExistingUser;
+
+        DayCount++;
+        IsTodayRewardReceipt = false;
+
+        string json = JsonUtility.ToJson(this, true);
+        File.WriteAllText(_path, json);
     }
+
 
     public void SaveUserInfoData()
     {
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
         Debug.Log(_path);
