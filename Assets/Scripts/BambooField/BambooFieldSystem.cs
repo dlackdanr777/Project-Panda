@@ -118,11 +118,11 @@ public class BambooFieldSystem : MonoBehaviour
         for(int i = 0; i <= _fieldIndex; i++)
         {
             //현재 접속 시간과 마지막 접속 시간을 비교
-            if ((_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay).Minutes >= _fieldSlots[i].GrowthTime * 2)
+            if ((UserInfo.TODAY - UserInfo._lastAccessDay).Minutes >= _fieldSlots[i].GrowthTime * 2)
             {
                 _fieldSlots[i].GrowingCrops(2);
             }
-            else if ((_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay).Minutes >= _fieldSlots[i].GrowthTime)
+            else if ((UserInfo.TODAY - UserInfo._lastAccessDay).Minutes >= _fieldSlots[i].GrowthTime)
             {
                 _fieldSlots[i].GrowingCrops(1);
             }
