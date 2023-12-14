@@ -1,15 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class DropZone : MonoBehaviour
 {
-    public event Action<string> OnUseItem;
-    public event Action<string> OnPutInItem;
+    public static Action<string> OnUseItem = delegate { };
+    public static Action<string> OnPutInItem = delegate { };
 
     //Drop
     [SerializeField] private GameObject _itemDropPopup;
@@ -21,89 +19,67 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Button _itemScoopButton;
     [SerializeField] private Button _itemNoScoopButton;
 
-    //Camera
-    [SerializeField] private GameObject _wood;
+    private GameObject _currentItem;
+    private string _id;
 
-    public int CurrentItemIndex;
-
-    private void Start()
+    private void Awake()
     {
+        DragDrop.OnDropEvent += HandleDropPopup;
+        ScoopItem.OnScoop += HandleScoopItem;
+
         _itemDropButton.onClick.AddListener(OnClickedItemDrop);
         _itemNoDropButton.onClick.AddListener(OnClickedNoItemDrop);
 
         _itemScoopButton.onClick.AddListener(OnClickedItemScoop);
         _itemNoScoopButton.onClick.AddListener(OnClickedItemNoScoop);
+    }
+    private void OnDestroy()
+    {
+        DragDrop.OnDropEvent -= HandleDropPopup;
+        ScoopItem.OnScoop -= HandleScoopItem;
+    }
 
-
-        for(int i = 0; i < transform.childCount; i++)
+    private void HandleDropPopup(GameObject currentItem)
+    {
+        _itemDropPopup.SetActive(true);
+        _currentItem = currentItem;
+        _id = _currentItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+    }
+    private void HandleScoopItem(GameObject currentItem)
+    {
+        if (currentItem != null)
         {
-            int index = i;
-            transform.GetChild(i).GetComponent<Button>().onClick.AddListener(()=>OnClickItemSlot(index));  
+            _currentItem = currentItem;
+            _id = currentItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+            _itemScoopPopup.SetActive(true);
+
         }
-
-    }
-
-    private void Update()
-    {
-        transform.position = Camera.main.WorldToScreenPoint(_wood.transform.position);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        foreach (Image item in transform.GetComponentsInChildren<Image>())
-        {
-            if (item.sprite == null)
-            {
-                ChangeAlpha(item, 0.6f);      
-            }
-        } 
-    } 
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        foreach (Image item in transform.GetComponentsInChildren<Image>())
-        {
-            if (item.sprite == null)
-            {
-                ChangeAlpha(item, 0f);
-            }
-        }
-    }
-
-    private void ChangeAlpha(Image image, float alpha)
-    {
-        Color tempColor = image.color;
-        tempColor.a = alpha;
-        image.color = tempColor;
     }
 
     private void OnClickedItemDrop()
     {
         _itemDropPopup.SetActive(false); //popup 사라짐
 
-        string id = transform.GetChild(CurrentItemIndex).GetChild(0).GetComponent<TextMeshProUGUI>().text;
-        OnUseItem?.Invoke(id);
-
+        OnUseItem?.Invoke(_id);
+        DatabaseManager.Instance.FurniturePosDatabase.AddFurniturePosition(_id, _currentItem.transform.position);
 
     }
     private void OnClickedNoItemDrop()
     {
         _itemDropPopup.SetActive(false); //popup 사라짐
-        DeleteItem();
+        Destroy(_currentItem);
 
     }
 
     private void OnClickedItemScoop()
     {
-        if (transform.GetChild(CurrentItemIndex).GetComponent<Image>() != null)
-        {
-            _itemScoopPopup.SetActive(false);
 
-            string id = transform.GetChild(CurrentItemIndex).GetChild(0).GetComponent<TextMeshProUGUI>().text;
-            OnPutInItem?.Invoke(id);
+        _itemScoopPopup.SetActive(false);
 
-            DeleteItem();
-        }
+        OnPutInItem?.Invoke(_id);
+
+        DatabaseManager.Instance.FurniturePosDatabase.RemoveFurniturePosition(_currentItem.transform.position);
+        Destroy(_currentItem);
 
     }
     private void OnClickedItemNoScoop()
@@ -111,28 +87,4 @@ public class DropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         _itemScoopPopup.SetActive(false);
 
     }
-
-    private void OnClickItemSlot(int index)
-    {
-        if(transform.GetChild(index).GetComponent<Image>() != null)
-        {
-            _itemScoopPopup.SetActive(true);
-
-        }
-    }
-
-
-    private void DeleteItem()
-    {
-        //지우기
-        transform.GetChild(CurrentItemIndex).GetComponent<Image>().sprite = null;
-        ChangeAlpha(transform.GetChild(CurrentItemIndex).GetComponent<Image>(), 0f);
-
-        transform.GetChild(CurrentItemIndex).GetChild(0).GetComponent<TextMeshProUGUI>().text = null; //id
-
-        //worldPosition의 object 지우기
-        GameObject spawnItem = transform.GetChild(CurrentItemIndex).GetComponent<ItemSlot>()._dropItemSpawnPoint.GetChild(CurrentItemIndex).GetChild(0).gameObject;
-        Destroy(spawnItem);
-    }
-
 }
