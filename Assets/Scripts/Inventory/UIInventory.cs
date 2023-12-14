@@ -72,9 +72,10 @@ public class UIInventory : UIView
 
         Tween.RectTransfromAnchoredPosition(_moveUI, _tempPos, _duration, TweenMode.EaseInOutBack, () =>
         {
-            Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 630), 0.7f, TweenMode.EaseInOutBack, () =>
+            Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 672), 0.7f, TweenMode.EaseInOutBack, () =>
             {
-                Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 663), 0.2f, TweenMode.Quadratic, () => 
+                _hideButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 672);
+                Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 672), 0.2f, TweenMode.Quadratic, () => 
                 {
                     VisibleState = VisibleState.Disappeared;
                     _showButton.SetActive(true);
