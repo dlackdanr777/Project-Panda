@@ -60,8 +60,6 @@ public class UIAlbumSlot : MonoBehaviour
                 _image.material = null;
                 _image.material = _tempMat;
 
-                Debug.Log((tex.height / tex.width));
-
 
             }
             else

@@ -97,19 +97,6 @@ public class CameraApplication : MonoBehaviour
     }
 
 
-    private void AddPhotoData(PhotoData photoData)
-    {
-        if(photoData != null)
-        {
-            Database.Instance.Photos.Add(photoData);
-        }
-        else
-        {
-            Debug.LogError("photoData가 null입니다.");
-        } 
-    }
-
-
     private void SavePhoto()
     {
         //텍스처를 PNG 형식으로 인코딩하여 byte배열에 저장   
@@ -127,7 +114,6 @@ public class CameraApplication : MonoBehaviour
         File.WriteAllBytes(savePath + fileName, byteArray);
 
         PhotoData photoData = new PhotoData(fileName, savePath);
-        AddPhotoData(photoData);
 
         Debug.LogFormat("캡쳐 완료! 저장위치: {0}", savePath + fileName);
         OnSavePhotoHandler?.Invoke(photoData);

@@ -9,6 +9,8 @@ public class UIInventory : UIView
 
     [SerializeField] private GameObject _hideButton;
 
+    [SerializeField] private GameObject _dontTouchArea;
+
     [SerializeField] private float _duration;
 
     private Vector2 _tempPos;
@@ -35,6 +37,7 @@ public class UIInventory : UIView
     private void Anime1_Show()
     {
         gameObject.SetActive(true);
+        _dontTouchArea.SetActive(true);
         _showButton.SetActive(false);
         VisibleState = VisibleState.Appearing;
 
@@ -42,6 +45,7 @@ public class UIInventory : UIView
         {
             Tween.RectTransfromAnchoredPosition(_moveUI, new Vector2(0, -800), _duration, TweenMode.EaseInOutBack, () =>
             {
+                _dontTouchArea.SetActive(false);
                 VisibleState = VisibleState.Appeared;
             });
         });
@@ -64,15 +68,18 @@ public class UIInventory : UIView
     private void Anime1_Hide()
     {
         VisibleState = VisibleState.Disappearing;
+        _dontTouchArea.SetActive(true);
 
         Tween.RectTransfromAnchoredPosition(_moveUI, _tempPos, _duration, TweenMode.EaseInOutBack, () =>
         {
-            Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 630), 0.7f, TweenMode.EaseInOutBack, () =>
+            Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 672), 0.7f, TweenMode.EaseInOutBack, () =>
             {
-                Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 663), 0.2f, TweenMode.Quadratic, () => 
+                _hideButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 672);
+                Tween.RectTransfromAnchoredPosition(_hideButton, new Vector2(0, 672), 0.2f, TweenMode.Quadratic, () => 
                 {
                     VisibleState = VisibleState.Disappeared;
                     _showButton.SetActive(true);
+                    _dontTouchArea.SetActive(false);
                     gameObject.SetActive(false);
                 });
 

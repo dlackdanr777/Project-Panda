@@ -34,7 +34,7 @@ public class WeatherApp : MonoBehaviour
 {
     [SerializeField] private UIWeather _uiWeather;
 
-    public UserInfo UserInfo {get; private set; }
+    public UserInfo UserInfo => DatabaseManager.Instance.UserInfo;
 
     private DataManager _dataManager => DataManager.Instance;
 
@@ -61,7 +61,12 @@ public class WeatherApp : MonoBehaviour
 
     public void Awake()
     {
-        Login();
+
+
+    }
+
+    private void Start()
+    {
         Init();
         AttendanceCheck();
         _uiWeather.Init();
@@ -110,14 +115,11 @@ public class WeatherApp : MonoBehaviour
     private bool RewardedCheck()
     {
         //만약 현재 날짜 전날에 접속했다면?
-        if (UserInfo.TODAY.Day > UserInfo.LastAccessDay.Day)
+        if (!UserInfo.IsTodayRewardReceipt)
         {
-
-            //UserInfo.LastAccessDay = DateTime.Now;
-            UserInfo.DayCount++;
             _uiWeather.OnRewardedHandler += GiveReward;
             _isCanReward = true;
-
+            UserInfo.IsTodayRewardReceipt = true;
             return true;
         }
 
@@ -132,13 +134,6 @@ public class WeatherApp : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-
-    private void Login()
-    {
-        UserInfo = new UserInfo();
-        UserInfo.LoadUserInfoData();
     }
 
     //보상지급 함수

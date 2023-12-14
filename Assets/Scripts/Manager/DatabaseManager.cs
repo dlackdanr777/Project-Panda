@@ -5,7 +5,7 @@ using UnityEngine;
 public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
     private UserInfo _userInfo;
-    public UserInfo UserInfo;
+    public UserInfo UserInfo => _userInfo;
 
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
@@ -35,7 +35,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_itemDatabase = new Database_Ssun();
         _furniturePosDatabase = new FurniturePositionDatabase();
 
-        _userInfo.Register();
+        UserInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
         //_weatherDatabase.Register();

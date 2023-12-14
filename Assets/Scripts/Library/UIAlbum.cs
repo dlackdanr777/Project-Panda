@@ -24,6 +24,7 @@ public class UIAlbum : MonoBehaviour
     }
 
 
+
     public void Init()
     {
         _slot = new List<UIAlbumSlot>();
@@ -36,11 +37,11 @@ public class UIAlbum : MonoBehaviour
 
     private void UpdateUI()
     {
-        int count = Database.Instance.Photos.Count - 1;
+        int count = DatabaseManager.Instance.PhotoDatabase.Count - 1;
 
         for (int i = 0; i < count; i++)
         {
-            _slot[i].Init(i, Database.Instance.Photos.GetData(i));
+            _slot[i].Init(i, DatabaseManager.Instance.PhotoDatabase.GetPhotoData(i));
         }
     }
 

@@ -14,6 +14,8 @@ public class PhotoDatabase
 
     private List<Texture2D> _photo = new List<Texture2D>();
 
+    public int Count => _photoData.Count;
+
     [Tooltip("데이터가 저장된 파일의 이름 지정")]
     private string _fileName => "PhotoData.json";
 
@@ -77,6 +79,11 @@ public class PhotoDatabase
     public List<PhotoData> GetPhotoDataList()
     {
         return _photoData;
+    }
+
+    public PhotoData GetPhotoData(int index)
+    {
+        return _photoData[index];
     }
 
 
