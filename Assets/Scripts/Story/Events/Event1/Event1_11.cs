@@ -47,7 +47,7 @@ public class Event1_11 : StoryEvent
 
                     _uiNav.Push("InsideWood");
                     _uiNav.Push("Dialogue");
-                    Tween.TransformMove(gameObject, transform.position, 3, TweenMode.Smootherstep, () =>
+                    Tween.TransformMove(gameObject, transform.position, 4, TweenMode.Smootherstep, () =>
                     {
                         onComplate?.Invoke();
                     });

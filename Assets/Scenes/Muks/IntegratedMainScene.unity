@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37089851, g: 0.3783701, b: 0.3572253, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1216,7 +1216,7 @@ PrefabInstance:
     - target: {fileID: 5655958072712881688, guid: 013ded777312bbb45b3c4387ae64cabc, type: 3}
       propertyPath: _UIBamboo
       value: 
-      objectReference: {fileID: 115841211}
+      objectReference: {fileID: 1215181646}
     - target: {fileID: 5655958072712881688, guid: 013ded777312bbb45b3c4387ae64cabc, type: 3}
       propertyPath: _UIBambooField
       value: 
@@ -1540,6 +1540,9 @@ MonoBehaviour:
     _storyEvent: {fileID: 1745919014}
   - _insertIndex: 2
     _storyEvent: {fileID: 1236256405}
+  _followButtonPrefab: {fileID: 166109119338726992, guid: 8529af3312e2d22439e077a8c0d700f9, type: 3}
+  _buttonImage: {fileID: 782838272, guid: 21f2a82f3d270a24eb0e0dd431841879, type: 3}
+  _buttonPos: {x: 0, y: 2, z: 0}
 --- !u!212 &167621112
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2058,9 +2061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019723712f805434486d7a43bdf213de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiHouse: {fileID: 0}
-  _uiNav: {fileID: 230217969}
-  _outsideWood: {fileID: 1539795175}
+  _uiWishTree: {fileID: 0}
 --- !u!1001 &222065815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2609,6 +2610,7 @@ MonoBehaviour:
     UIView: {fileID: 5341532245792099474}
   - Name: InsideWood
     UIView: {fileID: 530097742284771519}
+  _uiViews: []
 --- !u!1 &230464480
 GameObject:
   m_ObjectHideFlags: 0
@@ -6705,7 +6707,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &623568666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6726,6 +6728,9 @@ MonoBehaviour:
     _storyEvent: {fileID: 1755516706}
   - _insertIndex: 11
     _storyEvent: {fileID: 1356819158}
+  _followButtonPrefab: {fileID: 166109119338726992, guid: 8529af3312e2d22439e077a8c0d700f9, type: 3}
+  _buttonImage: {fileID: 21300000, guid: 04c3f62202762f74a9d86656b7b3a14d, type: 2}
+  _buttonPos: {x: 0, y: 2, z: 0}
 --- !u!212 &623568667
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8500,6 +8505,9 @@ MonoBehaviour:
     _storyEvent: {fileID: 1101473084}
   - _insertIndex: 8
     _storyEvent: {fileID: 2137582905}
+  _followButtonPrefab: {fileID: 166109119338726992, guid: 8529af3312e2d22439e077a8c0d700f9, type: 3}
+  _buttonImage: {fileID: 21300000, guid: d19f54570d0f68e45bf9c3cd1b0c3bf6, type: 3}
+  _buttonPos: {x: 0, y: 2, z: 0}
 --- !u!212 &826382604
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12943,6 +12951,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260023428}
   m_CullTransparentMesh: 1
+--- !u!1 &1269083881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1269083882}
+  m_Layer: 5
+  m_Name: Follow Button Parent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1269083882
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269083881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1359643631}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1272775781
 GameObject:
   m_ObjectHideFlags: 0
@@ -14081,6 +14124,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1269083882}
   - {fileID: 230217967}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16756,6 +16800,24 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3297660784492212197, guid: 972de4050c6182a4eae5f38a11ba5e40, type: 3}
   m_PrefabInstance: {fileID: 1566228445}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1577535729 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4376432511361854576, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
+  m_PrefabInstance: {fileID: 1885281017}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1577535731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577535729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019723712f805434486d7a43bdf213de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiWishTree: {fileID: 530097742284771519}
 --- !u!224 &1582917906 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5991903860922690620, guid: 40edb3968e9a404418f607a619b20964, type: 3}
@@ -21114,7 +21176,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4376432511361854576, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
       propertyPath: m_Name
-      value: Map
+      value: WishTree
       objectReference: {fileID: 0}
     - target: {fileID: 4434957909937298776, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
       propertyPath: m_IsActive
@@ -21167,7 +21229,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4211693684329535952, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
       insertIndex: -1
       addedObject: {fileID: 562605295}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4376432511361854576, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1577535731}
   m_SourcePrefab: {fileID: 100100000, guid: 4bdbd56222b28c64e9365050246e1954, type: 3}
 --- !u!1 &1895418488
 GameObject:
@@ -22399,6 +22464,9 @@ MonoBehaviour:
     _storyEvent: {fileID: 1907541456}
   - _insertIndex: 13
     _storyEvent: {fileID: 679184934}
+  _followButtonPrefab: {fileID: 166109119338726992, guid: 8529af3312e2d22439e077a8c0d700f9, type: 3}
+  _buttonImage: {fileID: 1857515258, guid: 07061af2502bf9047b7ce791514968d1, type: 3}
+  _buttonPos: {x: 0, y: 2, z: 0}
 --- !u!212 &1938007124
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22683,10 +22751,10 @@ RectTransform:
   - {fileID: 1457885826}
   m_Father: {fileID: 230464481}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1966074444
 GameObject:
@@ -23796,6 +23864,9 @@ MonoBehaviour:
     _storyEvent: {fileID: 1468581461}
   - _insertIndex: 19
     _storyEvent: {fileID: 237941618}
+  _followButtonPrefab: {fileID: 166109119338726992, guid: 8529af3312e2d22439e077a8c0d700f9, type: 3}
+  _buttonImage: {fileID: 33627446, guid: 2cfe9c3371c917a44bf00bf206e13149, type: 3}
+  _buttonPos: {x: 0, y: 2, z: 0}
 --- !u!212 &2070279040
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -25558,6 +25629,7 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _borderButton: {fileID: 8038653255866550975}
+  _cameraMovePos: {x: -0.1048288, y: -4, z: -10}
 --- !u!224 &531570029533468533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26069,8 +26141,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -211.837, y: 0}
-  m_SizeDelta: {x: 423.674, y: 840}
+  m_AnchoredPosition: {x: -210.42, y: 0}
+  m_SizeDelta: {x: 420.83, y: 840}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &926023491673935299
 GameObject:
@@ -28001,7 +28073,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015258789, y: -0.000004880807}
+  m_AnchoredPosition: {x: 0.000030517578, y: -0.000004880807}
   m_SizeDelta: {x: 300, y: 530}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &2580335578991116218
@@ -31162,6 +31234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _duration: 1
 --- !u!1 &5388194734252955644
 GameObject:
   m_ObjectHideFlags: 0
@@ -33448,7 +33521,7 @@ GameObject:
   - component: {fileID: 5407742744951502369}
   - component: {fileID: 530097742284771519}
   m_Layer: 5
-  m_Name: WishTree
+  m_Name: UIWishTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35433,7 +35506,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -9.28418, y: -111.999756}
+  m_AnchoredPosition: {x: -9.28418, y: -112}
   m_SizeDelta: {x: -665.323, y: -1320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &8671641765014093703

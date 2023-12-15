@@ -22,7 +22,7 @@ public class UINavigation : MonoBehaviour
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-    private List<UIView> _uiViews = new List<UIView>();
+    [SerializeField]  private List<UIView> _uiViews = new List<UIView>();
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
@@ -45,7 +45,7 @@ public class UINavigation : MonoBehaviour
 
     private void Init()
     {
-        //_rootUiView.UIView.Init(this);
+        _rootUiView.UIView.Init(this);
 
         for (int i = 0, count = _uiViewList.Length; i < count; i++)
         {
@@ -74,13 +74,12 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Push(string viewName)
     {
-
-            
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
         {
-            if(Count > 0)
+
+            foreach (UIView view in _viewDic.Values)
             {
-                if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+                if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
                 {
                     Debug.Log("UI가 열리거나 닫히는 중 입니다.");
                     return;
@@ -97,7 +96,8 @@ public class UINavigation : MonoBehaviour
                 _uiViews.Remove(uiView);
                 _uiViews.Add(uiView);
             }
-            
+
+            uiView.gameObject.SetActive(true);
             uiView.RectTransform.SetAsLastSibling();
             CheckViewListCount();
         }
@@ -113,14 +113,15 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Pop()
     {
-        if (Count > 0)
+
+        foreach (UIView view in _viewDic.Values)
         {
-            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
             {
                 Debug.Log("UI가 열리거나 닫히는 중 입니다.");
                 return;
             }
-        }
+        }         
 
         if (_uiViews.Count <= 0)
             return;
@@ -136,14 +137,16 @@ public class UINavigation : MonoBehaviour
 
     }
 
+
     /// <summary>
     /// viewName을 확인해 해당 UI 를 감추는 함수
     /// </summary>
     public void Pop(string viewName)
     {
-        if (Count > 0)
+
+        foreach (UIView view in _viewDic.Values)
         {
-            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
             {
                 Debug.Log("UI가 열리거나 닫히는 중 입니다.");
                 return;
@@ -172,14 +175,16 @@ public class UINavigation : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        if (Count > 0)
+
+        foreach (UIView view in _viewDic.Values)
         {
-            if (_uiViews.Last().VisibleState == VisibleState.Disappearing || _uiViews.Last().VisibleState == VisibleState.Appearing)
+            if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
             {
                 Debug.Log("UI가 열리거나 닫히는 중 입니다.");
                 return;
             }
         }
+
 
         while (_uiViews.Count > 0)
         {
@@ -187,6 +192,30 @@ public class UINavigation : MonoBehaviour
             _uiViews.Remove(_uiViews.Last());
         }
         CheckViewListCount();
+    }
+
+
+    /// <summary> 꺼놨던 모든 UIView를 SetActive(true)한다. </summary>
+    public void AllShow()
+    {
+        _rootUiView.UIView.gameObject.SetActive(true);
+
+        foreach (UIView view in _uiViews)
+        {
+            view.gameObject.SetActive(true);
+        }
+    }
+
+
+    /// <summary> 켜놨던 모든 UIView를 SetActive(false)한다. </summary>
+    public void AllHide()
+    {
+        _rootUiView.UIView.gameObject.SetActive(false);
+
+        foreach(UIView view in _uiViews)
+        {
+            view.gameObject.SetActive(false);
+        }
     }
 
 
