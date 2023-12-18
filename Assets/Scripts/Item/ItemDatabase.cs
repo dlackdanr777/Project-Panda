@@ -28,7 +28,7 @@ public enum MessageField
     Wish
 }
 
-public class Database_Ssun : SingletonHandler<Database_Ssun>
+public class ItemDatabase 
 {
     //Snack
     private List<Dictionary<string, object>> _dataSnack;
@@ -41,9 +41,8 @@ public class Database_Ssun : SingletonHandler<Database_Ssun>
 
     public Sprite Test;
 
-    public override void Awake()
+    public void Register()
     {
-        base.Awake();
         _dataSnack = CSVReader.Read("Snack");
         _dataFurniture = CSVReader.Read("Furniture");
 

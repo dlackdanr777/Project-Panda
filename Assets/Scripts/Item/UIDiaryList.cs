@@ -5,13 +5,13 @@ using UnityEngine.UI;
 public class UIDiaryList : UIList<Item, ItemField>
 {
     private int _currentItemIndex;
-    private Database_Ssun _dataBase;
+    private ItemDatabase _dataBase;
 
     public Sprite Test;
 
     private void Awake()
     {
-        _dataBase = Database_Ssun.Instance;
+        _dataBase = DatabaseManager.Instance.ItemDatabase;
         GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
         
         //Test snack

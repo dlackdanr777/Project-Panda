@@ -11,11 +11,11 @@ public class UIShopList : UIList<Item, ItemField>
     [SerializeField] private GameObject _purchasedPanel;
 
     private int _currentItemIndex;
-    private Database_Ssun _dataBase;
+    private ItemDatabase _dataBase;
 
     private void Awake()
     {
-        _dataBase = Database_Ssun.Instance;
+        _dataBase = DatabaseManager.Instance.ItemDatabase;
 
         //Shop
         for (int i = 0; i < 2; i++)

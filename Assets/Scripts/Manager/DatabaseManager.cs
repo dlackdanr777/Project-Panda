@@ -18,7 +18,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private MBTIManager _mbtiDatabase;
     private PandaManager _pandaDatabase;
-    private Database_Ssun _itemDatabase;
+    private ItemDatabase _itemDatabase;
+    public ItemDatabase ItemDatabase => _itemDatabase;  
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
@@ -32,7 +33,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_weatherDatabase = new WeatherApp();
         //_mbtiDatabase = new MBTIManager();
         //_pandaDatabase = new PandaManager();
-        //_itemDatabase = new Database_Ssun();
+        _itemDatabase = new ItemDatabase();
         _furniturePosDatabase = new FurniturePositionDatabase();
 
         UserInfo.Register();
@@ -41,7 +42,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         //_weatherDatabase.Register();
         //_mbtiDatabase.Register();
         //_pandaDatabase.Register();
-        //_itemDatabase.Register();
+        _itemDatabase.Register();
         _furniturePosDatabase.Register();
 
 
