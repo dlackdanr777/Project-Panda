@@ -7,7 +7,6 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 {
     [SerializeField] private Transform _itemSlot;
     [SerializeField] private GameObject _itempDropZone;
-
     private int _currentItemIndex;
     private ItemDatabase _dataBase;
 

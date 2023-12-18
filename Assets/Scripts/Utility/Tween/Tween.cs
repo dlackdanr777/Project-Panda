@@ -692,6 +692,55 @@ namespace Muks.Tween
                 objToColor.enabled = true;
             }
         }
+
+
+
+        public static void CameraSize(GameObject targetObject, float targetSize, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenCameraSize objToColor = !targetObject.GetComponent<TweenCameraSize>()
+                ? targetObject.AddComponent<TweenCameraSize>()
+                : targetObject.GetComponent<TweenCameraSize>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetSize;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            objToColor.AddDataSequence(tempData);
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
+
+        public static void CameraSize(GameObject targetObject, float targetSize, float duration, float repeatCount, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        {
+            TweenCameraSize objToColor = !targetObject.GetComponent<TweenCameraSize>()
+                ? targetObject.AddComponent<TweenCameraSize>()
+                : targetObject.GetComponent<TweenCameraSize>();
+
+            for (int i = 0; i < repeatCount; i++)
+            {
+                DataSequence tempData = new DataSequence();
+                tempData.TargetValue = targetSize;
+                tempData.Duration = duration;
+                tempData.TweenMode = tweenMode;
+                if (onComplete != null && i == repeatCount - 1)
+                    tempData.OnComplete = onComplete;
+
+                objToColor.AddDataSequence(tempData);
+            }
+
+            if (!objToColor.enabled)
+            {
+                objToColor.ElapsedDuration = 0;
+                objToColor.TotalDuration = 0;
+                objToColor.enabled = true;
+            }
+        }
     }
 }
 

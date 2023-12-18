@@ -26,6 +26,7 @@ public class UIDialogue : UIView
     private DialogueState _state;
     private int _currentIndex;
 
+    private PandaStoryController _currentStoryController;
     private StoryDialogue _dialogue;
     private StoryEventData[] _eventDatas;
 
@@ -71,6 +72,7 @@ public class UIDialogue : UIView
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
             gameObject.SetActive(false);
+            _currentStoryController.FollowButton.gameObject.SetActive(true);
             _isStoryStart = false;
             _state = DialogueState.None;
             VisibleState = VisibleState.Disappeared;
@@ -101,8 +103,8 @@ public class UIDialogue : UIView
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
-
-        _currentIndex = 0;
+        _currentStoryController.FollowButton.gameObject.SetActive(false);
+       _currentIndex = 0;
         
         VisibleState = VisibleState.Appearing;
         Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, 10), 1f, TweenMode.EaseInOutBack, () => 
@@ -115,6 +117,7 @@ public class UIDialogue : UIView
 
     private void OnNextButtonClicked()
     {
+        gameObject.SetActive(true);
 
         if (!_isSkipEnabled)
             return;
@@ -178,7 +181,7 @@ public class UIDialogue : UIView
     }
 
 
-    private void StartStory(StoryDialogue storyDialogue, StoryEventData[] eventDatas)
+    private void StartStory(PandaStoryController stroyController, StoryDialogue storyDialogue, StoryEventData[] eventDatas)
     {
         if (_isStoryStart || StoryManager.Instance._storyCompleteList.Contains(storyDialogue.StoryID))
         {
@@ -186,6 +189,7 @@ public class UIDialogue : UIView
             return;
         }
 
+        _currentStoryController = stroyController;
         _dialogue = storyDialogue;
         _eventDatas = eventDatas;
         _uiNav.Push("Dialogue");
