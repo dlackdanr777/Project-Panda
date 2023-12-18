@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class StarterPandaInfo
+public class PandaInfo
 {
     public string Mbti;
     public float Intimacy;
@@ -30,9 +30,9 @@ public class StarterPandaInfo
             return;
         }
 
-        StarterPandaInfo pandaInfo = new StarterPandaInfo();
+        PandaInfo pandaInfo = new PandaInfo();
         string loadJson = File.ReadAllText(_path);
-        pandaInfo = JsonUtility.FromJson<StarterPandaInfo>(loadJson);
+        pandaInfo = JsonUtility.FromJson<PandaInfo>(loadJson);
 
         Mbti = pandaInfo.Mbti;
         Intimacy = pandaInfo.Intimacy;
