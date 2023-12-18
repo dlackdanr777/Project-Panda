@@ -51,8 +51,8 @@ public class Inventory
     /// <param name="id"></param>
     public void AddById(ItemField field, string id)
     {
-        List<Item> database = Database_Ssun.Instance.ItemList[(int)field];
-        int listCount = Database_Ssun.Instance.ItemCount[(int)field];
+        List<Item> database = DatabaseManager.Instance.ItemDatabase.ItemList[(int)field];
+        int listCount = DatabaseManager.Instance.ItemDatabase.ItemCount[(int)field];
 
         for (int i=0;i< listCount; i++)
         {

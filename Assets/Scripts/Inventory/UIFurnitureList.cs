@@ -9,7 +9,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
     [SerializeField] private GameObject _itempDropZone;
 
     private int _currentItemIndex;
-    private Database_Ssun _dataBase;
+    private ItemDatabase _dataBase;
 
     //Test
     public Sprite Test;
@@ -17,7 +17,7 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
 
     private void Awake()
     {
-        _dataBase = Database_Ssun.Instance;
+        _dataBase = DatabaseManager.Instance.ItemDatabase;
 
         //Test
         GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F2"); //player가 아이템 하나를 얻음

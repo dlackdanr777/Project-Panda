@@ -34,8 +34,8 @@ public class MBTIManager : SingletonHandler<MBTIManager>
     }
     public void SetMBTI()
     {
-        List<Item> Snacks = Database_Ssun.Instance.ItemList[0];
-        List<Item> Toys = Database_Ssun.Instance.ItemList[1];
+        List<Item> Snacks = DatabaseManager.Instance.ItemDatabase.ItemList[0];
+        List<Item> Toys = DatabaseManager.Instance.ItemDatabase.ItemList[1];
         for (int i = 0; i < System.Enum.GetValues(typeof(EMBTI)).Length; i++)
         {
             DataMBTI.Add(new Preference(Snacks[i].Id, Toys[i].Id));
