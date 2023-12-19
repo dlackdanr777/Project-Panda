@@ -17,6 +17,7 @@ public class CostumeData
     public EBodyParts BodyParts;
     public string CostumeName;
     public Vector3 CostumePosition;
+    public bool IsMine;
     public Sprite Image;
     public GameObject CostumeSlot;
 

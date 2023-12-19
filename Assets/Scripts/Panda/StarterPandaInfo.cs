@@ -7,6 +7,7 @@ public class StarterPandaInfo
     public string Mbti;
     public float Intimacy;
     public float Happiness;
+    public int WearingHeadCostumeID;
 
     public bool IsExistingPandaInfo;
 
@@ -37,7 +38,8 @@ public class StarterPandaInfo
         Mbti = pandaInfo.Mbti;
         Intimacy = pandaInfo.Intimacy;
         Happiness = pandaInfo.Happiness;
-    }
+        WearingHeadCostumeID = pandaInfo.WearingHeadCostumeID;
+}
 
     private void CreateUserInfoData()
     {
