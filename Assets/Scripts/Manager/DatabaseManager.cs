@@ -16,6 +16,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private WeatherApp _weatherDatabase;
     public WeatherApp WeatherDatabase => _weatherDatabase;
 
+    private RecipeDatabase _recipeDatabase;
+    public RecipeDatabase RecipeDatabase => _recipeDatabase;
+
     private MBTIManager _mbtiDatabase;
     private PandaManager _pandaDatabase;
     private ItemDatabase _itemDatabase;
@@ -30,6 +33,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _userInfo = new UserInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
+        _recipeDatabase = new RecipeDatabase();
         //_weatherDatabase = new WeatherApp();
         //_mbtiDatabase = new MBTIManager();
         //_pandaDatabase = new PandaManager();
@@ -39,6 +43,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         UserInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
+        _recipeDatabase.Register();
         //_weatherDatabase.Register();
         //_mbtiDatabase.Register();
         //_pandaDatabase.Register();
