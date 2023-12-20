@@ -7,18 +7,22 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class UICookingDragSlot : MonoBehaviour
 {
-    public static UICookingDragSlot Instance;
+    private UICooking _uiCooking;
 
     private InventoryItem _tempItem;
 
     private Image _image;
 
-
-    private void Awake()
+    public void Init(UICooking uiCooking)
     {
-        Instance = this;
+        _uiCooking = uiCooking;
         _image = GetComponent<Image>();
         gameObject.SetActive(false);
+
+    }
+    private void Awake()
+    {
+
     }
 
 

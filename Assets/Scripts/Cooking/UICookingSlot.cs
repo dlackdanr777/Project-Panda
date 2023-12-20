@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -13,10 +12,12 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     [SerializeField] private TextMeshProUGUI _amountText;
 
-    private InventoryItem _item;
-    public void Init()
-    {
+    private UICooking _uiCooking;
 
+    private InventoryItem _item;
+    public void Init(UICooking uiCooking)
+    {
+        _uiCooking = uiCooking;
     }
 
     public void UpdateUI(InventoryItem item)
@@ -43,8 +44,8 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (_item == null)
             return;
 
-        UICookingDragSlot.Instance.StartDrag(_item);
-        UICookingDragSlot.Instance.transform.position = eventData.position;
+        _uiCooking.UICookingDragSlot.StartDrag(_item);
+        _uiCooking.UICookingDragSlot.transform.position = eventData.position;
 
     }
 
@@ -54,11 +55,11 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (_item == null)
             return;
 
-            UICookingDragSlot.Instance.transform.position = eventData.position;
+        _uiCooking.UICookingDragSlot.transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        UICookingDragSlot.Instance.EndDrag();
+        _uiCooking.UICookingDragSlot.EndDrag();
     }
 }

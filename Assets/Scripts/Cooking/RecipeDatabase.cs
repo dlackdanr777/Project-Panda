@@ -49,4 +49,9 @@ public class RecipeDatabase
             _recipeDataList.Add(recipeDatas[i]);
         }
     }
+
+    public RecipeData[] GetRecipeDataArray()
+    {
+        return _recipeDataList.ToArray();
+    }
 }
