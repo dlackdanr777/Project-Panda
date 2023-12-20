@@ -23,7 +23,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     private void Start()
     {
-        HarvestItem = HarvestItemManager.Instance.GetHarvestItemdata(_growingCropID);
+        HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
         GrowthTime = HarvestItem.HarvestTime * 5;
     }
