@@ -69,6 +69,14 @@ public class Book : MonoBehaviour {
     //current flip mode
     FlipMode mode;
 
+    private AutoFlip _autoFlip;
+
+    private void Awake()
+    {
+        BookToggle.OnMoveBookPage += HandleMoveBookPage;
+        _autoFlip = GetComponent<AutoFlip>();
+
+    }
     void Start()
     {
         if (!canvas) canvas=GetComponentInParent<Canvas>();
@@ -97,6 +105,30 @@ public class Book : MonoBehaviour {
         ShadowLTR.rectTransform.pivot = new Vector2(0, (pageWidth / 2) / shadowPageHeight);
 
     }
+
+    #region Handle
+    private void HandleMoveBookPage(int index)
+    {
+        //if(currentPage/2 < index)
+        //{
+        //    for(int i = currentPage/2; i <= index; i++)
+        //    {
+        //        _autoFlip.FlipRightPage();
+        //    }
+        //}
+        //else if(currentPage/2 > index)
+        //{
+        //    for(int i = currentPage/2; i>=index; i--)
+        //    {
+        //        _autoFlip.FlipLeftPage();
+        //        Debug.Log(i);
+        //    }
+        //}
+        currentPage = index*2;
+        UpdateSprites();
+
+    }
+    #endregion
 
     private void CalcCurlCriticalPoints()
     {
@@ -370,7 +402,7 @@ public class Book : MonoBehaviour {
     Coroutine currentCoroutine;
     void UpdateSprites()
     {
-        LeftNext.sprite= (currentPage > 0 && currentPage <= bookPages.Length) ? bookPages[currentPage-1] : background[0];
+        LeftNext.sprite=(currentPage > 0 && currentPage <= bookPages.Length) ? bookPages[currentPage-1] : background[0];
         RightNext.sprite=(currentPage>=0 &&currentPage<bookPages.Length) ? bookPages[currentPage] : background[1];
     }
     public void TweenForward()

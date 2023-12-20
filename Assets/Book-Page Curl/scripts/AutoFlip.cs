@@ -9,7 +9,10 @@ public class AutoFlip : MonoBehaviour {
     public bool AutoStartFlip=true;
     public Book ControledBook;
     public int AnimationFramesCount = 40;
+    public bool IsFlipped => isFlipping;
     bool isFlipping = false;
+    int rightDelay;
+    int leftDelay;
     // Use this for initialization
     void Start () {
         if (!ControledBook)
