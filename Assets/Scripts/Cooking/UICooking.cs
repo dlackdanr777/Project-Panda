@@ -26,7 +26,6 @@ public class UICooking : UIView
             _uiCookingSlots[i].UpdateUI(null);
         }
 
-        Debug.Log(_inventory[0].ItemsCount);
         for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
         {
             _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
