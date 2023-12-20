@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class BookToggle : MonoBehaviour
 {
     public static Action<int> OnMoveBookPage = delegate { };
+    [SerializeField] GameObject[] _pages;
 
     private ToggleGroup _toggleGroup;
     private Dictionary<int, Toggle> _toggleList; //책 토글 <순서, 해당 토글>
@@ -49,6 +50,17 @@ public class BookToggle : MonoBehaviour
         t.transform.SetAsLastSibling();
 
         //Book page 이동
-        OnMoveBookPage?.Invoke(index);
+        for (int i = 0; i < _toggleList.Count; i++)
+        {
+            if (i == index)
+            {
+                _pages[i].SetActive(true);
+            }
+            else
+            {
+                _pages[i].SetActive(false);
+            }
+        }
+        //OnMoveBookPage?.Invoke(index);
     }
 }
