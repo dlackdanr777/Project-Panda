@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MBTIManager : SingletonHandler<MBTIManager>
+public class MBTIManager
 {
     private enum EMBTI
     {
@@ -27,15 +27,15 @@ public class MBTIManager : SingletonHandler<MBTIManager>
     
     private List<Preference> DataMBTI = new List<Preference>();
 
-    public override void Awake()
+    public void Register()
     {
-        base.Awake();
         SetMBTI();
     }
+
     public void SetMBTI()
     {
-        List<Item> Snacks = DatabaseManager.Instance.ItemDatabase.ItemList[0];
-        List<Item> Toys = DatabaseManager.Instance.ItemDatabase.ItemList[1];
+        List<Item> Snacks = DatabaseManager.Instance.GetSnackItem();
+        List<Item> Toys = DatabaseManager.Instance.GetToyItem();
         for (int i = 0; i < System.Enum.GetValues(typeof(EMBTI)).Length; i++)
         {
             DataMBTI.Add(new Preference(Snacks[i].Id, Toys[i].Id));

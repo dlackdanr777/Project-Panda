@@ -27,6 +27,12 @@ public class CostumeViewModel //: INotifyPropertyChanged
             }
         }
     }
+    public bool IsSaveCostume
+    {
+        get { return _costumeModel.IsSaveCostume; }
+        set { _costumeModel.IsSaveCostume = value; }
+    }
+
 
     public CostumeViewModel()
     {
@@ -44,7 +50,7 @@ public class CostumeViewModel //: INotifyPropertyChanged
     //    }
     //}
 
-    internal void WearingCostume(CostumeData costumeData)
+    public void WearingCostume(CostumeData costumeData)
     {
         if (_costumeModel.WearingCostume(costumeData)) // ¿Ê ÀåÂø
         {
@@ -54,5 +60,11 @@ public class CostumeViewModel //: INotifyPropertyChanged
         {
             WearingHeadCostumeID = -1;
         }
+    }
+
+    public void SaveCostume()
+    {
+        IsSaveCostume = true;
+        _costumeModel.SaveCostume();
     }
 }

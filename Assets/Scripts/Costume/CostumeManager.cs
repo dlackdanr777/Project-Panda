@@ -12,7 +12,16 @@ public class CostumeManager : SingletonHandler<CostumeManager>
 
     public override void Awake()
     {
-        base.Awake();
+        var obj = FindObjectsOfType<CostumeManager>();
+        if (obj.Length == 1)
+        {
+            base.Awake();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         CostumeDic = CostumeParse("Costume");
         int headCount = 0, leftHandCount = 0, rightHandCount = 0;
 

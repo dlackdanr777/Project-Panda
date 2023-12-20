@@ -2,22 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HarvestItemManager : SingletonHandler<HarvestItemManager>
+public class HarvestItemManager
 {
     private Dictionary<int, HarvestItem> _harvestItemDic;
-    [SerializeField] private HarvestItemImage _harvestItemImage;
+    public HarvestItemImage HarvestItemImage{ private get; set; }
 
-    public override void Awake()
+    public void Register()
     {
-        base.Awake();
         _harvestItemDic = HarvestItemParse("HarvestItem");
         
         // 수확아이템 이미지 저장
         for(int i = 0; i < _harvestItemDic.Count; i++)
         {
-            _harvestItemDic[i].Image[0] = _harvestItemImage.GrowthStageImages[i].ZeroStepImage;
-            _harvestItemDic[i].Image[1] = _harvestItemImage.GrowthStageImages[i].OneStepImage;
-            _harvestItemDic[i].Image[2] = _harvestItemImage.GrowthStageImages[i].TwoStepImage;
+            _harvestItemDic[i].Image[0] = HarvestItemImage.GrowthStageImages[i].ZeroStepImage;
+            _harvestItemDic[i].Image[1] = HarvestItemImage.GrowthStageImages[i].OneStepImage;
+            _harvestItemDic[i].Image[2] = HarvestItemImage.GrowthStageImages[i].TwoStepImage;
         }
     }
 
