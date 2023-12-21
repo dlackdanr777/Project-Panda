@@ -23,6 +23,8 @@ public class CostumeView : MonoBehaviour
     private Button[] _costumeImageBtn;
     private bool _isStart;
 
+    // 나중에 데이터베이스로 변경
+    private StarterPandaInfo _startPandaInfo; 
 
     private void Start()
     {
@@ -84,6 +86,8 @@ public class CostumeView : MonoBehaviour
                 Debug.Log(i);
             }
         }
+
+        _costumeViewModel = _startPandaInfo.CostumeViewModelInfo;
     }
 
     private void Bind()
