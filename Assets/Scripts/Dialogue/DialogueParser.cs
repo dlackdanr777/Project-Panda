@@ -94,4 +94,31 @@ public class DialogueParser
         }
         return pandaDic;
     }
+
+
+    public RecipeData[] RecipeDataParse(string CSVFileName)
+    {
+        List<RecipeData> recipeDataList = new List<RecipeData>(); //리스트 생성
+        TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
+
+        string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
+
+        for (int i = 1; i < data.Length; i++)
+        {
+            string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
+
+            string materialItemID = row[0];
+            int materialValue = int.Parse(row[1]);
+            string cookingItemID_B = row[2];
+            string cookingItemID_A = row[3];
+            string cookingItemID_S = row[4];
+
+            RecipeData recipeData = new RecipeData(materialItemID, materialValue, cookingItemID_B,
+                cookingItemID_A, cookingItemID_S); //레시피 클래스 생성
+
+            recipeDataList.Add(recipeData);
+        }
+
+        return recipeDataList.ToArray();
+    }
 }
