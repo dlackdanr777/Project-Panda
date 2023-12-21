@@ -3,12 +3,15 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CostumeViewModel //: INotifyPropertyChanged
+public class CostumeViewModel
 {
     public event PropertyChangedEventHandler PropertyChanged;
     public event Action<CostumeData> CostumeChanged;
+    public event Action<bool> CostumeSceneChanged;
+    public event Action<bool> SetSaveCostumeView;
     
     private CostumeModel _costumeModel;
+    //private bool _isSetSaveCostumeView;
 
     public int WearingHeadCostumeID
     {
@@ -16,17 +19,35 @@ public class CostumeViewModel //: INotifyPropertyChanged
         set
         {
             _costumeModel.WearingHeadCostumeID = value;
-            //OnPropertyChanged("WearingHeadCostumeID");
             if(value == -1)
             {
                 CostumeChanged?.Invoke(null);
             }
             else
             {
+                Debug.Log("코스튬 변경 이벤트 실행 " + WearingHeadCostumeID);
                 CostumeChanged?.Invoke(CostumeManager.Instance.GetCostumeData(value));
             }
         }
     }
+    public bool IsExitCostume
+    {
+        get { return _costumeModel.IsExitCostume; }
+        set 
+        {
+            //if (!_isSetSaveCostumeView)
+            //{
+            //    SetSaveCostumeView?.Invoke(value);
+            //}
+            //_isSetSaveCostumeView = true;
+            _costumeModel.IsExitCostume = value;
+            if(value == true)
+            {
+                CostumeSceneChanged?.Invoke(value);
+            }
+        }
+    }
+
     public bool IsSaveCostume
     {
         get { return _costumeModel.IsSaveCostume; }
@@ -38,17 +59,8 @@ public class CostumeViewModel //: INotifyPropertyChanged
     {
         _costumeModel = new CostumeModel();
         _costumeModel.Init();
+        Debug.Log("판다 뷰모델 생성 WearingHeadCostumeID: " + WearingHeadCostumeID);
     }
-
-    //// name에 해당하는 이름을 갖는 데이터에 변화가 생길 때마다 이벤트 발생
-    //protected void OnPropertyChanged(string name)
-    //{
-    //    PropertyChangedEventHandler handler = PropertyChanged;
-    //    if(handler != null)
-    //    {
-    //        handler(this, new PropertyChangedEventArgs(name));
-    //    }
-    //}
 
     public void WearingCostume(CostumeData costumeData)
     {
@@ -62,6 +74,19 @@ public class CostumeViewModel //: INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 나가기 버튼 누르면 실행 </summary>
+    public void ExitCostume()
+    {
+        Debug.Log("exit: "+ IsExitCostume);
+        if (IsExitCostume == false)
+        {
+            IsExitCostume = true;
+        }
+    }
+
+    /// <summary>
+    /// 저장 버튼 누르면 실행</summary>
     public void SaveCostume()
     {
         IsSaveCostume = true;

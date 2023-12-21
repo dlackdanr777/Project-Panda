@@ -5,8 +5,8 @@ using UnityEngine;
 public class CostumeModel
 {
     public int WearingHeadCostumeID; // -1이면 입고 있는 옷 없음
+    public bool IsExitCostume;
     public bool IsSaveCostume;
-    private StarterPandaInfo _starterPandaInfo; // 데이터베이스에 추가하기
 
     public bool WearingCostume(CostumeData costumeData)
     {
@@ -35,11 +35,12 @@ public class CostumeModel
     public void Init()
     {
         WearingHeadCostumeID = -1;
+        Debug.Log("판다 모델 초기화 WearingHeadCostumeID: " + WearingHeadCostumeID);
     }
 
 
     public void SaveCostume()
     {
-        _starterPandaInfo.WearingHeadCostumeID = WearingHeadCostumeID;
+        DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID = WearingHeadCostumeID;
     }
 }

@@ -9,8 +9,8 @@ public class StarterPandaInfo
     public float Happiness;
 
     #region ÄÚ½ºÆ¬
-    public int WearingHeadCostumeID;
-    public CostumeViewModel CostumeViewModelInfo;
+    public int WearingHeadCostumeID = -1;
+    public CostumeViewModel CostumeViewModel;
     #endregion
 
 
