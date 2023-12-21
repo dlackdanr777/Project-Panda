@@ -16,40 +16,55 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private WeatherApp _weatherDatabase;
     public WeatherApp WeatherDatabase => _weatherDatabase;
 
-    private RecipeDatabase _recipeDatabase;
-    public RecipeDatabase RecipeDatabase => _recipeDatabase;
-
     private MBTIManager _mbtiDatabase;
+
+    [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;  
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
+    private HarvestItemManager _harvestItemDatabase;
+    [SerializeField] HarvestItemImage _harvestItemImage;
+
     public override void Awake()
     {
-        base.Awake();
+        var obj = FindObjectsOfType<DatabaseManager>();
+        if(obj.Length == 1)
+        {
+            base.Awake();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         _userInfo = new UserInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
-        _recipeDatabase = new RecipeDatabase();
-        //_weatherDatabase = new WeatherApp();
-        //_mbtiDatabase = new MBTIManager();
-        //_pandaDatabase = new PandaManager();
         _itemDatabase = new ItemDatabase();
+        //_weatherDatabase = new WeatherApp();
+        _mbtiDatabase = new MBTIManager();
+
+
+        _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
+        _harvestItemDatabase = new HarvestItemManager();
 
         UserInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
-        _recipeDatabase.Register();
-        //_weatherDatabase.Register();
-        //_mbtiDatabase.Register();
-        //_pandaDatabase.Register();
         _itemDatabase.Register();
+        //_weatherDatabase.Register();
+        _mbtiDatabase.Register();
+
+        _pandaDatabase.PandaImage = _pandaImage;
+        _pandaDatabase.Register();
         _furniturePosDatabase.Register();
 
+        _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
+        _harvestItemDatabase.Register();
 
     }
 
@@ -78,7 +93,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// </summary>
     /// <param name="pandaID">panda id</param>
     /// <returns></returns>
-    public PandaData GetpandaData(int pandaID)
+    public PandaData GetPandaData(int pandaID)
     {
         return _pandaDatabase.GetPandaData(pandaID);
     }
@@ -88,16 +103,37 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// </summary>
     /// <param name="pandaID">panda id</param>
     /// <returns></returns>
-    public PandaStateImage GetpandaImage(int pandaID)
+    public PandaStateImage GetPandaImage(int pandaID)
     {
         return _pandaDatabase.GetPandaImage(pandaID);
+    }
+
+    /// <summary>
+    /// 판다 친밀도 업데이트 </summary>
+    public void UpdatePandaIntimacy(int pandaID, float intimacy)
+    {
+        _pandaDatabase.UpdatePandaIntimacy(pandaID, intimacy);
+    }
+
+    /// <summary>
+    /// 판다 행복도 업데이트 </summary>
+    public void UpdatePandaHappiness(int pandaID, float happiness)
+    {
+        _pandaDatabase.UpdatePandaHappiness(pandaID, happiness);
+    }
+
+    /// <summary>
+    /// 스타터 판다 mbti 설정</summary>
+    public void SetStarterMBTI(string mbti)
+    {
+        _pandaDatabase.SetStarterMBTI(mbti);
     }
 
     /// <summary>
     /// Toy ItemList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GeToyItem()
+    public List<Item> GetToyItem()
     {
         return _itemDatabase.ItemList[0];
     }
@@ -135,5 +171,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _photoDatabase.Save();
         _furniturePosDatabase.Save();
         _userInfo.SaveUserInfoData();
+    }
+
+    public HarvestItem GetHarvestItemdata(int harvestItemID)
+    {
+        return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
     }
 }
