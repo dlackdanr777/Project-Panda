@@ -40,16 +40,19 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
             _currentItem = item;
             return;
         }
+        _cookButton.onClick.RemoveListener(OnCookButtonCilcked);
 
         _currentItem = item;
         _itemImage.sprite = item.Image;
-        _cookButton.onClick.RemoveAllListeners();
-        _cookButton.onClick.AddListener(() =>
-        {
-            _uiCooking.CookingSystem.StartCooking(_currentItem);
-            CheckItem();
-        });
 
+        _cookButton.onClick.AddListener(OnCookButtonCilcked);
+
+        CheckItem();
+    }
+
+    private void OnCookButtonCilcked()
+    {
+        _uiCooking.SetCurrentRecipeData(_uiCooking.CookingSystem.StartCooking(_currentItem));
         CheckItem();
     }
 
@@ -64,19 +67,14 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
         }
 
         _itemImage.gameObject.SetActive(true);
-        Debug.Log("실행합니다");
 
         if (_uiCooking.CookingSystem.CheckRecipe(_currentItem))
         {
-            Debug.Log("레시피에 존재합니다.");
-
-
             _uiCooking.HideButtonImage.SetActive(false);
 
             return;
         }
 
-        Debug.Log("레시피에 존재하지 않습니다.");
         _uiCooking.HideButtonImage.SetActive(true);
     }
 

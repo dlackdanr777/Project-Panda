@@ -16,6 +16,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private WeatherApp _weatherDatabase;
     public WeatherApp WeatherDatabase => _weatherDatabase;
 
+    private RecipeDatabase _recipeDatabase;
+    public RecipeDatabase RecipeDatabase => _recipeDatabase;
+
     private MBTIManager _mbtiDatabase;
 
     [SerializeField] private PandaImage _pandaImage;
@@ -45,6 +48,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
         //_weatherDatabase = new WeatherApp();
+        _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
 
 
@@ -57,6 +61,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _photoDatabase.Register();
         _itemDatabase.Register();
         //_weatherDatabase.Register();
+        _recipeDatabase.Register();
         _mbtiDatabase.Register();
 
         _pandaDatabase.PandaImage = _pandaImage;

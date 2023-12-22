@@ -8,6 +8,8 @@ public class UICooking : UIView
     [SerializeField] private CookingSystem _cookingSystem;
     public CookingSystem CookingSystem => _cookingSystem;
 
+    [SerializeField] private UiCookingStart _uiCookingStart;
+
     [SerializeField] private UICookingSlotParent _uiCookingSlotParent;
 
     [SerializeField] private UICookingSlot[] _uiCookingSlots;
@@ -17,10 +19,14 @@ public class UICooking : UIView
 
     [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
 
+    [SerializeField] private Button _cookButton;
+
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
 
     private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
+
+    private RecipeData _currentRecipeData;
 
 
     public void Start()
@@ -30,6 +36,8 @@ public class UICooking : UIView
         _uiCookingCenterSlot.Init(this);
 
         _hideButtonImage.SetActive(true);
+
+        _cookButton.onClick.AddListener(OnCookButtonClicked);
     }
 
 
@@ -38,6 +46,8 @@ public class UICooking : UIView
         base.Init(uiNav);
 
         _uiCookingSlots = _uiCookingSlotParent.GetComponentsInChildren<UICookingSlot>();
+
+        _uiCookingStart.Init(_cookingSystem, this);
 
         for (int i = 0, count = _uiCookingSlots.Length; i < count; i++)
         {
@@ -62,6 +72,19 @@ public class UICooking : UIView
         {
             _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
         }
+    }
+
+    private void OnCookButtonClicked()
+    {
+        Debug.Log("요리 시작");
+        gameObject.SetActive(false);
+        _uiCookingStart.gameObject.SetActive(true);
+        _uiCookingStart.StartCooking(_currentRecipeData);
+    }
+
+    public void SetCurrentRecipeData(RecipeData data)
+    {
+        _currentRecipeData = data;
     }
 
     public override void Show()
