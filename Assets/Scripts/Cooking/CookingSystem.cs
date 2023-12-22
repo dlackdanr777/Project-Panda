@@ -6,7 +6,7 @@ public class CookingSystem : MonoBehaviour
 {
     [SerializeField] private UICooking _uiCooking;
 
-    private RecipeDatabase _recipeDatabase => DatabaseManager.Instance.RecipeDatabase;
+    private RecipeDatabase _recipeDatabase; //=> DatabaseManager.Instance.RecipeDatabase;
 
     private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
 
