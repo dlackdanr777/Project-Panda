@@ -61,7 +61,6 @@ public class PhotoDatabase
         PhotoDatas photoDatas = new PhotoDatas();
 
         string loadJson = File.ReadAllText(UserInfo.PhotoPath + _fileName);
-        Debug.Log(loadJson);
         photoDatas = JsonUtility.FromJson<PhotoDatas>(loadJson);
 
         foreach (PhotoData data in photoDatas.PhotoDataList)

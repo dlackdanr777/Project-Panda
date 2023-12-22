@@ -202,7 +202,7 @@ public class UIDialogue : UIView
         _state = DialogueState.Context;
         _isSkipEnabled = false;
 
-        _pandaImage.sprite = PandaManager.Instance.GetPandaImage(1).NomalImage;
+        _pandaImage.sprite = DatabaseManager.Instance.GetPandaImage(1).NomalImage;
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
 
         Invoke("SkipDisable", 0.5f);

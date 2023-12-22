@@ -16,7 +16,6 @@ public class UICameraApp : UIView
     [Tooltip("카메라 앵글 이미지")]
     [SerializeField] private Image _angleImage;
 
-    public event Action OnShowHandler;
 
     public event Action OnHideHandler;
 

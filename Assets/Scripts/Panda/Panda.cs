@@ -91,8 +91,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// 판다 상태 이미지 표시
-    /// </summary>
+    /// 판다 상태 이미지 표시 </summary>
     public void ShowStateImage()
     {
 
@@ -148,8 +147,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// 판다의 UI 생성 후 세팅
-    /// </summary>
+    /// 판다의 UI 생성 후 세팅 </summary>
     protected void SetUIPanda()
     {
         //UIPanda 프리팹 불러오기
