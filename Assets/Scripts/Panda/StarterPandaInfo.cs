@@ -9,8 +9,9 @@ public class StarterPandaInfo
     public float Happiness;
 
     #region 코스튬
+    public CostumeViewModel CostumeViewModel; // 저장 필요 x
     public int WearingHeadCostumeID = -1;
-    public CostumeViewModel CostumeViewModel;
+    public bool[] IsMine;
     #endregion
 
 
@@ -46,6 +47,18 @@ public class StarterPandaInfo
         Intimacy = pandaInfo.Intimacy;
         Happiness = pandaInfo.Happiness;
         WearingHeadCostumeID = pandaInfo.WearingHeadCostumeID;
+        // 현재 가지고 있는 옷 저장
+        if(CostumeManager.Instance.CostumeDic != null)
+        {
+            for (int i = 0; i < CostumeManager.Instance.CostumeDic.Count; i++)
+            {
+                CostumeManager.Instance.CostumeDic[i].IsMine = pandaInfo.IsMine[i];
+            }
+        }
+        else
+        {
+            Debug.Log("코스튬 매니저 null"); // 따로 함수 만들어서 코스튬 정보 불러온 후 저장해야 함
+        }
 }
 
     private void CreateUserInfoData()

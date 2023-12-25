@@ -14,7 +14,7 @@ public class CostumeModel
         {
             if (WearingHeadCostumeID != -1) // 입고 있는 옷이 있을 경우
             {
-                CostumeManager.Instance.CostumeDic[WearingHeadCostumeID].CostumeSlot.SetActive(false); // 입고 있는 옷 벗기
+                //CostumeManager.Instance.CostumeDic[WearingHeadCostumeID].CostumeSlot.SetActive(false); // 입고 있는 옷 벗기
 
                 // 옷이 겹칠 경우
                 if (CostumeManager.Instance.CostumeDic[WearingHeadCostumeID].CostumeID == costumeData.CostumeID)
@@ -26,7 +26,7 @@ public class CostumeModel
             }
             // 현재 입고 있는 옷 ID 저장
             //WearingHeadCostumeID = costumeData.CostumeID;
-            costumeData.CostumeSlot.SetActive(true);
+            //costumeData.CostumeSlot.SetActive(true);
         }
         return true;
         
@@ -41,6 +41,12 @@ public class CostumeModel
 
     public void SaveCostume()
     {
+        // 지금 입고 있던 옷 벗기
+        int wearingHeadCostumeID = DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID;
+        CostumeManager.Instance.CostumeDic[wearingHeadCostumeID].CostumeSlot.SetActive(false);
+
+        // 저장한 옷 입기
         DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID = WearingHeadCostumeID;
+        CostumeManager.Instance.CostumeDic[WearingHeadCostumeID].CostumeSlot.SetActive(true);
     }
 }
