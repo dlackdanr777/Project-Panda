@@ -71,7 +71,7 @@ public class CookingSystem : MonoBehaviour
         return false;
     }
 
-    public RecipeData StartCooking(InventoryItem item)
+    public RecipeData GetRecipe(InventoryItem item)
     {
         foreach (RecipeData data in _recipeDatas)
         {
@@ -84,10 +84,11 @@ public class CookingSystem : MonoBehaviour
                 
                 _uiCooking.UpdateUI();
 
+                Debug.Log("레시피가 존재합니다.");
                 return data;
             }
         }
-
+        Debug.Log("레시피가 존재하지 않습니다.");
         return default;
     }
 }

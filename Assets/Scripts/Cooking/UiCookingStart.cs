@@ -13,6 +13,9 @@ public class UiCookingStart : MonoBehaviour
 
     [SerializeField] private Button _complatedButton;
 
+    [SerializeField] private UICookingBar _uiStaminaBar;
+    [SerializeField] private UICookingBar _uiFireBar;
+
     [Space]
     [SerializeField] private int _maxFireValue;
 
@@ -43,6 +46,8 @@ public class UiCookingStart : MonoBehaviour
         _currentRecipeData = currentRecipe;
         _stamina = _cookingUserData.MaxStamina;
         _fireValue = 0;
+        _uiStaminaBar.Reset(1);
+        _uiFireBar.Reset(0);
         gameObject.SetActive(true);
 
         CheckAllAddValueButtons();
@@ -59,10 +64,11 @@ public class UiCookingStart : MonoBehaviour
     private void MoreAddValueButtonClicked()
     {
         bool check = _cookingUserData.MoreAddValueStamina <= _stamina;
-        Debug.Log(check);
+        check = check && _fireValue < _maxFireValue;
+        
         _moreAddButton.CheckUsabled(check, () =>
         {
-            _stamina -= _cookingUserData.MoreAddValueStamina;
+            DecreaseStamina(_cookingUserData.MoreAddValueStamina);
             AddFireValue(_cookingUserData.MoreAddValue);
             CheckAllAddValueButtons();
         });
@@ -72,10 +78,11 @@ public class UiCookingStart : MonoBehaviour
     private void AddValueButtonClicked()
     {
         bool check = _cookingUserData.AddValueStamina <= _stamina;
-        Debug.Log(check);
+        check = check && _fireValue < _maxFireValue;
+
         _addButton.CheckUsabled(check, () =>
         {
-            _stamina -= _cookingUserData.AddValueStamina;
+            DecreaseStamina(_cookingUserData.AddValueStamina);
             AddFireValue(_cookingUserData.AddValue);
             CheckAllAddValueButtons();
         });
@@ -84,9 +91,11 @@ public class UiCookingStart : MonoBehaviour
     private void SmallAddValueButtonClicked()
     {
         bool check = _cookingUserData.SmallAddValueStamina <= _stamina;
+        check = check && _fireValue < _maxFireValue; 
+
         _smallAddButton.CheckUsabled(check, () =>
         {
-            _stamina -= _cookingUserData.SmallAddValueStamina;
+            DecreaseStamina(_cookingUserData.SmallAddValueStamina);
             AddFireValue(_cookingUserData.SmallAddValue);
             CheckAllAddValueButtons();
         });
@@ -99,6 +108,16 @@ public class UiCookingStart : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    private void DecreaseStamina(int value)
+    {
+        _stamina -= value;
+
+        if(_stamina < 0)
+            _stamina = 0;
+
+        _uiStaminaBar.DecreaseGauge(_cookingUserData.MaxStamina, _stamina);
+    }
+
 
     private void AddFireValue(int value)
     {
@@ -106,9 +125,8 @@ public class UiCookingStart : MonoBehaviour
 
         if (_maxFireValue < _fireValue)
             _fireValue = _maxFireValue;
-        Debug.Log(_stamina + "스테미나");
-        Debug.Log(_fireValue + "불 게이지");
-        //애니메이션 추가
+
+        _uiFireBar.DecreaseGauge(_maxFireValue, _fireValue);
     }
 
 

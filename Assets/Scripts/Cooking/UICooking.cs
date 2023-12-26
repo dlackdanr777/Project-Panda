@@ -19,8 +19,6 @@ public class UICooking : UIView
 
     [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
 
-    [SerializeField] private Button _cookButton;
-
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
 
@@ -36,8 +34,6 @@ public class UICooking : UIView
         _uiCookingCenterSlot.Init(this);
 
         _hideButtonImage.SetActive(true);
-
-        _cookButton.onClick.AddListener(OnCookButtonClicked);
     }
 
 
@@ -74,17 +70,13 @@ public class UICooking : UIView
         }
     }
 
-    private void OnCookButtonClicked()
+    public void StartCooking(RecipeData data)
     {
-        Debug.Log("요리 시작");
+        _currentRecipeData = data;
+
         gameObject.SetActive(false);
         _uiCookingStart.gameObject.SetActive(true);
         _uiCookingStart.StartCooking(_currentRecipeData);
-    }
-
-    public void SetCurrentRecipeData(RecipeData data)
-    {
-        _currentRecipeData = data;
     }
 
     public override void Show()

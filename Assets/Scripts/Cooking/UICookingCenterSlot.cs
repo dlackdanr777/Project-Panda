@@ -19,6 +19,7 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
     public void Init(UICooking uiCooking)
     {
         _uiCooking = uiCooking;
+        _cookButton.onClick.AddListener(OnCookButtonCilcked);
         _itemImage.gameObject.SetActive(false);
     }
 
@@ -35,24 +36,26 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
     public void OnDrop(PointerEventData eventData)
     {
         InventoryItem item = _uiCooking.UICookingDragSlot.GetItem();
+
+        Debug.Log("드롭함");
+
         if (item == null)
         {
-            _currentItem = item;
+            _currentItem = null;
             return;
         }
-        _cookButton.onClick.RemoveListener(OnCookButtonCilcked);
 
+        Debug.Log("아이템 존재");
         _currentItem = item;
         _itemImage.sprite = item.Image;
-
-        _cookButton.onClick.AddListener(OnCookButtonCilcked);
 
         CheckItem();
     }
 
     private void OnCookButtonCilcked()
     {
-        _uiCooking.SetCurrentRecipeData(_uiCooking.CookingSystem.StartCooking(_currentItem));
+        Debug.Log("버튼 눌림");
+        _uiCooking.StartCooking(_uiCooking.CookingSystem.GetRecipe(_currentItem));
         CheckItem();
     }
 
@@ -62,7 +65,6 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
         {
             _itemImage.gameObject.SetActive(false);
             _uiCooking.HideButtonImage.SetActive(true);
-            _cookButton.onClick.RemoveAllListeners();
             return;
         }
 
