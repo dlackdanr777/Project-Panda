@@ -37,11 +37,9 @@ public class SaveCostumeView : MonoBehaviour
         _costumeViewModel = DatabaseManager.Instance.StartPandaInfo.CostumeViewModel;
         if (_costumeViewModel != null)
         {
-            Debug.Log("저장코스튬 바인드");
             _costumeViewModel.CostumeSceneChanged += SaveCostume;
         }
 
-        Debug.Log("저장코스튬 바인드: "+ _costumeViewModel);
     }
 
     private void SaveCostume(bool IsExit)
@@ -57,11 +55,15 @@ public class SaveCostumeView : MonoBehaviour
 
     private void OnSaveYesButtonClicked()
     {
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
         _costumeViewModel.SaveCostume();
         SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
     }
     private void OnSaveNoButtonClicked()
     {
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
         SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
     }
 

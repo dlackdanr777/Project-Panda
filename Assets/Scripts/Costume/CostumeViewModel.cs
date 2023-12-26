@@ -25,7 +25,6 @@ public class CostumeViewModel
             }
             else
             {
-                Debug.Log("코스튬 변경 이벤트 실행 " + WearingHeadCostumeID);
                 CostumeChanged?.Invoke(CostumeManager.Instance.GetCostumeData(value));
             }
         }
@@ -35,11 +34,6 @@ public class CostumeViewModel
         get { return _costumeModel.IsExitCostume; }
         set 
         {
-            //if (!_isSetSaveCostumeView)
-            //{
-            //    SetSaveCostumeView?.Invoke(value);
-            //}
-            //_isSetSaveCostumeView = true;
             _costumeModel.IsExitCostume = value;
             if(value == true)
             {
@@ -59,7 +53,6 @@ public class CostumeViewModel
     {
         _costumeModel = new CostumeModel();
         _costumeModel.Init();
-        Debug.Log("판다 뷰모델 생성 WearingHeadCostumeID: " + WearingHeadCostumeID);
     }
 
     public void WearingCostume(CostumeData costumeData)

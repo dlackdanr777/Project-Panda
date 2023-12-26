@@ -39,6 +39,8 @@ public class CostumeManager : SingletonHandler<CostumeManager>
             costumeSlot.SetActive(false);
         }
 
+        // 현재 가지고 있는 코스튬 불러오기
+        DatabaseManager.Instance.StartPandaInfo.LoadMyCostume();
     }
 
     private Dictionary<int, CostumeData> CostumeParse(string CSVFileName)

@@ -13,6 +13,7 @@ public class Test : MonoBehaviour
 
     private void OnCostumeButtonClicked()
     {
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI();
         SceneManager.LoadScene("CostumeTest");
     }
 }

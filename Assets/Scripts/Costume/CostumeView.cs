@@ -38,6 +38,8 @@ public class CostumeView : MonoBehaviour
 
     private void Init()
     {
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
+
         // 커튼 열기
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
         Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(-600, 0), 1.5f, TweenMode.Quadratic);
@@ -52,6 +54,13 @@ public class CostumeView : MonoBehaviour
             int index = i;
             _costumeImagePfs[i] = Instantiate(_costumeImagePf, _headCostumeImages.transform);
             _costumeImagePfs[i].GetComponent<Image>().sprite = CostumeManager.Instance.CostumeDic[i].Image;
+
+            // 없는 코스튬은 어둡게 표시
+            if (!CostumeManager.Instance.CostumeDic[i].IsMine)
+            {
+                _costumeImagePfs[i].GetComponent<Image>().color = new Color(58/255f, 58/255f, 58/255f, 1);
+            }
+
             _costumeImageBtn[i] = _costumeImagePfs[i].GetComponent<Button>();
             if (_costumeImageBtn[i] != null)
             {
@@ -60,7 +69,6 @@ public class CostumeView : MonoBehaviour
             }
         }
 
-        //Bind();
         _exitButton.onClick.AddListener(OnExitButtonClicked);
         //DataBind.SetButtonValue("ExitCostumeButton", OnExitButtonClicked); // 수정
 
@@ -86,7 +94,10 @@ public class CostumeView : MonoBehaviour
     /// 코스튬 선택 버튼 </summary>
     private void CostumeImageBtnClick(int index)
     {
-        _costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
+        if (CostumeManager.Instance.GetCostumeData(index).IsMine)
+        {
+            _costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
+        }
     }
 
     /// <summary>
@@ -96,6 +107,7 @@ public class CostumeView : MonoBehaviour
         // 여러 부위가 있을 경우
         //_panda.transform.GetChild((int)costumeData.BodyParts).gameObject.SetActive(true);
         //_panda.transform.GetChild((int)costumeData.BodyParts).GetComponent<Image>().sprite = costumeData.Image;
+
         if(costumeData != null)
         {
             _pandaHead.SetActive(true);
@@ -110,11 +122,6 @@ public class CostumeView : MonoBehaviour
 
     private void OnExitButtonClicked()
     {
-        Debug.Log("나가기 버튼 클릭");
         _costumeViewModel.ExitCostume();
-
-        //// 저장
-        //_costumeViewModel.SaveCostume();
-        //SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
     }
 }
