@@ -13,13 +13,13 @@ public class CostumeViewModel
     private CostumeModel _costumeModel;
     //private bool _isSetSaveCostumeView;
 
-    public int WearingHeadCostumeID
+    public string WearingHeadCostumeID
     {
         get { return _costumeModel.WearingHeadCostumeID; }
         set
         {
             _costumeModel.WearingHeadCostumeID = value;
-            if(value == -1)
+            if(value == null)
             {
                 CostumeChanged?.Invoke(null);
             }
@@ -63,7 +63,7 @@ public class CostumeViewModel
         }
         else // ø  ¿Â¬¯ «ÿ¡¶
         {
-            WearingHeadCostumeID = -1;
+            WearingHeadCostumeID = null;
         }
     }
 

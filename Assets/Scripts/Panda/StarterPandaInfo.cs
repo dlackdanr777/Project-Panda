@@ -16,10 +16,10 @@ public class StarterPandaInfo
 
     #region 코스튬
     public CostumeViewModel CostumeViewModel; // 저장 필요 x
-    public int WearingHeadCostumeID = -1;
+    public string WearingHeadCostumeID;
     public int CostumeCount = -1;
     //public bool[] IsMine;
-    public List<int> CostumeInventoryID;
+    public List<string> CostumeInventoryID;
     public List<CostumeData> CostumeInventory;
     #endregion
 
@@ -58,14 +58,14 @@ public class StarterPandaInfo
         WearingHeadCostumeID = pandaInfo.WearingHeadCostumeID;
         CostumeCount = pandaInfo.CostumeCount;
         CostumeInventoryID = pandaInfo.CostumeInventoryID;
-
+        CostumeInventory = new List<CostumeData>();
     }
 
     private void CreateUserInfoData()
     {
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
-        CostumeInventoryID = new List<int>();
+        CostumeInventoryID = new List<string>();
     }
 
     public void SavePandaInfoData()
@@ -84,15 +84,45 @@ public class StarterPandaInfo
     {
         if (CostumeManager.Instance.CostumeDic != null)
         {
+            foreach (string key in CostumeManager.Instance.CostumeDic.Keys)
+            {
+                // 코스튬 인벤토리에 ID 찾으면
+                if (CostumeInventoryID == null)
+                {
+                    Debug.Log("코스튬 없음");
+                }
+                else
+                {
+                    if (CostumeInventoryID.Find(a => a.Equals(CostumeManager.Instance.CostumeDic[key].CostumeID)) != null)
+                    {
+                        CostumeManager.Instance.CostumeDic[key].IsMine = true;
+                        CostumeInventory.Add(CostumeManager.Instance.CostumeDic[key]);
+                        Debug.Log("Add Costume: " + CostumeManager.Instance.CostumeDic[key].CostumeName);
+                    }
+                    else
+                    {
+                        CostumeManager.Instance.CostumeDic[key].IsMine = false;
+                    }
+                }
+
+            }
+            // 코스튬 불러온 후 저장하기
+            SaveMyCostume();
+
+
             //for (int i = 0; i < CostumeManager.Instance.CostumeDic.Count; i++)
             //{
             //    // 코스튬 인벤토리에 ID 찾으면
-            //    if(CostumeInventoryID == null)
+            //    if (CostumeInventoryID == null)
             //    {
             //        Debug.Log("코스튬 없음");
             //    }
             //    else
             //    {
+            //        List<int> filterCostumeInventoryID = CostumeInventoryID
+            //            .Where(id => id == CostumeManager.Instance.CostumeDic[i].CostumeID)
+            //            .ToList();
+
             //        if (CostumeInventoryID.Find(a => a == CostumeManager.Instance.CostumeDic[i].CostumeID) != 0)
             //        {
             //            CostumeManager.Instance.CostumeDic[i].IsMine = true;
@@ -107,35 +137,6 @@ public class StarterPandaInfo
             //}
             //// 코스튬 불러온 후 저장하기
             //SaveMyCostume();
-
-
-            for (int i = 0; i < CostumeManager.Instance.CostumeDic.Count; i++)
-            {
-                // 코스튬 인벤토리에 ID 찾으면
-                if (CostumeInventoryID == null)
-                {
-                    Debug.Log("코스튬 없음");
-                }
-                else
-                {
-                    List<int> filterCostumeInventory = CostumeInventoryID
-                        .Where(id => id == CostumeManager.Instance.CostumeDic[i].CostumeID)
-                        .ToList();
-
-                    if (CostumeInventoryID.Find(a => a == CostumeManager.Instance.CostumeDic[i].CostumeID) != 0)
-                    {
-                        CostumeManager.Instance.CostumeDic[i].IsMine = true;
-                        CostumeInventory.Add(CostumeManager.Instance.CostumeDic[i]);
-                    }
-                    else
-                    {
-                        CostumeManager.Instance.CostumeDic[i].IsMine = false;
-                    }
-                }
-
-            }
-            // 코스튬 불러온 후 저장하기
-            SaveMyCostume();
         }
         else
         {
@@ -156,11 +157,11 @@ public class StarterPandaInfo
         }
     }
 
-    public void AddCostume(int costumeID)
+    public void AddCostume(string CostumeDicID)
     {
-        CostumeInventoryID.Add(costumeID);
+        CostumeInventoryID.Add(CostumeManager.Instance.CostumeDic[CostumeDicID].CostumeID);
         CostumeCount++;
-        CostumeManager.Instance.CostumeDic[costumeID].IsMine = true;
+        CostumeManager.Instance.CostumeDic[CostumeDicID].IsMine = true;
     }
 }
 

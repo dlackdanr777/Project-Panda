@@ -40,7 +40,7 @@ namespace BT
             {
                 DatabaseManager.Instance.UpdatePandaIntimacy(_pandaID, DatabaseManager.Instance.StartPandaInfo.Intimacy);
                 DatabaseManager.Instance.UpdatePandaHappiness(_pandaID, DatabaseManager.Instance.StartPandaInfo.Happiness);
-                if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != -1)
+                if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != null)
                 {
                     CostumeManager.Instance.CostumeDic[DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID].CostumeSlot.SetActive(true);
                 }
