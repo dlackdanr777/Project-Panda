@@ -29,6 +29,9 @@ public class CostumeManager : SingletonHandler<CostumeManager>
         {
             // 코스튬 판다 부위에 맞추어 생성
             GameObject costumeSlot = Instantiate(_costumeSlot, _pandaCostume.transform.GetChild((int)CostumeDic[i].BodyParts));
+            
+            // 코스튬 위치 지정
+            costumeSlot.transform.position = _pandaCostume.transform.GetChild((int)CostumeDic[i].BodyParts).transform.position + CostumeDic[i].CostumePosition;
 
             if (CostumeDic[i].BodyParts == EBodyParts.Head) CostumeDic[i].Image = _costumeImage.HeadCostumeImages[headCount++];
             else if (CostumeDic[i].BodyParts == EBodyParts.LeftHand) CostumeDic[i].Image = _costumeImage.LeftHandCostumeImages[leftHandCount++];

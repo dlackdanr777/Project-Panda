@@ -35,12 +35,15 @@ namespace BT
 
             //스타터 판다 mbti를 판다 데이터에 저장
             DatabaseManager.Instance.SetStarterMBTI(DatabaseManager.Instance.StartPandaInfo.Mbti);
-            Debug.Log("IsExistingUser " + DatabaseManager.Instance.StartPandaInfo.IsExistingUser);
+            
             if (DatabaseManager.Instance.StartPandaInfo.IsExistingUser)
             {
-                Debug.Log("Intimacy" + DatabaseManager.Instance.StartPandaInfo.Intimacy);
                 DatabaseManager.Instance.UpdatePandaIntimacy(_pandaID, DatabaseManager.Instance.StartPandaInfo.Intimacy);
                 DatabaseManager.Instance.UpdatePandaHappiness(_pandaID, DatabaseManager.Instance.StartPandaInfo.Happiness);
+                if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != -1)
+                {
+                    CostumeManager.Instance.CostumeDic[DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID].CostumeSlot.SetActive(true);
+                }
             }
 
             SetPandaData(pandaData);
