@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37089851, g: 0.3783701, b: 0.3572253, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3588,51 +3588,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5991903860922690620, guid: 40edb3968e9a404418f607a619b20964, type: 3}
   m_PrefabInstance: {fileID: 1557389705}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &334921900
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 334921902}
-  - component: {fileID: 334921901}
-  m_Layer: 0
-  m_Name: HarvestItemManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &334921901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 334921900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 277719b80bc43af49a6cc6de6c0ec80b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _harvestItemImage: {fileID: 11400000, guid: fed7aea151469db40b1ce6627d377c11, type: 2}
---- !u!4 &334921902
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 334921900}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &337098419
 GameObject:
   m_ObjectHideFlags: 0
@@ -13367,51 +13322,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1320808426
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1320808428}
-  - component: {fileID: 1320808427}
-  m_Layer: 0
-  m_Name: PandaManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1320808427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320808426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfe140256f96518479898fc000152a2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pandaImage: {fileID: 11400000, guid: 73b1ac22c520def4981df1c6a4beff6c, type: 2}
---- !u!4 &1320808428
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320808426}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1327189793
 GameObject:
   m_ObjectHideFlags: 0
@@ -17332,10 +17242,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mbti: ENFP
   IsCameraRequest: 0
-  _uiPandaParent: {fileID: 855275532}
   _uiPandaPrefab: {fileID: 2461772435273675221, guid: eba94e92e16cf624d93eabba6191f7a7, type: 3}
   _intimacy: 0
   _happiness: 0
+  IsSwitchingScene: 0
 --- !u!61 &1622439612
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -22601,6 +22511,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c772a902d5c1a54da9f357c9f237906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pandaImage: {fileID: 0}
+  _harvestItemImage: {fileID: 0}
 --- !u!1 &1946526399
 GameObject:
   m_ObjectHideFlags: 0
@@ -36361,8 +36273,6 @@ SceneRoots:
   - {fileID: 1222835540}
   - {fileID: 229741536}
   - {fileID: 345782168}
-  - {fileID: 1320808428}
-  - {fileID: 334921902}
   - {fileID: 1942182567}
   - {fileID: 242476749}
   - {fileID: 1794909679}
