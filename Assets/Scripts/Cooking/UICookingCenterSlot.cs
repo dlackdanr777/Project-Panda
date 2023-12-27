@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 
-public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHandler
+public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropHandler
 {
     [SerializeField] private Button _cookButton;
 
@@ -33,7 +33,23 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
         }
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public void ChoiceItem(InventoryItem item)
+    {
+        _currentItem = item;
+
+        if (_currentItem == null)
+        {
+            return;
+        }
+
+        _currentItem = item;
+        _itemImage.sprite = item.Image;
+
+        CheckItem();
+    }
+
+
+   /* public void OnDrop(PointerEventData eventData)
     {
         InventoryItem item = _uiCooking.UICookingDragSlot.GetItem();
 
@@ -50,7 +66,7 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
         _itemImage.sprite = item.Image;
 
         CheckItem();
-    }
+    }*/
 
     private void OnCookButtonCilcked()
     {

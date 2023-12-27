@@ -18,6 +18,7 @@ public class UICooking : UIView
     public UICookingDragSlot UICookingDragSlot => _uiCookingDragSlot;
 
     [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
+    public UICookingCenterSlot UICookingCenterSlot => _uiCookingCenterSlot;
 
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
