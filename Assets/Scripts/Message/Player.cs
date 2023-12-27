@@ -33,11 +33,11 @@ public class Player : MonoBehaviour
         
         for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
         {
-            Inventory[i] = new Inventory();
+            //Inventory[i] = new Inventory();
         }
         for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
         {
-            Messages[i] = new MessageList();
+            //Messages[i] = new MessageList();
         }
     }
 
