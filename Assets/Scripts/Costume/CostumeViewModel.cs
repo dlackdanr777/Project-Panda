@@ -3,21 +3,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CostumeViewModel //: INotifyPropertyChanged
+public class CostumeViewModel
 {
     public event PropertyChangedEventHandler PropertyChanged;
     public event Action<CostumeData> CostumeChanged;
+    public event Action<bool> CostumeSceneChanged;
+    public event Action<bool> SetSaveCostumeView;
     
     private CostumeModel _costumeModel;
+    //private bool _isSetSaveCostumeView;
 
-    public int WearingHeadCostumeID
+    public string WearingHeadCostumeID
     {
         get { return _costumeModel.WearingHeadCostumeID; }
         set
         {
             _costumeModel.WearingHeadCostumeID = value;
-            //OnPropertyChanged("WearingHeadCostumeID");
-            if(value == -1)
+            if(value == "")
             {
                 CostumeChanged?.Invoke(null);
             }
@@ -27,6 +29,19 @@ public class CostumeViewModel //: INotifyPropertyChanged
             }
         }
     }
+    public bool IsExitCostume
+    {
+        get { return _costumeModel.IsExitCostume; }
+        set 
+        {
+            _costumeModel.IsExitCostume = value;
+            if(value == true)
+            {
+                CostumeSceneChanged?.Invoke(value);
+            }
+        }
+    }
+
     public bool IsSaveCostume
     {
         get { return _costumeModel.IsSaveCostume; }
@@ -40,16 +55,6 @@ public class CostumeViewModel //: INotifyPropertyChanged
         _costumeModel.Init();
     }
 
-    //// name에 해당하는 이름을 갖는 데이터에 변화가 생길 때마다 이벤트 발생
-    //protected void OnPropertyChanged(string name)
-    //{
-    //    PropertyChangedEventHandler handler = PropertyChanged;
-    //    if(handler != null)
-    //    {
-    //        handler(this, new PropertyChangedEventArgs(name));
-    //    }
-    //}
-
     public void WearingCostume(CostumeData costumeData)
     {
         if (_costumeModel.WearingCostume(costumeData)) // 옷 장착
@@ -58,10 +63,23 @@ public class CostumeViewModel //: INotifyPropertyChanged
         }
         else // 옷 장착 해제
         {
-            WearingHeadCostumeID = -1;
+            WearingHeadCostumeID = "";
         }
     }
 
+    /// <summary>
+    /// 나가기 버튼 누르면 실행 </summary>
+    public void ExitCostume()
+    {
+        Debug.Log("exit: "+ IsExitCostume);
+        if (IsExitCostume == false)
+        {
+            IsExitCostume = true;
+        }
+    }
+
+    /// <summary>
+    /// 저장 버튼 누르면 실행</summary>
     public void SaveCostume()
     {
         IsSaveCostume = true;
