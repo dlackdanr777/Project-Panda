@@ -13,7 +13,7 @@ public enum EBodyParts
 
 public class CostumeData
 {
-    public string CostumeID;
+    public int CostumeID;
     public EBodyParts BodyParts;
     public string CostumeName;
     public Vector3 CostumePosition;
@@ -21,7 +21,7 @@ public class CostumeData
     public Sprite Image;
     public GameObject CostumeSlot;
 
-    public CostumeData(string costumeID, EBodyParts bodyParts, string costumeName, float x, float y, float z)
+    public CostumeData(int costumeID, EBodyParts bodyParts, string costumeName, float x, float y, float z)
     {
         CostumeID = costumeID;
         BodyParts = bodyParts;

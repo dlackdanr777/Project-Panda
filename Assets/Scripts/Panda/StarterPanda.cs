@@ -6,12 +6,10 @@ namespace BT
 {
     public class StarterPanda : Panda
     {
-        public bool IsSwitchingScene;
         private BehaviorTree _behaviorTree;
 
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
-
 
         private void Awake()
         {
@@ -32,22 +30,9 @@ namespace BT
             // 판다 세팅
             _pandaID = 0;
             PandaData pandaData = DatabaseManager.Instance.GetPandaData(_pandaID);
-
             //스타터 판다 mbti를 판다 데이터에 저장
-            DatabaseManager.Instance.SetStarterMBTI(DatabaseManager.Instance.StartPandaInfo.Mbti);
-            
-            if (DatabaseManager.Instance.StartPandaInfo.IsExistingUser)
-            {
-                DatabaseManager.Instance.UpdatePandaIntimacy(_pandaID, DatabaseManager.Instance.StartPandaInfo.Intimacy);
-                DatabaseManager.Instance.UpdatePandaHappiness(_pandaID, DatabaseManager.Instance.StartPandaInfo.Happiness);
-                if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != "")
-                {
-                    CostumeManager.Instance.CostumeDic[DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID].CostumeSlot.SetActive(true);
-                }
-            }
-
+            DatabaseManager.Instance.SetStarterMBTI(Mbti);
             SetPandaData(pandaData);
-
 
             _behaviorTree = new BehaviorTree(SettingBT());
 
@@ -55,7 +40,6 @@ namespace BT
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
             _preference = DatabaseManager.Instance.SetPreference(Mbti);
-            DatabaseManager.Instance.StartPandaInfo.StarterPanda = this;
 
             //test 잘 설정되었는지 확인 - 나중에 지우기
             Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);
@@ -84,16 +68,16 @@ namespace BT
             ShowStateImage();
             GiveAGift();
 
-            // 씬 전환되면 1초 뒤 실행
-            if (IsSwitchingScene)
-            {
-                IsSwitchingScene = false;
-                Invoke("SwitchingScene", 1f);
-            }
 
             // 판다 행복도 지속적으로 감소
-            ChangeHappiness(-Time.deltaTime * 0.001f);
-
+            if (_happiness > -10)
+            {
+                _happiness -= Time.deltaTime * 0.001f;
+            }
+            else
+            {
+                _happiness = -10;
+            }
             _feelingTimer += Time.deltaTime;
             _stateImageTimer += Time.deltaTime;
         }
@@ -238,28 +222,13 @@ namespace BT
             }
             //판다 데이터도 변경
             DatabaseManager.Instance.UpdatePandaIntimacy(_pandaID, _intimacy);
-            DatabaseManager.Instance.StartPandaInfo.Intimacy = _intimacy;
         }
 
         public override void ChangeHappiness(float changeHappiness)
         {
             _happiness += changeHappiness;
-
             DatabaseManager.Instance.UpdatePandaHappiness(_pandaID, _happiness);
-            DatabaseManager.Instance.StartPandaInfo.Happiness = _happiness;
         }
 
-        /// <summary>
-        /// Scene 전환될 때 실행 </summary>
-        public void SwitchingScene()
-        {
-            SetUIPanda();
-            StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
-        }
-
-        public void SetFalseUI()
-        {
-            _uiPanda.gameObject.SetActive(false);
-        }
     }
 }
