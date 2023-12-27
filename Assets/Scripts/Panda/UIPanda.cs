@@ -51,13 +51,13 @@ public class UIPanda : MonoBehaviour
         _isStart = true;
     }
 
-    private void OnDestroy()
+/*    private void OnDisable()
     {
-        _panda.StateHandler -= StarterPanda_StateHandler;
-        _panda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
-        _panda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
-        _panda.GiftHandler -= StarterPanda_GiftHandler;
-    }
+        _starterPanda.StateHandler -= StarterPanda_StateHandler;
+        _starterPanda.UIAlphaHandler -= StarterPanda_UIAlphaHandler;
+        _starterPanda.ImageAlphaHandler -= StarterPanda_ImageAlphaHandler;
+        _starterPanda.GiftHandler -= StarterPanda_GiftHandler;
+    }*/
 
     private void Update()
     {

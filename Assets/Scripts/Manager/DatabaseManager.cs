@@ -7,9 +7,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private UserInfo _userInfo;
     public UserInfo UserInfo => _userInfo;
 
-    private StarterPandaInfo _startPandaInfo;
-    public StarterPandaInfo StartPandaInfo => _startPandaInfo;
-
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
 
@@ -44,7 +41,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
 
         _userInfo = new UserInfo();
-        _startPandaInfo = new StarterPandaInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
@@ -57,7 +53,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase = new HarvestItemManager();
 
         UserInfo.Register();
-        StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
         _itemDatabase.Register();
@@ -176,7 +171,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _photoDatabase.Save();
         _furniturePosDatabase.Save();
         _userInfo.SaveUserInfoData();
-        _startPandaInfo.SavePandaInfoData();
     }
 
     public HarvestItem GetHarvestItemdata(int harvestItemID)

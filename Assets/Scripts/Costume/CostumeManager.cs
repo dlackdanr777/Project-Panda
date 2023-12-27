@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CostumeManager : SingletonHandler<CostumeManager>
 {
-    public Dictionary<string, CostumeData> CostumeDic;
+    public Dictionary<int, CostumeData> CostumeDic;
     [SerializeField] private CostumeImage _costumeImage;
     [SerializeField] private GameObject _costumeSlot;
     [SerializeField] private GameObject _pandaCostume;
@@ -20,36 +20,30 @@ public class CostumeManager : SingletonHandler<CostumeManager>
         else
         {
             Destroy(gameObject);
-            return;
         }
 
         CostumeDic = CostumeParse("Costume");
         int headCount = 0, leftHandCount = 0, rightHandCount = 0;
 
-        foreach (string key in CostumeDic.Keys)
+        for (int i = 0; i < CostumeDic.Count; i++)
         {
             // 코스튬 판다 부위에 맞추어 생성
-            GameObject costumeSlot = Instantiate(_costumeSlot, _pandaCostume.transform.GetChild((int)CostumeDic[key].BodyParts));
-            
-            // 코스튬 위치 지정
-            costumeSlot.transform.position = _pandaCostume.transform.GetChild((int)CostumeDic[key].BodyParts).transform.position + CostumeDic[key].CostumePosition;
+            GameObject costumeSlot = Instantiate(_costumeSlot, _pandaCostume.transform.GetChild((int)CostumeDic[i].BodyParts));
 
-            if (CostumeDic[key].BodyParts == EBodyParts.Head) CostumeDic[key].Image = _costumeImage.HeadCostumeImages[headCount++];
-            else if (CostumeDic[key].BodyParts == EBodyParts.LeftHand) CostumeDic[key].Image = _costumeImage.LeftHandCostumeImages[leftHandCount++];
-            else if (CostumeDic[key].BodyParts == EBodyParts.RightHand) CostumeDic[key].Image = _costumeImage.RightCostumeImages[rightHandCount++];
+            if (CostumeDic[i].BodyParts == EBodyParts.Head) CostumeDic[i].Image = _costumeImage.HeadCostumeImages[headCount++];
+            else if (CostumeDic[i].BodyParts == EBodyParts.LeftHand) CostumeDic[i].Image = _costumeImage.LeftHandCostumeImages[leftHandCount++];
+            else if (CostumeDic[i].BodyParts == EBodyParts.RightHand) CostumeDic[i].Image = _costumeImage.RightCostumeImages[rightHandCount++];
 
-            costumeSlot.GetComponent<SpriteRenderer>().sprite = CostumeDic[key].Image;
-            CostumeDic[key].CostumeSlot = costumeSlot;
+            costumeSlot.GetComponent<SpriteRenderer>().sprite = CostumeDic[i].Image;
+            CostumeDic[i].CostumeSlot = costumeSlot;
             costumeSlot.SetActive(false);
         }
 
-        // 현재 가지고 있는 코스튬 불러오기
-        DatabaseManager.Instance.StartPandaInfo.LoadMyCostume();
     }
 
-    private Dictionary<string, CostumeData> CostumeParse(string CSVFileName)
+    private Dictionary<int, CostumeData> CostumeParse(string CSVFileName)
     {
-        Dictionary<string, CostumeData> costumeDic = new Dictionary<string, CostumeData>();
+        Dictionary<int, CostumeData> costumeDic = new Dictionary<int, CostumeData>();
 
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
         string[] data = csvData.text.Split(new char[] { '\n' });
@@ -57,12 +51,12 @@ public class CostumeManager : SingletonHandler<CostumeManager>
         for (int i = 1; i < data.Length - 1; i++)
         {
             string[] row = data[i].Split(new char[] { ',' });
-            costumeDic.Add(row[0], new CostumeData(row[0], (EBodyParts)Enum.Parse(typeof(EBodyParts), row[1]), row[2], float.Parse(row[3]), float.Parse(row[4]), float.Parse(row[5])));
+            costumeDic.Add(int.Parse(row[0]), new CostumeData(int.Parse(row[0]), (EBodyParts)Enum.Parse(typeof(EBodyParts), row[1]), row[2], float.Parse(row[3]), float.Parse(row[4]), float.Parse(row[5])));
         }
         return costumeDic;
     }
 
-    public CostumeData GetCostumeData(string costumeID) 
+    public CostumeData GetCostumeData(int costumeID) 
     {
         CostumeData costumeData = CostumeDic[costumeID];
         return costumeData;
