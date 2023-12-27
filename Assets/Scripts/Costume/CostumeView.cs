@@ -45,7 +45,6 @@ public class CostumeView : MonoBehaviour
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
         Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(400, 0), 1f, TweenMode.Quadratic);
         Tween.RectTransfromAnchoredPosition(_rightCurtain, new Vector2(0, 0), 1f, TweenMode.Quadratic);
-        Debug.Log("DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count: " + DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count);
 
         _costumeImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];
         _costumeImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];
@@ -53,7 +52,6 @@ public class CostumeView : MonoBehaviour
         // °³¼ö¸¸Å­ ÄÚ½ºÆ¬ ÇÁ¸®ÆÕ »ý¼º
         for (int i = 0; i < DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count; i++)
         {
-            Debug.Log("ÄÚ½ºÆ¬ ÇÁ¸®ÆÕ °³¼öi: " + i);
             int index = i;
             _costumeImagePfs[i] = Instantiate(_costumeImagePf, _headCostumeImages.transform);
             _costumeImagePfs[i].GetComponent<Image>().sprite = DatabaseManager.Instance.StartPandaInfo.CostumeInventory[i].Image;
@@ -87,7 +85,7 @@ public class CostumeView : MonoBehaviour
             DatabaseManager.Instance.StartPandaInfo.CostumeViewModel = _costumeViewModel;   
             _costumeViewModel.CostumeChanged += UpdateCostumeID;
         }
-        if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != null)
+        if(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != "")
         {
             _costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID));
         }

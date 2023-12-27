@@ -19,7 +19,7 @@ public class CostumeViewModel
         set
         {
             _costumeModel.WearingHeadCostumeID = value;
-            if(value == null)
+            if(value == "")
             {
                 CostumeChanged?.Invoke(null);
             }
@@ -63,7 +63,7 @@ public class CostumeViewModel
         }
         else // ø  ¿Â¬¯ «ÿ¡¶
         {
-            WearingHeadCostumeID = null;
+            WearingHeadCostumeID = "";
         }
     }
 
