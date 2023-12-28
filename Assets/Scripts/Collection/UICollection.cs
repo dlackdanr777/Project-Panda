@@ -23,11 +23,10 @@ public class UICollection : MonoBehaviour
     {
         _collectionButton.OnCollectionButtonClicked += FadeInOut;
 
-        _collection.OnCollectionSuccess += SetSuccessText;
-        _collection.OnCollectionSuccess += SetSuccessImage;
+        _collection.OnCollectionSuccess += SetSuccess;
+        _collection.OnCollectionFail += SetFail;
 
-        _collection.OnCollectionFail += SetFailText;
-        _collection.OnCollectionFail += SetFailImage;
+        _collection.OnExitCollection += ExitUICollection;
 
         DataBind.SetButtonValue("CheckResultButton", OnCheckResultButton);
     }
@@ -36,11 +35,11 @@ public class UICollection : MonoBehaviour
     {
         _collectionButton.OnCollectionButtonClicked -= FadeInOut;
 
-        _collection.OnCollectionSuccess -= SetSuccessText;
-        _collection.OnCollectionSuccess -= SetSuccessImage;
+        _collection.OnCollectionSuccess -= SetSuccess;
+        _collection.OnCollectionFail -= SetFail;
 
-        _collection.OnCollectionFail -= SetFailText;
-        _collection.OnCollectionFail -= SetFailImage;
+        _collection.OnExitCollection -= ExitUICollection;
+
     }
 
     private void FadeInOut(float fadeTime)
@@ -66,28 +65,33 @@ public class UICollection : MonoBehaviour
         _checkResultButton.gameObject.SetActive(false);
     }
 
-    private void SetSuccessText()
+    /// <summary>
+    /// 채집 성공 시 UI </summary>
+    private void SetSuccess()
     {
         _resultTextImage.gameObject.SetActive(true);
         _resultText.text = "잡았다!"; // 나중에 채집한 아이템 이름 뒤에 추가
 
+        _successImage.gameObject.SetActive(true);
+        // 아이템 이미지 받아와서 띄우기
+
     }
 
-    private void SetFailText()
+    /// <summary>
+    /// 채집 실패 시 UI </summary>
+    private void SetFail()
     {
         _resultTextImage.gameObject.SetActive(true);
         _resultText.text = ",,, 놓쳐 버렸다,,,";
+
+        _successImage.gameObject.SetActive(true);
     }
 
-    private void SetSuccessImage()
+    /// <summary>
+    /// 채집 UI 모두 종료 </summary>
+    private void ExitUICollection()
     {
-        _successImage.gameObject.SetActive(true);
-        // 아이템 이미지 받아와서 띄우기
-    }
-
-    private void SetFailImage()
-    {
-        _successImage.gameObject.SetActive(true);
-
+        _resultTextImage.gameObject.SetActive(false);
+        _successImage.gameObject.SetActive(false);
     }
 }

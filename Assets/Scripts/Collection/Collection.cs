@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Collection : MonoBehaviour, IInteraction
 {
-    public bool IsCollection = false; // 채집 중인가?
+    private bool _isCollection = false; // 채집 중인가?
+    private bool _isExit = false;
 
     private float _time;
-    private float _spawnTime = 50f; // 채집 가능한 시간 간격 - 10초마다 채집 가능
+    private float _spawnTime = 30f; // 채집 가능한 시간 간격 - 10초마다 채집 가능
     private float _fadeTime; // 화면 어두운 시간
 
     #region 위치 지정
@@ -15,12 +16,14 @@ public class Collection : MonoBehaviour, IInteraction
     private Vector3 CollectionPosition = new Vector3(-3.4f, -14f, 0);
     #endregion
 
+    private Sprite _pandaImage;
     private Animator _collectionAnim;
     [SerializeField] private CollectionButton _collectionButton;
     [SerializeField] private GameObject _speechBubble;
 
     public Action OnCollectionSuccess;
     public Action OnCollectionFail;
+    public Action OnExitCollection; // 채집 화면 종료
 
     #region 채집 성공 체크
     private float _successRate = 0.7f;
@@ -41,14 +44,15 @@ public class Collection : MonoBehaviour, IInteraction
                 Debug.Log("채집 실패");
                 OnCollectionFail?.Invoke();
             }
-            IsCollection = false;
+            _isCollection = false;
+            _isExit = true;
         }
     }
     #endregion
 
     private void Start()
     {
-        _time = 49;
+        _time = 29;
         _collectionButton.OnCollectionButtonClicked += ClickCollectionButton;
         OnCollectionSuccess += CollectionSuccess;
         OnCollectionFail += CollectionFail;
@@ -75,9 +79,15 @@ public class Collection : MonoBehaviour, IInteraction
         }
 
         // 채집 중이면 카메라 잠금
-        if(_collectionButton.enabled && IsCollection)
+        if(_isCollection)
         {
             CameraLock();
+        }
+        else if(Input.GetMouseButtonDown(0) && _isExit)
+        {
+            _isExit = false;
+            OnExitCollection?.Invoke();
+            ExitCollection();
         }
     }
 
@@ -110,6 +120,7 @@ public class Collection : MonoBehaviour, IInteraction
     private void ReadyCollection()
     {
         StarterPanda starterPanda = DatabaseManager.Instance.StartPandaInfo.StarterPanda;
+        _pandaImage = starterPanda.GetComponent<SpriteRenderer>().sprite;
         if(_collectionAnim == null)
         {
             _collectionAnim = starterPanda.GetComponent<Animator>();
@@ -122,7 +133,7 @@ public class Collection : MonoBehaviour, IInteraction
         _targetPos = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
 
-        IsCollection = true;
+        _isCollection = true;
         GetComponent<SpriteRenderer>().enabled = false;
 
         // 화면 켜지는 시간에 맞추어 채집 시작
@@ -185,7 +196,10 @@ public class Collection : MonoBehaviour, IInteraction
 
     private void ExitCollection()
     {
+        _collectionAnim.SetBool("IsCollectionEnd", false);
 
+        _collectionAnim.enabled = false; // 끊겨서 그냥 판다 애니메이션 종료될 때 조건 체크한 다음 enable = false 하는게 나을 거 같음..
+        _collectionAnim.gameObject.GetComponent<SpriteRenderer>().sprite = _pandaImage;
     }
 
 }

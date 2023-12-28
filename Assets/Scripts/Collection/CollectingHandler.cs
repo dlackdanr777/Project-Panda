@@ -14,9 +14,11 @@ public class CollectingHandler : MonoBehaviour
     {
         Debug.Log("애니메이션 종료");
         GetComponent<Animator>().enabled = false;
-        GetComponent<SpriteRenderer>().enabled = false;
 
         // 애니메이션 완료되면 느낌표 표시
         _checkResultButton.SetActive(true);
+
+        //GetComponent<SpriteRenderer>().enabled = false;
+        gameObject.SetActive(false);
     }
 }
