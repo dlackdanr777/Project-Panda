@@ -26,6 +26,16 @@ public class UICookingBar : MonoBehaviour
         UpdataBar();
     }
 
+    public float GetBarWedth()
+    {
+        return _bar.rectTransform.rect.width;
+    }
+
+    public float GetBarValue()
+    {
+        return _bar.fillAmount;
+    }
+
     public void Reset(float fillAmount)
     {
         _bar.fillAmount = fillAmount;

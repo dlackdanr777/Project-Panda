@@ -80,6 +80,8 @@ public class UICooking : UIView
         _uiCookingStart.StartCooking(_currentRecipeData);
     }
 
+   
+
     public override void Show()
     {
 

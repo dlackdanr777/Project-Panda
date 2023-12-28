@@ -71,7 +71,7 @@ public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropH
     private void OnCookButtonCilcked()
     {
         Debug.Log("버튼 눌림");
-        _uiCooking.StartCooking(_uiCooking.CookingSystem.GetRecipe(_currentItem));
+        _uiCooking.StartCooking(_uiCooking.CookingSystem.GetRecipeByItem(_currentItem));
         CheckItem();
     }
 

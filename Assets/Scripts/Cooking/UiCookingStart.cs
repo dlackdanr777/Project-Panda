@@ -13,8 +13,16 @@ public class UiCookingStart : MonoBehaviour
 
     [SerializeField] private Button _complatedButton;
 
+    [Space]
     [SerializeField] private UICookingBar _uiStaminaBar;
+
     [SerializeField] private UICookingBar _uiFireBar;
+
+    [SerializeField] private UISuccessLocation _uiSuccessLocation;
+
+    [SerializeField] private UICookingTimer _uiCookingTimer;
+
+    [SerializeField] private UICookingEnd _uiCookingEnd;
 
     [Space]
     [SerializeField] private int _maxFireValue;
@@ -33,25 +41,51 @@ public class UiCookingStart : MonoBehaviour
 
     public void Init(CookingSystem cookingSystem, UICooking uiCooking)
     {
+        _uiSuccessLocation.Init(this);
+        _uiCookingEnd.Init(OnComplatedButtonClicked);
         _cookingSystem = cookingSystem;
         _uiCooking = uiCooking;
-
         _cookingUserData = _cookingSystem.CookingData;
         _complatedButton.onClick.AddListener(CookingComplated);
+
         gameObject.SetActive(false);
     }
 
-    public void StartCooking(RecipeData currentRecipe)
+    public void StartCooking(RecipeData recipe)
     {
-        _currentRecipeData = currentRecipe;
+        _currentRecipeData = recipe;
         _stamina = _cookingUserData.MaxStamina;
         _fireValue = 0;
         _uiStaminaBar.Reset(1);
         _uiFireBar.Reset(0);
-        gameObject.SetActive(true);
 
+        _uiSuccessLocation.SetSuccessRange(recipe, _uiFireBar.GetBarWedth());
+        _uiCookingTimer.StartTimer(60);
+        gameObject.SetActive(true);
         CheckAllAddValueButtons();
     }
+
+
+    /// <summary>조리완료 버튼 클릭시 실행되는 함수</summary>
+    public void CookingComplated()
+    {
+        int InventoryIndex = (int)_currentRecipeData.Item.ItemField;
+
+        Debug.Log(_uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, _uiFireBar.GetBarValue()) + " 획득");
+
+        GameManager.Instance.Player.Inventory[InventoryIndex].Add(_currentRecipeData.Item);
+
+        _uiCookingTimer.EndTimer();
+        _uiCookingEnd.Show(_currentRecipeData.Item);
+    }
+
+
+    private void OnComplatedButtonClicked()
+    {
+        _uiCooking.gameObject.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
 
     private void CheckAllAddValueButtons()
     {
@@ -88,6 +122,7 @@ public class UiCookingStart : MonoBehaviour
         });
     }
 
+
     private void SmallAddValueButtonClicked()
     {
         bool check = _cookingUserData.SmallAddValueStamina <= _stamina;
@@ -102,11 +137,6 @@ public class UiCookingStart : MonoBehaviour
 
     }
 
-    private void CookingComplated()
-    {
-        _uiCooking.gameObject.SetActive(true);
-        gameObject.SetActive(false);
-    }
 
     private void DecreaseStamina(int value)
     {

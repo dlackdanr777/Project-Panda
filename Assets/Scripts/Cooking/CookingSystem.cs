@@ -71,7 +71,7 @@ public class CookingSystem : MonoBehaviour
         return false;
     }
 
-    public RecipeData GetRecipe(InventoryItem item)
+    public RecipeData GetRecipeByItem(InventoryItem item)
     {
         foreach (RecipeData data in _recipeDatas)
         {
@@ -90,5 +90,36 @@ public class CookingSystem : MonoBehaviour
         }
         Debug.Log("레시피가 존재하지 않습니다.");
         return default;
+    }
+
+    public string CheckItemGrade(RecipeData data, float fireValue)
+    {
+
+        bool checkLevel_S = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_S) <= fireValue &&
+            data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_S) >= fireValue;
+
+        bool checkLevel_A = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_A) <= fireValue &&
+            data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_A) >= fireValue;
+
+        bool checkLevel_B = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_B) <= fireValue &&
+    data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_B) >= fireValue;
+
+        if (checkLevel_S)
+        {
+            return "S";
+        }
+        else if (checkLevel_A)
+        {
+            return "A";
+        }
+        else if (checkLevel_B)
+        {
+            return "B";
+        }
+        else
+        {
+            return "F";
+        }
+     
     }
 }
