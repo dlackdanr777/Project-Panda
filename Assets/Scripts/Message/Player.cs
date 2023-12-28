@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public int Familiarity;
 
     [Header("Inventory")]
-    public Inventory[] Inventory = new Inventory[System.Enum.GetValues(typeof(ItemField)).Length - 1]; //0:toy, 1:snack 2:Furniture
+    public Inventory[] Inventory = new Inventory[System.Enum.GetValues(typeof(ItemField)).Length - 1]; //0:Fish, 1:Bug, 2:Fruit, 3:Furniture
     //public Inventory[] Inventory = new Inventory[2]; //0:toy, 1:snack
 
     [Header("Message")]
@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
         
         for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
         {
-            //Inventory[i] = new Inventory();
+            Inventory[i] = new Inventory();
         }
         for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
         {

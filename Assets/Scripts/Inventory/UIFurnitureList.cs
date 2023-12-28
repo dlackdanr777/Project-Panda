@@ -19,9 +19,9 @@ public class UIFurnitureList : UIList<InventoryItem, FurnitureType>
         _dataBase = DatabaseManager.Instance.ItemDatabase;
 
         //Test
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F2"); //player가 아이템 하나를 얻음
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
-        GameManager.Instance.Player.Inventory[2].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[(int)ItemField.Furniture].AddById(ItemField.Furniture, "F2"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[(int)ItemField.Furniture].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
+        GameManager.Instance.Player.Inventory[(int)ItemField.Furniture].AddById(ItemField.Furniture, "F5"); //player가 아이템 하나를 얻음
 
         for(int i=0;i<System.Enum.GetValues(typeof(FurnitureType)).Length - 1; i++)
         {

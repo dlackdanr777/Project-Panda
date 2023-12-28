@@ -12,7 +12,7 @@ public class UIItemList : UIList<Item, ItemField>
     private void Awake()
     {
         _dataBase = DatabaseManager.Instance.ItemDatabase;
-        GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
+        //GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
         
         //Test snack
         for(int i = 0; i < 2; i++)

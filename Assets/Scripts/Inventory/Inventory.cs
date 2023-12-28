@@ -45,16 +45,15 @@ public class Inventory
 
     /// <summary>
     /// 플레이어의 인벤토리에 있는 아이템 id을 이용해서 add
-    /// field는 종류 Field.Toy, Field.Snack Field.Furniture가 있음
+    /// field는 종류 가 있음
     /// </summary>
     /// <param name="field"></param>
     /// <param name="id"></param>
     public void AddById(ItemField field, string id)
     {
         List<Item> database = DatabaseManager.Instance.ItemDatabase.ItemList[(int)field];
-        int listCount = DatabaseManager.Instance.ItemDatabase.ItemCount[(int)field];
 
-        for (int i=0;i< listCount; i++)
+        for (int i=0;i< database.Count; i++)
         {
             if (database[i].Id.Equals(id))
             {
@@ -118,5 +117,10 @@ public class Inventory
                 }
             }
         }
+    }
+
+    private void SearchField(ItemField field)
+    {
+
     }
 }

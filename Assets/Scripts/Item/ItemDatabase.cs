@@ -6,9 +6,23 @@ using UnityEngine;
 public enum ItemField
 {
     None = -1,
-    Toy,
-    Snack,
-    Furniture
+    GatheringItem,
+    Furniture,
+    Tool
+}
+
+public enum ToolItemType
+{
+    None = - 1,
+
+}
+
+public enum GatheringItemType
+{
+    None = -1,
+    Fish,
+    Bug,
+    Fruit
 }
 
 public enum FurnitureType
@@ -30,45 +44,79 @@ public enum MessageField
 
 public class ItemDatabase 
 {
+    //public List<Item>[] ItemList = new List<Item>[System.Enum.GetValues(typeof(ItemField)).Length - 1];
+    //public int[] ItemCount = new int[System.Enum.GetValues(typeof(ItemField)).Length - 1];
+
     //Snack
     private List<Dictionary<string, object>> _dataSnack;
-    public List<Item>[] ItemList = new List<Item>[3];
-    public int[] ItemCount = new int[3];
 
     //Furniture
-    private List<Dictionary<string, object>> _dataFurniture;
     public FurnitureType[] FurnitureTypeList;
+    public List<Item> FurnitureList = new List<Item>();
+    private List<Dictionary<string, object>> _dataFurniture;
+
+    //GatheringItem
+    //Fish
+    public List<Item> ItemFishList = new List<Item>();
+    private List<Dictionary<string, object>> _dataFish;
+    //Bug
+    public List<Item> ItemBugList = new List<Item>();
+    private List<Dictionary<string, object>> _dataBug;
+    //Fruit
+    public List<Item> ItemFruitList = new List<Item>();
+    private List<Dictionary<string, object>> _dataFruit;
+
 
     public Sprite Test;
 
     public void Register()
     {
-        _dataSnack = CSVReader.Read("Snack");
         _dataFurniture = CSVReader.Read("Furniture");
 
-        //snack, toy
-        for (int i = 0; i < ItemList.Length -1; i++)
-        {
-            ItemList[i] = new List<Item>();
-            for (int j = 0; j < _dataSnack.Count; j++)
-            {
-                ItemList[i].Add(new Item(_dataSnack[j]["Id"].ToString(),
-                    _dataSnack[j]["Name"].ToString(),
-                    _dataSnack[j]["Description"].ToString(),
-                    (int)_dataSnack[i]["Price"],
-                    ItemField.Snack,
-                    Test)); //아직 이미지는 받아오지 않음
-            }
-            ItemCount[i] = ItemList[i].Count;
+        //GatheringItem
+        _dataFish = CSVReader.Read("ItemFish");
+        _dataBug = CSVReader.Read("ItemBug");
+        _dataFruit = CSVReader.Read("ItemFruit");
 
+        //Gathering Item
+        //Fish
+        for (int i = 0; i < _dataFish.Count; i++)
+        {
+            ItemFishList.Add(new Item(_dataFish[i]["ID"].ToString(),
+                    _dataFish[i]["이름"].ToString(),
+                    _dataFish[i]["설명"].ToString(),
+                    (int)_dataFish[i]["가격"],
+                    ItemField.GatheringItem,
+                    Test)); //아직 이미지는 받아오지 않음
+        }
+
+        //Bug
+        for (int i = 0; i < _dataBug.Count; i++)
+        {
+            ItemBugList.Add(new Item(_dataBug[i]["ID"].ToString(),
+                    _dataBug[i]["이름"].ToString(),
+                    _dataBug[i]["설명"].ToString(),
+                    (int)_dataBug[i]["가격"],
+                    ItemField.GatheringItem,
+                    Test)); //아직 이미지는 받아오지 않음
+        }
+
+        //Fruit
+        for (int i = 0; i < _dataFruit.Count; i++)
+        {
+            ItemFruitList.Add(new Item(_dataFruit[i]["ID"].ToString(),
+                    _dataFruit[i]["이름"].ToString(),
+                    _dataFruit[i]["설명"].ToString(),
+                    (int)_dataFruit[i]["가격"],
+                    ItemField.GatheringItem,
+                    Test)); //아직 이미지는 받아오지 않음
         }
 
         //Furniture
         FurnitureTypeList = new FurnitureType[_dataFurniture.Count];
-        ItemList[2] = new List<Item>();
         for(int i = 0; i < _dataFurniture.Count; i++)
         {
-            ItemList[2].Add(new Item(_dataFurniture[i]["Id"].ToString(),
+            FurnitureList.Add(new Item(_dataFurniture[i]["Id"].ToString(),
                     _dataFurniture[i]["Name"].ToString(),
                     _dataFurniture[i]["Description"].ToString(),
                     (int)_dataFurniture[i]["Price"],
@@ -76,6 +124,5 @@ public class ItemDatabase
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
-        ItemCount[2] = ItemList[2].Count;
     }
 }
