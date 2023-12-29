@@ -2,7 +2,7 @@ using Muks.DataBind;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIItemList : UIList<Item, ItemField>
+public class UIItemList : UIList<Item, GatheringItemType>
 {
     private int _currentItemIndex;
     private ItemDatabase _dataBase;
@@ -15,11 +15,11 @@ public class UIItemList : UIList<Item, ItemField>
         //GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
         
         //Test snack
-        for(int i = 0; i < 2; i++)
-        {
-            _maxCount[i] = _dataBase.ItemCount[i];
-            _lists[i] = _dataBase.ItemList[i];
-        }
+        //for(int i = 0; i < 2; i++)
+        //{
+        //    _maxCount[i] = _dataBase.ItemCount[i];
+        //    _lists[i] = _dataBase.ItemList[i];
+        //}
 
         Init();
     }

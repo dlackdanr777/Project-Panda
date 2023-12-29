@@ -133,19 +133,19 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// Toy ItemList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetToyItem()
-    {
-        return _itemDatabase.ItemList[0];
-    }
+    //public List<Item> GetToyItem()
+    //{
+    //    return _itemDatabase.ItemList[0];
+    //}
 
     /// <summary>
     /// Snack ItemList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetSnackItem()
-    {
-        return _itemDatabase.ItemList[1];
-    }
+    //public List<Item> GetSnackItem()
+    //{
+    //    return _itemDatabase.ItemList[1];
+    //}
 
     /// <summary>
     /// Furniture ItemList
@@ -153,7 +153,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <returns></returns>
     public List<Item> GetFurnitureItem()
     {
-        return _itemDatabase.ItemList[2];
+        return _itemDatabase.FurnitureList;
     }
 
     /// <summary>

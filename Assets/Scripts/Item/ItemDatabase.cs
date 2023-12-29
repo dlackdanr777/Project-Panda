@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //아이템 종류
-public enum ItemField
+public enum InventoryItemField
 {
     None = -1,
     GatheringItem,
-    Furniture,
-    Tool
+    Snack,
+    Tool,
+    Furniture
 }
 
 public enum ToolItemType
@@ -86,7 +87,6 @@ public class ItemDatabase
                     _dataFish[i]["이름"].ToString(),
                     _dataFish[i]["설명"].ToString(),
                     (int)_dataFish[i]["가격"],
-                    ItemField.GatheringItem,
                     Test)); //아직 이미지는 받아오지 않음
         }
 
@@ -97,7 +97,6 @@ public class ItemDatabase
                     _dataBug[i]["이름"].ToString(),
                     _dataBug[i]["설명"].ToString(),
                     (int)_dataBug[i]["가격"],
-                    ItemField.GatheringItem,
                     Test)); //아직 이미지는 받아오지 않음
         }
 
@@ -108,7 +107,6 @@ public class ItemDatabase
                     _dataFruit[i]["이름"].ToString(),
                     _dataFruit[i]["설명"].ToString(),
                     (int)_dataFruit[i]["가격"],
-                    ItemField.GatheringItem,
                     Test)); //아직 이미지는 받아오지 않음
         }
 
@@ -120,7 +118,6 @@ public class ItemDatabase
                     _dataFurniture[i]["Name"].ToString(),
                     _dataFurniture[i]["Description"].ToString(),
                     (int)_dataFurniture[i]["Price"],
-                    ItemField.Furniture,
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }

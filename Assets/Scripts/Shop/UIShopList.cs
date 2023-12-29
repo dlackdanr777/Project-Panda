@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIShopList : UIList<Item, ItemField>
+public class UIShopList : UIList<Item, InventoryItemField>
 {
     [SerializeField] private Button _purchaseButton;
 
@@ -18,11 +18,11 @@ public class UIShopList : UIList<Item, ItemField>
         _dataBase = DatabaseManager.Instance.ItemDatabase;
 
         //Shop
-        for (int i = 0; i < 2; i++)
-        {
-            _maxCount[i] = _dataBase.ItemCount[i];
-            _lists[i] = _dataBase.ItemList[i];
-        }
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    _maxCount[i] = _dataBase.ItemCount[i];
+        //    _lists[i] = _dataBase.ItemList[i];
+        //}
 
         Init();
     }
