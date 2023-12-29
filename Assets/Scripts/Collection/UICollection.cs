@@ -10,6 +10,7 @@ public class UICollection : MonoBehaviour
     [SerializeField] private Image _fadeInOut;
     [SerializeField] private Image _successImage;
     [SerializeField] private Image _resultTextImage;
+    [SerializeField] private Image _collectionItemImage;
     [SerializeField] private TextMeshProUGUI _resultText;
     [SerializeField] private Button _checkResultButton;
     #endregion
@@ -61,19 +62,23 @@ public class UICollection : MonoBehaviour
 
     private void OnCheckResultButton()
     {
+        // 느낌표 터치하면 채집 성공 실패 여부 알려줌
         _collection.IsSuccess();
         _checkResultButton.gameObject.SetActive(false);
     }
 
     /// <summary>
     /// 채집 성공 시 UI </summary>
-    private void SetSuccess()
+    private void SetSuccess(string id)
     {
         _resultTextImage.gameObject.SetActive(true);
-        _resultText.text = "잡았다!"; // 나중에 채집한 아이템 이름 뒤에 추가
+        _resultText.text = "잡았다!"+ DatabaseManager.Instance.GetSnackItem()[0].Name; // 나중에 채집한 아이템 ID 통해 추가하는 것으로 수정
 
         _successImage.gameObject.SetActive(true);
-        // 아이템 이미지 받아와서 띄우기
+        _collectionItemImage.gameObject.SetActive(true);
+        // 아이템 이미지 받아와서 띄우기 - 나중에 ID로 가져오는 것으로 변경 - 우선은 그냥 0 이미지 띄움
+        _collectionItemImage.sprite = DatabaseManager.Instance.GetSnackItem()[0].Image;
+        Debug.Log("채집한 아이템 이미지 띄움"+id);
 
     }
 
@@ -85,6 +90,7 @@ public class UICollection : MonoBehaviour
         _resultText.text = ",,, 놓쳐 버렸다,,,";
 
         _successImage.gameObject.SetActive(true);
+        _collectionItemImage.gameObject.SetActive(false);
     }
 
     /// <summary>

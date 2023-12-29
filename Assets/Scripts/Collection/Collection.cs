@@ -17,32 +17,35 @@ public class Collection : MonoBehaviour, IInteraction
     #endregion
 
     private Sprite _pandaImage;
+    [SerializeField] private Sprite _pandaCollectionImage;
+
     private Animator _collectionAnim;
     [SerializeField] private CollectionButton _collectionButton;
     [SerializeField] private GameObject _speechBubble;
 
-    public Action OnCollectionSuccess;
+    public Action<string> OnCollectionSuccess;
     public Action OnCollectionFail;
     public Action OnExitCollection; // 채집 화면 종료
 
     #region 채집 성공 체크
     private float _successRate = 0.7f;
     private bool _isSuccessCollection;
-    public bool IsSuccessCollection
+    public bool IsSuccessCollection 
     {
         get { return _isSuccessCollection; }
         set
         {
-            // 채집 성공
+            _isSuccessCollection = value;
+            // 채집 성공: 애니메이션 실행 + 텍스트 띄워줌
             if (_isSuccessCollection)
             {
                 Debug.Log("채집 성공");
-                OnCollectionSuccess?.Invoke();
+                CollectionSuccess();
             }
             else
             {
                 Debug.Log("채집 실패");
-                OnCollectionFail?.Invoke();
+                CollectionFail();
             }
             _isCollection = false;
             _isExit = true;
@@ -54,24 +57,20 @@ public class Collection : MonoBehaviour, IInteraction
     {
         _time = 29;
         _collectionButton.OnCollectionButtonClicked += ClickCollectionButton;
-        OnCollectionSuccess += CollectionSuccess;
-        OnCollectionFail += CollectionFail;
 
     }
     private void OnDestroy()
     {
         _collectionButton.OnCollectionButtonClicked -= ClickCollectionButton;
-        OnCollectionSuccess -= CollectionSuccess;
-        OnCollectionFail -= CollectionFail;
     }
 
     private void Update()
     {
-        if (_time < _spawnTime)
+        if (_time < _spawnTime && !_isCollection)
         {
             _time += Time.deltaTime;
         }
-        else
+        else if(_time >= _spawnTime)
         {
             _time = 0;
             GetComponent<SpriteRenderer>().enabled = true;
@@ -86,8 +85,9 @@ public class Collection : MonoBehaviour, IInteraction
         else if(Input.GetMouseButtonDown(0) && _isExit)
         {
             _isExit = false;
+            _collectionAnim.SetBool("IsCollectionEnd", false);
+            Invoke("ExitCollection", 0.4f);
             OnExitCollection?.Invoke();
-            ExitCollection();
         }
     }
 
@@ -129,6 +129,10 @@ public class Collection : MonoBehaviour, IInteraction
         // 캐릭터가 채집 포인트로 이동
         starterPanda.gameObject.transform.position = CollectionPosition;
 
+        // 판다 채집 이미지로 변경
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.GetComponent<SpriteRenderer>().sprite = _pandaCollectionImage;
+        Debug.Log("판다 이미지 변경 완 " + DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.GetComponent<SpriteRenderer>().sprite.name);
+
         // 카메라가 캐릭터가 중앙으로 고정되도록 이동
         _targetPos = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
@@ -151,21 +155,12 @@ public class Collection : MonoBehaviour, IInteraction
     /// 채집 시작할 때 실행 </summary>
     private void StartCollection()
     {
-        Debug.Log("채집시작함니다 ~~");
-
         // 채집 애니메이션 판다와 말풍선 실행
         _collectionAnim.enabled = true;
         _collectionAnim.SetTrigger("IsCollecting");
+
         _speechBubble.SetActive(true);
         _speechBubble.GetComponent<Animator>().enabled = true;
-
-        // 말풍선 ...이 끝나면 느낌표 표시
-        // 느낌표 터치하면 채집 성공 실패 여부 알려줌
-        // 애니메이션 실행 + 텍스트 띄워줌
-        // 인벤토리와 도감으로 정보 전달
-
-        // 채집 종료
-        //IsCollection = false;
     }
 
     /// <summary>
@@ -173,10 +168,12 @@ public class Collection : MonoBehaviour, IInteraction
     public void IsSuccess()
     {
         Debug.Log("성공인지 확인");
-        float random = UnityEngine.Random.Range(0, 1);
+        float random = UnityEngine.Random.Range(0, 1f);
+        Debug.Log("랜덤 값: "+ random);
         if (_successRate < random)
         {
             IsSuccessCollection = false;
+            return;
         }
         IsSuccessCollection = true;
     }
@@ -184,20 +181,26 @@ public class Collection : MonoBehaviour, IInteraction
 
     private void CollectionSuccess()
     {
+        // 성공했을 시 아이템 중 랜덤으로 한 가지 채집 - 우선 snack으로 하기
+        int random = UnityEngine.Random.Range(0, DatabaseManager.Instance.ItemDatabase.ItemCount[1]);
+        Debug.Log("랜덤: " + random);
+        string collectionID = DatabaseManager.Instance.ItemDatabase.ItemList[1][random].Id;
+
+        OnCollectionSuccess?.Invoke(collectionID);
         _collectionAnim.SetBool("IsCollectionEnd", true); // 채집 완료 시 실행
+        
         // 인벤토리로 아이템 이동
         // 도감 업데이트
     }
 
     private void CollectionFail()
     {
+        OnCollectionFail?.Invoke();
         _collectionAnim.SetBool("IsCollectionEnd", true);
     }
 
     private void ExitCollection()
     {
-        _collectionAnim.SetBool("IsCollectionEnd", false);
-
         _collectionAnim.enabled = false; // 끊겨서 그냥 판다 애니메이션 종료될 때 조건 체크한 다음 enable = false 하는게 나을 거 같음..
         _collectionAnim.gameObject.GetComponent<SpriteRenderer>().sprite = _pandaImage;
     }
