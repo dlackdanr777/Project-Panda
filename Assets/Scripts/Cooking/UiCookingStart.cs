@@ -42,6 +42,7 @@ public class UiCookingStart : MonoBehaviour
     public void Init(CookingSystem cookingSystem, UICooking uiCooking)
     {
         _uiSuccessLocation.Init(this);
+        _uiCookingTimer.Init(this);
         _uiCookingEnd.Init(OnComplatedButtonClicked);
         _cookingSystem = cookingSystem;
         _uiCooking = uiCooking;
