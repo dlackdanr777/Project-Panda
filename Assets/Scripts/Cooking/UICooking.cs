@@ -93,16 +93,28 @@ public class UICooking : UIView
     private void ChangeCookware(int value)
     {
         int currentCookware = _cookingSystem.ChangeCookware(value);
+        CheckCookEnabled(_uiCookingCenterSlot.CurrentItem);
 
-        if(currentCookware == 0)
+        if (currentCookware == 0)
             _leftCookwareChangeButton.gameObject.SetActive(false);
         else
             _leftCookwareChangeButton.gameObject.SetActive(true);
 
-        if ((int)Cookware.Sizeof <= currentCookware)
+        if ((int)Cookware.Sizeof -1 <= currentCookware)
             _rightCookwareChangeButton.gameObject.SetActive(false);
         else
             _rightCookwareChangeButton.gameObject.SetActive(true);
+    }
+
+    public void CheckCookEnabled(InventoryItem item)
+    {
+        if (CookingSystem.CheckRecipe(item))
+        {
+            HideButtonImage.SetActive(false);
+            return;
+        }
+
+        HideButtonImage.SetActive(true);
     }
    
 

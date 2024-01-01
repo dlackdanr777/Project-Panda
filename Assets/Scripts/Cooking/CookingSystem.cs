@@ -66,13 +66,20 @@ private void Start()
 
     public bool CheckRecipe(InventoryItem item)
     {
-        foreach(RecipeData data in _recipeDatas)
+        if (item == null)
+        {
+            Debug.Log("아이템이 존재하지 않습니다.");
+            return false;
+        }
+
+        foreach (RecipeData data in _recipeDatas)
         {
             bool isEnabled = data.MaterialItemID == item.Id && data.MaterialValue <= item.Count && data.Cookware == _currentCookware;
 
             if (isEnabled)
                 return true;
         }
+
         return false;
     }
 

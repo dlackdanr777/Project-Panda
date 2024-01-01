@@ -15,6 +15,7 @@ public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropH
     private UICooking _uiCooking;
 
     private InventoryItem _currentItem;
+    public InventoryItem CurrentItem => _currentItem;
 
     public void Init(UICooking uiCooking)
     {
@@ -86,14 +87,7 @@ public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropH
 
         _itemImage.gameObject.SetActive(true);
 
-        if (_uiCooking.CookingSystem.CheckRecipe(_currentItem))
-        {
-            _uiCooking.HideButtonImage.SetActive(false);
-
-            return;
-        }
-
-        _uiCooking.HideButtonImage.SetActive(true);
+        _uiCooking.CheckCookEnabled(_currentItem);
     }
 
 
