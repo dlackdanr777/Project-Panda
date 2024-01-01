@@ -25,6 +25,9 @@ public class UiCookingStart : MonoBehaviour
     [SerializeField] private UICookingEnd _uiCookingEnd;
 
     [Space]
+    [SerializeField] private Image _fish;
+
+    [Space]
     [SerializeField] private int _maxFireValue;
 
     private UICooking _uiCooking;
@@ -35,9 +38,13 @@ public class UiCookingStart : MonoBehaviour
 
     private RecipeData _currentRecipeData;
 
+    [SerializeField] private UICookingFood _currentFood;
+
     private int _fireValue;
 
     private int _stamina;
+
+    private int _tempfireValue;
 
     public void Init(CookingSystem cookingSystem, UICooking uiCooking)
     {
@@ -47,7 +54,6 @@ public class UiCookingStart : MonoBehaviour
         _cookingSystem = cookingSystem;
         _uiCooking = uiCooking;
         _cookingUserData = _cookingSystem.UserData;
-        _complatedButton.onClick.AddListener(CookingComplated);
 
         gameObject.SetActive(false);
     }
@@ -59,11 +65,23 @@ public class UiCookingStart : MonoBehaviour
         _fireValue = 0;
         _uiStaminaBar.Reset(1);
         _uiFireBar.Reset(0);
-
+        _complatedButton.onClick.AddListener(FilpFood);
+        _currentFood.ResetSprite();
         _uiSuccessLocation.SetSuccessRange(recipe, _uiFireBar.GetBarWedth());
         _uiCookingTimer.StartTimer(60);
         gameObject.SetActive(true);
         CheckAllAddValueButtons();
+
+        _fish.gameObject.SetActive(true);
+    }
+
+
+    public void FilpFood()
+    {
+        SaveFireValue();
+        _currentFood.StartAnime();
+        _complatedButton.onClick.RemoveListener(FilpFood);
+        _complatedButton.onClick.AddListener(CookingComplated);
     }
 
 
@@ -72,12 +90,14 @@ public class UiCookingStart : MonoBehaviour
     {
         int InventoryIndex = (int)_currentRecipeData.Item.ItemField;
 
-        Debug.Log(_uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, _uiFireBar.GetBarValue()) + " È¹µæ");
+        float totalFireValue = (_tempfireValue + _fireValue) * 0.5f * 0.01f;
+        Debug.Log(_uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue) + " È¹µæ");
 
         GameManager.Instance.Player.Inventory[InventoryIndex].Add(_currentRecipeData.Item);
 
         _uiCookingTimer.EndTimer();
         _uiCookingEnd.Show(_currentRecipeData.Item);
+         _complatedButton.onClick.RemoveAllListeners();
     }
 
 
@@ -100,7 +120,7 @@ public class UiCookingStart : MonoBehaviour
     {
         bool check = _cookingUserData.MoreAddValueStamina <= _stamina;
         check = check && _fireValue < _maxFireValue;
-        
+
         _moreAddButton.CheckUsabled(check, () =>
         {
             DecreaseStamina(_cookingUserData.MoreAddValueStamina);
@@ -120,14 +140,15 @@ public class UiCookingStart : MonoBehaviour
             DecreaseStamina(_cookingUserData.AddValueStamina);
             AddFireValue(_cookingUserData.AddValue);
             CheckAllAddValueButtons();
-        });
+        }); 
     }
 
 
     private void SmallAddValueButtonClicked()
     {
         bool check = _cookingUserData.SmallAddValueStamina <= _stamina;
-        check = check && _fireValue < _maxFireValue; 
+        check = check && _fireValue < _maxFireValue;
+
 
         _smallAddButton.CheckUsabled(check, () =>
         {
@@ -146,7 +167,7 @@ public class UiCookingStart : MonoBehaviour
         if(_stamina < 0)
             _stamina = 0;
 
-        _uiStaminaBar.DecreaseGauge(_cookingUserData.MaxStamina, _stamina);
+        _uiStaminaBar.UpdateGauge(_cookingUserData.MaxStamina, _stamina);
     }
 
 
@@ -157,7 +178,16 @@ public class UiCookingStart : MonoBehaviour
         if (_maxFireValue < _fireValue)
             _fireValue = _maxFireValue;
 
-        _uiFireBar.DecreaseGauge(_maxFireValue, _fireValue);
+        _currentFood.SetFoodSprite(_currentRecipeData, _fireValue);
+        _uiFireBar.UpdateGauge(_maxFireValue, _fireValue);
+    }
+
+    private void SaveFireValue()
+    {
+        _tempfireValue = 0;
+        _tempfireValue += _fireValue;
+        _fireValue = 0;
+        _uiFireBar.UpdateGauge(_maxFireValue, _fireValue);
     }
 
 

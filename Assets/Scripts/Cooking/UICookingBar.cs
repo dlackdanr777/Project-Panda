@@ -43,7 +43,7 @@ public class UICookingBar : MonoBehaviour
     }
 
 
-    public void DecreaseGauge(float maxStamina, float stamina)
+    public void UpdateGauge(float maxStamina, float stamina)
     {
         if (_barType == BarType.Decrease)
         {

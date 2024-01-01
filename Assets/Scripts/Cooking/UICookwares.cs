@@ -1,5 +1,6 @@
 using Muks.Tween;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,7 @@ public class UICookwares : MonoBehaviour
             _dontTouchArea.gameObject.SetActive(false);
             _parentRect.anchoredPosition = targetPos;
             _tempAnchoredPosition_X += movePos;
+
             onComplated?.Invoke();
         });
     }
