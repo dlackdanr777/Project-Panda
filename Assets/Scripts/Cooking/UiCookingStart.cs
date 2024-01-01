@@ -24,6 +24,8 @@ public class UiCookingStart : MonoBehaviour
 
     [SerializeField] private UICookingEnd _uiCookingEnd;
 
+    [SerializeField] private UICookwares _uiCookwares;
+
     [Space]
     [SerializeField] private Image _fish;
 
@@ -37,8 +39,6 @@ public class UiCookingStart : MonoBehaviour
     private CookingUserData _cookingUserData;
 
     private RecipeData _currentRecipeData;
-
-    [SerializeField] private UICookingFood _currentFood;
 
     private int _fireValue;
 
@@ -66,7 +66,7 @@ public class UiCookingStart : MonoBehaviour
         _uiStaminaBar.Reset(1);
         _uiFireBar.Reset(0);
         _complatedButton.onClick.AddListener(FilpFood);
-        _currentFood.ResetSprite();
+        _uiCookwares.StartCooking();
         _uiSuccessLocation.SetSuccessRange(recipe, _uiFireBar.GetBarWedth());
         _uiCookingTimer.StartTimer(60);
         gameObject.SetActive(true);
@@ -79,7 +79,7 @@ public class UiCookingStart : MonoBehaviour
     public void FilpFood()
     {
         SaveFireValue();
-        _currentFood.StartAnime();
+        _uiCookwares.StartAnime();
         _complatedButton.onClick.RemoveListener(FilpFood);
         _complatedButton.onClick.AddListener(CookingComplated);
     }
@@ -96,6 +96,7 @@ public class UiCookingStart : MonoBehaviour
         GameManager.Instance.Player.Inventory[InventoryIndex].Add(_currentRecipeData.Item);
 
         _uiCookingTimer.EndTimer();
+        _uiCookwares.EndCooking();
         _uiCookingEnd.Show(_currentRecipeData.Item);
          _complatedButton.onClick.RemoveAllListeners();
     }
@@ -178,7 +179,7 @@ public class UiCookingStart : MonoBehaviour
         if (_maxFireValue < _fireValue)
             _fireValue = _maxFireValue;
 
-        _currentFood.SetFoodSprite(_currentRecipeData, _fireValue);
+        _uiCookwares.SetFoodSprite(_currentRecipeData, _fireValue);
         _uiFireBar.UpdateGauge(_maxFireValue, _fireValue);
     }
 
