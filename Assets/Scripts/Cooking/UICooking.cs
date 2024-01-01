@@ -20,7 +20,7 @@ public class UICooking : UIView
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
 
-    private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
+    private Inventory[] _inventory => GameManager.Instance.Player.CookItemInventory;
 
 
     public void Start()

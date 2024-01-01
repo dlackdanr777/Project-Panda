@@ -10,5 +10,5 @@ public class Furniture : Item
     public Vector2 PlayerCoor;
     public FurnitureType FurnitureType;
 
-    public Furniture(string id, string name, string description, int price, Sprite image) : base(id, name, description, price, image) {}
+    public Furniture(string id, string name, string description, int price, string rank, Sprite image) : base(id, name, description, price, rank, image) {}
 }

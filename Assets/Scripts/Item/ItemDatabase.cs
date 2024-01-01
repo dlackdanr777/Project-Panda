@@ -7,9 +7,14 @@ public enum InventoryItemField
 {
     None = -1,
     GatheringItem,
-    Snack,
+    Cook,
     Tool,
     Furniture
+}
+
+public enum CookItemType
+{
+    None = -1,
 }
 
 public enum ToolItemType
@@ -21,8 +26,8 @@ public enum ToolItemType
 public enum GatheringItemType
 {
     None = -1,
-    Fish,
     Bug,
+    Fish,
     Fruit
 }
 
@@ -80,37 +85,53 @@ public class ItemDatabase
         _dataFruit = CSVReader.Read("ItemFruit");
 
         //Gathering Item
-        //Fish
-        for (int i = 0; i < _dataFish.Count; i++)
-        {
-            ItemFishList.Add(new Item(_dataFish[i]["ID"].ToString(),
-                    _dataFish[i]["이름"].ToString(),
-                    _dataFish[i]["설명"].ToString(),
-                    (int)_dataFish[i]["가격"],
-                    Test)); //아직 이미지는 받아오지 않음
-        }
 
         //Bug
         for (int i = 0; i < _dataBug.Count; i++)
         {
-            ItemBugList.Add(new Item(_dataBug[i]["ID"].ToString(),
+            ItemBugList.Add(new GatheringItem(_dataBug[i]["ID"].ToString(),
                     _dataBug[i]["이름"].ToString(),
                     _dataBug[i]["설명"].ToString(),
                     (int)_dataBug[i]["가격"],
-                    Test)); //아직 이미지는 받아오지 않음
+                    _dataBug[i]["등급"].ToString(),
+                    Test, //이미지 불러와야함
+                    DateTime.ParseExact(_dataBug[i]["시작시간"].ToString(), "H:mm", null),
+                    DateTime.ParseExact(_dataBug[i]["끝시간"].ToString(), "H:mm", null)
+                    ));
+
+        }
+
+        //Fish
+        for (int i = 0; i < _dataFish.Count; i++)
+        {
+            ItemFishList.Add(new GatheringItem(_dataFish[i]["ID"].ToString(),
+                    _dataFish[i]["이름"].ToString(),
+                    _dataFish[i]["설명"].ToString(),
+                    (int)_dataFish[i]["가격"],
+                    _dataFish[i]["등급"].ToString(),
+                    Test, //이미지 불러와야함
+                    DateTime.ParseExact(_dataFish[i]["시작시간"].ToString(), "H:mm", null),
+                    DateTime.ParseExact(_dataFish[i]["끝시간"].ToString(), "H:mm", null)
+                    ));
+                    
         }
 
         //Fruit
         for (int i = 0; i < _dataFruit.Count; i++)
         {
-            ItemFruitList.Add(new Item(_dataFruit[i]["ID"].ToString(),
+            ItemFruitList.Add(new GatheringItem(_dataFruit[i]["ID"].ToString(),
                     _dataFruit[i]["이름"].ToString(),
                     _dataFruit[i]["설명"].ToString(),
                     (int)_dataFruit[i]["가격"],
-                    Test)); //아직 이미지는 받아오지 않음
+                    _dataFruit[i]["등급"].ToString(),
+                    Test, //이미지 불러와야함
+                    DateTime.ParseExact(_dataFruit[i]["시작시간"].ToString(), "H:mm", null),
+                    DateTime.ParseExact(_dataFruit[i]["끝시간"].ToString(), "H:mm", null)
+                    ));
+
         }
 
-        //Furniture
+        //Furniture //아직 수정 중
         FurnitureTypeList = new FurnitureType[_dataFurniture.Count];
         for(int i = 0; i < _dataFurniture.Count; i++)
         {
@@ -118,6 +139,7 @@ public class ItemDatabase
                     _dataFurniture[i]["Name"].ToString(),
                     _dataFurniture[i]["Description"].ToString(),
                     (int)_dataFurniture[i]["Price"],
+                    "등급",
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }

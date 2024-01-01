@@ -34,12 +34,12 @@ public class MBTIManager
 
     public void SetMBTI()
     {
-        List<Item> Snacks = DatabaseManager.Instance.GetSnackItem();
-        List<Item> Toys = DatabaseManager.Instance.GetToyItem();
-        for (int i = 0; i < System.Enum.GetValues(typeof(EMBTI)).Length; i++)
-        {
-            DataMBTI.Add(new Preference(Snacks[i].Id, Toys[i].Id));
-        }
+        //List<Item> Snacks = DatabaseManager.Instance.GetSnackItem();
+        //List<Item> Toys = DatabaseManager.Instance.GetToyItem();
+        //for (int i = 0; i < System.Enum.GetValues(typeof(EMBTI)).Length; i++)
+        //{
+        //    DataMBTI.Add(new Preference(Snacks[i].Id, Toys[i].Id));
+        //}
     }
 
     public Preference SetPreference(string mbti)

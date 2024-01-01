@@ -9,8 +9,12 @@ public class Player : MonoBehaviour
     public int Familiarity;
 
     [Header("Inventory")]
-    public Inventory[] Inventory = new Inventory[System.Enum.GetValues(typeof(InventoryItemField)).Length - 1]; //0:GatheringItem, 1:Snack, 2:Tool, 3:Furnitures
-    //public Inventory[] Inventory = new Inventory[2]; //0:toy, 1:snack
+    //GatheringItemInventory
+    public Inventory[] GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
+    //CookInventory
+    public Inventory[] CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1]; 
+    //Tool Inventory
+    public Inventory[] ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1]; 
 
     [Header("Message")]
     public MessageList[] Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1]; //0:Mail, 1:Wish 
@@ -31,13 +35,27 @@ public class Player : MonoBehaviour
         //MaxMessageCount = 20;
         MaxBamboo = 1000;
         
-        for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
+        //for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
+        //{
+        //    Inventory[i] = new Inventory();
+        //}
+        //for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
+        //{
+        //    //Messages[i] = new MessageList();
+        //}
+        
+        //Item ÃÊ±âÈ­
+        for(int i=0;i<System.Enum.GetValues(typeof(GatheringItemType)).Length - 1; i++)
         {
-            Inventory[i] = new Inventory();
+            GatheringItemInventory[i] = new Inventory();
         }
-        for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
+        for (int i = 0; i < System.Enum.GetValues(typeof(CookItemType)).Length - 1; i++)
         {
-            //Messages[i] = new MessageList();
+            CookItemInventory[i] = new Inventory();
+        }
+        for (int i = 0; i < System.Enum.GetValues(typeof(ToolItemType)).Length - 1; i++)
+        {
+            ToolItemInventory[i] = new Inventory();
         }
     }
 
@@ -87,6 +105,25 @@ public class Player : MonoBehaviour
             StartCoroutine(PopupCoroutine(_dontGainBambooPanel));
             return false;
         }
+    }
+
+    public Inventory[] GetItemInventory(InventoryItemField field)
+    {
+        Inventory[] inventoryArray = null;
+        switch (field)
+        {
+            case InventoryItemField.GatheringItem:
+                inventoryArray = GatheringItemInventory;
+                break;
+            case InventoryItemField.Cook:
+                inventoryArray = CookItemInventory;
+                break;
+            case InventoryItemField.Tool:
+                inventoryArray = ToolItemInventory;
+                break;
+        }
+
+        return inventoryArray;
     }
 
     private IEnumerator PopupCoroutine(GameObject panel)

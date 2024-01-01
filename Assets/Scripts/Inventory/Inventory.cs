@@ -17,7 +17,7 @@ public class Inventory
         return Items;
     }
 
-    public void Add(InventoryItemField itemField, Item item)
+    public void Add(Item item)
     {
         if(Items.Count > 0) 
         {
@@ -39,7 +39,7 @@ public class Inventory
         }
 
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, itemField, item.Image);
+        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.Rank, item.Image);
         Items.Add(addItem); //새로운 인벤토리 생성
     }
 
@@ -48,27 +48,28 @@ public class Inventory
     /// field는 종류 가 있음
     /// </summary>
     /// <param name="field"></param>
+    /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public void AddById(InventoryItemField field, string id)
+    public void AddById(InventoryItemField field, int fieldindex, string id)
     {
         List<Item> database = null;
         switch (field)
         {
             case InventoryItemField.GatheringItem:
-                if (id.StartsWith("IB"))
+                if (fieldindex == 0)
                 {
                     database = DatabaseManager.Instance.ItemDatabase.ItemBugList;
                 }
-                else if (id.StartsWith("IFI"))
+                else if (fieldindex == 1)
                 {
                     database = DatabaseManager.Instance.ItemDatabase.ItemFishList;
                 }
-                else if (id.StartsWith("IFR"))
+                else if (fieldindex == 2)
                 {
                     database = DatabaseManager.Instance.ItemDatabase.ItemFruitList;
                 }
                 break;
-            case InventoryItemField.Snack:
+            case InventoryItemField.Cook:
                 break;
             case InventoryItemField.Tool:
                 break;
@@ -78,7 +79,7 @@ public class Inventory
         {
             if (database[i].Id.Equals(id))
             {
-                Add(field, database[i]);
+                Add(database[i]);
                 database[i].IsReceived = true;
             }
         }

@@ -129,23 +129,33 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _pandaDatabase.SetStarterMBTI(mbti);
     }
 
+    //Gathering Item
     /// <summary>
-    /// Toy ItemList
+    /// GatheringItem BugList
     /// </summary>
     /// <returns></returns>
-    //public List<Item> GetToyItem()
-    //{
-    //    return _itemDatabase.ItemList[0];
-    //}
+    public List<Item> GetBugItemList()
+    {
+        return _itemDatabase.ItemBugList;
+    }
 
     /// <summary>
-    /// Snack ItemList
+    /// GatheringItem FishList
     /// </summary>
     /// <returns></returns>
-    //public List<Item> GetSnackItem()
-    //{
-    //    return _itemDatabase.ItemList[1];
-    //}
+    public List<Item> GetFishItemList()
+    {
+        return _itemDatabase.ItemFishList;
+    }
+
+    /// <summary>
+    /// GatheringItem FruitList
+    /// </summary>
+    /// <returns></returns>
+    public List<Item> GetFruitItemList()
+    {
+        return _itemDatabase.ItemFruitList;
+    }
 
     /// <summary>
     /// Furniture ItemList
