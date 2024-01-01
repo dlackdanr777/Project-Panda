@@ -109,7 +109,7 @@ public class DialogueParser
             string materialItemID = row[0];
             int materialValue = int.Parse(row[1]);
             string successItemID = row[2];
-            string cookware = row[3];
+            int cookware = int.Parse(row[3]);
             int cookingAmount = int.Parse(row[4]);
             float successLocation = float.Parse(row[5]);
             float successRangeLevel_S = float.Parse(row[6]);

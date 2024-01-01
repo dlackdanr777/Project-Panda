@@ -31,9 +31,7 @@ public class UICookingTimer : MonoBehaviour
             _currentTime += Time.deltaTime;
 
             float angleZ = Mathf.Lerp(0, -360f, _currentTime / _timerValue);
-            Debug.Log(angleZ);
             _clockHands.transform.rotation = Quaternion.Euler(0, 0, angleZ);
-
         }
         else
         {

@@ -19,9 +19,9 @@ public class RecipeData
     public string SuccessItemID => _successItemID;
 
 
-    private string _cookware;
+    private Cookware _cookware;
     /// <summary>조리 도구</summary>
-    public string Cookware => _cookware;
+    public Cookware Cookware => _cookware;
 
 
     private int _cookingAmount;
@@ -55,13 +55,13 @@ public class RecipeData
     public Item Item => _item;
 
     public RecipeData(string materialItemID, int materialValue, string successItemID,
-        string cookware, int cookingAmount, float successLocation,
+        int cookware, int cookingAmount, float successLocation,
        float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B)
     {
         _materialItemID = materialItemID;
         _materialValue = materialValue;
         _successItemID = successItemID;
-        _cookware = cookware;
+        _cookware = (Cookware)cookware;
         _cookingAmount = CookingAmount;
         _successLocation = successLocation;
         _successRangeLevel_S = successRangeLevel_S;

@@ -20,8 +20,13 @@ public class UICooking : UIView
     [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
     public UICookingCenterSlot UICookingCenterSlot => _uiCookingCenterSlot;
 
+    [Space]
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
+
+    [SerializeField] private Button _leftCookwareChangeButton;
+
+    [SerializeField] private Button _rightCookwareChangeButton;
 
     private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
 
@@ -35,13 +40,14 @@ public class UICooking : UIView
         _uiCookingCenterSlot.Init(this);
 
         _hideButtonImage.SetActive(true);
+
+
     }
 
 
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-
         _uiCookingSlots = _uiCookingSlotParent.GetComponentsInChildren<UICookingSlot>();
 
         _uiCookingStart.Init(_cookingSystem, this);
@@ -56,6 +62,10 @@ public class UICooking : UIView
         {
             _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
         }
+
+        _leftCookwareChangeButton.onClick.AddListener(() => ChangeCookware(-1));
+        _rightCookwareChangeButton.onClick.AddListener(() => ChangeCookware(1));
+        ChangeCookware(0);
     }
 
     public void UpdateUI()
@@ -80,6 +90,20 @@ public class UICooking : UIView
         _uiCookingStart.StartCooking(_currentRecipeData);
     }
 
+    private void ChangeCookware(int value)
+    {
+        int currentCookware = _cookingSystem.ChangeCookware(value);
+
+        if(currentCookware == 0)
+            _leftCookwareChangeButton.gameObject.SetActive(false);
+        else
+            _leftCookwareChangeButton.gameObject.SetActive(true);
+
+        if ((int)Cookware.Sizeof <= currentCookware)
+            _rightCookwareChangeButton.gameObject.SetActive(false);
+        else
+            _rightCookwareChangeButton.gameObject.SetActive(true);
+    }
    
 
     public override void Show()

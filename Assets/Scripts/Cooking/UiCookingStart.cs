@@ -45,7 +45,7 @@ public class UiCookingStart : MonoBehaviour
         _uiCookingEnd.Init(OnComplatedButtonClicked);
         _cookingSystem = cookingSystem;
         _uiCooking = uiCooking;
-        _cookingUserData = _cookingSystem.CookingData;
+        _cookingUserData = _cookingSystem.UserData;
         _complatedButton.onClick.AddListener(CookingComplated);
 
         gameObject.SetActive(false);

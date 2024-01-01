@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Cookware
+{
+    Jar,
+    FryingPan,
+    Sizeof
+}
+
 
 [Serializable]
 public class CookingUserData
@@ -36,18 +43,17 @@ public class CookingSystem : MonoBehaviour
     [SerializeField] private UICooking _uiCooking;
 
     [SerializeField] private CookingUserData _userData;
+    public CookingUserData UserData => _userData;
 
     private RecipeDatabase _recipeDatabase => DatabaseManager.Instance.RecipeDatabase;
 
     private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
 
     private RecipeData[] _recipeDatas;
-    public CookingUserData CookingData => _userData;
 
+    private Cookware _currentCookware;
 
-
-
-    private void Start()
+private void Start()
     {
         Init();
     }
@@ -57,19 +63,19 @@ public class CookingSystem : MonoBehaviour
         _recipeDatas = _recipeDatabase.GetRecipeDataArray();
     }
 
+
     public bool CheckRecipe(InventoryItem item)
     {
         foreach(RecipeData data in _recipeDatas)
         {
-            if (data.MaterialItemID == item.Id && data.MaterialValue <= item.Count)
-            {
-                return true;
-            }
-                
-        }
+            bool isEnabled = data.MaterialItemID == item.Id && data.MaterialValue <= item.Count && data.Cookware == _currentCookware;
 
+            if (isEnabled)
+                return true;
+        }
         return false;
     }
+
 
     public RecipeData GetRecipeByItem(InventoryItem item)
     {
@@ -91,6 +97,7 @@ public class CookingSystem : MonoBehaviour
         Debug.Log("레시피가 존재하지 않습니다.");
         return default;
     }
+
 
     public string CheckItemGrade(RecipeData data, float fireValue)
     {
@@ -120,6 +127,20 @@ public class CookingSystem : MonoBehaviour
         {
             return "F";
         }
-     
+    }
+
+    public int ChangeCookware(int value)
+    {
+        int tmpInt = (int)_currentCookware + value;
+
+        if (tmpInt < 0)
+            tmpInt = 0;
+
+        else if((int)Cookware.Sizeof <= tmpInt)
+            tmpInt = (int)Cookware.Sizeof - 1;
+
+        _currentCookware = (Cookware)tmpInt;
+
+        return tmpInt;
     }
 }
