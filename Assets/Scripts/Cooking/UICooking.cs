@@ -20,6 +20,8 @@ public class UICooking : UIView
     [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
     public UICookingCenterSlot UICookingCenterSlot => _uiCookingCenterSlot;
 
+    [SerializeField] private UICookwares _uiCookwares;
+
     [Space]
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
@@ -40,8 +42,6 @@ public class UICooking : UIView
         _uiCookingCenterSlot.Init(this);
 
         _hideButtonImage.SetActive(true);
-
-
     }
 
 
@@ -51,6 +51,7 @@ public class UICooking : UIView
         _uiCookingSlots = _uiCookingSlotParent.GetComponentsInChildren<UICookingSlot>();
 
         _uiCookingStart.Init(_cookingSystem, this);
+        _uiCookwares.Init();
 
         for (int i = 0, count = _uiCookingSlots.Length; i < count; i++)
         {
@@ -93,17 +94,24 @@ public class UICooking : UIView
     private void ChangeCookware(int value)
     {
         int currentCookware = _cookingSystem.ChangeCookware(value);
-        CheckCookEnabled(_uiCookingCenterSlot.CurrentItem);
+        _leftCookwareChangeButton.gameObject.SetActive(false);
+        _rightCookwareChangeButton.gameObject.SetActive(false);
 
-        if (currentCookware == 0)
-            _leftCookwareChangeButton.gameObject.SetActive(false);
-        else
-            _leftCookwareChangeButton.gameObject.SetActive(true);
+        _uiCookwares.ChangeImage(value, () =>
+        {
+            CheckCookEnabled(_uiCookingCenterSlot.CurrentItem);
 
-        if ((int)Cookware.Sizeof -1 <= currentCookware)
-            _rightCookwareChangeButton.gameObject.SetActive(false);
-        else
-            _rightCookwareChangeButton.gameObject.SetActive(true);
+            if (currentCookware == 0)
+                _leftCookwareChangeButton.gameObject.SetActive(false);
+            else
+                _leftCookwareChangeButton.gameObject.SetActive(true);
+
+            if ((int)Cookware.Sizeof - 1 <= currentCookware)
+                _rightCookwareChangeButton.gameObject.SetActive(false);
+            else
+                _rightCookwareChangeButton.gameObject.SetActive(true);
+        });
+      
     }
 
     public void CheckCookEnabled(InventoryItem item)
