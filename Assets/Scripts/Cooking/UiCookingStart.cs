@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class UiCookingStart : MonoBehaviour
     [SerializeField] private UIAddValueButton _smallAddButton;
 
     [SerializeField] private Button _complatedButton;
+    [SerializeField] private TextMeshProUGUI _complatedText;
 
     [Space]
     [SerializeField] private UICookingBar _uiStaminaBar;
@@ -27,7 +29,7 @@ public class UiCookingStart : MonoBehaviour
     [SerializeField] private UICookwares _uiCookwares;
 
     [Space]
-    [SerializeField] private Image _fish;
+    [SerializeField] private GameObject _dontTouchArea;
 
     [Space]
     [SerializeField] private int _maxFireValue;
@@ -72,7 +74,7 @@ public class UiCookingStart : MonoBehaviour
         gameObject.SetActive(true);
         CheckAllAddValueButtons();
 
-        _fish.gameObject.SetActive(true);
+        _complatedText.text = "뒤집기";
     }
 
 
@@ -82,8 +84,15 @@ public class UiCookingStart : MonoBehaviour
         _uiCookwares.StartAnime();
         _complatedButton.onClick.RemoveListener(FilpFood);
         _complatedButton.onClick.AddListener(CookingComplated);
+        _dontTouchArea.SetActive(true);
+        Invoke("DisabledDontTouchArea", 1);
+        _complatedText.text = "종료";
     }
 
+    private void DisabledDontTouchArea()
+    {
+        _dontTouchArea.SetActive(false);
+    }
 
     /// <summary>조리완료 버튼 클릭시 실행되는 함수</summary>
     public void CookingComplated()
@@ -125,7 +134,8 @@ public class UiCookingStart : MonoBehaviour
         _moreAddButton.CheckUsabled(check, () =>
         {
             DecreaseStamina(_cookingUserData.MoreAddValueStamina);
-            AddFireValue(_cookingUserData.MoreAddValue);
+            int rendInt = Random.Range(0, _cookingUserData.MoreAddValue.Length);
+            AddFireValue(_cookingUserData.MoreAddValue[rendInt]);
             CheckAllAddValueButtons();
         });
     }
@@ -139,7 +149,8 @@ public class UiCookingStart : MonoBehaviour
         _addButton.CheckUsabled(check, () =>
         {
             DecreaseStamina(_cookingUserData.AddValueStamina);
-            AddFireValue(_cookingUserData.AddValue);
+            int rendInt = Random.Range(0, _cookingUserData.AddValue.Length);
+            AddFireValue(_cookingUserData.AddValue[rendInt]);
             CheckAllAddValueButtons();
         }); 
     }
@@ -154,7 +165,8 @@ public class UiCookingStart : MonoBehaviour
         _smallAddButton.CheckUsabled(check, () =>
         {
             DecreaseStamina(_cookingUserData.SmallAddValueStamina);
-            AddFireValue(_cookingUserData.SmallAddValue);
+            int rendInt = Random.Range(0, _cookingUserData.SmallAddValue.Length);
+            AddFireValue(_cookingUserData.SmallAddValue[rendInt]);
             CheckAllAddValueButtons();
         });
 

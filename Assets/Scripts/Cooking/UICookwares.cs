@@ -44,9 +44,9 @@ public class UICookwares : MonoBehaviour
         float movePos = _imageWidth * -value;
         _cookwareIndex += value;
         Vector2 targetPos = new Vector2(movePos + _tempAnchoredPosition_X, 0);
-        Tween.RectTransfromAnchoredPosition(_parent.gameObject, targetPos, 0.4f, TweenMode.Constant, () =>
+        Tween.RectTransfromAnchoredPosition(_parent.gameObject, targetPos, 0.4f, TweenMode.Smoothstep, () =>
         {
-            Tween.RectTransfromAnchoredPosition(_parent.gameObject, targetPos, 0.1f, TweenMode.Constant, () =>
+            Tween.RectTransfromAnchoredPosition(_parent.gameObject, targetPos, 0.1f, TweenMode.Smoothstep, () =>
             {
                 _dontTouchArea.gameObject.SetActive(false);
                 _parentRect.anchoredPosition = targetPos;

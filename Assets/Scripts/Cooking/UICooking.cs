@@ -66,7 +66,8 @@ public class UICooking : UIView
 
         _leftCookwareChangeButton.onClick.AddListener(() => ChangeCookware(-1));
         _rightCookwareChangeButton.onClick.AddListener(() => ChangeCookware(1));
-        ChangeCookware(0);
+        _leftCookwareChangeButton.gameObject.SetActive(false);
+        _rightCookwareChangeButton.gameObject.SetActive(true);
     }
 
     public void UpdateUI()

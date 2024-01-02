@@ -150,7 +150,7 @@ public class UIDialogue : UIView
         {
             if (_contextAnimeRoutine != null)
                 StopCoroutine(_contextAnimeRoutine);
-
+            Debug.Log(_dialogue.DialogDatas[_currentIndex].Contexts);
             _contextAnimeRoutine = StartCoroutine(ContextAnime(_dialogue.DialogDatas[_currentIndex]));
             _currentIndex++;
         }
@@ -194,6 +194,8 @@ public class UIDialogue : UIView
         _eventDatas = eventDatas;
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
+
+        Debug.Log(_eventDatas.Length);
     }
 
 

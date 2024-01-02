@@ -7,6 +7,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class FollowButton : MonoBehaviour
 {
+    [SerializeField] private Image _image;
+
     private Vector3 _targetPos;
 
     private Button _button;
@@ -17,7 +19,7 @@ public class FollowButton : MonoBehaviour
         _button = GetComponent<Button>();
 
         _button.GetComponent<RectTransform>().sizeDelta = size;
-        _button.image.sprite = sprite;
+        _image.sprite = sprite;
         _button.onClick.AddListener(() => onClicked?.Invoke());
         _targetPos = targetPos;
     }
