@@ -21,37 +21,56 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
     protected override void UpdateListSlots()
     {
         UpdateList();
+        Debug.Log("updateListSlot : " + _lists[(int)_currentField].Count);
+        Debug.Log("maxCount : " + _maxCount[(int)_currentField]);
 
-        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
+        if (_lists[(int)_currentField] != null)
         {
-            if (j < _lists[(int)_currentField].Count)
+            for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
             {
-                _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
-                _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
-                _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
+                if (j < _lists[(int)_currentField].Count)
+                {
+                    Transform prefab = _spawnPoint[(int)_currentField].GetChild(j).GetChild(0);
+                    prefab.gameObject.SetActive(true); //구조 변경 => Getchild만 켜지도록
+                    prefab.GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
+                    if(_lists[(int)_currentField][j].Count > 1) //1이상 
+                    {
+                        prefab.GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
+                    }
 
-            }
-            else
-            {
-                _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(false);
+                }
+                else
+                {
+                    _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).gameObject.SetActive(false);
 
 
+                }
             }
         }
     }
 
     private void Awake()
     {
+        Debug.Log(GameManager.Instance.Player.GatheringItemInventory.Length);
+        //Test
+        GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
+        GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
+        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI4");
+        GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, "IFR5");
+
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < System.Enum.GetValues(typeof(InventoryItemField)).Length - 1; i++)
         {
             Inventory[] itemInventory = GameManager.Instance.Player.GetItemInventory((InventoryItemField)i);
             if(itemInventory != null)
             {
+                _maxCount[i] = 0;
+                _lists[i] = new List<InventoryItem>();
+
                 for (int j = 0; j < itemInventory.Length; j++)
                 {
                     _maxCount[i] += itemInventory[j].MaxInventoryItem;
-                    if (itemInventory[j].ItemsCount > 0)
+                    if (itemInventory[j] != null)
                     {
                         _lists[i].AddRange(itemInventory[j].GetInventoryList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
                     }
@@ -61,7 +80,6 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
             
         }
         Init();
-
     }
 
     private void UpdateList() 
@@ -71,9 +89,10 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
             Inventory[] itemInventory = GameManager.Instance.Player.GetItemInventory((InventoryItemField)i);
             if (itemInventory != null)
             {
-                for (int j = 0; j < itemInventory.Length; i++)
+                _lists[i] = new List<InventoryItem>();
+                for (int j = 0; j < itemInventory.Length; j++)
                 {
-                    if (itemInventory[j].ItemsCount > 0)
+                    if (itemInventory[j] != null)
                     {
                         _lists[i].AddRange(itemInventory[j].GetInventoryList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
                     }

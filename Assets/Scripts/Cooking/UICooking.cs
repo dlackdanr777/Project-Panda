@@ -47,7 +47,7 @@ public class UICooking : UIView
 
         for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(_inventory[0].GetInventoryList()[i]);
         }
     }
 
@@ -60,7 +60,7 @@ public class UICooking : UIView
 
         for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(_inventory[0].GetInventoryList()[i]);
         }
     }
 

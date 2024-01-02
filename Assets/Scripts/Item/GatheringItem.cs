@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class GatheringItem : Item
 {
-    public DateTime StartTime;
-    public DateTime EndTime;
+    public string Time;
+    public string Season;
 
-    public GatheringItem(string id, string name, string description, int price, string rank, Sprite image, DateTime startTime, DateTime endTime) : base(id, name, description, price, rank, image)
+    public GatheringItem(string id, string name, string description, int price, string rank, Sprite image, string time, string season) : base(id, name, description, price, rank, image)
     {
-        StartTime = startTime;
-        EndTime = endTime;
+        Time = time;
+        Season = season;
     }
 
 }

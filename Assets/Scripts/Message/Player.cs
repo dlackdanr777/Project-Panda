@@ -10,11 +10,11 @@ public class Player : MonoBehaviour
 
     [Header("Inventory")]
     //GatheringItemInventory
-    public Inventory[] GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
+    public Inventory[] GatheringItemInventory; //0:Bug, 1:Fish, 2:Fruit
     //CookInventory
-    public Inventory[] CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1]; 
+    public Inventory[] CookItemInventory; 
     //Tool Inventory
-    public Inventory[] ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1]; 
+    public Inventory[] ToolItemInventory; 
 
     [Header("Message")]
     public MessageList[] Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1]; //0:Mail, 1:Wish 
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     {
         //MaxMessageCount = 20;
         MaxBamboo = 1000;
-        
+
         //for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
         //{
         //    Inventory[i] = new Inventory();
@@ -43,17 +43,22 @@ public class Player : MonoBehaviour
         //{
         //    //Messages[i] = new MessageList();
         //}
-        
-        //Item 초기화
-        for(int i=0;i<System.Enum.GetValues(typeof(GatheringItemType)).Length - 1; i++)
+
+        GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
+        CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
+        ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
+
+        Debug.Log("Player : " + System.Enum.GetValues(typeof(GatheringItemType)).Length);
+        //ItemInventory 초기화
+        for(int i=0;i<GatheringItemInventory.Length; i++)
         {
             GatheringItemInventory[i] = new Inventory();
         }
-        for (int i = 0; i < System.Enum.GetValues(typeof(CookItemType)).Length - 1; i++)
+        for (int i = 0; i < CookItemInventory.Length; i++)
         {
             CookItemInventory[i] = new Inventory();
         }
-        for (int i = 0; i < System.Enum.GetValues(typeof(ToolItemType)).Length - 1; i++)
+        for (int i = 0; i < ToolItemInventory.Length; i++)
         {
             ToolItemInventory[i] = new Inventory();
         }

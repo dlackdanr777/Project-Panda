@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 [Serializable]
 public class Inventory
@@ -7,7 +8,7 @@ public class Inventory
     public int MaxInventoryItem { get; private set; } = 30; //inventory 최대 저장 개수
     public int MaxInventoryItemCount { get; private set; } = 10;//한 아이템당 최대 개수
 
-    public List<InventoryItem> Items = new List<InventoryItem>();
+    private List<InventoryItem> Items = new List<InventoryItem>();
     
     public int ItemsCount => Items.Count;
 
@@ -58,15 +59,15 @@ public class Inventory
             case InventoryItemField.GatheringItem:
                 if (fieldindex == 0)
                 {
-                    database = DatabaseManager.Instance.ItemDatabase.ItemBugList;
+                    database = DatabaseManager.Instance.GetBugItemList();
                 }
                 else if (fieldindex == 1)
                 {
-                    database = DatabaseManager.Instance.ItemDatabase.ItemFishList;
+                    database = DatabaseManager.Instance.GetFishItemList();
                 }
                 else if (fieldindex == 2)
                 {
-                    database = DatabaseManager.Instance.ItemDatabase.ItemFruitList;
+                    database = DatabaseManager.Instance.GetFruitItemList();
                 }
                 break;
             case InventoryItemField.Cook:

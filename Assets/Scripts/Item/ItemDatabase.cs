@@ -73,15 +73,27 @@ public class ItemDatabase
     private List<Dictionary<string, object>> _dataFruit;
 
 
-    public Sprite Test;
+    public ItemSpriteDatabase[] ItemSpriteArray = new ItemSpriteDatabase[3];
+    public Dictionary<string, Sprite>[] _gatheingItemSpriteDic = new Dictionary<string, Sprite>[3];
+    private Sprite Test;
 
     public void Register()
     {
+        //Image
+        for (int i = 0; i < _gatheingItemSpriteDic.Length; i++)
+        {
+            _gatheingItemSpriteDic[i] = new Dictionary<string, Sprite>();
+            for(int j = 0; j < ItemSpriteArray[i].ItemSprites.Length; j++)
+            {
+                _gatheingItemSpriteDic[i].Add(ItemSpriteArray[i].ItemSprites[j].Id, ItemSpriteArray[i].ItemSprites[j].Image);
+            }
+        }
+
         _dataFurniture = CSVReader.Read("Furniture");
 
         //GatheringItem
-        _dataFish = CSVReader.Read("ItemFish");
         _dataBug = CSVReader.Read("ItemBug");
+        _dataFish = CSVReader.Read("ItemFish");
         _dataFruit = CSVReader.Read("ItemFruit");
 
         //Gathering Item
@@ -94,9 +106,9 @@ public class ItemDatabase
                     _dataBug[i]["설명"].ToString(),
                     (int)_dataBug[i]["가격"],
                     _dataBug[i]["등급"].ToString(),
-                    Test, //이미지 불러와야함
-                    DateTime.ParseExact(_dataBug[i]["시작시간"].ToString(), "H:mm", null),
-                    DateTime.ParseExact(_dataBug[i]["끝시간"].ToString(), "H:mm", null)
+                    GetItemSpriteById(_dataBug[i]["ID"].ToString(), GatheringItemType.Bug),
+                    _dataBug[i]["시간"].ToString(),
+                    _dataBug[i]["계절"].ToString()
                     ));
 
         }
@@ -109,9 +121,9 @@ public class ItemDatabase
                     _dataFish[i]["설명"].ToString(),
                     (int)_dataFish[i]["가격"],
                     _dataFish[i]["등급"].ToString(),
-                    Test, //이미지 불러와야함
-                    DateTime.ParseExact(_dataFish[i]["시작시간"].ToString(), "H:mm", null),
-                    DateTime.ParseExact(_dataFish[i]["끝시간"].ToString(), "H:mm", null)
+                    GetItemSpriteById(_dataFish[i]["ID"].ToString(), GatheringItemType.Fish),
+                    _dataFish[i]["시간"].ToString(),
+                    _dataFish[i]["계절"].ToString()
                     ));
                     
         }
@@ -124,9 +136,9 @@ public class ItemDatabase
                     _dataFruit[i]["설명"].ToString(),
                     (int)_dataFruit[i]["가격"],
                     _dataFruit[i]["등급"].ToString(),
-                    Test, //이미지 불러와야함
-                    DateTime.ParseExact(_dataFruit[i]["시작시간"].ToString(), "H:mm", null),
-                    DateTime.ParseExact(_dataFruit[i]["끝시간"].ToString(), "H:mm", null)
+                    GetItemSpriteById(_dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
+                    _dataFruit[i]["시간"].ToString(),
+                    _dataFruit[i]["계절"].ToString()
                     ));
 
         }
@@ -143,5 +155,11 @@ public class ItemDatabase
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
+    }
+
+    private Sprite GetItemSpriteById(string id, GatheringItemType type)
+    {
+        Sprite sprite = _gatheingItemSpriteDic[(int)type][id];
+        return sprite;
     }
 }

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class DatabaseManager : SingletonHandler<DatabaseManager>
@@ -20,8 +22,12 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
+
+    //Item
+    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     private ItemDatabase _itemDatabase;
-    public ItemDatabase ItemDatabase => _itemDatabase;  
+    public ItemDatabase ItemDatabase => _itemDatabase;
+    
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
@@ -55,7 +61,13 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         UserInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
+
+        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
+        {
+            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
+        }
         _itemDatabase.Register();
+
         //_weatherDatabase.Register();
         _mbtiDatabase.Register();
 
@@ -67,7 +79,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase.Register();
 
     }
-
 
     /// <summary>
     /// weekWeather data
