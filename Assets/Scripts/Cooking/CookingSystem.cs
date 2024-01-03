@@ -39,7 +39,7 @@ public class CookingSystem : MonoBehaviour
 
     private RecipeDatabase _recipeDatabase => DatabaseManager.Instance.RecipeDatabase;
 
-    private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
+    private Inventory[] _inventory => GameManager.Instance.Player.CookItemInventory;
 
     private RecipeData[] _recipeDatas;
     public CookingUserData CookingData => _userData;
