@@ -9,6 +9,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private UserInfo _userInfo;
     public UserInfo UserInfo => _userInfo;
 
+    private StarterPandaInfo _startPandaInfo;
+    public StarterPandaInfo StartPandaInfo => _startPandaInfo;
+
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
 
@@ -17,6 +20,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private WeatherApp _weatherDatabase;
     public WeatherApp WeatherDatabase => _weatherDatabase;
+
+    private RecipeDatabase _recipeDatabase;
+    public RecipeDatabase RecipeDatabase => _recipeDatabase;
 
     private MBTIManager _mbtiDatabase;
 
@@ -47,10 +53,12 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
 
         _userInfo = new UserInfo();
+        _startPandaInfo = new StarterPandaInfo();
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
         //_weatherDatabase = new WeatherApp();
+        _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
 
 
@@ -59,6 +67,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase = new HarvestItemManager();
 
         UserInfo.Register();
+        StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
 
@@ -70,6 +79,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
 
         //_weatherDatabase.Register();
+        _recipeDatabase.Register();
         _mbtiDatabase.Register();
 
         _pandaDatabase.PandaImage = _pandaImage;
@@ -193,6 +203,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _photoDatabase.Save();
         _furniturePosDatabase.Save();
         _userInfo.SaveUserInfoData();
+        _startPandaInfo.SavePandaInfoData();
     }
 
     public HarvestItem GetHarvestItemdata(int harvestItemID)

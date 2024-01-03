@@ -19,6 +19,7 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
     public void Init(UICooking uiCooking)
     {
         _uiCooking = uiCooking;
+        _cookButton.onClick.AddListener(OnCookButtonCilcked);
         _itemImage.gameObject.SetActive(false);
     }
 
@@ -35,21 +36,26 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
     public void OnDrop(PointerEventData eventData)
     {
         InventoryItem item = _uiCooking.UICookingDragSlot.GetItem();
+
+        Debug.Log("드롭함");
+
         if (item == null)
         {
-            _currentItem = item;
+            _currentItem = null;
             return;
         }
 
+        Debug.Log("아이템 존재");
         _currentItem = item;
         _itemImage.sprite = item.Image;
-        _cookButton.onClick.RemoveAllListeners();
-        _cookButton.onClick.AddListener(() =>
-        {
-            _uiCooking.CookingSystem.StartCooking(_currentItem);
-            CheckItem();
-        });
 
+        CheckItem();
+    }
+
+    private void OnCookButtonCilcked()
+    {
+        Debug.Log("버튼 눌림");
+        _uiCooking.StartCooking(_uiCooking.CookingSystem.GetRecipe(_currentItem));
         CheckItem();
     }
 
@@ -59,24 +65,18 @@ public class UICookingCenterSlot : MonoBehaviour, IDropHandler, IPointerClickHan
         {
             _itemImage.gameObject.SetActive(false);
             _uiCooking.HideButtonImage.SetActive(true);
-            _cookButton.onClick.RemoveAllListeners();
             return;
         }
 
         _itemImage.gameObject.SetActive(true);
-        Debug.Log("실행합니다");
 
         if (_uiCooking.CookingSystem.CheckRecipe(_currentItem))
         {
-            Debug.Log("레시피에 존재합니다.");
-
-
             _uiCooking.HideButtonImage.SetActive(false);
 
             return;
         }
 
-        Debug.Log("레시피에 존재하지 않습니다.");
         _uiCooking.HideButtonImage.SetActive(true);
     }
 

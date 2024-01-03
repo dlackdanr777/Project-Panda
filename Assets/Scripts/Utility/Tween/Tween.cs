@@ -50,6 +50,7 @@ namespace Muks.Tween
             foreach(TweenData tween in tweens)
             {
                 tween.enabled = false;
+                tween.DataSequences.Clear();
             }
 
         }
