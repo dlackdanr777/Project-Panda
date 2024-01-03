@@ -68,6 +68,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
         _itemDatabase.Register();
 
+
         //_weatherDatabase.Register();
         _mbtiDatabase.Register();
 

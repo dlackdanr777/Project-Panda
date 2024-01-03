@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
 
         Debug.Log("Player : " + System.Enum.GetValues(typeof(GatheringItemType)).Length);
         //ItemInventory √ ±‚»≠
-        for(int i=0;i<GatheringItemInventory.Length; i++)
+        for (int i = 0; i < GatheringItemInventory.Length; i++)
         {
             GatheringItemInventory[i] = new Inventory();
         }
@@ -62,6 +62,8 @@ public class Player : MonoBehaviour
         {
             ToolItemInventory[i] = new Inventory();
         }
+
+        //GatheringItemInventory = DatabaseManager.Instance.UserInfo.GatheringItemInventory;
     }
 
     private void Start()

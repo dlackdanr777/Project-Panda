@@ -23,6 +23,9 @@ public class UserInfo
 
     public bool IsExistingUser; //기존 유저인가?
 
+    //Inventory
+    public Inventory[] GatheringItemInventory;
+
 
     //==========================================================================================================
 
@@ -62,8 +65,10 @@ public class UserInfo
         _lastAccessDay = paser;
         DayCount = userInfo.DayCount;  
         IsExistingUser = userInfo.IsExistingUser;
+        GatheringItemInventory = userInfo.GatheringItemInventory;
 
         IsTodayRewardReceipt = true;
+
 
         if (TODAY.Day > LastAccessDay.Day)
         {
@@ -78,9 +83,11 @@ public class UserInfo
         IsExistingUser = false;
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
+        GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
 
         DayCount++;
         IsTodayRewardReceipt = false;
+
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
@@ -91,6 +98,8 @@ public class UserInfo
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
+
+        GatheringItemInventory = GameManager.Instance.Player.GatheringItemInventory;
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
         Debug.Log(_path);

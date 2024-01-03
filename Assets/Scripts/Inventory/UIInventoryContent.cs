@@ -51,12 +51,13 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
 
     private void Awake()
     {
-        Debug.Log(GameManager.Instance.Player.GatheringItemInventory.Length);
         //Test
         GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
         GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
         GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI4");
         GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, "IFR5");
+        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI4");
+        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI24");
 
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < System.Enum.GetValues(typeof(InventoryItemField)).Length - 1; i++)
