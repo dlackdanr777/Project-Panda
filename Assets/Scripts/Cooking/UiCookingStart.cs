@@ -114,6 +114,12 @@ public class UiCookingStart : MonoBehaviour
     private void OnComplatedButtonClicked()
     {
         _uiCooking.gameObject.SetActive(true);
+
+        for (int i = 0, count = _uiCooking.UICookingCenterSlot.Length; i < count; i++)
+        {
+            _uiCooking.UICookingCenterSlot[i].CheckCurrentItem();
+        }
+        _uiCooking.CheckCookEnabled();
         gameObject.SetActive(false);
     }
 

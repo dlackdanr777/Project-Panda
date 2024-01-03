@@ -44,7 +44,7 @@ public class UICookingSlot : MonoBehaviour//IBeginDragHandler, IDragHandler, IEn
 
     public void OnButtonClicked()
     {
-        _uiCooking.UICookingCenterSlot.ChoiceItem(_item);
+        _uiCooking.ChoiceItem(_item);
     }
 
   /*  public void OnBeginDrag(PointerEventData eventData) //마우스 드래그가 시작 됬을 때 실행되는 함수

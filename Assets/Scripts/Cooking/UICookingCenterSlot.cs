@@ -1,16 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
-
-public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropHandler
+public class UICookingCenterSlot : MonoBehaviour
 {
-    [SerializeField] private Button _cookButton;
-
     [SerializeField] private Image _itemImage;
+
+    [SerializeField] private Button _slotButton;
 
     private UICooking _uiCooking;
 
@@ -20,16 +17,26 @@ public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropH
     public void Init(UICooking uiCooking)
     {
         _uiCooking = uiCooking;
-        _cookButton.onClick.AddListener(OnCookButtonCilcked);
+        _slotButton.onClick.AddListener(OnSlotButtonClicked);
         _itemImage.gameObject.SetActive(false);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+
+    private void OnSlotButtonClicked()
     {
-        if(eventData.button == PointerEventData.InputButton.Right)
+        _currentItem = null;
+        _uiCooking.CheckCookEnabled();
+        _itemImage.gameObject.SetActive(false);
+    }
+
+    public void CheckCurrentItem()
+    {
+        if (_currentItem == null)
+            return;
+
+        if(_currentItem.Count <= 0)
         {
             _currentItem = null;
-            _uiCooking.HideButtonImage.SetActive(true);
             _itemImage.gameObject.SetActive(false);
         }
     }
@@ -37,58 +44,16 @@ public class UICookingCenterSlot : MonoBehaviour, IPointerClickHandler//, IDropH
     public void ChoiceItem(InventoryItem item)
     {
         _currentItem = item;
-
         if (_currentItem == null)
         {
-            return;
-        }
-
-        _currentItem = item;
-        _itemImage.sprite = item.Image;
-
-        CheckItem();
-    }
-
-
-   /* public void OnDrop(PointerEventData eventData)
-    {
-        InventoryItem item = _uiCooking.UICookingDragSlot.GetItem();
-
-        Debug.Log("드롭함");
-
-        if (item == null)
-        {
-            _currentItem = null;
-            return;
-        }
-
-        Debug.Log("아이템 존재");
-        _currentItem = item;
-        _itemImage.sprite = item.Image;
-
-        CheckItem();
-    }*/
-
-    private void OnCookButtonCilcked()
-    {
-        Debug.Log("버튼 눌림");
-        _uiCooking.StartCooking(_uiCooking.CookingSystem.GetRecipeByItem(_currentItem));
-        CheckItem();
-    }
-
-    private void CheckItem()
-    {
-        if(_currentItem.Count <= 0)
-        {
             _itemImage.gameObject.SetActive(false);
-            _uiCooking.HideButtonImage.SetActive(true);
             return;
         }
 
         _itemImage.gameObject.SetActive(true);
+        _currentItem = item;
+        _itemImage.sprite = item.Image;
 
-        _uiCooking.CheckCookEnabled(_currentItem);
+        _uiCooking.CheckCookEnabled();
     }
-
-
 }

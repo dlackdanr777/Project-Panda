@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public enum Cookware
 {
@@ -64,46 +67,112 @@ private void Start()
     }
 
 
-    public bool CheckRecipe(InventoryItem item)
+    public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
     {
-        if (item == null)
+        // 아이템이 존재하지 않는 경우
+        if (item1 == null && item2 == null)
         {
             Debug.Log("아이템이 존재하지 않습니다.");
-            return false;
+            return null;
         }
 
         foreach (RecipeData data in _recipeDatas)
         {
-            bool isEnabled = data.MaterialItemID == item.Id && data.MaterialValue <= item.Count && data.Cookware == _currentCookware;
+            // 두 아이템이 모두 존재하고, 재료 아이템 수가 2개인 경우
+            if (item1 != null && item2 != null && data.MaterialItemList.Count == 2)
+            {
+                List<KeyValuePair<string, int>> materialList = new List<KeyValuePair<string, int>>(data.MaterialItemList);
+                List<InventoryItem> itemList = new List<InventoryItem> { item1, item2 };
 
-            if (isEnabled)
-                return true;
+                foreach (var materialItem in materialList.ToList())
+                {
+                    foreach (var inventoryItem in itemList.ToList())
+                    {
+                        if (materialItem.Key == inventoryItem.Id && materialItem.Value <= inventoryItem.Count)
+                        {
+                            // 동일한 아이템인 경우 해당 아이템의 count를 2개로 계산
+                            int itemCount = (item1 == item2) ? 2 : 1;
+
+                            if(itemCount <= inventoryItem.Count)
+                            {
+                                materialList.Remove(materialItem);
+                                itemList.Remove(inventoryItem);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (materialList.Count == 0 && itemList.Count == 0)
+                {
+                    Debug.Log("2개 슬롯 조합법 리턴");
+                    return data;
+                }
+            }
+
+            // 재료 아이템 수가 1개인 경우
+            if ((item1 == null || item2 == null) && data.MaterialItemList.Count == 1)
+            {
+                foreach (var materialItem in data.MaterialItemList)
+                {
+                    bool isEnabled = (item1 != null && materialItem.Key == item1.Id && materialItem.Value <= item1.Count) ||
+                                     (item2 != null && materialItem.Key == item2.Id && materialItem.Value <= item2.Count);
+
+                    if (isEnabled)
+                    {
+                        Debug.Log("1개 슬롯 조합법 리턴");
+                        return data;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public bool IsEnabledCooking(RecipeData data)
+    {
+        List<KeyValuePair<string, int>> tmpMaterialItemList = data.MaterialItemList.ToList();
+
+        foreach (Inventory inventory in _inventory)
+        {
+            for (int itemIndex = inventory.Items.Count - 1; itemIndex >= 0; itemIndex--)
+            {
+                InventoryItem item = inventory.Items[itemIndex];
+
+                for (int i = tmpMaterialItemList.Count - 1; i >= 0; i--)
+                {
+                    var materialItem = tmpMaterialItemList[i];
+                    if (item.Id == materialItem.Key)
+                    {
+                        if (item.Count >= materialItem.Value)
+                        {
+                            for (int j = 0; j < materialItem.Value; j++)
+                            {
+                                Debug.Log("삭제 실행");
+                                inventory.Remove(item);
+                            }
+                            // 제외시킬 아이템은 해당 리스트에서 제거
+                            tmpMaterialItemList.RemoveAt(i);
+                        }
+                        else
+                        {
+                            Debug.Log("재료가 부족합니다.");
+                        }
+                    }
+                }
+
+                if (tmpMaterialItemList.Count == 0)
+                {
+                    _uiCooking.UpdateUI();
+                    return true;
+                }
+            }
         }
 
         return false;
     }
 
-
-    public RecipeData GetRecipeByItem(InventoryItem item)
-    {
-        foreach (RecipeData data in _recipeDatas)
-        {
-            if (data.MaterialItemID == item.Id)
-            {
-                for(int i = 0, count = data.MaterialValue; i < count; i++)
-                {
-                    _inventory[0].Remove(item);
-                }
-                
-                _uiCooking.UpdateUI();
-
-                Debug.Log("레시피가 존재합니다.");
-                return data;
-            }
-        }
-        Debug.Log("레시피가 존재하지 않습니다.");
-        return default;
-    }
 
 
     public string CheckItemGrade(RecipeData data, float fireValue)

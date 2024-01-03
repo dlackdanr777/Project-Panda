@@ -106,17 +106,32 @@ public class DialogueParser
         {
             string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
 
-            string materialItemID = row[0];
-            int materialValue = int.Parse(row[1]);
-            string successItemID = row[2];
-            int cookware = int.Parse(row[3]);
-            int cookingAmount = int.Parse(row[4]);
+            List<KeyValuePair<string, int>> itemList = new List<KeyValuePair<string, int>>();
+
+            if (!string.IsNullOrWhiteSpace(row[0]))
+            {
+                string materialItemID = row[0];
+                int materialValue = int.Parse(row[1]);
+
+               itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+
+            if (!string.IsNullOrWhiteSpace(row[2]))
+            {
+                string materialItemID = row[2];
+                int materialValue = int.Parse(row[3]);
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+
+
+            string successItemID = row[4];
             float successLocation = float.Parse(row[5]);
             float successRangeLevel_S = float.Parse(row[6]);
             float successRangeLevel_A = float.Parse(row[7]);
             float successRangeLevel_B = float.Parse(row[8]);
 
-            RecipeData recipeData = new RecipeData(materialItemID, materialValue, successItemID, cookware, cookingAmount, successLocation,
+            RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
                 successRangeLevel_S, successRangeLevel_A, successRangeLevel_B); //레시피 클래스 생성
 
             recipeDataList.Add(recipeData);

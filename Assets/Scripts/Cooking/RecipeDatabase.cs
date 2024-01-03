@@ -4,29 +4,14 @@ using UnityEngine;
 
 public class RecipeData
 {
-    private string _materialItemID;
+    private List<KeyValuePair<string, int>> _materialItemList;
     /// <summary>조리 필요 아이템</summary>
-    public string MaterialItemID => _materialItemID;
-
-
-    private int _materialValue;
-    /// <summary>조리 필요 아이템 갯수</summary>
-    public int MaterialValue => _materialValue;
+    public List<KeyValuePair<string, int>> MaterialItemList => _materialItemList;
 
 
     private string _successItemID;
     /// <summary>조리 완료 아이템 ID</summary>
     public string SuccessItemID => _successItemID;
-
-
-    private Cookware _cookware;
-    /// <summary>조리 도구</summary>
-    public Cookware Cookware => _cookware;
-
-
-    private int _cookingAmount;
-    /// <summary>조리 횟수</summary>
-    public int CookingAmount => _cookingAmount;
 
 
     private float _successLocation;
@@ -54,15 +39,11 @@ public class RecipeData
     private Item _item;
     public Item Item => _item;
 
-    public RecipeData(string materialItemID, int materialValue, string successItemID,
-        int cookware, int cookingAmount, float successLocation,
-       float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B)
+    public RecipeData(List<KeyValuePair<string, int>> materialItemList, string successItemID,
+         float successLocation, float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B)
     {
-        _materialItemID = materialItemID;
-        _materialValue = materialValue;
+        _materialItemList = materialItemList;
         _successItemID = successItemID;
-        _cookware = (Cookware)cookware;
-        _cookingAmount = CookingAmount;
         _successLocation = successLocation;
         _successRangeLevel_S = successRangeLevel_S;
         _successRangeLevel_A = successRangeLevel_A;

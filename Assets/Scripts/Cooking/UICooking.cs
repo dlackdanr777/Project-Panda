@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,12 +18,15 @@ public class UICooking : UIView
     [SerializeField] private UICookingDragSlot _uiCookingDragSlot;
     public UICookingDragSlot UICookingDragSlot => _uiCookingDragSlot;
 
-    [SerializeField] private UICookingCenterSlot _uiCookingCenterSlot;
-    public UICookingCenterSlot UICookingCenterSlot => _uiCookingCenterSlot;
+    [SerializeField] private UICookingCenterSlot[] _uiCookingCenterSlot;
+    public UICookingCenterSlot[] UICookingCenterSlot => _uiCookingCenterSlot;
 
     [SerializeField] private UICookwares _uiCookwares;
 
     [Space]
+
+    [SerializeField] private Button _cookButton;
+
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
 
@@ -39,8 +43,12 @@ public class UICooking : UIView
     {
         Init(null);
         _uiCookingDragSlot.Init(this);
-        _uiCookingCenterSlot.Init(this);
 
+        for(int i = 0, count = _uiCookingCenterSlot.Length; i < count; i++)
+        {
+            _uiCookingCenterSlot[i].Init(this);
+        }
+        _cookButton.onClick.AddListener(StartCooking);
         _hideButtonImage.SetActive(true);
     }
 
@@ -83,13 +91,16 @@ public class UICooking : UIView
         }
     }
 
-    public void StartCooking(RecipeData data)
-    {
-        _currentRecipeData = data;
 
-        gameObject.SetActive(false);
-        _uiCookingStart.gameObject.SetActive(true);
-        _uiCookingStart.StartCooking(_currentRecipeData);
+    private void StartCooking()
+    {
+        if(CookingSystem.IsEnabledCooking(_currentRecipeData))
+        {
+            gameObject.SetActive(false);
+            _uiCookingStart.gameObject.SetActive(true);
+            _uiCookingStart.StartCooking(_currentRecipeData);
+        }
+
     }
 
     private void ChangeCookware(int value)
@@ -100,7 +111,7 @@ public class UICooking : UIView
 
         _uiCookwares.ChangeImage(value, () =>
         {
-            CheckCookEnabled(_uiCookingCenterSlot.CurrentItem);
+            CheckCookEnabled();
 
             if (currentCookware == 0)
                 _leftCookwareChangeButton.gameObject.SetActive(false);
@@ -115,17 +126,41 @@ public class UICooking : UIView
       
     }
 
-    public void CheckCookEnabled(InventoryItem item)
+    public void CheckCookEnabled()
     {
-        if (CookingSystem.CheckRecipe(item))
+        if (CookingSystem.GetkRecipeByItems(_uiCookingCenterSlot[0].CurrentItem, _uiCookingCenterSlot[1].CurrentItem) != null)
         {
+            _currentRecipeData = CookingSystem.GetkRecipeByItems(_uiCookingCenterSlot[0].CurrentItem, _uiCookingCenterSlot[1].CurrentItem);
             HideButtonImage.SetActive(false);
             return;
         }
-
-        HideButtonImage.SetActive(true);
+        _hideButtonImage.SetActive(true);
     }
-   
+
+    public void ChoiceItem(InventoryItem item)
+    {
+        foreach (UICookingCenterSlot slot in _uiCookingCenterSlot)
+        {
+            if (slot.CurrentItem != null)
+                continue;
+
+            slot.ChoiceItem(item);
+            return;
+        }
+
+        _uiCookingCenterSlot.Last().ChoiceItem(item);
+
+        CheckCookEnabled();
+    }
+
+    private void OnCookButtonCilcked()
+    {
+        //StartCooking(CookingSystem.GetRecipeByItem(_currentItem));
+        //CheckItem();
+    }
+
+    
+
 
     public override void Show()
     {
