@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
 
-        Debug.Log("Player : " + System.Enum.GetValues(typeof(GatheringItemType)).Length);
+        //Debug.Log("Player : " + System.Enum.GetValues(typeof(GatheringItemType)).Length);
         //ItemInventory √ ±‚»≠
         for (int i = 0; i < GatheringItemInventory.Length; i++)
         {
@@ -64,11 +64,13 @@ public class Player : MonoBehaviour
         }
 
         //GatheringItemInventory = DatabaseManager.Instance.UserInfo.GatheringItemInventory;
+        DatabaseManager.Instance.UserInfo.LoadUserInventory();
     }
 
     private void Start()
     {
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+
     }
 
     //public int CurrentNotCheckedMessage {
