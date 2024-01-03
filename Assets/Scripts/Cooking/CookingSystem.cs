@@ -54,9 +54,11 @@ public class CookingSystem : MonoBehaviour
 
     private RecipeData[] _recipeDatas;
 
+    private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
+
     private Cookware _currentCookware;
 
-private void Start()
+    private void Start()
     {
         Init();
     }
@@ -67,7 +69,7 @@ private void Start()
     }
 
 
-    public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
+   /* public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
     {
         // 아이템이 존재하지 않는 경우
         if (item1 == null && item2 == null)
@@ -93,7 +95,7 @@ private void Start()
                             // 동일한 아이템인 경우 해당 아이템의 count를 2개로 계산
                             int itemCount = (item1 == item2) ? 2 : 1;
 
-                            if(itemCount <= inventoryItem.Count)
+                            if (itemCount <= inventoryItem.Count)
                             {
                                 materialList.Remove(materialItem);
                                 itemList.Remove(inventoryItem);
@@ -128,7 +130,43 @@ private void Start()
         }
 
         return null;
+    }*/
+
+    public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
+    {
+        // 아이템이 존재하지 않는 경우
+        if (item1 == null && item2 == null)
+        {
+            Debug.Log("아이템이 존재하지 않습니다.");
+            return null;
+        }
+
+        if(item1 == item2)
+        {
+            if (item1.Count < 2)
+                return null;
+        }
+
+        RecipeData recipe;
+        string item1ID = item1 != null ? item1.Id : "";
+        string item2ID = item2 != null ? item2.Id : "";
+
+        Tuple<string, string> tuple1 = Tuple.Create<string, string>(item1ID, item2ID);
+        Tuple<string, string> tuple2 = Tuple.Create<string, string>(item2ID, item1ID);
+
+
+        if (_recipeDataDic.TryGetValue(tuple1, out recipe))
+        {
+                return recipe;
+        }
+        else if(_recipeDataDic.TryGetValue(tuple2, out recipe))
+        {
+                return recipe;
+        }
+
+        return null;
     }
+
 
     public bool IsEnabledCooking(RecipeData data)
     {
@@ -212,7 +250,7 @@ private void Start()
         if (tmpInt < 0)
             tmpInt = 0;
 
-        else if((int)Cookware.Sizeof <= tmpInt)
+        else if ((int)Cookware.Sizeof <= tmpInt)
             tmpInt = (int)Cookware.Sizeof - 1;
 
         _currentCookware = (Cookware)tmpInt;

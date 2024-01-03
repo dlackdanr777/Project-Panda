@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -74,6 +75,9 @@ public class RecipeDatabase
 {
     private List<RecipeData> _recipeDataList = new List<RecipeData>();
 
+    private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic = new Dictionary<Tuple<string, string>, RecipeData>();
+    public Dictionary<Tuple<string, string>, RecipeData> RecipeDataDic => _recipeDataDic;
+
     private DialogueParser _parser = new DialogueParser();
 
     public void Register()
@@ -88,6 +92,9 @@ public class RecipeDatabase
         for (int i = 0, count = recipeDatas.Length; i < count; i++)
         {
             _recipeDataList.Add(recipeDatas[i]);
+
+            Tuple<string, string> tuple = Tuple.Create(recipeDatas[i].MaterialItemList[0].Key, recipeDatas[i].MaterialItemList[1].Key);
+            _recipeDataDic.Add(tuple, recipeDatas[i]);
         }
     }
 

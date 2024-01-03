@@ -115,11 +115,25 @@ public class DialogueParser
 
                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
             }
+            else
+            {
+                string materialItemID = "";
+                int materialValue = 0;
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
 
             if (!string.IsNullOrWhiteSpace(row[2]))
             {
                 string materialItemID = row[2];
                 int materialValue = int.Parse(row[3]);
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+            else
+            {
+                string materialItemID = "";
+                int materialValue = 0;
 
                 itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
             }

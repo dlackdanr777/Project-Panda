@@ -21,7 +21,6 @@ public class GameManager : SingletonHandler<GameManager>
     public override void Awake()
     {
         base.Awake();
-        Application.targetFrameRate = 60;
     }
 
 }
