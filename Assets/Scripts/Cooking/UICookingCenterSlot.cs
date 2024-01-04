@@ -41,6 +41,17 @@ public class UICookingCenterSlot : MonoBehaviour
         }
     }
 
+    public void SetActiveSlot(bool value)
+    {
+        gameObject.SetActive(value);
+    }
+
+    public void ResetItem()
+    {
+        _currentItem = null;
+        _itemImage.gameObject.SetActive(false);
+    }
+
     public void ChoiceItem(InventoryItem item)
     {
         _currentItem = item;

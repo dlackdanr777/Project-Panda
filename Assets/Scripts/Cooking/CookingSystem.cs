@@ -154,7 +154,6 @@ public class CookingSystem : MonoBehaviour
         Tuple<string, string> tuple1 = Tuple.Create<string, string>(item1ID, item2ID);
         Tuple<string, string> tuple2 = Tuple.Create<string, string>(item2ID, item1ID);
 
-
         if (_recipeDataDic.TryGetValue(tuple1, out recipe))
         {
                 return recipe;
@@ -165,6 +164,52 @@ public class CookingSystem : MonoBehaviour
         }
 
         return null;
+    }
+
+    public bool IsEnabledCooking(InventoryItem item1, InventoryItem item2)
+    {
+        RecipeData recipe = GetkRecipeByItems(item1, item2);
+        
+        if (recipe == null)
+            return false;
+
+        bool isRemovedItem1 = item1 == null ? true : false;
+        bool isRemovedItem2 = item2 == null ? true : false;
+
+        foreach (Inventory inventory in _inventory)
+        {
+            for(int i = 0; i < inventory.ItemsCount; i++)
+            {
+                if (!isRemovedItem1)
+                {
+                    if (item1.Id == inventory.Items[i].Id)
+                    {
+                        isRemovedItem1 = true;
+                        inventory.Remove(item1);
+                    }
+                        
+                }
+
+                if (!isRemovedItem2)
+                {
+                    if (item2.Id == inventory.Items[i].Id)
+                    {
+                        isRemovedItem2 = true;
+                        inventory.Remove(item2);
+                    }
+                }
+
+                if (isRemovedItem1 && isRemovedItem2)
+                {
+                    Debug.Log("두개다 삭제");
+                    _uiCooking.UpdateUI();
+                    return true;
+                }
+                    
+            }
+        }
+
+        return false;
     }
 
 
