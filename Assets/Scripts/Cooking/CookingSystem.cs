@@ -69,7 +69,7 @@ public class CookingSystem : MonoBehaviour
     }
 
 
-   /* public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
+    /*public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
     {
         // 아이템이 존재하지 않는 경우
         if (item1 == null && item2 == null)
@@ -141,30 +141,25 @@ public class CookingSystem : MonoBehaviour
             return null;
         }
 
-        if(item1 == item2)
+        if(item1 == item2 && item1.Count < 2)
         {
-            if (item1.Count < 2)
-                return null;
+            return null;
         }
 
-        RecipeData recipe;
         string item1ID = item1 != null ? item1.Id : "";
         string item2ID = item2 != null ? item2.Id : "";
 
         Tuple<string, string> tuple1 = Tuple.Create<string, string>(item1ID, item2ID);
         Tuple<string, string> tuple2 = Tuple.Create<string, string>(item2ID, item1ID);
 
-        if (_recipeDataDic.TryGetValue(tuple1, out recipe))
+        if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))
         {
-                return recipe;
-        }
-        else if(_recipeDataDic.TryGetValue(tuple2, out recipe))
-        {
-                return recipe;
+             return recipe;
         }
 
         return null;
     }
+
 
     public bool IsEnabledCooking(InventoryItem item1, InventoryItem item2)
     {

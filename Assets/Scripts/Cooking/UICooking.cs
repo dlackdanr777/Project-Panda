@@ -101,6 +101,10 @@ public class UICooking : UIView
     {
         if(CookingSystem.IsEnabledCooking(_uiCookingCenterSlot[0].CurrentItem, _uiCookingCenterSlot[1].CurrentItem))
         {
+            for(int i = 0, count = _uiCookingCenterSlot.Length; i < count; i++)
+            {
+                _uiCookingCenterSlot[i].ResetItem();
+            }
             gameObject.SetActive(false);
             _uiCookingStart.gameObject.SetActive(true);
             _uiCookingStart.StartCooking(_currentRecipeData);
@@ -116,7 +120,6 @@ public class UICooking : UIView
 
         _uiCookwares.ChangeImage(value, () =>
         {
-            CheckCookEnabled();
             SetCookwareCount(currentCookware);
             CheckCookEnabled();
 
