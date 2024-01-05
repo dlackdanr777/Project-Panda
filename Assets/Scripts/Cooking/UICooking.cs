@@ -22,7 +22,7 @@ public class UICooking : UIView
     [SerializeField] private GameObject _hideButtonImage;
     public GameObject HideButtonImage => _hideButtonImage;
 
-    private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
+    private Inventory[] _inventory => GameManager.Instance.Player.CookItemInventory;
 
     private RecipeData _currentRecipeData;
 
@@ -53,7 +53,7 @@ public class UICooking : UIView
 
         for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(_inventory[0].GetInventoryList()[i]);
         }
     }
 
@@ -66,7 +66,7 @@ public class UICooking : UIView
 
         for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(_inventory[0].GetInventoryList()[i]);
         }
     }
 

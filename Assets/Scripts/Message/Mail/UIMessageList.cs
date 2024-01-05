@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMessageList : UIList<Message,MessageField>
+public class UIMessageList : UIList<Message, MessageField>
 {
     [SerializeField] private Button _removeButton;
     [SerializeField] private GameObject _removePopup;
@@ -15,14 +15,14 @@ public class UIMessageList : UIList<Message,MessageField>
     public Action NoticeHandler;
 
     private void Awake()
-    { 
+    {
         _player = GameManager.Instance.Player;
-        for(int i = 0; i < _player.Messages.Length; i++)
+        for (int i = 0; i < _player.Messages.Length; i++)
         {
             _maxCount[i] = _player.Messages[i].MaxMessageCount;
         }
 
-        Init();      
+        Init();
     }
 
     private void Start()
@@ -42,16 +42,16 @@ public class UIMessageList : UIList<Message,MessageField>
 
     private void OnAddInventoryItem(int index)
     {
-        if (!_player.Messages[0].IsReceiveGift[index])
-        { 
-            _player.Messages[0].IsReceiveGift[index] = true;
+        //if (!_player.Messages[0].IsReceiveGift[index])
+        //{
+        //    _player.Messages[0].IsReceiveGift[index] = true;
 
-            //선물 버튼 클릭하면 인벤토리에 추가
-            ItemField itemField = _player.Messages[0].GetMessageList()[index].Gift.ItemField;
-            _player.Inventory[(int)itemField].Add(_player.Messages[(int)_currentField].GetMessageList()[index].Gift);
+        //    //선물 버튼 클릭하면 인벤토리에 추가
+        //    ItemField itemField = _player.Messages[0].GetMessageList()[index].Gift.ItemField;
+        //    _player.Inventory[(int)itemField].Add(_player.Messages[(int)_currentField].GetMessageList()[index].Gift);
 
-            _detailView.transform.GetChild(3).gameObject.SetActive(false); //선물 버튼 안보이게
-        }
+        //    _detailView.transform.GetChild(3).gameObject.SetActive(false); //선물 버튼 안보이게
+        //}
     }
 
     private void OnClickRemoveButton()
@@ -101,18 +101,18 @@ public class UIMessageList : UIList<Message,MessageField>
         //player 메시지 확인
         _spawnPoint[(int)_currentField].GetChild(index).GetChild(2).gameObject.SetActive(false);
         _player.Messages[(int)_currentField].IsCheckMessage[index] = true;
-        NoticeHandler?.Invoke(); 
+        NoticeHandler?.Invoke();
 
         DataBind.SetTextValue("MessageDetailTo", _lists[(int)_currentField][index].To);
         DataBind.SetTextValue("MessageDetailContent", _lists[(int)_currentField][index].Content);
         DataBind.SetTextValue("MessageDetailFrom", _lists[(int)_currentField][index].From);
 
-        if(_currentField == MessageField.Mail)
+        if (_currentField == MessageField.Mail)
         {
 
             _spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
             DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
-            DataBind.SetButtonValue("MessageDetailGiftButton", ()=>OnAddInventoryItem(index));
+            DataBind.SetButtonValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
         }
     }
 

@@ -2,7 +2,14 @@ using Muks.DataBind;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIDiaryList : UIList<Item, ItemField>
+public enum DiaryType
+{
+    None = -1,
+    Item,
+    NPC,
+    Diary
+}
+public class UIDiaryList : UIList<Item, DiaryType>
 {
     private int _currentItemIndex;
     private ItemDatabase _dataBase;
@@ -12,14 +19,14 @@ public class UIDiaryList : UIList<Item, ItemField>
     private void Awake()
     {
         _dataBase = DatabaseManager.Instance.ItemDatabase;
-        GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
+        //GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
         
         //Test snack
-        for(int i = 0; i < 2; i++)
-        {
-            _maxCount[i] = _dataBase.ItemCount[i];
-            _lists[i] = _dataBase.ItemList[i];
-        }
+        //for(int i = 0; i < 2; i++)
+        //{
+        //    _maxCount[i] = _dataBase.ItemCount[i];
+        //    _lists[i] = _dataBase.ItemList[i];
+        //}
 
         Init();
     }
@@ -44,12 +51,12 @@ public class UIDiaryList : UIList<Item, ItemField>
 
     protected override void GetContent(int index)
     {
-        if (_currentField == ItemField.Toy) //친구면 name 
+        if (_currentField == DiaryType.NPC) //친구면 name 
         {
             DataBind.SetTextValue("DiaryDetailName", _lists[(int)_currentField][index].Name);
             OriginImage(_detailView.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>());
         }
-        else if(_currentField == ItemField.Snack) //일기장이면 이미지 크게
+        else if(_currentField == DiaryType.Diary) //일기장이면 이미지 크게
         {
             StretchImage(_detailView.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>());
         }

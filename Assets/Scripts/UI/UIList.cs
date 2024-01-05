@@ -8,6 +8,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
     [SerializeField] private GameObject _prefab; //spawn할 prefab
     [SerializeField] private Button _closeDetailViewButton; //상세설명 창 닫기
     [SerializeField] private int _firstToggleIndex;
+    [SerializeField] private ScrollRect _scrollrect;
 
     [SerializeField] protected ToggleGroup _field; //토글 종류
     [SerializeField] protected GameObject _detailView; //상세설명 창
@@ -50,7 +51,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
         CreateSlots(); //slot 생성
 
         //버튼 리스너
-        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>()) //토글이 변경되면 배경 색상도 변화
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>())
         {
             toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
         }
@@ -92,7 +93,9 @@ public abstract class UIList<T, Enum> : MonoBehaviour
         }
         if((int)(object)_currentField >= 0)
         {
-            _spawnPoint[(int)(object)_currentField].gameObject.SetActive(true);//현재 토글의 content를 setactive 
+            GameObject activeContent = _spawnPoint[(int)(object)_currentField].gameObject;
+            activeContent.SetActive(true);//현재 토글의 content를 setactive 
+            _scrollrect.content = activeContent.GetComponent<RectTransform>(); //scrollview 변경 
 
         }
     }

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class DatabaseManager : SingletonHandler<DatabaseManager>
@@ -26,8 +28,12 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
+
+    //Item
+    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     private ItemDatabase _itemDatabase;
-    public ItemDatabase ItemDatabase => _itemDatabase;  
+    public ItemDatabase ItemDatabase => _itemDatabase;
+    
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
@@ -64,7 +70,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
+
+        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
+        {
+            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
+        }
         _itemDatabase.Register();
+
+
         //_weatherDatabase.Register();
         _recipeDatabase.Register();
         _mbtiDatabase.Register();
@@ -77,7 +90,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase.Register();
 
     }
-
 
     /// <summary>
     /// weekWeather data
@@ -139,22 +151,32 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _pandaDatabase.SetStarterMBTI(mbti);
     }
 
+    //Gathering Item
     /// <summary>
-    /// Toy ItemList
+    /// GatheringItem BugList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetToyItem()
+    public List<Item> GetBugItemList()
     {
-        return _itemDatabase.ItemList[0];
+        return _itemDatabase.ItemBugList;
     }
 
     /// <summary>
-    /// Snack ItemList
+    /// GatheringItem FishList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetSnackItem()
+    public List<Item> GetFishItemList()
     {
-        return _itemDatabase.ItemList[1];
+        return _itemDatabase.ItemFishList;
+    }
+
+    /// <summary>
+    /// GatheringItem FruitList
+    /// </summary>
+    /// <returns></returns>
+    public List<Item> GetFruitItemList()
+    {
+        return _itemDatabase.ItemFruitList;
     }
 
     /// <summary>
@@ -163,7 +185,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <returns></returns>
     public List<Item> GetFurnitureItem()
     {
-        return _itemDatabase.ItemList[2];
+        return _itemDatabase.FurnitureList;
     }
 
     /// <summary>
