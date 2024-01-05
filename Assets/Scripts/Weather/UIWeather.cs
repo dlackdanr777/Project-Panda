@@ -52,17 +52,13 @@ public class UIWeather : UIView
             _daySlots[i].SetDayText(i + 1);
         }
 
-        Debug.Log(DatabaseManager.Instance.UserInfo.DayCount);
-
         //슬롯들을 세팅해준다.
         for (int i = 0, count = _slots.Count; i < count; i++)
         {
             //만약 보상 지급 슬롯이라면?
             if ((DatabaseManager.Instance.UserInfo.DayCount % 6) - 1 == i)
             {
-                Debug.Log(_weekWeathers[i]);
                 _todayWeatherData = _weekWeathers[i];
-                Debug.Log(_todayWeatherData);
                 _daySlots[i].Init(true);
 
                 //보상이 지급되는 날이면?

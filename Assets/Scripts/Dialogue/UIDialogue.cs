@@ -76,6 +76,8 @@ public class UIDialogue : UIView
             _isStoryStart = false;
             _state = DialogueState.None;
             VisibleState = VisibleState.Disappeared;
+
+            _uiNav.ShowMainUI();
         });
 
         if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
@@ -99,6 +101,7 @@ public class UIDialogue : UIView
 
         gameObject.SetActive(true);
         _isSkipEnabled = true;
+        _uiNav.HideMainUI();
 
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
@@ -194,6 +197,8 @@ public class UIDialogue : UIView
         _eventDatas = eventDatas;
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
+
+        Debug.Log(_eventDatas.Length);
     }
 
 

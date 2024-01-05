@@ -5,10 +5,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class UICookingSlot : MonoBehaviour//IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     
     [SerializeField] private Image _itemImage;
+
+    [SerializeField] private Button _button;
 
     [SerializeField] private TextMeshProUGUI _amountText;
 
@@ -18,6 +20,7 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void Init(UICooking uiCooking)
     {
         _uiCooking = uiCooking;
+        _button.onClick.AddListener(OnButtonClicked);
     }
 
     public void UpdateUI(InventoryItem item)
@@ -39,7 +42,12 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         _amountText.text = item.Count.ToString();
     }
 
-    public void OnBeginDrag(PointerEventData eventData) //마우스 드래그가 시작 됬을 때 실행되는 함수
+    public void OnButtonClicked()
+    {
+        _uiCooking.ChoiceItem(_item);
+    }
+
+  /*  public void OnBeginDrag(PointerEventData eventData) //마우스 드래그가 시작 됬을 때 실행되는 함수
     {
         if (_item == null)
             return;
@@ -61,5 +69,5 @@ public class UICookingSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         _uiCooking.UICookingDragSlot.EndDrag();
-    }
+    }*/
 }

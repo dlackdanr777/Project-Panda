@@ -26,6 +26,16 @@ public class UICookingBar : MonoBehaviour
         UpdataBar();
     }
 
+    public float GetBarWedth()
+    {
+        return _bar.rectTransform.rect.width;
+    }
+
+    public float GetBarValue()
+    {
+        return _bar.fillAmount;
+    }
+
     public void Reset(float fillAmount)
     {
         _bar.fillAmount = fillAmount;
@@ -33,7 +43,7 @@ public class UICookingBar : MonoBehaviour
     }
 
 
-    public void DecreaseGauge(float maxStamina, float stamina)
+    public void UpdateGauge(float maxStamina, float stamina)
     {
         if (_barType == BarType.Decrease)
         {

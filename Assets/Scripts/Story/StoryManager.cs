@@ -82,7 +82,6 @@ public class StoryManager : SingletonHandler<StoryManager>
         }
 
         panda.gameObject.SetActive(false);
-        Debug.Log(panda.name + "²¨Áü");
     }
 
 }
