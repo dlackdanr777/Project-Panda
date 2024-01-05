@@ -7,7 +7,7 @@ using System;
 
 public abstract class InteractionStoryEvent : StoryEvent
 {
-    [SerializeField] private FollowButton _followButtonPrefab;
+    [SerializeField] protected FollowButton _followButtonPrefab;
     private FollowButton _followButton;
     public FollowButton FollowButton => _followButton;
 
