@@ -52,20 +52,18 @@ public class PandaStoryController : MonoBehaviour
         Vector3 targetPos = transform.position + _buttonPos;
         Transform parent = GameObject.Find("Follow Button Parent").transform;
         _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
-        _followButton.Init(targetPos, new Vector2(120, 120), _buttonImage, () => OnStartInteractionHandler?.Invoke(this, StoryDialogue, _storyEvents));
+        _followButton.Init(gameObject, targetPos, new Vector2(120, 120), _buttonImage, () => OnStartInteractionHandler?.Invoke(this, StoryDialogue, _storyEvents));
         _followButton.gameObject.SetActive(gameObject.activeSelf);
     }
     
 
     private void OnEnable()
     {
-        if (_followButton != null)
-            _followButton.gameObject.SetActive(true);
+            _followButton?.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
-        if (_followButton != null)
-            _followButton.gameObject.SetActive(false);
+            _followButton?.gameObject.SetActive(false);
     }
 }

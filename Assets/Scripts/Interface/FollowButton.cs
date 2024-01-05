@@ -13,8 +13,10 @@ public class FollowButton : MonoBehaviour
 
     private Button _button;
 
+    private GameObject _targetGameObject;
 
-    public void Init(Vector3 targetPos, Vector2 size, Sprite sprite,  Action onClicked)
+
+    public void Init(GameObject target, Vector3 targetPos, Vector2 size, Sprite sprite,  Action onClicked)
     {
         _button = GetComponent<Button>();
 
@@ -22,11 +24,18 @@ public class FollowButton : MonoBehaviour
         _image.sprite = sprite;
         _button.onClick.AddListener(() => onClicked?.Invoke());
         _targetPos = targetPos;
+
+        _targetGameObject = target;
     }
 
     private void Update()
     {
-        if(_targetPos != null || _targetPos != Vector3.zero)
+        if (!_targetGameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
+
+        if (_targetPos != null || _targetPos != Vector3.zero)
         {
             transform.position = Camera.main.WorldToScreenPoint(_targetPos);
         }

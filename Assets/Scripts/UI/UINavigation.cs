@@ -218,6 +218,16 @@ public class UINavigation : MonoBehaviour
         }
     }
 
+    public void HideMainUI()
+    {
+        _rootUiView.UIView.gameObject?.SetActive(false);
+    }
+
+    public void ShowMainUI()
+    {
+        _rootUiView.UIView.gameObject?.SetActive(true);
+    }
+
 
     public void CheckViewListCount()
     {
