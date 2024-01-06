@@ -173,11 +173,13 @@ public class CookingSystem : MonoBehaviour
 
         foreach (Inventory inventory in _inventory)
         {
-            for(int i = 0; i < inventory.ItemsCount; i++)
+            List<InventoryItem> items = inventory.GetInventoryList();
+
+            for (int i = 0; i < items.Count; i++)
             {
                 if (!isRemovedItem1)
                 {
-                    if (item1.Id == inventory.Items[i].Id)
+                    if (item1.Id == items[i].Id)
                     {
                         isRemovedItem1 = true;
                         inventory.Remove(item1);
@@ -187,7 +189,7 @@ public class CookingSystem : MonoBehaviour
 
                 if (!isRemovedItem2)
                 {
-                    if (item2.Id == inventory.Items[i].Id)
+                    if (item2.Id == items[i].Id)
                     {
                         isRemovedItem2 = true;
                         inventory.Remove(item2);
@@ -214,9 +216,11 @@ public class CookingSystem : MonoBehaviour
 
         foreach (Inventory inventory in _inventory)
         {
-            for (int itemIndex = inventory.Items.Count - 1; itemIndex >= 0; itemIndex--)
+            List<InventoryItem> items = inventory.GetInventoryList();
+
+            for (int itemIndex = items.Count - 1; itemIndex >= 0; itemIndex--)
             {
-                InventoryItem item = inventory.Items[itemIndex];
+                InventoryItem item = items[itemIndex];
 
                 for (int i = tmpMaterialItemList.Count - 1; i >= 0; i--)
                 {

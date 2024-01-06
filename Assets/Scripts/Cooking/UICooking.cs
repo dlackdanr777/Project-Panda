@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class UICooking : UIView
 {
@@ -36,7 +37,8 @@ public class UICooking : UIView
 
     [SerializeField] private Button _rightCookwareChangeButton;
 
-    private Inventory[] _inventory => GameManager.Instance.Player.Inventory;
+    private Inventory[] _inventory => GameManager.Instance.Player.GatheringItemInventory;
+    //ToDo: 수정 예정
 
     private RecipeData _currentRecipeData;
 
@@ -70,10 +72,12 @@ public class UICooking : UIView
             _uiCookingSlots[i].UpdateUI(null);
         }
 
-        for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
+        List<InventoryItem> items = _inventory[1].GetInventoryList();
+        for (int i = 0, count = items.Count; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(items[i]);
         }
+        //TODO : 수정예정
 
         _leftCookwareChangeButton.onClick.AddListener(() => ChangeCookware(-1));
         _rightCookwareChangeButton.onClick.AddListener(() => ChangeCookware(1));
@@ -90,10 +94,12 @@ public class UICooking : UIView
             _uiCookingSlots[i].UpdateUI(null);
         }
 
-        for (int i = 0, count = _inventory[0].ItemsCount; i < count; i++)
+        List<InventoryItem> items = _inventory[1].GetInventoryList();
+        for (int i = 0, count = items.Count; i < count; i++)
         {
-            _uiCookingSlots[i].UpdateUI(_inventory[0].Items[i]);
+            _uiCookingSlots[i].UpdateUI(items[i]);
         }
+        //TODO: 수정예정
     }
 
 

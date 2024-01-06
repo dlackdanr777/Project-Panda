@@ -97,12 +97,10 @@ public class UiCookingStart : MonoBehaviour
     /// <summary>조리완료 버튼 클릭시 실행되는 함수</summary>
     public void CookingComplated()
     {
-        int InventoryIndex = (int)_currentRecipeData.Item.ItemField;
-
         float totalFireValue = (_tempfireValue + _fireValue) * 0.5f * 0.01f;
         Debug.Log(_uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue) + " 획득");
 
-        GameManager.Instance.Player.Inventory[InventoryIndex].Add(_currentRecipeData.Item);
+       GameManager.Instance.Player.GetItemInventory(InventoryItemField.Cook)[0].Add(_currentRecipeData.Item);
 
         _uiCookingTimer.EndTimer();
         _uiCookwares.EndCooking();
