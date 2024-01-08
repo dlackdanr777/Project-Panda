@@ -1,17 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UICookingEnd : MonoBehaviour
 {
+    [SerializeField] private Image _itemImage;
+    [SerializeField] private TextMeshProUGUI _nameText;
+    [SerializeField] private TextMeshProUGUI _descriptionText;
 
-
-    [SerializeField] private Image _layoutImage;
     [SerializeField] private Button _okButton;
-
 
     public void Init(UnityAction onButtonClicked)
     {
@@ -22,6 +20,9 @@ public class UICookingEnd : MonoBehaviour
 
     public void Show(Item item)
     {
+        _itemImage.sprite = item.Image;
+        _nameText.text = item.Name;
+        _descriptionText.text = item.Description;
         gameObject.SetActive(true);
     }
 

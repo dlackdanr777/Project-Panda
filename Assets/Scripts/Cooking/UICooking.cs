@@ -72,7 +72,7 @@ public class UICooking : UIView
             _uiCookingSlots[i].UpdateUI(null);
         }
 
-        List<InventoryItem> items = _inventory[1].GetInventoryList();
+        List<InventoryItem> items = _inventory[(int)CookingSystem.InventoryType].GetInventoryList();
         for (int i = 0, count = items.Count; i < count; i++)
         {
             _uiCookingSlots[i].UpdateUI(items[i]);
@@ -94,7 +94,7 @@ public class UICooking : UIView
             _uiCookingSlots[i].UpdateUI(null);
         }
 
-        List<InventoryItem> items = _inventory[1].GetInventoryList();
+        List<InventoryItem> items = _inventory[(int)CookingSystem.InventoryType].GetInventoryList();
         for (int i = 0, count = items.Count; i < count; i++)
         {
             _uiCookingSlots[i].UpdateUI(items[i]);
