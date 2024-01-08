@@ -1,6 +1,7 @@
 using Muks.DataBind;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -103,12 +104,14 @@ public class UIBookList : MonoBehaviour
                     child.GetChild(0).GetComponent<Image>().enabled = true;
                     child.GetChild(0).GetComponent<Image>().sprite = _database[(_current*9) + i].Image;
                     child.GetChild(0).GetComponent<Image>().preserveAspect = true;
+                    child.GetChild(1).GetComponent<TextMeshProUGUI>().text = _database[(_current * 9) + i].Name;
                     child.GetComponent<Button>().interactable = true;
                 }
                 else
                 {
                     child.GetChild(0).GetComponent<Image>().enabled = false;
                     child.GetChild(0).GetComponent<Image>().sprite = null;
+                    child.GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
                     child.GetComponent<Button>().interactable = false;
                 }
 
