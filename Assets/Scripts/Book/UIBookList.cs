@@ -90,11 +90,11 @@ public class UIBookList : MonoBehaviour
                 }
                 else if (_database[(_current * 9) + i].Season.Equals("WFA") || _database[(_current * 9) + i].Season.Equals("WWT") || _database[(_current * 9) + i].Season.Equals("WFW")) //가을,겨울,가을/겨울
                 {
-                    child.GetComponent<Image>().sprite = _cardImage[0];
+                    child.GetComponent<Image>().sprite = _cardImage[1];
                 }
                 else if (_database[(_current * 9) + i].Season.Equals("WAS") || _database[(_current * 9) + i].Season.Equals("WSF") || _database[(_current * 9) + i].Season.Equals("WWS")) //봄/여름/가을/겨울,여름/가을,겨울/봄
                 {
-                    child.GetComponent<Image>().sprite = _cardImage[0];
+                    child.GetComponent<Image>().sprite = _cardImage[2];
                 }
 
                 //활성화
@@ -102,6 +102,7 @@ public class UIBookList : MonoBehaviour
                 {
                     child.GetChild(0).GetComponent<Image>().enabled = true;
                     child.GetChild(0).GetComponent<Image>().sprite = _database[(_current*9) + i].Image;
+                    child.GetChild(0).GetComponent<Image>().preserveAspect = true;
                     child.GetComponent<Button>().interactable = true;
                 }
                 else
