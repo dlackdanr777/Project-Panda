@@ -59,11 +59,14 @@ public class PandaStoryController : MonoBehaviour
 
     private void OnEnable()
     {
-            _followButton?.gameObject.SetActive(true);
+        if (_followButton != null)
+            _followButton.gameObject.SetActive(true);
     }
+
 
     private void OnDisable()
     {
-            _followButton?.gameObject.SetActive(false);
+        if(_followButton != null )
+            _followButton.gameObject.SetActive(false);
     }
 }
