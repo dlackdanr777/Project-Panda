@@ -14,6 +14,9 @@ public class Event4_14 : StoryEvent
 
     public override void EventCancel(Action onComplate = null)
     {
+        Tween.Stop(_shopBrothers);
+        Tween.Stop(gameObject);
+
         SpriteRenderer pandaBrotherRenderer = _shopBrothers.GetComponent<SpriteRenderer>();
         pandaBrotherRenderer.color = new Color(pandaBrotherRenderer.color.r, pandaBrotherRenderer.color.g, pandaBrotherRenderer.color.b, 0);
         SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();

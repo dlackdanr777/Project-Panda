@@ -7,7 +7,6 @@ using System;
 
 public abstract class StoryEvent : MonoBehaviour
 {
-
     [Tooltip("이게 참이면 이벤트가 끝났다는 것입니다. ")]
     public bool IsComplate;
 

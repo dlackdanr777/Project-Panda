@@ -7,18 +7,18 @@ public class Item
     public string Id;
     public string Name;
     public string Description;
+    public string Rank;
     public int Price;
-    public ItemField ItemField;
     public Sprite Image;
     public bool IsReceived;
 
-    public Item(string id, string name, string description, int price, ItemField itemField, Sprite image)
+    public Item(string id, string name, string description, int price, string rank, Sprite image)
     {
         Id = id;
         Name = name;
         Description = description;
+        Rank = rank;
         Price = price;
-        ItemField = itemField;
         Image = image;
     }
 }

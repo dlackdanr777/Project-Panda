@@ -1,54 +1,94 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 
 public class DatabaseManager : SingletonHandler<DatabaseManager>
 {
-    private DataList<PhotoData> _photoDatabase;
+    private UserInfo _userInfo;
+    public UserInfo UserInfo => _userInfo;
+
+    private StarterPandaInfo _startPandaInfo;
+    public StarterPandaInfo StartPandaInfo => _startPandaInfo;
+
+    private PhotoDatabase _photoDatabase;
+    public PhotoDatabase PhotoDatabase => _photoDatabase;
 
     private DialogueManager _dialogueDatabase;
+    public DialogueManager DialogueDatabase => _dialogueDatabase;
+
     private WeatherApp _weatherDatabase;
+    public WeatherApp WeatherDatabase => _weatherDatabase;
+
+    private RecipeDatabase _recipeDatabase;
+    public RecipeDatabase RecipeDatabase => _recipeDatabase;
+
     private MBTIManager _mbtiDatabase;
+
+    [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
-    private Database_Ssun _itemDatabase;
+
+    //Item
+    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    private ItemDatabase _itemDatabase;
+    public ItemDatabase ItemDatabase => _itemDatabase;
+    
+    private FurniturePositionDatabase _furniturePosDatabase;
+    public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
+
+    private HarvestItemManager _harvestItemDatabase;
+    [SerializeField] HarvestItemImage _harvestItemImage;
 
     public override void Awake()
     {
-        base.Awake();
+        var obj = FindObjectsOfType<DatabaseManager>();
+        if(obj.Length == 1)
+        {
+            base.Awake();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
-        //_dialogueDatabase = new DialogueManager();
+        _userInfo = new UserInfo();
+        _startPandaInfo = new StarterPandaInfo();
+        _dialogueDatabase = new DialogueManager();
+        _photoDatabase = new PhotoDatabase();
+        _itemDatabase = new ItemDatabase();
         //_weatherDatabase = new WeatherApp();
-        //_mbtiDatabase = new MBTIManager();
-        //_pandaDatabase = new PandaManager();
-        //_itemDatabase = new Database_Ssun();
+        _recipeDatabase = new RecipeDatabase();
+        _mbtiDatabase = new MBTIManager();
 
-        //_dialogueDatabase.Register();
+
+        _pandaDatabase = new PandaManager();
+        _furniturePosDatabase = new FurniturePositionDatabase();
+        _harvestItemDatabase = new HarvestItemManager();
+
+        UserInfo.Register();
+        StartPandaInfo.Register();
+        _dialogueDatabase.Register();
+        _photoDatabase.Register();
+
+        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
+        {
+            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
+        }
+        _itemDatabase.Register();
+
+
         //_weatherDatabase.Register();
-        //_mbtiDatabase.Register();
-        //_pandaDatabase.Register();
-        //_itemDatabase.Register();
+        _recipeDatabase.Register();
+        _mbtiDatabase.Register();
 
-        _photoDatabase = new DataList<PhotoData>();
-    }
+        _pandaDatabase.PandaImage = _pandaImage;
+        _pandaDatabase.Register();
+        _furniturePosDatabase.Register();
 
+        _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
+        _harvestItemDatabase.Register();
 
-    /// <summary>
-    /// 해당 ID의 Dialogue를 가져옴
-    /// </summary>
-    /// <param name="index">story ID</param>
-    public StoryDialogue GetDialogueData(int index)
-    {
-        return _dialogueDatabase.GetStoryDialogue(index);
-    }
-    
-    /// <summary>
-    /// photo data
-    /// </summary>
-    /// <param name="index">indeㅌ</param>
-    /// <returns></returns>
-    public DataList<PhotoData> GetPhotoData(int index)
-    {
-        return _photoDatabase;
     }
 
     /// <summary>
@@ -75,7 +115,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// </summary>
     /// <param name="pandaID">panda id</param>
     /// <returns></returns>
-    public PandaData GetpandaData(int pandaID)
+    public PandaData GetPandaData(int pandaID)
     {
         return _pandaDatabase.GetPandaData(pandaID);
     }
@@ -85,27 +125,58 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// </summary>
     /// <param name="pandaID">panda id</param>
     /// <returns></returns>
-    public PandaStateImage GetpandaImage(int pandaID)
+    public PandaStateImage GetPandaImage(int pandaID)
     {
         return _pandaDatabase.GetPandaImage(pandaID);
     }
 
     /// <summary>
-    /// Toy ItemList
-    /// </summary>
-    /// <returns></returns>
-    public List<Item> GeToyItem()
+    /// 판다 친밀도 업데이트 </summary>
+    public void UpdatePandaIntimacy(int pandaID, float intimacy)
     {
-        return _itemDatabase.ItemList[0];
+        _pandaDatabase.UpdatePandaIntimacy(pandaID, intimacy);
     }
 
     /// <summary>
-    /// Snack ItemList
+    /// 판다 행복도 업데이트 </summary>
+    public void UpdatePandaHappiness(int pandaID, float happiness)
+    {
+        _pandaDatabase.UpdatePandaHappiness(pandaID, happiness);
+    }
+
+    /// <summary>
+    /// 스타터 판다 mbti 설정</summary>
+    public void SetStarterMBTI(string mbti)
+    {
+        _pandaDatabase.SetStarterMBTI(mbti);
+    }
+
+    //Gathering Item
+    /// <summary>
+    /// GatheringItem BugList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetSnackItem()
+    public List<Item> GetBugItemList()
     {
-        return _itemDatabase.ItemList[1];
+        return _itemDatabase.ItemBugList;
+    }
+
+    /// <summary>
+    /// GatheringItem FishList
+    /// </summary>
+    /// <returns></returns>
+    public List<Item> GetFishItemList()
+    {
+        return _itemDatabase.ItemFishList;
+    }
+
+    /// <summary>
+    /// GatheringItem FruitList
+    /// </summary>
+    /// <returns></returns>
+    public List<Item> GetFruitItemList()
+    {
+        return _itemDatabase.ItemFruitList;
     }
 
     /// <summary>
@@ -114,7 +185,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <returns></returns>
     public List<Item> GetFurnitureItem()
     {
-        return _itemDatabase.ItemList[2];
+        return _itemDatabase.FurnitureList;
     }
 
     /// <summary>
@@ -126,4 +197,17 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.FurnitureTypeList;
     }
 
+
+    public void OnApplicationQuit()
+    {
+        _photoDatabase.Save();
+        _furniturePosDatabase.Save();
+        _userInfo.SaveUserInfoData();
+        _startPandaInfo.SavePandaInfoData();
+    }
+
+    public HarvestItem GetHarvestItemdata(int harvestItemID)
+    {
+        return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
+    }
 }

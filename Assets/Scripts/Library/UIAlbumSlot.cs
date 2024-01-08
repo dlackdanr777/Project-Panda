@@ -18,7 +18,7 @@ public class UIAlbumSlot : MonoBehaviour
 
     private RectTransform _albumRect;
 
-    public static event Action<PhotoData> OnButtonClickHandler;
+    public static event Action<PhotoData, Vector3> OnButtonClickHandler;
 
     public void Init(int slotIndex, PhotoData photoData)
     {
@@ -28,7 +28,7 @@ public class UIAlbumSlot : MonoBehaviour
         _albumRect = GetComponent<RectTransform>();
         SetImageByPhotoData(photoData);
 
-        _button.onClick.AddListener(() => OnButtonClickHandler(_photoData));
+        _button.onClick.AddListener(() => OnButtonClickHandler(_photoData, transform.position));
     }
 
     /// <summary>
@@ -59,8 +59,6 @@ public class UIAlbumSlot : MonoBehaviour
                 //재질을 null로 변경했다 다시 원래대로 변경한다. 이렇게 새로고침을 해야 이미지를 바꾼게 적용됨
                 _image.material = null;
                 _image.material = _tempMat;
-
-                Debug.Log((tex.height / tex.width));
 
 
             }

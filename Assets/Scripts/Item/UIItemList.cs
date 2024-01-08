@@ -2,24 +2,24 @@ using Muks.DataBind;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIItemList : UIList<Item, ItemField>
+public class UIItemList : UIList<Item, GatheringItemType>
 {
     private int _currentItemIndex;
-    private Database_Ssun _dataBase;
+    private ItemDatabase _dataBase;
 
     public Sprite Test;
 
     private void Awake()
     {
-        _dataBase = Database_Ssun.Instance;
-        GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
+        _dataBase = DatabaseManager.Instance.ItemDatabase;
+        //GameManager.Instance.Player.Inventory[1].AddById(ItemField.Snack, "I03"); //player가 아이템 하나를 얻음
         
         //Test snack
-        for(int i = 0; i < 2; i++)
-        {
-            _maxCount[i] = _dataBase.ItemCount[i];
-            _lists[i] = _dataBase.ItemList[i];
-        }
+        //for(int i = 0; i < 2; i++)
+        //{
+        //    _maxCount[i] = _dataBase.ItemCount[i];
+        //    _lists[i] = _dataBase.ItemList[i];
+        //}
 
         Init();
     }

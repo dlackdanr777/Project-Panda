@@ -15,7 +15,7 @@ public class UITimeText : MonoBehaviour
 
     void SetTimeText()
     {
-        string timeText = UserInfo.TODAY.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+        string timeText = DatabaseManager.Instance.UserInfo.TODAY.ToString("hh:mm tt", CultureInfo.InvariantCulture);
         _timeText.text = timeText;
     }
 }

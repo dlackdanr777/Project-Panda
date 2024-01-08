@@ -25,7 +25,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected Sprite _pandaImage;
     protected Preference _preference;
 
-    [SerializeField] protected GameObject _uiPandaParent;
+    protected GameObject _uiPandaParent;
     [SerializeField] protected UIPanda _uiPandaPrefab;
     protected UIPanda _uiPanda;
 
@@ -91,8 +91,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// 판다 상태 이미지 표시
-    /// </summary>
+    /// 판다 상태 이미지 표시 </summary>
     public void ShowStateImage()
     {
 
@@ -136,8 +135,10 @@ public abstract class Panda : MonoBehaviour, IInteraction
             }
         }
     }
+
     protected void SetPandaData(PandaData pandaData)
     {
+
         _pandaName = pandaData.PandaName;
         Mbti = pandaData.MBTI;
         _intimacy = pandaData.Intimacy;
@@ -148,12 +149,12 @@ public abstract class Panda : MonoBehaviour, IInteraction
     }
 
     /// <summary>
-    /// 판다의 UI 생성 후 세팅
-    /// </summary>
+    /// 판다의 UI 생성 후 세팅 </summary>
     protected void SetUIPanda()
     {
         //UIPanda 프리팹 불러오기
-        Debug.Log(_uiPandaParent);
+        _uiPandaParent = GameObject.Find("UIPandas");
+
         _uiPanda = Instantiate(_uiPandaPrefab, transform.position, Quaternion.identity, _uiPandaParent.transform);
         _uiPanda.Init(this);
         _uiPanda.gameObject.SetActive(true);

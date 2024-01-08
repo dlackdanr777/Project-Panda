@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +47,7 @@ namespace Muks.DataBind
                 _dataID = gameObject.name;
             }
         }
+
         private void OnEnable()
         {
             Invoke("Enabled", 0.02f);
@@ -60,6 +62,7 @@ namespace Muks.DataBind
         {
             if (_type == GetterType.Image)
                 _image.sprite = sprite;
+
             else if (_type == GetterType.SpriteRenderer)
                 _spriteRenderer.sprite = sprite;
         }
@@ -67,13 +70,13 @@ namespace Muks.DataBind
         private void Enabled()
         {
             _data = DataBind.GetSpriteValue(_dataID);
+            _data.CallBack += UpdateImage;
 
             if (_type == GetterType.Image)
                 _image.sprite = _data.Item;
+
             else if(_type == GetterType.SpriteRenderer)
                 _spriteRenderer.sprite = _data.Item;
-
-            _data.CallBack += UpdateImage;
         }
 
         private void Disabled()

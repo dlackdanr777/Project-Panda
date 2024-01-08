@@ -196,7 +196,7 @@ public class CameraController : MonoBehaviour
         if (!_isBegan)
             return;
 
-        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)Input.mousePosition );
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition );
         transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
     }
 

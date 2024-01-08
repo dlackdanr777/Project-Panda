@@ -57,7 +57,7 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
                 _selectImage.sprite = null;
 
                 _currentItemIndex =  FindChildIndex();
-                transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
+                transform.parent.GetComponent<DropZone_Old>().CurrentItemIndex = _currentItemIndex;
 
                 ChangeAlpha(GetComponent<Image>(), 1f);
 
@@ -96,6 +96,6 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         _currentItemIndex = FindChildIndex();
-        transform.parent.GetComponent<DropZone>().CurrentItemIndex = _currentItemIndex;
+        transform.parent.GetComponent<DropZone_Old>().CurrentItemIndex = _currentItemIndex;
     }
 }
