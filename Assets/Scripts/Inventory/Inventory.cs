@@ -53,7 +53,7 @@ public class Inventory
     /// <param name="id"></param>
     public void AddById(InventoryItemField field, int fieldindex, string id)
     {
-        List<Item> database = null;
+        List<GatheringItem> database = null;
         switch (field)
         {
             case InventoryItemField.GatheringItem:
