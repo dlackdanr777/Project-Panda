@@ -23,7 +23,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected int _pandaID;
     protected string _pandaName;
     protected Sprite _pandaImage;
-    protected Preference _preference;
+    //protected Preference _preference;
 
     protected GameObject _uiPandaParent;
     [SerializeField] protected UIPanda _uiPandaPrefab;
