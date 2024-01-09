@@ -83,9 +83,13 @@ public class UserInfo
         DayCount = userInfo.DayCount;  
         IsExistingUser = userInfo.IsExistingUser;
         GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
+        ToolInventoryDataArray = userInfo.ToolInventoryDataArray;
+
         GatheringItemReceived = userInfo.GatheringItemReceived;
+        ToolItemReceived = userInfo.ToolItemReceived;
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
+        ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
 
         IsTodayRewardReceipt = true;
 
@@ -104,7 +108,9 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
+        ToolInventoryDataArray = new List<InventoryData>();
         GatheringItemReceived = new List<string>();
+        ToolItemReceived = new List<string>();
 
         DayCount++;
         IsTodayRewardReceipt = false;
@@ -144,6 +150,7 @@ public class UserInfo
 
     public void LoadUserInventory()
     {
+        //GatheringItem
         List<Item> GatheringItems = new List<Item>();
         GatheringItems.AddRange(DatabaseManager.Instance.GetBugItemList());
         GatheringItems.AddRange(DatabaseManager.Instance.GetFishItemList());
@@ -176,11 +183,30 @@ public class UserInfo
             }
         }
 
+        //ToolItem
+        List<Item> ToolItems = new List<Item>();
+        ToolItems.AddRange(DatabaseManager.Instance.GetGatheringToolItemList());
+
+        for(int i = 0; i < ToolInventoryDataArray.Count; i++)
+        {
+            for(int j=0;j<ToolItems.Count; j++)
+            {
+                int fieldIndex = -1;
+                if (ToolInventoryDataArray[i].Id.Equals(ToolItems[i].Id))
+                {
+                    if (ToolInventoryDataArray[i].Id.StartsWith("ITG"))
+                    {
+                        fieldIndex = 0;
+                    }
+                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
+                }
+            }
+        }
+
     }
 
     private void SaveUserInventory()
     {
-
         GatheringItemInventory = GameManager.Instance.Player.GatheringItemInventory;
         CookItemInventory = GameManager.Instance.Player.CookItemInventory;
         ToolItemInventory = GameManager.Instance.Player.ToolItemInventory;
@@ -233,11 +259,12 @@ public class UserInfo
     #region Item
     public void LoadUserReceivedItem()
     {
-        for(int i=0;i<GatheringItemReceived.Count; i++) 
+        //GatheringItem
+        for (int i = 0; i < GatheringItemReceived.Count; i++)
         {
             if (GatheringItemReceived[i].StartsWith("IBG"))
             {
-                for(int j = 0; j < DatabaseManager.Instance.GetBugItemList().Count; j++)
+                for (int j = 0; j < DatabaseManager.Instance.GetBugItemList().Count; j++)
                 {
                     if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetBugItemList()[j].Id))
                     {
@@ -266,19 +293,48 @@ public class UserInfo
                 }
             }
         }
+
+        //ToolItem
+        for (int i = 0; i < ToolItemReceived.Count; i++)
+        {
+            if (ToolItemReceived[i].StartsWith("ITG"))
+            {
+                for (int j = 0; j < DatabaseManager.Instance.GetGatheringToolItemList().Count; j++)
+                {
+                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetGatheringToolItemList()[j].Id))
+                    {
+                        DatabaseManager.Instance.GetGatheringToolItemList()[j].IsReceived = true;
+                    }
+                }
+            }
+        }
     }
+
     
     private void SaveUserReceivedItem() 
     {
-        List<GatheringItem>[] itemDatabase = { DatabaseManager.Instance.GetBugItemList(), DatabaseManager.Instance.GetFishItemList(), DatabaseManager.Instance.GetFruitItemList() };
+        List<GatheringItem>[] gatheringItemDatabase = { DatabaseManager.Instance.GetBugItemList(), DatabaseManager.Instance.GetFishItemList(), DatabaseManager.Instance.GetFruitItemList() };
         GatheringItemReceived = new List<string>();
-        for (int i = 0; i < itemDatabase.Length; i++)
+        for (int i = 0; i < gatheringItemDatabase.Length; i++)
         {
-            for(int j = 0; j < itemDatabase[i].Count; j++)
+            for(int j = 0; j < gatheringItemDatabase[i].Count; j++)
             {
-                if (itemDatabase[i][j].IsReceived)
+                if (gatheringItemDatabase[i][j].IsReceived)
                 {
-                    GatheringItemReceived.Add(itemDatabase[i][j].Id);
+                    GatheringItemReceived.Add(gatheringItemDatabase[i][j].Id);
+                }
+            }
+        }
+
+        List<ToolItem>[] tooItemDatabase = { DatabaseManager.Instance.GetGatheringToolItemList() };
+        ToolItemReceived = new List<string>();
+        for (int i = 0; i < tooItemDatabase.Length; i++)
+        {
+            for (int j = 0; j < tooItemDatabase[i].Count; j++)
+            {
+                if (tooItemDatabase[i][j].IsReceived)
+                {
+                    ToolItemReceived.Add(tooItemDatabase[i][j].Id);
                 }
             }
         }
