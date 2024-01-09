@@ -10,10 +10,12 @@ public class Collection : MonoBehaviour, IInteraction
 
     #region 현재 계절, 시간
     // 현재 게임 시간, 계절 임의로 설정
-    [SerializeField] private int _hour; // 나중에 _hour은 유저 정보의 시간 정보로 수정
-    [SerializeField] private string[] _timeIDs = new string[6]; // 현재 채집 가능한 모든 시간 ID
-    [SerializeField] private string _season; // 나중에 _season은 유저 정보의 시간 정보로 수정
-    [SerializeField] private string[] _seasonIDs = new string[4]; // 현재 채집 가능한 모든 계절 ID
+    [SerializeField] 
+    private int _hour; // 나중에 _hour은 유저 정보의 시간 정보로 수정
+    private string[] _timeIds = new string[6]; // 현재 채집 가능한 모든 시간 ID
+    [SerializeField] 
+    private string _season; // 나중에 _season은 유저 정보의 시간 정보로 수정
+    private string[] _seasonIds = new string[4]; // 현재 채집 가능한 모든 계절 ID
     #endregion
 
     #region 현재 채집 가능한 아이템 리스트
@@ -41,7 +43,7 @@ public class Collection : MonoBehaviour, IInteraction
     [SerializeField] private Sprite _pandaCollectionImage;
 
     private Animator _collectionAnim;
-    [SerializeField] private CollectionButton _collectionButton;
+    //[SerializeField] private CollectionButton _collectionButton;
     [SerializeField] private GameObject _speechBubble;
 
     public Action<string> OnCollectionSuccess;
@@ -237,12 +239,12 @@ public class Collection : MonoBehaviour, IInteraction
         // 1. 계절 체크 2. 시간 체크 3. 등급 체크(랜덤) 4. 아이템 결정(랜덤)  
 
         // 유저 정보를 통해 시간이 변경되었다면 채집의 시간 수정
-        if (_timeIDs[5] != "GTS" + (21 + _hour)) // 나중에 _hour는 유저 정보의 시간 정보로 수정
+        if (_timeIds[5] != "GTS" + (21 + _hour)) // 나중에 _hour는 유저 정보의 시간 정보로 수정
         {
             // 시간 설정
             SetTime();
 
-            if (_seasonIDs[3] != _season)
+            if (_seasonIds[3] != _season)
             {
                 // 계절 설정
                 SetSeason();
@@ -253,7 +255,7 @@ public class Collection : MonoBehaviour, IInteraction
                 if (item is GatheringItem gatheringItem)
                 {
                     // 현재 시간에 채집 가능하다면(1, 2 체크)
-                    if (Array.Exists(_timeIDs, time => time == gatheringItem.Time) && Array.Exists(_seasonIDs, season => season == gatheringItem.Season))
+                    if (Array.Exists(_timeIds, time => time == gatheringItem.Time) && Array.Exists(_seasonIds, season => season == gatheringItem.Season))
                     {
                         if(item.Rank == "레어")
                         {
@@ -311,45 +313,45 @@ public class Collection : MonoBehaviour, IInteraction
     private void SetTime()
     {
         // 시간 설정
-        _timeIDs[0] = "GTS00";
-        _timeIDs[1] = "GTS0" + (1 + _hour / 12);
-        _timeIDs[2] = "GTS0" + (3 + _hour / 6);
+        _timeIds[0] = "GTS00";
+        _timeIds[1] = "GTS0" + (1 + _hour / 12);
+        _timeIds[2] = "GTS0" + (3 + _hour / 6);
         if(7 + _hour / 4 > 10)
         {
-            _timeIDs[3] = "GTS" + (7 + _hour / 4);
+            _timeIds[3] = "GTS" + (7 + _hour / 4);
         }
         else
         {
-            _timeIDs[3] = "GTS0" + (7 + _hour / 4);
+            _timeIds[3] = "GTS0" + (7 + _hour / 4);
         }
-        _timeIDs[4] = "GTS" + (13 + _hour / 3);
-        _timeIDs[5] = "GTS" + (21 + _hour);
+        _timeIds[4] = "GTS" + (13 + _hour / 3);
+        _timeIds[5] = "GTS" + (21 + _hour);
     }
 
     private void SetSeason()
     {
-        _seasonIDs[0] = "WAS";
+        _seasonIds[0] = "WAS";
 
         switch (_season)
         {
             case "WSP":
-                _seasonIDs[1] = "WSS";
-                _seasonIDs[2] = "WWS";
+                _seasonIds[1] = "WSS";
+                _seasonIds[2] = "WWS";
                 break;
             case "WSU":
-                _seasonIDs[1] = "WSS";
-                _seasonIDs[2] = "WSF";
+                _seasonIds[1] = "WSS";
+                _seasonIds[2] = "WSF";
                 break;
             case "WFA":
-                _seasonIDs[1] = "WFW";
-                _seasonIDs[2] = "WSF";
+                _seasonIds[1] = "WFW";
+                _seasonIds[2] = "WSF";
                 break;
             case "WWT":
-                _seasonIDs[1] = "WFW";
-                _seasonIDs[2] = "WWS";
+                _seasonIds[1] = "WFW";
+                _seasonIds[2] = "WWS";
                 break;
         }
 
-        _seasonIDs[3] = _season;
+        _seasonIds[3] = _season;
     }
 }

@@ -24,7 +24,7 @@ public class UICollection : MonoBehaviour
     #endregion
 
     #region Collection
-    [SerializeField] private CollectionButton _collectionButton;
+    //[SerializeField] private CollectionButton _collectionButton;
     [SerializeField] private Collection _collection;
     #endregion
 
