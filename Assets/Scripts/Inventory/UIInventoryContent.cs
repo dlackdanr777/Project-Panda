@@ -49,6 +49,10 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
 
     private void Awake()
     {
+        //Test
+        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG03");
+        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG06");
+
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < System.Enum.GetValues(typeof(InventoryItemField)).Length - 1; i++)
         {

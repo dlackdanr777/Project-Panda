@@ -192,13 +192,14 @@ public class UserInfo
             for(int j=0;j<ToolItems.Count; j++)
             {
                 int fieldIndex = -1;
-                if (ToolInventoryDataArray[i].Id.Equals(ToolItems[i].Id))
+                if (ToolInventoryDataArray[i].Id.Equals(ToolItems[j].Id))
                 {
                     if (ToolInventoryDataArray[i].Id.StartsWith("ITG"))
                     {
                         fieldIndex = 0;
                     }
-                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
+                    Debug.Log(ToolInventoryDataArray[i].Id);
+                    GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
                 }
             }
         }
@@ -247,8 +248,7 @@ public class UserInfo
                 for (int j = 0; j < ToolItemInventory[i].ItemsCount; j++)
                 {
                     ToolInventoryDataArray.Add(new InventoryData(
-                        ToolItemInventory[i].GetInventoryList()[j].Id,
-                        ToolItemInventory[i].GetInventoryList()[j].Count));
+                        ToolItemInventory[i].GetInventoryList()[j].Id, 1));
                 }
 
             }
