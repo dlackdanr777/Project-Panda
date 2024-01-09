@@ -71,9 +71,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _dialogueDatabase.Register();
         _photoDatabase.Register();
 
-        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
+        for(int i = 0; i < _itemDatabase.GatheringItemSpriteArray.Length; i++)
         {
-            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
+            _itemDatabase.GatheringItemSpriteArray[i] = _gatheringItemImages[i];
         }
         _itemDatabase.Register();
 

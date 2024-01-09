@@ -72,22 +72,35 @@ public class ItemDatabase
     public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
     private List<Dictionary<string, object>> _dataFruit;
 
+    //ToolItem
+    public List<ToolItem> ItemToolList = new List<ToolItem>();
+    private List<Dictionary<string, object>> _dataTool;
 
-    public ItemSpriteDatabase[] ItemSpriteArray = new ItemSpriteDatabase[3];
+    //Image
+    //GatheringItem
+    public ItemSpriteDatabase[] GatheringItemSpriteArray = new ItemSpriteDatabase[3];
     public Dictionary<string, Sprite>[] _gatheingItemSpriteDic = new Dictionary<string, Sprite>[3];
+    //ToolItem
+    public ItemSpriteDatabase ToolItemSpriteArray;
+    public Dictionary<string, Sprite> _tollItemSpriteDic = new Dictionary<string, Sprite>();
+
+
     private Sprite Test;
 
     public void Register()
     {
         //Image
+        //GatheringItem
         for (int i = 0; i < _gatheingItemSpriteDic.Length; i++)
         {
             _gatheingItemSpriteDic[i] = new Dictionary<string, Sprite>();
-            for(int j = 0; j < ItemSpriteArray[i].ItemSprites.Length; j++)
+            for(int j = 0; j < GatheringItemSpriteArray[i].ItemSprites.Length; j++)
             {
-                _gatheingItemSpriteDic[i].Add(ItemSpriteArray[i].ItemSprites[j].Id, ItemSpriteArray[i].ItemSprites[j].Image);
+                _gatheingItemSpriteDic[i].Add(GatheringItemSpriteArray[i].ItemSprites[j].Id, GatheringItemSpriteArray[i].ItemSprites[j].Image);
             }
         }
+        //ToolItem
+
 
         _dataFurniture = CSVReader.Read("Furniture");
 
@@ -97,7 +110,6 @@ public class ItemDatabase
         _dataFruit = CSVReader.Read("ItemFruit");
 
         //Gathering Item
-
         //Bug
         for (int i = 0; i < _dataBug.Count; i++)
         {
@@ -106,6 +118,7 @@ public class ItemDatabase
                     _dataBug[i]["설명"].ToString(),
                     (int)_dataBug[i]["가격"],
                     _dataBug[i]["등급"].ToString(),
+                    _dataBug[i]["맵 ID"].ToString(),
                     GetItemSpriteById(_dataBug[i]["ID"].ToString(), GatheringItemType.Bug),
                     _dataBug[i]["시간"].ToString(),
                     _dataBug[i]["계절"].ToString()
@@ -121,6 +134,7 @@ public class ItemDatabase
                     _dataFish[i]["설명"].ToString(),
                     (int)_dataFish[i]["가격"],
                     _dataFish[i]["등급"].ToString(),
+                    _dataFish[i]["맵 ID"].ToString(),
                     GetItemSpriteById(_dataFish[i]["ID"].ToString(), GatheringItemType.Fish),
                     _dataFish[i]["시간"].ToString(),
                     _dataFish[i]["계절"].ToString()
@@ -136,6 +150,7 @@ public class ItemDatabase
                     _dataFruit[i]["설명"].ToString(),
                     (int)_dataFruit[i]["가격"],
                     _dataFruit[i]["등급"].ToString(),
+                    _dataFruit[i]["맵 ID"].ToString(),
                     GetItemSpriteById(_dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
                     _dataFruit[i]["시간"].ToString(),
                     _dataFruit[i]["계절"].ToString()
@@ -152,6 +167,7 @@ public class ItemDatabase
                     _dataFurniture[i]["Description"].ToString(),
                     (int)_dataFurniture[i]["Price"],
                     "등급",
+                    "맵",
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }

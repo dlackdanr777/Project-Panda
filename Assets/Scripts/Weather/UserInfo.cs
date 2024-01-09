@@ -156,7 +156,7 @@ public class UserInfo
                 int fieldIndex = -1;
                 if (GatheringInventoryDataArray[i].Id.Equals(GatheringItems[j].Id))
                 {
-                    if (GatheringInventoryDataArray[i].Id.StartsWith("IB"))
+                    if (GatheringInventoryDataArray[i].Id.StartsWith("IBG"))
                     {
                         fieldIndex = 0;
                     }
@@ -235,7 +235,7 @@ public class UserInfo
     {
         for(int i=0;i<GatheringItemReceived.Count; i++) 
         {
-            if (GatheringItemReceived[i].StartsWith("IB"))
+            if (GatheringItemReceived[i].StartsWith("IBG"))
             {
                 for(int j = 0; j < DatabaseManager.Instance.GetBugItemList().Count; j++)
                 {
