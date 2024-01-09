@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Collection : MonoBehaviour, IInteraction
 {
     private bool _isCollection = false; // 채집 중인가?
@@ -32,11 +33,12 @@ public class Collection : MonoBehaviour, IInteraction
     #endregion
 
     /// <summary> 현재 채집 종류 </summary>
-    private int fieldIndex = -1;
+    [SerializeField] private GatheringItemType fieldIndex = GatheringItemType.None;
 
     #region 위치 지정
     private Vector3 _targetPos;
-    private Vector3 CollectionPosition = new Vector3(-3.4f, -14f, 0);
+    [SerializeField] private Vector3[] _collectionPosition;
+    private Vector3 _currentCollectionPosition = new Vector3(-3.4f, -14f, 0);
     #endregion
 
     private Sprite _pandaImage;
@@ -170,7 +172,7 @@ public class Collection : MonoBehaviour, IInteraction
         }
 
         // 캐릭터가 채집 포인트로 이동
-        starterPanda.gameObject.transform.position = CollectionPosition;
+        starterPanda.gameObject.transform.position = _currentCollectionPosition;
 
         // 판다 채집 이미지로 변경
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.GetComponent<SpriteRenderer>().sprite = _pandaCollectionImage;
@@ -288,10 +290,10 @@ public class Collection : MonoBehaviour, IInteraction
 
         OnCollectionSuccess?.Invoke(collectionID); // 애니메이션 종료 후 실행하는 것으로 수정해야 함
 
-        fieldIndex = 0; // 곤충은 0번
+        fieldIndex = GatheringItemType.Bug; // 곤충은 0번
 
         // 인벤토리로 아이템 이동
-        GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.GatheringItem, fieldIndex, collectionID);
+        GameManager.Instance.Player.GatheringItemInventory[(int)fieldIndex].AddById(InventoryItemField.GatheringItem, (int)fieldIndex, collectionID);
 
 
         // 도감 업데이트
