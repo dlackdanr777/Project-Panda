@@ -13,6 +13,7 @@ public class UiCookingStart : MonoBehaviour
     [SerializeField] private UIAddValueButton _smallAddButton;
 
     [SerializeField] private Button _complatedButton;
+
     [SerializeField] private TextMeshProUGUI _complatedText;
 
     [Space]
@@ -33,6 +34,15 @@ public class UiCookingStart : MonoBehaviour
 
     [Space]
     [SerializeField] private int _maxFireValue;
+
+
+    [Space]
+    [SerializeField] private Transform _animeParent;
+
+    [SerializeField] private GameObject _complatedAnimePrefab;
+
+    [SerializeField] private GameObject _failedAnimePrefab;
+
 
     private UICooking _uiCooking;
 
@@ -56,7 +66,6 @@ public class UiCookingStart : MonoBehaviour
         _cookingSystem = cookingSystem;
         _uiCooking = uiCooking;
         _cookingUserData = _cookingSystem.UserData;
-
         gameObject.SetActive(false);
     }
 
@@ -65,12 +74,13 @@ public class UiCookingStart : MonoBehaviour
         _currentRecipeData = recipe;
         _stamina = _cookingUserData.MaxStamina;
         _fireValue = 0;
-        _uiStaminaBar.Reset(1);
-        _uiFireBar.Reset(0);
+        _uiStaminaBar.ResetBar(1);
+        _uiFireBar.ResetBar(0);
         _complatedButton.onClick.AddListener(FilpFood);
         _uiCookwares.StartCooking();
         _uiSuccessLocation.SetSuccessRange(recipe, _uiFireBar.GetBarWedth());
         _uiCookingTimer.StartTimer(60);
+
         gameObject.SetActive(true);
         CheckAllAddValueButtons();
 
@@ -81,31 +91,51 @@ public class UiCookingStart : MonoBehaviour
     public void FilpFood()
     {
         SaveFireValue();
+        CheckAllAddValueButtons();
         _uiCookwares.StartAnime();
         _complatedButton.onClick.RemoveListener(FilpFood);
         _complatedButton.onClick.AddListener(CookingComplated);
         _dontTouchArea.SetActive(true);
         Invoke("DisabledDontTouchArea", 1);
-        _complatedText.text = "종료";
+        _complatedText.text = "완성";
     }
+
 
     private void DisabledDontTouchArea()
     {
         _dontTouchArea.SetActive(false);
     }
 
+
     /// <summary>조리완료 버튼 클릭시 실행되는 함수</summary>
     public void CookingComplated()
     {
-        float totalFireValue = (_tempfireValue + _fireValue) * 0.5f * 0.01f;
-        Debug.Log(_uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue) + " 획득");
+        StartCoroutine(CookingComplatedRoutine());
+    }
 
-       GameManager.Instance.Player.GetItemInventory(InventoryItemField.Cook)[0].Add(_currentRecipeData.Item);
+    private IEnumerator CookingComplatedRoutine()
+    {
+        float totalFireValue = (_tempfireValue + _fireValue) * 0.5f * 0.01f;
+
+        string grade = _uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue);
+        Debug.Log(grade + " 획득");
+
+        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].Add(_currentRecipeData.Item);
+        //TODO : 여기서 오류
+
+        GameObject animeObj = grade == "F" ? Instantiate(_failedAnimePrefab) : Instantiate(_complatedAnimePrefab);
+        animeObj.transform.SetParent(_animeParent);
+        //여기에 애니메이션
 
         _uiCookingTimer.EndTimer();
         _uiCookwares.EndCooking();
+        _complatedButton.onClick.RemoveAllListeners();
+
+        yield return new WaitForSeconds(1.1f);
+
+        Destroy(animeObj);
         _uiCookingEnd.Show(_currentRecipeData.Item);
-         _complatedButton.onClick.RemoveAllListeners();
+        _uiCooking.UpdateUI();
     }
 
 
@@ -117,7 +147,9 @@ public class UiCookingStart : MonoBehaviour
         {
             _uiCooking.UICookingCenterSlot[i].CheckCurrentItem();
         }
+
         _uiCooking.CheckCookEnabled();
+
         gameObject.SetActive(false);
     }
 
@@ -198,6 +230,7 @@ public class UiCookingStart : MonoBehaviour
         _uiCookwares.SetFoodSprite(_currentRecipeData, _fireValue);
         _uiFireBar.UpdateGauge(_maxFireValue, _fireValue);
     }
+
 
     private void SaveFireValue()
     {

@@ -37,7 +37,6 @@ public class Event1_0 : StoryEvent
                 });
                 
             });
-            //Tween.TransformMove(gameObject,  new Vector3(-2.10f, -14, 0), 2, TweenMode.Spike);
         });
 
     }
@@ -48,9 +47,9 @@ public class Event1_0 : StoryEvent
         Tween.Stop(gameObject);
         Tween.Stop(Camera.main.gameObject);
         SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
+        gameObject.transform.position = _tempObjPos;
         renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 0);
         renderer.sortingOrder = 1;
-        gameObject.transform.position = _tempObjPos;
     }
 
 }

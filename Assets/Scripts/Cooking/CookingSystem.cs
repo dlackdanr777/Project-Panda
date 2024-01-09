@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public enum Cookware
 {
@@ -48,11 +45,10 @@ public class CookingSystem : MonoBehaviour
     [SerializeField] private CookingUserData _userData;
     public CookingUserData UserData => _userData;
 
-    private RecipeDatabase _recipeDatabase => DatabaseManager.Instance.RecipeDatabase;
+    [SerializeField] private GatheringItemType _inventoryType;
+    public GatheringItemType InventoryType => _inventoryType;
 
-    private Inventory[] _inventory => GameManager.Instance.Player.CookItemInventory;
-
-    private RecipeData[] _recipeDatas;
+    private Inventory[] _inventory => GameManager.Instance.Player.GatheringItemInventory;
 
     private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
 
@@ -65,7 +61,7 @@ public class CookingSystem : MonoBehaviour
 
     private void Init()
     {
-        _recipeDatas = _recipeDatabase.GetRecipeDataArray();
+
     }
 
 
@@ -146,17 +142,25 @@ public class CookingSystem : MonoBehaviour
             return null;
         }
 
+        if(GetCookwareSlotNum() == 2 && (item1 == null || item2 == null))
+        {
+            Debug.Log("2구 짜리에선 1구 요리 불가능");
+            return null;
+        }
+
         string item1ID = item1 != null ? item1.Id : "";
         string item2ID = item2 != null ? item2.Id : "";
 
-        Tuple<string, string> tuple1 = Tuple.Create<string, string>(item1ID, item2ID);
-        Tuple<string, string> tuple2 = Tuple.Create<string, string>(item2ID, item1ID);
+        Tuple<string, string> tuple1 = Tuple.Create(item1ID, item2ID);
+        Tuple<string, string> tuple2 = Tuple.Create(item2ID, item1ID);
+
 
         if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))
         {
-             return recipe;
+            return recipe;
         }
 
+        Debug.Log("아무것도 없었다..");
         return null;
     }
 
@@ -164,45 +168,43 @@ public class CookingSystem : MonoBehaviour
     public bool IsEnabledCooking(InventoryItem item1, InventoryItem item2)
     {
         RecipeData recipe = GetkRecipeByItems(item1, item2);
-        
+
         if (recipe == null)
             return false;
 
         bool isRemovedItem1 = item1 == null ? true : false;
         bool isRemovedItem2 = item2 == null ? true : false;
 
-        foreach (Inventory inventory in _inventory)
+        Inventory inventory = _inventory[(int)_inventoryType];
+
+        List<InventoryItem> items = inventory.GetInventoryList();
+
+        for (int i = 0; i < items.Count; i++)
         {
-            List<InventoryItem> items = inventory.GetInventoryList();
-
-            for (int i = 0; i < items.Count; i++)
+            if (!isRemovedItem1)
             {
-                if (!isRemovedItem1)
+                if (item1.Id == items[i].Id)
                 {
-                    if (item1.Id == items[i].Id)
-                    {
-                        isRemovedItem1 = true;
-                        inventory.Remove(item1);
-                    }
-                        
+                    isRemovedItem1 = true;
+                    inventory.Remove(item1);
                 }
 
-                if (!isRemovedItem2)
-                {
-                    if (item2.Id == items[i].Id)
-                    {
-                        isRemovedItem2 = true;
-                        inventory.Remove(item2);
-                    }
-                }
+            }
 
-                if (isRemovedItem1 && isRemovedItem2)
+            if (!isRemovedItem2)
+            {
+                if (item2.Id == items[i].Id)
                 {
-                    Debug.Log("두개다 삭제");
-                    _uiCooking.UpdateUI();
-                    return true;
+                    isRemovedItem2 = true;
+                    inventory.Remove(item2);
                 }
-                    
+            }
+
+            if (isRemovedItem1 && isRemovedItem2)
+            {
+                Debug.Log("두개다 삭제");
+                _uiCooking.UpdateUI();
+                return true;
             }
         }
 
@@ -210,7 +212,7 @@ public class CookingSystem : MonoBehaviour
     }
 
 
-    public bool IsEnabledCooking(RecipeData data)
+/*    public bool IsEnabledCooking(RecipeData data)
     {
         List<KeyValuePair<string, int>> tmpMaterialItemList = data.MaterialItemList.ToList();
 
@@ -253,7 +255,7 @@ public class CookingSystem : MonoBehaviour
         }
 
         return false;
-    }
+    }*/
 
 
 
@@ -287,18 +289,20 @@ public class CookingSystem : MonoBehaviour
         }
     }
 
+
     public int ChangeCookware(int value)
     {
         int tmpInt = (int)_currentCookware + value;
-
-        if (tmpInt < 0)
-            tmpInt = 0;
-
-        else if ((int)Cookware.Sizeof <= tmpInt)
-            tmpInt = (int)Cookware.Sizeof - 1;
+        tmpInt = Mathf.Clamp(tmpInt, 0, (int)Cookware.Sizeof - 1);
 
         _currentCookware = (Cookware)tmpInt;
 
         return tmpInt;
+    }
+
+
+    public int GetCookwareSlotNum()
+    {
+        return (int)_currentCookware + 1;
     }
 }

@@ -36,7 +36,7 @@ public class UICookingBar : MonoBehaviour
         return _bar.fillAmount;
     }
 
-    public void Reset(float fillAmount)
+    public void ResetBar(float fillAmount)
     {
         _bar.fillAmount = fillAmount;
         _backgroundBar.fillAmount = fillAmount;
