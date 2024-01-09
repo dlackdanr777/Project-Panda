@@ -26,14 +26,24 @@ public class UICookingBar : MonoBehaviour
         UpdataBar();
     }
 
-    public void Reset(float fillAmount)
+    public float GetBarWedth()
+    {
+        return _bar.rectTransform.rect.width;
+    }
+
+    public float GetBarValue()
+    {
+        return _bar.fillAmount;
+    }
+
+    public void ResetBar(float fillAmount)
     {
         _bar.fillAmount = fillAmount;
         _backgroundBar.fillAmount = fillAmount;
     }
 
 
-    public void DecreaseGauge(float maxStamina, float stamina)
+    public void UpdateGauge(float maxStamina, float stamina)
     {
         if (_barType == BarType.Decrease)
         {

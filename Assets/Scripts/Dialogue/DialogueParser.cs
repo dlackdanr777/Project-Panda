@@ -95,8 +95,67 @@ public class DialogueParser
         return pandaDic;
     }
 
-
     public RecipeData[] RecipeDataParse(string CSVFileName)
+    {
+        List<RecipeData> recipeDataList = new List<RecipeData>(); //리스트 생성
+        TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
+
+        string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
+
+        for (int i = 1; i < data.Length; i++)
+        {
+            string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
+
+            List<KeyValuePair<string, int>> itemList = new List<KeyValuePair<string, int>>();
+
+            if (!string.IsNullOrWhiteSpace(row[0]))
+            {
+                string materialItemID = row[0];
+                int materialValue = int.Parse(row[1]);
+
+               itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+            else
+            {
+                string materialItemID = "";
+                int materialValue = 0;
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+
+            if (!string.IsNullOrWhiteSpace(row[2]))
+            {
+                string materialItemID = row[2];
+                int materialValue = int.Parse(row[3]);
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+            else
+            {
+                string materialItemID = "";
+                int materialValue = 0;
+
+                itemList.Add(new KeyValuePair<string, int>(materialItemID, materialValue));
+            }
+
+
+            string successItemID = row[4];
+            float successLocation = float.Parse(row[5]);
+            float successRangeLevel_S = float.Parse(row[6]);
+            float successRangeLevel_A = float.Parse(row[7]);
+            float successRangeLevel_B = float.Parse(row[8]);
+
+            RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
+                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B); //레시피 클래스 생성
+
+            recipeDataList.Add(recipeData);
+        }
+
+        return recipeDataList.ToArray();
+    }
+
+
+    /*public RecipeData[] RecipeDataParse(string CSVFileName)
     {
         List<RecipeData> recipeDataList = new List<RecipeData>(); //리스트 생성
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
@@ -120,5 +179,5 @@ public class DialogueParser
         }
 
         return recipeDataList.ToArray();
-    }
+    }*/
 }

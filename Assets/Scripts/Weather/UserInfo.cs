@@ -195,9 +195,6 @@ public class UserInfo
 
     private void SaveUserInventory()
     {
-        GatheringInventoryDataArray = null;
-        CookInventoryDataArray = null;
-        ToolInventoryDataArray = null;
 
         GatheringItemInventory = GameManager.Instance.Player.GatheringItemInventory;
         CookItemInventory = GameManager.Instance.Player.CookItemInventory;
@@ -205,6 +202,7 @@ public class UserInfo
 
         if(GatheringInventoryDataArray != null)
         {
+            GatheringInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
             for(int i=0;i< GatheringItemInventory.Length; i++)
             {
                 for(int j=0;j< GatheringItemInventory[i].ItemsCount; j++)
@@ -218,6 +216,7 @@ public class UserInfo
 
         if (CookInventoryDataArray != null)
         {
+            CookInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
             for (int i = 0; i < CookItemInventory.Length; i++)
             {
                 for (int j = 0; j < CookItemInventory[i].ItemsCount; j++)
@@ -231,6 +230,7 @@ public class UserInfo
 
         if (ToolInventoryDataArray != null)
         {
+            ToolInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
             for (int i = 0; i < ToolItemInventory.Length; i++)
             {
                 for (int j = 0; j < ToolItemInventory[i].ItemsCount; j++)

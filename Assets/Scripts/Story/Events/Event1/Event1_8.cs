@@ -1,64 +1,39 @@
 using System;
 using UnityEngine;
 using Muks.Tween;
-using UnityEngine.UI;
-using System.Collections;
 
-public class Event1_8 : StoryEvent
+public class Event1_8 : InteractionStoryEvent
 {
-    [SerializeField] private UINavigation _uiNav;
-
-    private bool _clickEnable;
-
     private Vector3 _tempPos;
-
-    private Coroutine _clickCoroutine;
 
 
     public override void EventStart(Action onComplate)
     {
         _tempPos = gameObject.transform.position;
-        Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+        _nextActionHandler = onComplate;
+
+        Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + 1, Camera.main.transform.position.z);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 3, TweenMode.Smootherstep, () =>
         {
-            _clickEnable = true;
-            _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
+            ShowFollowButton();
         });
     }
 
     public override void EventCancel(Action onComplate = null)
     {
         Tween.Stop(gameObject);
-
-        _clickEnable = false;
         transform.position = _tempPos;
-        if (_clickCoroutine != null)
-        StopCoroutine(_clickCoroutine);
+
+        HideFollowButton();
     }
 
-    private IEnumerator ButtonClickEnable(Action onComplate)
+
+    protected override void OnFollowButtonClicked()
     {
-        while (_clickEnable)
+        HideFollowButton();
+        Tween.TransformMove(gameObject, transform.position, 1, TweenMode.Smootherstep, () =>
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.one, 10);
-
-                foreach(RaycastHit2D hit in hits)
-                {
-                    if (hit.transform.gameObject != gameObject)
-                        continue;
-
-                    _clickEnable = false;
-                    Tween.TransformMove(gameObject, transform.position + transform.up, 2, TweenMode.Smootherstep, () =>
-                    {
-                        onComplate?.Invoke();
-                    });
-                }
-            }
-                
-            yield return null;
-        }
+            _nextActionHandler?.Invoke();
+        });
     }
 }

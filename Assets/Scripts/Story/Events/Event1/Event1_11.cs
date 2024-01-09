@@ -4,57 +4,37 @@ using Muks.Tween;
 using UnityEngine.UI;
 using System.Collections;
 
-public class Event1_11 : StoryEvent
+public class Event1_11 : InteractionStoryEvent
 {
     [SerializeField] private UINavigation _uiNav;
-    private bool _clickEnable;
 
-    private Coroutine _clickCoroutine;
 
     public override void EventStart(Action onComplate)
     {
         Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+        _nextActionHandler = onComplate;
         Tween.TransformMove(Camera.main.gameObject, targetPos, 3, TweenMode.Smootherstep, () =>
         {
-            _clickEnable = true;
-            _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
+            ShowFollowButton();
         });
     }
 
     public override void EventCancel(Action onComplate = null)
     {
-        _clickEnable = false;
-
-        if(_clickCoroutine != null)
-        StopCoroutine(_clickCoroutine);
+        HideFollowButton();
+        _uiNav.Pop("InsideWood");
     }
+  
 
-    private IEnumerator ButtonClickEnable(Action onComplate)
+    protected override void OnFollowButtonClicked()
     {
-        while (_clickEnable)
+        HideFollowButton();
+        _uiNav.Push("InsideWood");
+
+        Tween.TransformMove(gameObject, transform.position, 4, TweenMode.Smootherstep, () =>
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.one, 10);
-
-                foreach(RaycastHit2D hit in hits)
-                {
-                    if (hit.transform.gameObject != gameObject)
-                        continue;
-
-                    _clickEnable = false;
-
-                    _uiNav.Push("InsideWood");
-                    _uiNav.Push("Dialogue");
-                    Tween.TransformMove(gameObject, transform.position, 4, TweenMode.Smootherstep, () =>
-                    {
-                        onComplate?.Invoke();
-                    });
-                }
-            }
-                
-            yield return null;
-        }
+            _uiNav.Push("Dialogue");
+            _nextActionHandler?.Invoke();
+        });
     }
 }

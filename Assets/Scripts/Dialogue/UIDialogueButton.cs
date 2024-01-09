@@ -27,19 +27,26 @@ public class UIDialogueButton : MonoBehaviour
     {
         gameObject.SetActive(true);
         _buttonText.text = text;
-        Tween.IamgeAlpha(_button.gameObject, 1, _animeDuration, TweenMode.Quadratic);
-        Tween.IamgeAlpha(_outerImage.gameObject, 1, _animeDuration, TweenMode.Quadratic);
-        Tween.IamgeAlpha(_innerImage.gameObject, 1, _animeDuration, TweenMode.Quadratic);
-        Tween.TMPAlpha(_buttonText.gameObject, 1, _animeDuration, TweenMode.Quadratic, onComplate);
+        Tween.Stop(_button.gameObject);
+        Tween.Stop(_outerImage.gameObject);
+        Tween.Stop(_innerImage.gameObject);
+        Tween.Stop(_buttonText.gameObject);
+        Tween.IamgeAlpha(_button.gameObject, 1, _animeDuration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(_outerImage.gameObject, 1, _animeDuration, TweenMode.Smoothstep, () => Debug.Log("1ตส"));
+        Tween.IamgeAlpha(_innerImage.gameObject, 1, _animeDuration, TweenMode.Smoothstep);
+        Tween.TMPAlpha(_buttonText.gameObject, 1, _animeDuration, TweenMode.Smoothstep, onComplate);
     }
 
     public void HideButton(Action onComplate = null)
     {
-
-        Tween.IamgeAlpha(_button.gameObject, 0, _animeDuration, TweenMode.Quadratic);
-        Tween.IamgeAlpha(_outerImage.gameObject, 0, _animeDuration, TweenMode.Quadratic);
-        Tween.IamgeAlpha(_innerImage.gameObject, 0, _animeDuration, TweenMode.Quadratic);
-        Tween.TMPAlpha(_buttonText.gameObject, 0, _animeDuration, TweenMode.Quadratic, () => 
+        Tween.Stop(_button.gameObject);
+        Tween.Stop(_outerImage.gameObject);
+        Tween.Stop(_innerImage.gameObject);
+        Tween.Stop(_buttonText.gameObject);
+        Tween.IamgeAlpha(_button.gameObject, 0, _animeDuration, TweenMode.Smoothstep);
+        Tween.IamgeAlpha(_outerImage.gameObject, 0, _animeDuration, TweenMode.Smoothstep, () => Debug.Log("0ตส"));
+        Tween.IamgeAlpha(_innerImage.gameObject, 0, _animeDuration, TweenMode.Smoothstep);
+        Tween.TMPAlpha(_buttonText.gameObject, 0, _animeDuration, TweenMode.Smoothstep, () => 
         {
             onComplate?.Invoke();
             gameObject.SetActive(false);
@@ -48,7 +55,10 @@ public class UIDialogueButton : MonoBehaviour
 
     public void Disabled()
     {
-
+        Tween.Stop(_button.gameObject);
+        Tween.Stop(_outerImage.gameObject);
+        Tween.Stop(_innerImage.gameObject);
+        Tween.Stop(_buttonText.gameObject);
         _button.image.color = new Color(_button.image.color.r, _button.image.color.g, _button.image.color.b, 0);
         _outerImage.color = new Color(_outerImage.color.r, _outerImage.color.g, _outerImage.color.b, 0);
         _innerImage.color = new Color(_innerImage.color.r, _innerImage.color.g, _innerImage.color.b, 0);

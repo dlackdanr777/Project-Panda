@@ -12,6 +12,6 @@ public class Event4_0 : StoryEvent
 
     public override void EventCancel(Action onComplate = null)
     {
-
+        Tween.Stop(Camera.main.gameObject);
     }
 }
