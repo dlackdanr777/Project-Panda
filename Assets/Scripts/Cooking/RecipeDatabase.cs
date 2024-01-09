@@ -51,7 +51,7 @@ public class RecipeData
         _successRangeLevel_B = successRangeLevel_B;
 
         //TODO: 차후 레시피 수정 예정
-        List<List<Item>> itemList = new List<List<Item>>
+        List<List<GatheringItem>> itemList = new List<List<GatheringItem>>
         {
             DatabaseManager.Instance.ItemDatabase.ItemFishList,
             DatabaseManager.Instance.ItemDatabase.ItemBugList,

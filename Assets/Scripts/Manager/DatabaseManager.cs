@@ -156,7 +156,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// GatheringItem BugList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetBugItemList()
+    public List<GatheringItem> GetBugItemList()
     {
         return _itemDatabase.ItemBugList;
     }
@@ -165,7 +165,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// GatheringItem FishList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetFishItemList()
+    public List<GatheringItem> GetFishItemList()
     {
         return _itemDatabase.ItemFishList;
     }
@@ -174,7 +174,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// GatheringItem FruitList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetFruitItemList()
+    public List<GatheringItem> GetFruitItemList()
     {
         return _itemDatabase.ItemFruitList;
     }

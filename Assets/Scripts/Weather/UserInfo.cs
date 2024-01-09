@@ -28,17 +28,20 @@ public class UserInfo
     public bool IsExistingUser; //기존 유저인가?
 
     //Inventory
-
-    //public List<InventoryItem>[] GatheringItemInventoryData;
-    public Inventory[] GatheringItemInventory; //게임 속 인벤토리
-    //public string[] GatheringItemInventoryData;
     public List<InventoryData> GatheringInventoryDataArray; //저장할 인벤토리 데이터
+    private Inventory[] GatheringItemInventory; //게임 속 인벤토리
 
-    public Inventory[] CookItemInventory;
     public List<InventoryData> CookInventoryDataArray;
+    private Inventory[] CookItemInventory;
 
-    public Inventory[] ToolItemInventory;
     public List<InventoryData> ToolInventoryDataArray;
+    private Inventory[] ToolItemInventory;
+
+    //Item
+    public List<string> GatheringItemReceived;
+    public List<string> NPCItemReceived;
+    public List<string> CookItemReceived;
+    public List<string> ToolItemReceived;
 
 
     //==========================================================================================================
@@ -80,8 +83,8 @@ public class UserInfo
         DayCount = userInfo.DayCount;  
         IsExistingUser = userInfo.IsExistingUser;
         GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
-  
-        //GatheringItemInventoryData = new List<InventoryItem>[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
+        GatheringItemReceived = userInfo.GatheringItemReceived;
+
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
 
         IsTodayRewardReceipt = true;
@@ -101,7 +104,7 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
-        //GatheringItemInventoryData = new string[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
+        GatheringItemReceived = new List<string>();
 
         DayCount++;
         IsTodayRewardReceipt = false;
@@ -117,25 +120,8 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        //Inventory[] GatheringItemInventory = GameManager.Instance.Player.GatheringItemInventory;
-        //for(int i=0;i<GatheringItemInventory.Length;i++)
-        //{
-        //    Debug.Log("Gathering : " + GatheringItemInventory);
-        //    //GatheringItemInventoryData[i] = JsonConvert.SerializeObject(GatheringItemInventory[i].GetInventoryList(), Formatting.Indented, new JsonSerializerSettings
-        //    //{
-        //    //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        //    //});
-        //    //Debug.Log(GatheringItemInventory[i].GetInventoryList()[0].Id);
-
-        //    //GatheringItemInventoryData[i] = new List<InventoryItem>();
-        //    //GatheringItemInventoryData[i] = GatheringItemInventory[i].GetInventoryList();
-
-
-        //}
         SaveUserInventory();
-
-        Debug.Log("g inventory : " + GatheringItemInventory[0].GetInventoryList()[0].Id);
-        Debug.Log(GatheringInventoryDataArray[0].Id);
+        SaveUserReceivedItem();
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
@@ -165,7 +151,6 @@ public class UserInfo
 
         for (int i=0;i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
-            Debug.Log("GatheringInventoryDataArray : " + GatheringInventoryDataArray[i].Id);
             for (int j = 0; j < GatheringItems.Count; j++) //데이터베이스
             {
                 int fieldIndex = -1;
@@ -240,6 +225,61 @@ public class UserInfo
                         ToolItemInventory[i].GetInventoryList()[j].Count));
                 }
 
+            }
+        }
+    }
+    #endregion
+
+    #region Item
+    public void LoadUserReceivedItem()
+    {
+        for(int i=0;i<GatheringItemReceived.Count; i++) 
+        {
+            if (GatheringItemReceived[i].StartsWith("IB"))
+            {
+                for(int j = 0; j < DatabaseManager.Instance.GetBugItemList().Count; j++)
+                {
+                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetBugItemList()[j].Id))
+                    {
+                        DatabaseManager.Instance.GetBugItemList()[j].IsReceived = true;
+                    }
+                }
+            }
+            else if (GatheringItemReceived[i].StartsWith("IFI"))
+            {
+                for (int j = 0; j < DatabaseManager.Instance.GetFishItemList().Count; j++)
+                {
+                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetFishItemList()[j].Id))
+                    {
+                        DatabaseManager.Instance.GetFishItemList()[j].IsReceived = true;
+                    }
+                }
+            }
+            else if (GatheringItemReceived[i].StartsWith("IFR"))
+            {
+                for (int j = 0; j < DatabaseManager.Instance.GetFruitItemList().Count; j++)
+                {
+                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetFruitItemList()[j].Id))
+                    {
+                        DatabaseManager.Instance.GetFruitItemList()[j].IsReceived = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    private void SaveUserReceivedItem() 
+    {
+        List<GatheringItem>[] itemDatabase = { DatabaseManager.Instance.GetBugItemList(), DatabaseManager.Instance.GetFishItemList(), DatabaseManager.Instance.GetFruitItemList() };
+        GatheringItemReceived = new List<string>();
+        for (int i = 0; i < itemDatabase.Length; i++)
+        {
+            for(int j = 0; j < itemDatabase[i].Count; j++)
+            {
+                if (itemDatabase[i][j].IsReceived)
+                {
+                    GatheringItemReceived.Add(itemDatabase[i][j].Id);
+                }
             }
         }
     }

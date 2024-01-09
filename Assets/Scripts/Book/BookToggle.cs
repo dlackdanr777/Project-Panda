@@ -49,18 +49,21 @@ public class BookToggle : MonoBehaviour
         t.transform.SetParent(transform.parent); 
         t.transform.SetAsLastSibling();
 
-        //Book page 이동
-        for (int i = 0; i < _toggleList.Count; i++)
+        if(_pages.Length != 0)
         {
-            if (i == index)
+
+            //Book page 이동
+            for (int i = 0; i < _toggleList.Count; i++)
             {
-                _pages[i].SetActive(true);
-            }
-            else
-            {
-                _pages[i].SetActive(false);
+                if (i == index)
+                {
+                    _pages[i].SetActive(true);
+                }
+                else
+                {
+                    _pages[i].SetActive(false);
+                }
             }
         }
-        //OnMoveBookPage?.Invoke(index);
     }
 }

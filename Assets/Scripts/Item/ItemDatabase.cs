@@ -63,13 +63,13 @@ public class ItemDatabase
 
     //GatheringItem
     //Fish
-    public List<Item> ItemFishList = new List<Item>();
+    public List<GatheringItem> ItemFishList = new List<GatheringItem>();
     private List<Dictionary<string, object>> _dataFish;
     //Bug
-    public List<Item> ItemBugList = new List<Item>();
+    public List<GatheringItem> ItemBugList = new List<GatheringItem>();
     private List<Dictionary<string, object>> _dataBug;
     //Fruit
-    public List<Item> ItemFruitList = new List<Item>();
+    public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
     private List<Dictionary<string, object>> _dataFruit;
 
 
@@ -155,6 +155,8 @@ public class ItemDatabase
                     Test)); //아직 이미지는 받아오지 않음
             FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
+
+        DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();
     }
 
     private Sprite GetItemSpriteById(string id, GatheringItemType type)

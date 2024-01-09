@@ -138,6 +138,35 @@ public class UiCookingStart : MonoBehaviour
         _uiCooking.UpdateUI();
     }
 
+    public void TimeOut()
+    {
+        StartCoroutine(TimeOutRoutine());
+    }
+
+
+    private IEnumerator TimeOutRoutine()
+    {
+        string grade = "F";
+        Debug.Log(grade + " 획득");
+
+        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].Add(_currentRecipeData.Item);
+        //TODO : 여기서 오류
+
+        GameObject animeObj = Instantiate(_failedAnimePrefab);
+        animeObj.transform.SetParent(_animeParent);
+        //여기에 애니메이션
+
+        _uiCookingTimer.EndTimer();
+        _uiCookwares.EndCooking();
+        _complatedButton.onClick.RemoveAllListeners();
+
+        yield return new WaitForSeconds(1.1f);
+
+        Destroy(animeObj);
+        _uiCookingEnd.Show(_currentRecipeData.Item);
+        _uiCooking.UpdateUI();
+    }
+
 
     private void OnComplatedButtonClicked()
     {
