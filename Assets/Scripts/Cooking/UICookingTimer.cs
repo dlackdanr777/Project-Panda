@@ -56,6 +56,6 @@ public class UICookingTimer : MonoBehaviour
 
     public void TimeOut()
     {
-        _uiCookingStart.CookingComplated();
+        _uiCookingStart.TimeOut();
     }
 }

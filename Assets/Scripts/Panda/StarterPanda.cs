@@ -54,12 +54,12 @@ namespace BT
             SetUIPanda();
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
-            _preference = DatabaseManager.Instance.SetPreference(Mbti);
+            //_preference = DatabaseManager.Instance.SetPreference(Mbti);
             DatabaseManager.Instance.StartPandaInfo.StarterPanda = this;
 
             //test 잘 설정되었는지 확인 - 나중에 지우기
             Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);
-            Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
+            //Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
             Debug.Log("판다 이미지" + _pandaImage.name);
         }
 

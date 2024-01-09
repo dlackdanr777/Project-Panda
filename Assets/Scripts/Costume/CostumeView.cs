@@ -43,8 +43,8 @@ public class CostumeView : MonoBehaviour
 
         // 커튼 열기
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-        Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(400, 0), 1f, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_rightCurtain, new Vector2(0, 0), 1f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(390, 0), 1f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(_rightCurtain, new Vector2(10, 0), 1f, TweenMode.Quadratic);
 
         _costumeImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];
         _costumeImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];

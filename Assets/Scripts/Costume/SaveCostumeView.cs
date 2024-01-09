@@ -2,15 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Muks.Tween;
+using TMPro;
 
 public class SaveCostumeView : MonoBehaviour
 {
     [SerializeField] private GameObject _saveCostume;
+    [SerializeField] private TextMeshProUGUI _saveText;
     [SerializeField] private Button _yesButton;
     [SerializeField] private Button _noButton;
     [SerializeField] private Button _notExitButton;
 
     private CostumeViewModel _costumeViewModel;
+
+    private float _loadTime = 0.05f; // 창 띄우고 끄는데 걸리는 시간
 
     // CostumeView 이후에 실행돼야 함
     void Start()
@@ -46,11 +50,10 @@ public class SaveCostumeView : MonoBehaviour
     {
         _saveCostume.gameObject.SetActive(true);
 
-        Tween.IamgeAlpha(_saveCostume, 1, 0.5f, TweenMode.Quadratic);
-        _yesButton.gameObject.SetActive(true);
-        _noButton.gameObject.SetActive(true);
-        //Tween.IamgeAlpha(_yesButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
-        //Tween.IamgeAlpha(_noButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
+        Tween.IamgeAlpha(_saveCostume, 1, _loadTime, TweenMode.Quadratic);
+        Tween.IamgeAlpha(_yesButton.gameObject, 1, _loadTime, TweenMode.Quadratic);
+        Tween.IamgeAlpha(_noButton.gameObject, 1, _loadTime, TweenMode.Quadratic);
+        //Tween.TextAlpha(_saveText.gameObject, 1, _loadTime, TweenMode.Quadratic);
     }
 
     private void OnSaveYesButtonClicked()
@@ -70,12 +73,15 @@ public class SaveCostumeView : MonoBehaviour
     private void NotExitCostumeButtonClicked()
     {
         _costumeViewModel.IsExitCostume = false;
-        Tween.IamgeAlpha(_saveCostume, 0, 0.5f, TweenMode.Quadratic, () =>
+
+        Tween.IamgeAlpha(_saveCostume, 0, _loadTime, TweenMode.Quadratic, () =>
         {
             _saveCostume.gameObject.SetActive(false);
         });
-        _yesButton.gameObject.SetActive(false);
-        _noButton.gameObject.SetActive(false);
+        Tween.IamgeAlpha(_yesButton.gameObject, 0, _loadTime, TweenMode.Quadratic);
+        Tween.IamgeAlpha(_noButton.gameObject, 0, _loadTime, TweenMode.Quadratic);
+        //Tween.TextAlpha(_saveText.gameObject, 0, _loadTime, TweenMode.Quadratic);
+
     }
 
 }

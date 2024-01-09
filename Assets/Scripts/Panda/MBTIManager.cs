@@ -44,7 +44,7 @@ public class MBTIManager
 
     public Preference SetPreference(string mbti)
     {
-        EMBTI Embti = StringToEnum<EMBTI>(mbti);
+        EMBTI Embti = StringToEnum<EMBTI>(mbti); // mbti를 Enum으로 변경
         return DataMBTI[(int)Embti];
     }
 
