@@ -62,10 +62,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
 
-
         _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
+
 
         UserInfo.Register();
         StartPandaInfo.Register();
@@ -84,7 +84,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
             _itemDatabase.ToolItemSpriteArray[i] = _toolItemImages[i];
         }
         _itemDatabase.Register();
-
 
         //_weatherDatabase.Register();
         _recipeDatabase.Register();

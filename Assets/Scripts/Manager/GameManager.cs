@@ -23,6 +23,8 @@ public class GameManager : SingletonHandler<GameManager>
         base.Awake();
 
         Application.targetFrameRate = 60;
+        Player = new Player();
+        Player.Init();
     }
 
 }
