@@ -21,8 +21,6 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
     protected override void UpdateListSlots()
     {
         UpdateList();
-        Debug.Log("updateListSlot : " + _lists[(int)_currentField].Count);
-        Debug.Log("maxCount : " + _maxCount[(int)_currentField]);
 
         if (_lists[(int)_currentField] != null)
         {
@@ -52,12 +50,8 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
     private void Awake()
     {
         //Test
-        GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
-        GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IB3");
-        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI4");
-        GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, "IFR5");
-        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI4");
-        GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI24");
+        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG03");
+        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG06");
 
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < System.Enum.GetValues(typeof(InventoryItemField)).Length - 1; i++)

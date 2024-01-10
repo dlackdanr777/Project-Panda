@@ -15,7 +15,9 @@ public class UIBookList : MonoBehaviour
     [SerializeField] private Button _rightButton;
     [SerializeField] private Sprite[] _cardImage; //봄,여름 / 가을,겨울 / 혼합
 
-    private List<GatheringItem> _database;
+    private List<GatheringItem> _gatheringDatabase;
+    private List<ToolItem> _toolDatabase;
+    private List<Item> _database;
     private int _current; //현재 페이지 위치
 
     private void Awake()
@@ -26,24 +28,34 @@ public class UIBookList : MonoBehaviour
             case InventoryItemField.GatheringItem:
                 if(_typeField == 0)
                 {
-                    _database = DatabaseManager.Instance.GetBugItemList();
+                    _gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
                 }
                 else if(_typeField == 1)
                 {
-                    _database = DatabaseManager.Instance.GetFishItemList();
+                    _gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
                 }
                 else if(_typeField == 2)
                 {
-                    _database = DatabaseManager.Instance.GetFruitItemList();
+                    _gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
                 }
                 else
                 {
                     Debug.Log("해당 데이터가 없습니다.");
                 }
+                _database = ToItemType(_gatheringDatabase);
             break;
             case InventoryItemField.Cook:
                 break;
             case InventoryItemField.Tool:
+                if(_typeField == 0)
+                {
+                    _toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
+                }
+                else
+                {
+                    Debug.Log("해당 데이터가 없습니다.");
+                }
+                _database = ToItemType(_toolDatabase);
                 break;
         }
 
@@ -85,17 +97,20 @@ public class UIBookList : MonoBehaviour
             {
                 child.gameObject.SetActive(true);
                 //카드 UI 변경
-                if (_database[(_current * 9) + i].Season.Equals("WSP") || _database[(_current * 9) + i].Season.Equals("WSU") || _database[(_current * 9) + i].Season.Equals("WSS")) //봄,여름,봄/여름
+                if(_itemField == InventoryItemField.GatheringItem)
                 {
-                    child.GetComponent<Image>().sprite = _cardImage[0];
-                }
-                else if (_database[(_current * 9) + i].Season.Equals("WFA") || _database[(_current * 9) + i].Season.Equals("WWT") || _database[(_current * 9) + i].Season.Equals("WFW")) //가을,겨울,가을/겨울
-                {
-                    child.GetComponent<Image>().sprite = _cardImage[1];
-                }
-                else if (_database[(_current * 9) + i].Season.Equals("WAS") || _database[(_current * 9) + i].Season.Equals("WSF") || _database[(_current * 9) + i].Season.Equals("WWS")) //봄/여름/가을/겨울,여름/가을,겨울/봄
-                {
-                    child.GetComponent<Image>().sprite = _cardImage[2];
+                    if (_gatheringDatabase[(_current * 9) + i].Season.Equals("WSP") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WSU") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WSS")) //봄,여름,봄/여름
+                    {
+                        child.GetComponent<Image>().sprite = _cardImage[0];
+                    }
+                    else if (_gatheringDatabase[(_current * 9) + i].Season.Equals("WFA") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WWT") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WFW")) //가을,겨울,가을/겨울
+                    {
+                        child.GetComponent<Image>().sprite = _cardImage[1];
+                    }
+                    else if (_gatheringDatabase[(_current * 9) + i].Season.Equals("WAS") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WSF") || _gatheringDatabase[(_current * 9) + i].Season.Equals("WWS")) //봄/여름/가을/겨울,여름/가을,겨울/봄
+                    {
+                        child.GetComponent<Image>().sprite = _cardImage[2];
+                    }
                 }
 
                 //활성화
@@ -153,4 +168,16 @@ public class UIBookList : MonoBehaviour
         DataBind.SetSpriteValue("BookItemDetailImage", _database[(_current * 9) + index].Image);
     }
 
+    private List<Item> ToItemType(List<GatheringItem> gatheringItemList)
+    {
+        List<Item> itemList = new List<Item>();
+        itemList.AddRange(gatheringItemList);
+        return itemList;
+    }
+    private List<Item> ToItemType(List<ToolItem> toolItemList)
+    {
+        List<Item> itemList = new List<Item>();
+        itemList.AddRange(toolItemList);
+        return itemList;
+    }
 }

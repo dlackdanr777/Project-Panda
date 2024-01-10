@@ -40,7 +40,7 @@ public class Inventory
         }
 
         //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.Rank, item.Image);
+        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.Rank, item.Map, item.Image);
         _items.Add(addItem); //새로운 인벤토리 생성
     }
 
@@ -51,38 +51,50 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public void AddById(InventoryItemField field, int fieldindex, string id)
+    public void AddById(InventoryItemField field, int fieldIndex, string id)
     {
-        List<GatheringItem> database = null;
         switch (field)
         {
             case InventoryItemField.GatheringItem:
-                if (fieldindex == 0)
+                List<GatheringItem> gatheringDatabase = null;
+                if (fieldIndex == 0)
                 {
-                    database = DatabaseManager.Instance.GetBugItemList();
+                    gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
                 }
-                else if (fieldindex == 1)
+                else if (fieldIndex == 1)
                 {
-                    database = DatabaseManager.Instance.GetFishItemList();
+                    gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
                 }
-                else if (fieldindex == 2)
+                else if (fieldIndex == 2)
                 {
-                    database = DatabaseManager.Instance.GetFruitItemList();
+                    gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
+                }
+                for (int i = 0; i < gatheringDatabase.Count; i++)
+                {
+                    if (gatheringDatabase[i].Id.Equals(id))
+                    {
+                        Add(gatheringDatabase[i]);
+                        gatheringDatabase[i].IsReceived = true;
+                    }
                 }
                 break;
             case InventoryItemField.Cook:
                 break;
             case InventoryItemField.Tool:
+                List<ToolItem> toolDatabase = null;
+                if(fieldIndex == 0)
+                {
+                    toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
+                }
+                for (int i = 0; i < toolDatabase.Count; i++)
+                {
+                    if (toolDatabase[i].Id.Equals(id))
+                    {
+                        Add(toolDatabase[i]);
+                        toolDatabase[i].IsReceived = true;
+                    }
+                }
                 break;
-        }
-
-        for (int i=0;i< database.Count; i++)
-        {
-            if (database[i].Id.Equals(id))
-            {
-                Add(database[i]);
-                database[i].IsReceived = true;
-            }
         }
     }
 

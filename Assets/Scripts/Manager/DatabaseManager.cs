@@ -31,6 +31,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
     
@@ -71,9 +72,16 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _dialogueDatabase.Register();
         _photoDatabase.Register();
 
-        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
+        //Image
+        //GatheringItem 
+        for(int i = 0; i < _itemDatabase.GatheringItemSpriteArray.Length; i++)
         {
-            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
+            _itemDatabase.GatheringItemSpriteArray[i] = _gatheringItemImages[i];
+        }
+        //ToolItem
+        for (int i = 0; i < _itemDatabase.ToolItemSpriteArray.Length; i++)
+        {
+            _itemDatabase.ToolItemSpriteArray[i] = _toolItemImages[i];
         }
         _itemDatabase.Register();
 
@@ -177,6 +185,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public List<GatheringItem> GetFruitItemList()
     {
         return _itemDatabase.ItemFruitList;
+    }
+
+    /// <summary>
+    /// ToolItem List
+    /// </summary>
+    public List<ToolItem> GetGatheringToolItemList()
+    {
+        return _itemDatabase.ItemToolList;
     }
 
     /// <summary>
