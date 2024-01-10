@@ -11,6 +11,12 @@ public class SkipButton : MonoBehaviour
     private void Start()
     {
         _button = GetComponent<Button>();
-        _button.onClick.AddListener(() => LoadingSceneManager.LoadScene("IntegratedMainScene"));
+        _button.onClick.AddListener(OnSkipButtonClicked);
+    }
+
+    private void OnSkipButtonClicked()
+    {
+        LoadingSceneManager.LoadScene("24_01_09_Integrated");
+        _button.onClick.RemoveListener(OnSkipButtonClicked);
     }
 }
