@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 using Muks.DataBind;
-using System;
 
 public class UICollection : MonoBehaviour
 {
