@@ -50,6 +50,9 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
     private void Awake()
     {
         //Test
+        //GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IBG03");
+        //GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI15");
+        //GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, "IFR15");
         //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG03");
         //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG06");
 
