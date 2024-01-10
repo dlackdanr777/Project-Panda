@@ -1,9 +1,9 @@
+using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class UICooking : UIView
 {
@@ -53,6 +53,9 @@ public class UICooking : UIView
         {
             _uiCookingCenterSlot[i].Init(this);
         }
+
+
+        DataBind.SetButtonValue("CookingExitButton", () => LoadingSceneManager.LoadScene("24_01_09_Integrated"));
         _cookButton.onClick.AddListener(StartCooking);
         _hideButtonImage.SetActive(true);
     }
@@ -73,6 +76,7 @@ public class UICooking : UIView
         }
 
         List<InventoryItem> items = _inventory[(int)CookingSystem.InventoryType].GetInventoryList();
+
         for (int i = 0, count = items.Count; i < count; i++)
         {
             _uiCookingSlots[i].UpdateUI(items[i]);

@@ -4944,7 +4944,6 @@ MonoBehaviour:
   _resultText: {fileID: 1856504760}
   _checkResultButton: {fileID: 2048608268}
   _pungImage: {fileID: 422100941}
-  _collectionButton: {fileID: 1814588360}
   _collection: {fileID: 1230128145}
 --- !u!1001 &480288114
 PrefabInstance:
@@ -7413,6 +7412,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _spriteRenderer: {fileID: 720037578}
   _uiShop: {fileID: 96456835}
 --- !u!61 &720037577
@@ -8011,6 +8013,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _shopYoungerBrother: {fileID: 321928744}
 --- !u!1 &773455916
 GameObject:
@@ -12769,21 +12774,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hour: 0
-  _timeIDs:
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
   _season: WSP
-  _seasonIDs:
-  - 
-  - 
-  - 
-  - 
+  fieldIndex: -1
+  _collectionPosition: []
   _pandaCollectionImage: {fileID: -978041886259020887, guid: 0fade69d83237b845bbd86844a8eec27, type: 3}
-  _collectionButton: {fileID: 1814588360}
   _speechBubble: {fileID: 1622392015}
 --- !u!95 &1230128146
 Animator:
@@ -12985,7 +12979,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
-  _spriteRenderer: {fileID: 1236256404}
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _changedObj:
   - {fileID: 1718538854}
   - {fileID: 994645427}
@@ -14696,6 +14692,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _uiNav: {fileID: 230217969}
 --- !u!1 &1359643627
 GameObject:
@@ -20490,7 +20489,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
-  _uiNav: {fileID: 230217969}
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &1755516707
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22613,6 +22614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _followButtonPrefab: {fileID: 0}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _spriteRenderer: {fileID: 1907541458}
   _uiShop: {fileID: 96456835}
 --- !u!61 &1907541457
@@ -23506,6 +23510,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d530864d561584b4c98b6c94189f2d5f, type: 2}
   - {fileID: 11400000, guid: 626b5d2bc8ffed14d976fa8c274c72c3, type: 2}
   - {fileID: 11400000, guid: 1d0ba241017cf9e4ea9af2d01c587e24, type: 2}
+  _toolItemImages:
+  - {fileID: 11400000, guid: 30eef562256b26f4eaad8954500aa877, type: 2}
   _harvestItemImage: {fileID: 11400000, guid: fed7aea151469db40b1ce6627d377c11, type: 2}
 --- !u!1 &1946526399
 GameObject:
@@ -31995,6 +32001,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _book: {fileID: 0}
+  _coverAnimator: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
+  _animeDuration: 0
+  _tweenMode: 0
 --- !u!1 &5068489938490880909
 GameObject:
   m_ObjectHideFlags: 0
