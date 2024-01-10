@@ -1,6 +1,7 @@
 using UnityEngine;
 using Muks.Tween;
 using Muks.DataBind;
+using Unity.VisualScripting;
 
 public class FieldSlot : MonoBehaviour, IInteraction
 {
@@ -32,6 +33,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
     {
         _time += Time.deltaTime;
         IsIncreaseYields();
+        if(_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
+        {
+            ShowHavestItem();
+        }
     }
 
     public void Init(BambooFieldSystem bambooFieldSystem, int growingCropID)
