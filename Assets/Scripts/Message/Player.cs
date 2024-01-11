@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour 
+public class Player
 {
     public int Familiarity;
 
@@ -17,20 +17,16 @@ public class Player : MonoBehaviour
     public Inventory[] ToolItemInventory; 
 
     [Header("Message")]
-    public MessageList[] Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1]; //0:Mail, 1:Wish 
+    public MessageList[] Messages; //0:Mail, 1:Wish 
     //public int MaxMessageCount { get; private set; }
     //public List<bool> IsCheckMessage = new List<bool>();
     //public List<bool> IsReceiveGift = new List<bool>();
 
-    [Header("Bamboo")]
-    [SerializeField] private GameObject _popupPanel;
-    [SerializeField] private GameObject _dontUseBambooPanel;
-    [SerializeField] private GameObject _dontGainBambooPanel;
     public int Bamboo { get; private set; }
     public int MaxBamboo;
 
 
-    private void Awake()
+    public void Init()
     {
         //MaxMessageCount = 20;
         MaxBamboo = 1000;
@@ -39,10 +35,11 @@ public class Player : MonoBehaviour
         //{
         //    Inventory[i] = new Inventory();
         //}
-        //for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
-        //{
-        //    //Messages[i] = new MessageList();
-        //}
+        Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
+        for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
+        {
+            Messages[i] = new MessageList();
+        }
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
@@ -63,14 +60,9 @@ public class Player : MonoBehaviour
             ToolItemInventory[i] = new Inventory();
         }
 
-        //GatheringItemInventory = DatabaseManager.Instance.UserInfo.GatheringItemInventory;
         DatabaseManager.Instance.UserInfo.LoadUserInventory();
-    }
-
-    private void Start()
-    {
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
-
+        //GatheringItemInventory = DatabaseManager.Instance.UserInfo.GatheringItemInventory;
     }
 
     //public int CurrentNotCheckedMessage {
@@ -96,7 +88,6 @@ public class Player : MonoBehaviour
         }
         else
         {
-            StartCoroutine(PopupCoroutine(_dontUseBambooPanel));
             return false;
         }
     }
@@ -111,7 +102,6 @@ public class Player : MonoBehaviour
         }
         else
         {
-            StartCoroutine(PopupCoroutine(_dontGainBambooPanel));
             return false;
         }
     }
@@ -133,14 +123,5 @@ public class Player : MonoBehaviour
         }
 
         return inventoryArray;
-    }
-
-    private IEnumerator PopupCoroutine(GameObject panel)
-    {
-        _popupPanel.SetActive(true);
-        panel.SetActive(true);
-        yield return new WaitForSeconds(1.0f);
-        panel.SetActive(false);
-        _popupPanel.SetActive(false);
     }
 }

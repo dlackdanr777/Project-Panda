@@ -10,23 +10,25 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
     [SerializeField] private Image _fadeImage;
 
     [SerializeField] private float _fadeScale;
+
     [SerializeField] private float _fadeDuration;
 
+    [SerializeField] private TweenMode _fadeTweenMode;
+
     private Vector3 _tempPos;
-    private Vector3 _tempScale;
+    private Vector3 _tempSize;
 
     private Vector3 _targetPos;
-    private Vector3 _targetScale;
+    private Vector3 _targetSize;
 
     public void Start()
     {
         _tempPos = _fadeImage.rectTransform.anchoredPosition;
-        _tempScale = _fadeImage.transform.localScale;
+        _tempSize = _fadeImage.rectTransform.sizeDelta;
 
         _targetPos = _tempPos * _fadeScale;
-        _targetScale = new Vector3(_fadeScale, _fadeScale, _fadeScale);
+        _targetSize = _tempSize * _fadeScale;
 
-        Debug.Log("Ω√¿€");
         _fadeImage.gameObject.SetActive(false);
     }
 
@@ -36,10 +38,10 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
          _fadeImage.gameObject.SetActive(true);
 
         _fadeImage.rectTransform.anchoredPosition = _targetPos;
-        _fadeImage.transform.localScale = _targetScale;
+        _fadeImage.rectTransform.sizeDelta = _targetSize;
 
-        Tween.TransformScale(_fadeImage.gameObject, _tempScale, _fadeDuration, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _tempPos, _fadeDuration, TweenMode.Quadratic, onComplete);
+        Tween.RectTransfromSizeDelta(_fadeImage.gameObject, _tempSize, _fadeDuration, _fadeTweenMode);
+        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _tempPos, _fadeDuration, _fadeTweenMode, onComplete);
      }
 
 
@@ -54,10 +56,10 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
         _fadeImage.gameObject.SetActive(true);
 
         _fadeImage.rectTransform.anchoredPosition = _tempPos;
-        _fadeImage.transform.localScale = _tempScale;
+        _fadeImage.rectTransform.sizeDelta = _tempSize;
 
-        Tween.TransformScale(_fadeImage.gameObject, _targetScale, _fadeDuration, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _targetPos, _fadeDuration, TweenMode.Quadratic, () => 
+        Tween.RectTransfromSizeDelta(_fadeImage.gameObject, _targetSize, _fadeDuration, _fadeTweenMode);
+        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _targetPos, _fadeDuration, _fadeTweenMode, () => 
         {
             onComplete?.Invoke();
             _fadeImage.gameObject.SetActive(false);

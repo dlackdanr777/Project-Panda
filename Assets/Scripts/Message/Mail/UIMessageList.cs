@@ -19,6 +19,9 @@ public class UIMessageList : UIList<Message, MessageField>
         _player = GameManager.Instance.Player;
         for (int i = 0; i < _player.Messages.Length; i++)
         {
+            Debug.Log("메시지 확인");
+            Debug.Log(_player.Messages[i]);
+            Debug.Log(_player.Messages[i].MaxMessageCount);
             _maxCount[i] = _player.Messages[i].MaxMessageCount;
         }
 

@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,6 @@ public class LoadingSceneManager : MonoBehaviour
 {
     public static string _nextScene;
 
-    [SerializeField] private Text _progressText;
-
     void Start()
     {
         StartCoroutine(LoadScene());
@@ -18,6 +17,7 @@ public class LoadingSceneManager : MonoBehaviour
 
     public static void LoadScene(string sceneName)
     {
+
         _nextScene = sceneName;
         ChangeSceneManager.Instance.ChangeScene(() => SceneManager.LoadScene("LoadingScene"));
     }
@@ -37,14 +37,8 @@ public class LoadingSceneManager : MonoBehaviour
             yield return null;
             timer += Time.deltaTime;
 
-            if(op.progress < 0.9f)
+            if(0.9f <= op.progress)
             {
-                _progressText.text = Mathf.RoundToInt(op.progress * 100).ToString();
-            }
-            else
-            {
-                _progressText.text = Mathf.RoundToInt(Mathf.Lerp(int.Parse(_progressText.text), 100, timer * 0.5f)).ToString();
-
                 if(timer > 2)
                 {
                     op.allowSceneActivation = true;
