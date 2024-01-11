@@ -29,7 +29,7 @@ public class BambooFieldSystem : MonoBehaviour
 
     [SerializeField] private GameObject _harvestBamboos;
     [SerializeField] private GameObject _harvestBamboo;
-    private GameObject[] _bambooPrefabs = new GameObject[50];
+    private GameObject[] _bambooPrefabs = new GameObject[100];
     private int _bambooPrefabCount;
 
     private void Awake()
@@ -39,7 +39,7 @@ public class BambooFieldSystem : MonoBehaviour
 
     private void Start()
     {
-        FirstCheckGrowth();
+        Invoke("FirstCheckGrowth", 0.1f);
     }
 
     private void Init()

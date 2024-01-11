@@ -462,22 +462,36 @@ public class Collection : MonoBehaviour, IInteraction
     {
 
         if (_gatheringType == GatheringItemType.Bug)
-        { 
+        {
             // 플레이어 도구에 따라 확률 변경하기
-            if (toolId == "ITG02")
+            switch (toolId)
             {
-                _successRate = 0.6f;
-            }
-            else
-            {
-                _successRate = 0.8f;
+                case "ITG02":
+                    _successRate = 0.6f;
+                    break;
+                case "ITG04":
+                    _successRate = 0.7f;
+                    break;
+                case "ITG06":
+                    _successRate = 0.8f;
+                    break;
             }
 
         }
         else if (_gatheringType == GatheringItemType.Fish)
         {
-            _successRate = 0.7f;
-
+            switch (toolId)
+            {
+                case "ITG01":
+                    _successRate = 0.6f;
+                    break;
+                case "ITG03":
+                    _successRate = 0.7f;
+                    break;
+                case "ITG05":
+                    _successRate = 0.8f;
+                    break;
+            }
         }
         else if (_gatheringType == GatheringItemType.Fruit)
         {
