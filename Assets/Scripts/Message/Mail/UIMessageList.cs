@@ -19,9 +19,6 @@ public class UIMessageList : UIList<Message, MessageField>
         _player = GameManager.Instance.Player;
         for (int i = 0; i < _player.Messages.Length; i++)
         {
-            Debug.Log("메시지 확인");
-            Debug.Log(_player.Messages[i]);
-            Debug.Log(_player.Messages[i].MaxMessageCount);
             _maxCount[i] = _player.Messages[i].MaxMessageCount;
         }
 
@@ -84,8 +81,8 @@ public class UIMessageList : UIList<Message, MessageField>
                     message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn = false;
 
                     _player.Messages[(int)_currentField].RemoveByIndex(i);
-                    _player.Messages[0].IsReceiveGift.RemoveAt(i);
-                    _player.Messages[0].IsCheckMessage.RemoveAt(i);
+                    //_player.Messages[0].IsReceiveGift.RemoveAt(i);
+                    //_player.Messages[0].IsCheckMessage.RemoveAt(i);
 
                 }
 
@@ -103,18 +100,18 @@ public class UIMessageList : UIList<Message, MessageField>
 
         //player 메시지 확인
         _spawnPoint[(int)_currentField].GetChild(index).GetChild(2).gameObject.SetActive(false);
-        _player.Messages[(int)_currentField].IsCheckMessage[index] = true;
+        //_player.Messages[(int)_currentField].IsCheckMessage[index] = true;
         NoticeHandler?.Invoke();
 
-        DataBind.SetTextValue("MessageDetailTo", _lists[(int)_currentField][index].To);
+        //DataBind.SetTextValue("MessageDetailTo", _lists[(int)_currentField][index].To);
         DataBind.SetTextValue("MessageDetailContent", _lists[(int)_currentField][index].Content);
         DataBind.SetTextValue("MessageDetailFrom", _lists[(int)_currentField][index].From);
 
         if (_currentField == MessageField.Mail)
         {
 
-            _spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
-            DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
+            //_spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
+            //DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
             DataBind.SetButtonValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
         }
     }

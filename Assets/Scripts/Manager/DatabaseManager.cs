@@ -41,6 +41,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private HarvestItemManager _harvestItemDatabase;
     [SerializeField] HarvestItemImage _harvestItemImage;
 
+    private NPCDatabase _npcDatabase;
+    public NPCDatabase NPCDatabase => _npcDatabase;
+
+    //Message
+    [SerializeField] private ItemSpriteDatabase _mailPaper;
+    private MessageDatabase _messageDatabase;
+    public MessageDatabase MessageDatabase => _messageDatabase;
+
     public override void Awake()
     {
         var obj = FindObjectsOfType<DatabaseManager>();
@@ -65,6 +73,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
+        _npcDatabase = new NPCDatabase();
+        _messageDatabase = new MessageDatabase();
 
 
         UserInfo.Register();
@@ -95,6 +105,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
+
+        _npcDatabase.Register();
+        _messageDatabase.MailPaperSpriteArray = _mailPaper;
+        _messageDatabase.Register();
 
     }
 
@@ -212,6 +226,13 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.FurnitureTypeList;
     }
 
+    /// <summary>
+    /// Mail List
+    /// </summary>
+    public List<Message> GetMailList()
+    {
+        return _messageDatabase.MailList;
+    }
 
     public void OnApplicationQuit()
     {

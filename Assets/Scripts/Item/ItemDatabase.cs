@@ -42,13 +42,6 @@ public enum FurnitureType
     Props
 }
 
-public enum MessageField
-{
-    None = -1,
-    Mail,
-    Wish
-}
-
 public class ItemDatabase 
 {
     //public List<Item>[] ItemList = new List<Item>[System.Enum.GetValues(typeof(ItemField)).Length - 1];

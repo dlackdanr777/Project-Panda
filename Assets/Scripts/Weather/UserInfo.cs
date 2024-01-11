@@ -196,7 +196,6 @@ public class UserInfo
                     {
                         fieldIndex = 0;
                     }
-                    Debug.Log(ToolInventoryDataArray[i].Id);
                     GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
                 }
             }

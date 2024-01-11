@@ -23,7 +23,7 @@ public class Wish : MonoBehaviour
 
     private void OnClickWishButton()
     {
-        DataBind.SetTextValue("WishDetailTo", Message.To);
+        //DataBind.SetTextValue("WishDetailTo", Message.To);
         DataBind.SetTextValue("WishDetailContent", Message.Content);
         DataBind.SetTextValue("WishDetailFrom", Message.From);
         _detailView.SetActive(true);
