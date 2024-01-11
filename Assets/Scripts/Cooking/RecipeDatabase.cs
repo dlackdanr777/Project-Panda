@@ -69,13 +69,10 @@ public class RecipeData
                     continue;
 
                 _item = item;
-                Debug.Log("존재함");
                 return;
 
             }
         }
-
-        Debug.Log("존재하지 않음");
     }
 }
 

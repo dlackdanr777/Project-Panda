@@ -20,6 +20,11 @@ public class UIPhoto : UIView
         ScreenshotCamera.OnStartHandler += ResizeImage;
     }
 
+    public void OnDestroy()
+    {
+        ScreenshotCamera.OnStartHandler -= ResizeImage;
+    }
+
     public override void Show()
     {
         gameObject.SetActive(true);

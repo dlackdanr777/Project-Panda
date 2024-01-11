@@ -11,6 +11,7 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     public override void Awake()
     {
+        base.Awake();
         Init();
     }
 
@@ -21,12 +22,6 @@ public class StoryManager : SingletonHandler<StoryManager>
         UIDialogue.OnComplateHandler += AddComplateStory;
         PandaStoryController.OnStartHandler += SetStroyDic;
         PandaStoryController.OnCheckActivateHandler += CheckStoryActivate;
-    }
-
-
-    private void Start()
-    {
-        CheckStoryActivates();
     }
 
 

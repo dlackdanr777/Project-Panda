@@ -85,7 +85,6 @@ public class CameraController : MonoBehaviour
         {
             if (_hit.collider == null)
             {
-                Debug.Log("아무것도 없다.");
                 _tempInteaction = null;
                 return;
             }
@@ -96,7 +95,6 @@ public class CameraController : MonoBehaviour
                 return;
             }
                 
-            Debug.Log("눌렸습니다.");
             _tempInteaction = interaction;
         }
 
@@ -106,7 +104,6 @@ public class CameraController : MonoBehaviour
 
             if (_hit.collider == null)
             {
-                Debug.Log("아무것도 없다.");
                 return;
             }
                 

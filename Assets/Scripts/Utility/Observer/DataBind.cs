@@ -11,7 +11,7 @@ namespace Muks.DataBind
 
         private static Dictionary<string, BindData<UnityAction>> _dataBindingUnityAction;
 
-        private static Dictionary<string, BindData<Action>> _dataBindingAction;
+        private static Dictionary<string, BindData<Action>> _dataBindingAction; //사용하지 않음
 
         private static Dictionary<string, BindData<Sprite>> _dataBindingSprite;
 
@@ -182,6 +182,5 @@ namespace Muks.DataBind
             }
             return objectData;
         }
-
     }
 }

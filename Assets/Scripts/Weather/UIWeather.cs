@@ -4,11 +4,7 @@ using UnityEngine;
 using Muks.DataBind;
 using System.Linq;
 using System;
-using UnityEngine.UI;
-using Muks.Tween;
-using UnityEngine.U2D;
-using Unity.VisualScripting;
-using System.Reflection;
+
 
 public class UIWeather : UIView
 {

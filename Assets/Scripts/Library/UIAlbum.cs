@@ -34,6 +34,11 @@ public class UIAlbum : MonoBehaviour
         UpdateUI();
     }
 
+    private void OnDestroy()
+    {
+        ScreenshotCamera.OnStartHandler -= ResizeImage;
+    }
+
 
     private void UpdateUI()
     {
