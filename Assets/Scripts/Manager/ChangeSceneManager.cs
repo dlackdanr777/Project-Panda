@@ -48,7 +48,7 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     public void HideFadeImage()
     {
-        //_fadeImage.gameObject.SetActive(false);
+        _fadeImage.gameObject.SetActive(false);
     }
 
 

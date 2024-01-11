@@ -35,6 +35,9 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetButtonValue("ShowPictureButton", OnShowPictureButtonClicked);
         DataBind.SetButtonValue("HidePictureButton", OnHidePictureButtonClicked);
+
+        DataBind.SetButtonValue("ShowMainUIButton", OnShowMainUIButtonClicked);
+        DataBind.SetButtonValue("HideMainUIButton", OnHideMainUIButtonClicked);
     }
 
     private void OnCameraButtonClicked()
@@ -132,4 +135,15 @@ public class UIMainScene : MonoBehaviour
         _uiNav.Pop("Picture");
     }
 
+
+
+    public void OnHideMainUIButtonClicked()
+    {
+        _uiNav.HideMainUI();
+    }
+
+    public void OnShowMainUIButtonClicked()
+    {
+        _uiNav.ShowMainUI();
+    }
 }

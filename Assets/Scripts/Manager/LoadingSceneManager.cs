@@ -9,7 +9,8 @@ public class LoadingSceneManager : MonoBehaviour
 {
     public static string _nextScene;
 
-    void Start()
+
+    private void Start()
     {
         StartCoroutine(LoadScene());
     }
