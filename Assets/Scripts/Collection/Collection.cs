@@ -1,4 +1,5 @@
 using BT;
+using Muks.DataBind;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -171,6 +172,7 @@ public class Collection : MonoBehaviour, IInteraction
         //_collectionButton.gameObject.SetActive(true);
         _boxCollider.enabled = false;
 
+        DataBind.GetAction("HideMainUIButton")?.Invoke();
         CameraSet(true);
     }
 
@@ -305,6 +307,7 @@ public class Collection : MonoBehaviour, IInteraction
 
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.transform.position = _lastPandaPosition;
 
+        DataBind.GetAction("ShowMainUIButton")?.Invoke();
         CameraSet(false);
         _targetPos = new Vector3(_lastPandaPosition.x, _lastPandaPosition.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
