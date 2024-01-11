@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Muks.Tween;
 using System;
 
+
 public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 {
     [SerializeField] private Image _fadeImage;
@@ -47,7 +48,7 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     public void HideFadeImage()
     {
-        _fadeImage.gameObject.SetActive(false);
+        //_fadeImage.gameObject.SetActive(false);
     }
 
 

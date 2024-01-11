@@ -85,6 +85,7 @@ namespace Muks.DataBind
             _data.CallBack -= UpdateImage;
         }
 
+
         private void OnDestroy()
         {
             if (_data == null)
