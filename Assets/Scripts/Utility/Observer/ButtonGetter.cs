@@ -24,15 +24,18 @@ namespace Muks.DataBind
             }
         }
 
+
         private void OnEnable()
         {
             Invoke("Enabled", 0.02f);
         }
 
+
         private void OnDisable()
         {
             Invoke("Disabled", 0.02f);
         }
+
 
         private void UpdateButton(UnityAction action)
         {
@@ -43,6 +46,7 @@ namespace Muks.DataBind
 
             _button.onClick.AddListener(_action);
         }
+
 
         private void Enabled()
         {
@@ -55,9 +59,6 @@ namespace Muks.DataBind
         private void Disabled()
         {
             _data.CallBack -= UpdateButton;
-
-            if (IsListenerRegistered(_data.Item))
-                _button.onClick?.RemoveListener(_data.Item);
         }
 
 
@@ -67,7 +68,6 @@ namespace Muks.DataBind
                 return;
 
             _data.CallBack -= UpdateButton;
-            Debug.Log("구독 해지");
         }
 
 

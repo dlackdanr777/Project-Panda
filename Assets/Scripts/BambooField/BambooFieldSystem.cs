@@ -34,7 +34,6 @@ public class BambooFieldSystem : MonoBehaviour
 
     private void Awake()
     {
-        _fieldIndex = 3; // 나중에 수정
         Init();
     }
 
@@ -46,7 +45,9 @@ public class BambooFieldSystem : MonoBehaviour
     private void Init()
     {
         _fieldSlots = _fieldSlotParent.GetComponentsInChildren<FieldSlot>();
-        for(int i = 0; i <= _fieldIndex; i++)
+        _fieldIndex = _fieldSlots.Length - 1;
+
+        for (int i = 0; i <= _fieldIndex; i++)
         {
             _fieldSlots[i].Init(this, 0);// 0: 우선 죽순ID로 설정
         }

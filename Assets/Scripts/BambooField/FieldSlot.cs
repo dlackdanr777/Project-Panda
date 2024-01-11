@@ -88,15 +88,22 @@ public class FieldSlot : MonoBehaviour, IInteraction
     {
         if(GrowthStage == 0)
         {
-            _growingCropImage.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            _growingCropImage.transform.localScale = new Vector3(3, 3, 3);
             _growingCropImage.transform.position = transform.position + new Vector3(0, 0.5f, 0);
             _isGrowthComplete = false;
         }
         else if(GrowthStage == 1)
         {
-            _growingCropImage.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 0.5f, 0);
+            //_growingCropImage.transform.localScale = new Vector3(5, 5, 5);
+            _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 1, 0);
         }
+
+        else if (GrowthStage == 2)
+        {
+            //_growingCropImage.transform.localScale = new Vector3(5, 5, 5);
+            _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 1.5f, 0);
+        }
+
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[growthStage];
     }
 
