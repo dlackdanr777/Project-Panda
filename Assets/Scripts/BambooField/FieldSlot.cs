@@ -32,7 +32,15 @@ public class FieldSlot : MonoBehaviour, IInteraction
     private void Update()
     {
         _time += Time.deltaTime;
-        IsIncreaseYields();
+        if(HarvestItem != null)
+        {
+            IsIncreaseYields();
+        }
+        else
+        {
+            Debug.Log("HarvestItem null");
+        }
+
         if(_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
         {
             ShowHavestItem();
@@ -103,7 +111,6 @@ public class FieldSlot : MonoBehaviour, IInteraction
             //_growingCropImage.transform.localScale = new Vector3(5, 5, 5);
             _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 1.5f, 0);
         }
-
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[growthStage];
     }
 
