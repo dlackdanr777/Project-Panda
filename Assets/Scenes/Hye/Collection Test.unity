@@ -756,6 +756,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88061963}
   m_CullTransparentMesh: 1
+--- !u!95 &88953022 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4502371831519699661, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+  m_PrefabInstance: {fileID: 5153879222402742528}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &96456835
 GameObject:
   m_ObjectHideFlags: 0
@@ -2292,7 +2297,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStart: 0
-  Player: {fileID: 1704462194}
   MessageDatabase: {fileID: 11400000, guid: 35bf09bada7d9b441a64c2776095ccbd, type: 2}
   FriezeCameraMove: 0
   FriezeCameraZoom: 0
@@ -6560,6 +6564,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &646048000 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6324892676310843636, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+  m_PrefabInstance: {fileID: 5153879222402742528}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &657022426
 GameObject:
   m_ObjectHideFlags: 0
@@ -14502,6 +14511,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dataID: ShowScreenshotCameraButton
+--- !u!95 &1389797577 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 405338033710837550, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+  m_PrefabInstance: {fileID: 5153879222402742528}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1391074084
 GameObject:
   m_ObjectHideFlags: 0
@@ -18559,15 +18573,18 @@ MonoBehaviour:
   CookItemInventory: []
   ToolItemInventory: []
   Messages:
-  - Messages: []
-    IsCheckMessage: 
-    IsReceiveGift: 
-  - Messages: []
-    IsCheckMessage: 
-    IsReceiveGift: 
+  - <MaxMessageCount>k__BackingField: 20
+    Messages: []
+    IsCheckMessage: []
+    IsReceiveGift: []
+  - <MaxMessageCount>k__BackingField: 20
+    Messages: []
+    IsCheckMessage: []
+    IsReceiveGift: []
   _popupPanel: {fileID: 1272775781}
   _dontUseBambooPanel: {fileID: 999912796}
   _dontGainBambooPanel: {fileID: 1072262061}
+  <Bamboo>k__BackingField: 0
   MaxBamboo: 0
 --- !u!4 &1704462195
 Transform:
@@ -30716,6 +30733,18 @@ PrefabInstance:
       propertyPath: _checkResultButton
       value: 
       objectReference: {fileID: 2048608266}
+    - target: {fileID: 365883546446463059, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _map
+      value: MN02
+      objectReference: {fileID: 0}
+    - target: {fileID: 365883546446463059, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _speechBubble
+      value: 
+      objectReference: {fileID: 646048000}
+    - target: {fileID: 365883546446463059, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _pandaCollectionSprite
+      value: 
+      objectReference: {fileID: -7785147043928374292, guid: b96302971253b674088d5766d5ef4508, type: 3}
     - target: {fileID: 1013288600292182181, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -30785,11 +30814,19 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6302054914330357641, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _speechBubble
+      value: 
+      objectReference: {fileID: 1389797577}
+    - target: {fileID: 6302054914330357641, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
       propertyPath: _pandaPosition.y
       value: -9.12
       objectReference: {fileID: 0}
     - target: {fileID: 6302054914330357641, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
       propertyPath: _collectionSprite
+      value: 
+      objectReference: {fileID: 3110571563801715268, guid: 61667bd6c6f9cf946bb2290b2e4050dd, type: 3}
+    - target: {fileID: 6302054914330357641, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _pandaCollectionSprite
       value: 
       objectReference: {fileID: 3110571563801715268, guid: 61667bd6c6f9cf946bb2290b2e4050dd, type: 3}
     - target: {fileID: 6816844098680287462, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
@@ -30800,6 +30837,14 @@ PrefabInstance:
       propertyPath: _checkResultButton
       value: 
       objectReference: {fileID: 2048608266}
+    - target: {fileID: 7831419001146483306, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _speechBubble
+      value: 
+      objectReference: {fileID: 88953022}
+    - target: {fileID: 7831419001146483306, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
+      propertyPath: _pandaCollectionSprite
+      value: 
+      objectReference: {fileID: -978041886259020887, guid: 0fade69d83237b845bbd86844a8eec27, type: 3}
     - target: {fileID: 8748054198602854739, guid: 8628025f9e33eb24bab672f83f142ee2, type: 3}
       propertyPath: m_SortingOrder
       value: 1000
