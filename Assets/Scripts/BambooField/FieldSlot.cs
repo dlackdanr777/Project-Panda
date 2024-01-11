@@ -27,6 +27,8 @@ public class FieldSlot : MonoBehaviour, IInteraction
         HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
         GrowthTime = HarvestItem.HarvestTime * 5;
+
+        ChangeGrowthStageImage(0);
     }
 
     private void Update()
