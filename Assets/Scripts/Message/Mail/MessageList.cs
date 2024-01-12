@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 [Serializable]
 public class MessageList
 {
+    public Action NoticeHandler;
     public int MaxMessageCount { get; private set; } = 20;
     public int MessagesCount => _messages.Count;
     private List<Message> _messages = new List<Message>();
@@ -35,6 +37,7 @@ public class MessageList
             _messages.RemoveAt(0);
         }
         _messages.Add(message);
+        NoticeHandler?.Invoke();
     }
 
     /// <summary>
@@ -67,5 +70,4 @@ public class MessageList
             _messages.RemoveAt(index);
         } 
     }
-
 }

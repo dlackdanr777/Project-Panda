@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class UIMailList : MonoBehaviour
 {
+    public Action NoticeHandler;
+
     [SerializeField] private GameObject _messageSlotPf;
     [SerializeField] private GameObject _detailView;
     [SerializeField] private GameObject _giftButton;
@@ -29,35 +31,17 @@ public class UIMailList : MonoBehaviour
 
     private void OnEnable()
     {
-        //Test 
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[0].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[2].Id, MessageField.Mail); //ML01 메일 추가
 
         UpdateList();
     }
 
     private void Start()
     {
+        //Test 
+        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[0].Id, MessageField.Mail); //ML01 메일 추가
+        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
+        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[2].Id, MessageField.Mail); //ML01 메일 추가
+        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[3].Id, MessageField.Mail); //ML01 메일 추가
         _closeButton.onClick.AddListener(OnClickCloseButton);
     }
 
@@ -99,6 +83,8 @@ public class UIMailList : MonoBehaviour
         DataBind.SetButtonValue("MailDetailGiftButton", ()=>OnClickGiftButton(index));
         
         _mailList.GetMessageList()[index].IsCheck = true;
+        NoticeHandler?.Invoke();
+
         _detailView.gameObject.SetActive(true);
         if (!_mailList.GetMessageList()[index].IsReceived)
         {
