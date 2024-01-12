@@ -23,6 +23,9 @@ public class StarterPandaInfo
     public List<CostumeData> CostumeInventory;
     #endregion
 
+    public FurnitureViewModel FurnitureViewModel;
+
+
     // 판다 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "PandaInfo.json");
 
