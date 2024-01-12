@@ -52,7 +52,7 @@ public class UIWeather : UIView
         for (int i = 0, count = _slots.Count; i < count; i++)
         {
             //만약 보상 지급 슬롯이라면?
-            if ((DatabaseManager.Instance.UserInfo.DayCount % 6) - 1 == i)
+            if ((DatabaseManager.Instance.UserInfo.DayCount -1 % 6) == i)
             {
                 _todayWeatherData = _weekWeathers[i];
                 _daySlots[i].Init(true);

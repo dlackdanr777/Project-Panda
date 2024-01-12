@@ -20,18 +20,18 @@ public class UIAlbum : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateUI();
+       // UpdateUI();
     }
 
 
 
     public void Init()
     {
-        _slot = new List<UIAlbumSlot>();
+      /*  _slot = new List<UIAlbumSlot>();
         _thisRectTransform = GetComponent<RectTransform>();
         ScreenshotCamera.OnStartHandler += ResizeImage;
         LoadPhotoData();
-        UpdateUI();
+        UpdateUI();*/
     }
 
     private void OnDestroy()

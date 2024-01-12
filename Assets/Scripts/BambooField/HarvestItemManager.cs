@@ -11,7 +11,7 @@ public class HarvestItemManager
     {
         _harvestItemDic = HarvestItemParse("HarvestItem");
         
-        // ¼öÈ®¾ÆÀÌÅÛ ÀÌ¹ÌÁö ÀúÀå
+        // ìˆ˜í™•ì•„ì´í…œ ì´ë¯¸ì§€ ì €ì¥
         foreach(string id in _harvestItemDic.Keys)
         {
             _harvestItemDic[id].Image[0] = HarvestItemImage.GrowthStageImages[0].ZeroStepImage;
@@ -21,7 +21,7 @@ public class HarvestItemManager
     }
 
     /// <summary>
-    /// ¼öÈ® ¾ÆÀÌÅÛ µ¥ÀÌÅÍ ¹Ş¾Æ¿Í ÀúÀå </summary>
+    /// ìˆ˜í™• ì•„ì´í…œ ë°ì´í„° ë°›ì•„ì™€ ì €ì¥ </summary>
     public Dictionary<string, HarvestItem> HarvestItemParse(string CSVFileName)
     {
         Dictionary<string, HarvestItem> harvestItemDic = new Dictionary<string, HarvestItem>();
