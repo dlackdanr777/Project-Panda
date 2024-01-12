@@ -10,7 +10,7 @@ public class FurniturePositionDatabase
 
     public void Register()
     {
-        Load();
+        //Load();
     }
     public Dictionary<Vector3, string> GetSaveFurniutreList()
     {

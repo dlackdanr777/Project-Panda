@@ -29,7 +29,7 @@ public class StarterPandaInfo
 
     public void Register()
     {
-        LoadPandaInfoData();
+        //LoadPandaInfoData();
     }
 
     // 불러오기

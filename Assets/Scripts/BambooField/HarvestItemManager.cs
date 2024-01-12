@@ -17,6 +17,7 @@ public class HarvestItemManager
             _harvestItemDic[i].Image[0] = HarvestItemImage.GrowthStageImages[i].ZeroStepImage;
             _harvestItemDic[i].Image[1] = HarvestItemImage.GrowthStageImages[i].OneStepImage;
             _harvestItemDic[i].Image[2] = HarvestItemImage.GrowthStageImages[i].TwoStepImage;
+            Debug.Log("수확아이템 저장");
         }
     }
 
