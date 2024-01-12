@@ -14,7 +14,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
     /// 현재 키우는 작물 정보 </summary>
     public HarvestItem HarvestItem;
 
-    [SerializeField] private string _growingCropID;
+    [SerializeField] private int _growingCropID;
     [SerializeField] private GameObject _growingCropImage;
 
     private BambooFieldSystem BFieldSystem;
@@ -24,9 +24,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     private void Start()
     {
-        HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
+        HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID.ToString());
+
         _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
-        GrowthTime = HarvestItem.HarvestTime * 6;
+        GrowthTime = HarvestItem.HarvestTime * 5;
 
         ChangeGrowthStageImage(0);
     }
@@ -41,17 +42,15 @@ public class FieldSlot : MonoBehaviour, IInteraction
         else
         {
             Debug.Log("HarvestItem null");
-            HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
-
         }
 
-        if (_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
+        if(_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
         {
             ShowHavestItem();
         }
     }
 
-    public void Init(BambooFieldSystem bambooFieldSystem, string growingCropID)
+    public void Init(BambooFieldSystem bambooFieldSystem, int growingCropID)
     {
         BFieldSystem = bambooFieldSystem;
         _growingCropID = growingCropID;
@@ -89,7 +88,6 @@ public class FieldSlot : MonoBehaviour, IInteraction
         // 버튼 생성
         if (!BFieldSystem.HarvestButton.IsSet)
         {
-
             BFieldSystem.HarvestButton.IsSet = true;
             Tween.SpriteRendererAlpha(BFieldSystem.HarvestButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
         }
@@ -121,7 +119,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     private void IsIncreaseYields()
     {
-        if(_time > HarvestItem.HarvestTime * 60)
+        if(_time > HarvestItem.HarvestTime *2)// 나중에 수정 *60
         {
             IncreaseYields();
             _time = 0;
@@ -137,12 +135,12 @@ public class FieldSlot : MonoBehaviour, IInteraction
         }
 
         //일정 시간이 지나면 버튼 생성 후 수확
-        if (Yield == HarvestItem.MaxYield && !_isGrowthComplete)
+        if (Yield == GrowthTime * 2 && !_isGrowthComplete)
         {
             _isGrowthComplete = true;
             GrowingCrops(2);
         }
-        else if (Yield == GrowthTime * HarvestItem.Yield / HarvestItem.HarvestTime)
+        else if (Yield == GrowthTime)
         {
             GrowingCrops(1);
         }

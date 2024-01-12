@@ -6,6 +6,19 @@ using UnityEngine.Rendering;
 
 public class UICutoutMask : Image
 {
+    protected override void Start()
+    {
+        base.Start();
+        StartCoroutine(Fix());
+    }
+
+    private IEnumerator Fix()
+    {
+        yield return null;
+        maskable = false;
+        maskable = true;
+    }
+
     public override Material materialForRendering
     {
         get
