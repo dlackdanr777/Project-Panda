@@ -4644,6 +4644,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447820594}
   m_CullTransparentMesh: 1
+--- !u!114 &478884498 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3466395332983192511, guid: 9a29137a3c9aea44fa0bc79cc33a1ca2, type: 3}
+  m_PrefabInstance: {fileID: 1433593413039594340}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &480288114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17771,37 +17782,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1872517763
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1872517764}
-  m_Layer: 0
-  m_Name: Mail Transform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1872517764
+--- !u!4 &1872517764 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+  m_PrefabInstance: {fileID: 8393145371612210855}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1872517763}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.5, y: -13, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1911969318}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1885281017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22606,6 +22591,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIMail
       objectReference: {fileID: 0}
+    - target: {fileID: 8694024563779288373, guid: 9a29137a3c9aea44fa0bc79cc33a1ca2, type: 3}
+      propertyPath: _giftCloseButton
+      value: 
+      objectReference: {fileID: 478884498}
     - target: {fileID: 9022847196631955649, guid: 9a29137a3c9aea44fa0bc79cc33a1ca2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -22686,7 +22675,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6164149130576084944, guid: 9a29137a3c9aea44fa0bc79cc33a1ca2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -29973,6 +29963,63 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1001 &8393145371612210855
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1911969318}
+    m_Modifications:
+    - target: {fileID: 3908515129879497789, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_Name
+      value: Mail Transform
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503816546920476936, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c4b428d4bcb690459067da98ed255a4, type: 3}
 --- !u!222 &8403567363172589302
 CanvasRenderer:
   m_ObjectHideFlags: 0

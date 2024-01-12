@@ -45,7 +45,6 @@ public class MessageDatabase
                 _dataMail[i]["게임 시간"].ToString(),
                 GetItemSpriteById(_dataMail[i]["NPC ID"].ToString())));
         }
-
     }
 
     private Sprite GetItemSpriteById(string id)

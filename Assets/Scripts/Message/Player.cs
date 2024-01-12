@@ -18,9 +18,6 @@ public class Player
 
     [Header("Message")]
     public MessageList[] Messages; //0:Mail, 1:Wish 
-    //public int MaxMessageCount { get; private set; }
-    //public List<bool> IsCheckMessage = new List<bool>();
-    //public List<bool> IsReceiveGift = new List<bool>();
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -28,13 +25,8 @@ public class Player
 
     public void Init()
     {
-        //MaxMessageCount = 20;
         MaxBamboo = 1000;
 
-        //for(int i=0; i < System.Enum.GetValues(typeof(ItemField)).Length - 1; i++)
-        //{
-        //    Inventory[i] = new Inventory();
-        //}
         Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
         for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
         {
@@ -45,7 +37,6 @@ public class Player
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
 
-        //Debug.Log("Player : " + System.Enum.GetValues(typeof(GatheringItemType)).Length);
         //ItemInventory ÃÊ±âÈ­
         for (int i = 0; i < GatheringItemInventory.Length; i++)
         {
@@ -61,22 +52,10 @@ public class Player
         }
 
         DatabaseManager.Instance.UserInfo.LoadUserInventory();
-        DataBind.SetTextValue("BambooCount", Bamboo.ToString());
-        //GatheringItemInventory = DatabaseManager.Instance.UserInfo.GatheringItemInventory;
-    }
+        DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
-    //public int CurrentNotCheckedMessage {
-    //    get
-    //    {
-    //        int count = 0;
-    //        for (int i = 0; i < IsCheckMessage.Count; i++)
-    //        {
-    //            if (!IsCheckMessage[i])
-    //                count++;
-    //        }
-    //        return count;
-    //    }
-    //}
+        DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+    }
 
     public bool SpendBamboo(int amount)
     {

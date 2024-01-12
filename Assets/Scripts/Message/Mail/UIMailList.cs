@@ -15,21 +15,23 @@ public class UIMailList : MonoBehaviour
     [SerializeField] private GameObject _giftDetailView;
     [SerializeField] private GameObject _giftButton;
     [SerializeField] private Button _closeButton;
+    [SerializeField] private Button _giftCloseButton;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private Sprite _checkMailImage;
+    [SerializeField] private Sprite[] _checkMailImage;
 
     private MessageList _mailList;
+    private int _currentIndex;
 
     private void Awake()
     {
         //Test 
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[0].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[2].Id, MessageField.Mail); //ML01 메일 추가
-        GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[3].Id, MessageField.Mail); //ML01 메일 추가
+        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[0].Id, MessageField.Mail); //ML01 메일 추가
+        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
+        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[2].Id, MessageField.Mail); //ML01 메일 추가
+        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[3].Id, MessageField.Mail); //ML01 메일 추가
         for (int i = 0; i < GameManager.Instance.Player.Messages[0].MaxMessageCount; i++) //미리 slot 생성
         {
-            int index = i;
+            int index = GameManager.Instance.Player.Messages[0].MaxMessageCount - 1 - i;
             GameObject messageSlot = Instantiate(_messageSlotPf, _spawnPoint);
             messageSlot.GetComponent<Button>().onClick.AddListener(()=>OnClickMessageSlot(index));
         }
@@ -37,33 +39,41 @@ public class UIMailList : MonoBehaviour
 
     private void OnEnable()
     {
-
         UpdateList();
+        
     }
 
     private void Start()
     {
         _closeButton.onClick.AddListener(OnClickCloseButton);
+        _giftCloseButton.onClick.AddListener(OnClickGiftCloseButton);
     }
 
     private void UpdateList()
     {
         _mailList = GameManager.Instance.Player.Messages[0]; //메시지리스트 받아옴
+        Debug.Log("메일: " + _mailList.MessagesCount);
         for (int i = 0; i < _spawnPoint.childCount; i++)
         {
             if (i < _mailList.MessagesCount)
             {
-                _spawnPoint.GetChild(i).gameObject.SetActive(true); //활성화
-                if (_mailList.GetMessageList()[i].IsCheck)
+                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).gameObject.SetActive(true); //활성화
+                if (!_mailList.GetMessageList()[i].IsCheck)
                 {
-                    _spawnPoint.GetChild(i).GetChild(0).GetComponent<Image>().sprite = _checkMailImage;
-                    _spawnPoint.GetChild(i).GetChild(0).GetChild(0).gameObject.SetActive(false); //느낌표
+                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetComponent<Image>().sprite = _checkMailImage[0];
+                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetChild(0).gameObject.SetActive(true); //느낌표
                 }
-                _spawnPoint.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = GetNPCName(_mailList.GetMessageList()[i].From);//NPC 이름
+                else
+                {
+                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetComponent<Image>().sprite = _checkMailImage[1];
+                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetChild(0).gameObject.SetActive(false); //느낌표
+
+                }
+                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(1).GetComponent<TextMeshProUGUI>().text = GetNPCName(_mailList.GetMessageList()[i].From);//NPC 이름
             }
             else
             {
-                _spawnPoint.GetChild(i).gameObject.SetActive(false);
+                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).gameObject.SetActive(false);
             }
         }
     }
@@ -75,21 +85,33 @@ public class UIMailList : MonoBehaviour
         UpdateList();
     }
 
+    private void OnClickGiftCloseButton()
+    {
+        _giftDetailView.SetActive(false);
+    }
+
     private void OnClickMessageSlot(int index)
     {
         DataBind.SetTextValue("MailDetailContent", _mailList.GetMessageList()[index].Content);
         DataBind.SetTextValue("MailDetailFrom", "From. " + GetNPCName(_mailList.GetMessageList()[index].From));
         DataBind.SetSpriteValue("MailDetailImage", _mailList.GetMessageList()[index].PaperImage);
-        DataBind.SetButtonValue("MailDetailGiftButton", ()=>OnClickGiftButton(index));
+        DataBind.SetButtonValue("MailDetailGiftButton", OnClickGiftButton);
         
         _mailList.GetMessageList()[index].IsCheck = true;
         NoticeHandler?.Invoke();
 
         _detailView.gameObject.SetActive(true);
-        if (!_mailList.GetMessageList()[index].IsReceived)
+
+        if (_mailList.GetMessageList()[index].IsReceived)
+        {
+            _giftButton.SetActive(false);
+        }
+        else
         {
             _giftButton.SetActive(true);
         }
+
+        _currentIndex = index;
     }
 
     private string GetNPCName(string id)
@@ -104,10 +126,10 @@ public class UIMailList : MonoBehaviour
         return null;
     }
 
-    private void OnClickGiftButton(int index)
+    private void OnClickGiftButton()
     {
-        AddGift(index);
-        SetDetail(index);
+        AddGift(_currentIndex);
+        SetDetail(_currentIndex);
         _giftDetailView.SetActive(true);
         _giftButton.SetActive(false);
     }
@@ -131,6 +153,7 @@ public class UIMailList : MonoBehaviour
                 GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, _mailList.GetMessageList()[index].Gift.Id);
                 break;
         }
+        Debug.Log("receiveIndex : " + index);
         _mailList.GetMessageList()[index].IsReceived = true;
     }
 

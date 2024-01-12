@@ -47,9 +47,6 @@ public enum FurnitureType
 
 public class ItemDatabase 
 {
-    //public List<Item>[] ItemList = new List<Item>[System.Enum.GetValues(typeof(ItemField)).Length - 1];
-    //public int[] ItemCount = new int[System.Enum.GetValues(typeof(ItemField)).Length - 1];
-
     //Snack
     private List<Dictionary<string, object>> _dataSnack;
 

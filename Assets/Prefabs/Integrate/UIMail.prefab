@@ -525,7 +525,6 @@ GameObject:
   - component: {fileID: 3995267180671333191}
   - component: {fileID: 7734634624673684516}
   - component: {fileID: 3466395332983192511}
-  - component: {fileID: 6164149130576084944}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -635,19 +634,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6164149130576084944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1268998565320549464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db8b9e84b5c57042bcfe8ca30ffbf44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _panel: {fileID: 3304153429691456619}
 --- !u!1 &1449550363790804208
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,7 +1096,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2150294283053899796
@@ -1170,7 +1156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5012906190715055602
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2653,5 +2639,8 @@ MonoBehaviour:
   _giftDetailView: {fileID: 3304153429691456619}
   _giftButton: {fileID: 3696068735271563989}
   _closeButton: {fileID: 4600594796680113891}
+  _giftCloseButton: {fileID: 3466395332983192511}
   _spawnPoint: {fileID: 2999516633691715867}
-  _checkMailImage: {fileID: -4643293985927976715, guid: 9727c50ff4c12dd4fa23db2b7536adcb, type: 3}
+  _checkMailImage:
+  - {fileID: -3688532361223805820, guid: 9727c50ff4c12dd4fa23db2b7536adcb, type: 3}
+  - {fileID: -4643293985927976715, guid: 9727c50ff4c12dd4fa23db2b7536adcb, type: 3}

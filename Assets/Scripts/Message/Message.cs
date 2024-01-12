@@ -11,7 +11,6 @@ public class Message
     public string StoryStep;
     public string Time;
     public Sprite PaperImage;
-    public bool IsSend;
     public bool IsCheck; //메시지 확인했는지
     public bool IsReceived; //선물 받았는지
 
@@ -24,7 +23,6 @@ public class Message
         StoryStep = storyStep;
         Time = time;
         PaperImage = paperImage;
-        IsSend = false;
         IsCheck = false;
         IsReceived = false;
     }
