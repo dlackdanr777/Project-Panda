@@ -69,6 +69,10 @@ public class UIMainScene : MonoBehaviour
     private void OnInventoryButtonClicked()
     {
         _uiNav.Push("Inventory");
+
+        GameManager.Instance.FirezeInteraction = false;
+        GameManager.Instance.FriezeCameraMove = false;
+        GameManager.Instance.FriezeCameraZoom = false;
     }
 
     private void OnShowDiaryButtonClicked()
@@ -104,6 +108,10 @@ public class UIMainScene : MonoBehaviour
     private void OnShowInventoryButtonClicked()
     {
         _uiNav.Push("Inventory");
+
+        GameManager.Instance.FriezeCameraMove = false;
+        GameManager.Instance.FirezeInteraction = false;
+        //GameManager.Instance.FriezeCameraZoom = false;
     }
 
     private void OnHideInventoryButtonClicked()

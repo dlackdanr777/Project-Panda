@@ -10,6 +10,9 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 {
     [SerializeField] private Image _fadeImage;
 
+    [SerializeField] private Image[] _backgroundImages;
+
+
     [SerializeField] private float _fadeScale;
 
     [SerializeField] private float _fadeDuration;
@@ -74,9 +77,9 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
     public void ResetFadeImage(Action onComplete = null)
     {
         _fadeImage.gameObject.SetActive(true);
-
         _fadeImage.rectTransform.anchoredPosition = _tempPos;
         _fadeImage.rectTransform.sizeDelta = _tempSize;
+        StartCoroutine(FixImage());
 
         Tween.RectTransfromSizeDelta(_fadeImage.gameObject, _targetSize, _fadeDuration, _fadeTweenMode);
         Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _targetPos, _fadeDuration, _fadeTweenMode, () => 
@@ -88,9 +91,24 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
             GameManager.Instance.FirezeInteraction = false;
 
             _isLoading = false;
-
             _fadeImage.gameObject.SetActive(false);
             _dontTouchArea.SetActive(false);
         });
+    }
+
+
+    private IEnumerator FixImage()
+    {
+        foreach(Image image in _backgroundImages)
+        {
+            image.maskable = false;
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        foreach (Image image in _backgroundImages)
+        {
+            image.maskable = true;
+        }
     }
 }
