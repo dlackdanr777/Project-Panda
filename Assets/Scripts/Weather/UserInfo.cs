@@ -113,6 +113,7 @@ public class UserInfo
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
+        MessageDataArray = new List<MessageData>();
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
 
