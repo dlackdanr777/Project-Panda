@@ -12,6 +12,7 @@ public class UIMailList : MonoBehaviour
 
     [SerializeField] private GameObject _messageSlotPf;
     [SerializeField] private GameObject _detailView;
+    [SerializeField] private GameObject _giftDetailView;
     [SerializeField] private GameObject _giftButton;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Transform _spawnPoint;
@@ -79,7 +80,6 @@ public class UIMailList : MonoBehaviour
         DataBind.SetTextValue("MailDetailContent", _mailList.GetMessageList()[index].Content);
         DataBind.SetTextValue("MailDetailFrom", "From. " + GetNPCName(_mailList.GetMessageList()[index].From));
         DataBind.SetSpriteValue("MailDetailImage", _mailList.GetMessageList()[index].PaperImage);
-        DataBind.SetSpriteValue("MailDetailGiftImage", _mailList.GetMessageList()[index].Gift.Image);
         DataBind.SetButtonValue("MailDetailGiftButton", ()=>OnClickGiftButton(index));
         
         _mailList.GetMessageList()[index].IsCheck = true;
@@ -106,11 +106,19 @@ public class UIMailList : MonoBehaviour
 
     private void OnClickGiftButton(int index)
     {
+        AddGift(index);
+        SetDetail(index);
+        _giftDetailView.SetActive(true);
+        _giftButton.SetActive(false);
+    }
+
+    private void AddGift(int index)
+    {
         string giftId = _mailList.GetMessageList()[index].Gift.Id;
         giftId = giftId.Substring(0, 3);
         switch (giftId)
         {
-            case "IBG": 
+            case "IBG":
                 GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, _mailList.GetMessageList()[index].Gift.Id);
                 break;
             case "IFI":
@@ -123,7 +131,13 @@ public class UIMailList : MonoBehaviour
                 GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, _mailList.GetMessageList()[index].Gift.Id);
                 break;
         }
-        _giftButton.SetActive(false);
         _mailList.GetMessageList()[index].IsReceived = true;
+    }
+
+    private void SetDetail(int index)
+    {
+        DataBind.SetSpriteValue("MailGiftDetailImage", _mailList.GetMessageList()[index].Gift.Image);
+        DataBind.SetTextValue("MailGiftDetailName", _mailList.GetMessageList()[index].Gift.Name);
+        DataBind.SetTextValue("MailGiftDetailDescription", _mailList.GetMessageList()[index].Gift.Description);
     }
 }
