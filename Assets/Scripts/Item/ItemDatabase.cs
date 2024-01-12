@@ -35,11 +35,14 @@ public enum GatheringItemType
 public enum FurnitureType
 {
     None = -1,
-    Furniture,
-    Appliances,
-    Kitchen,
-    Light,
-    Props
+    WallPaper,
+    Floor,
+    LeftWall,
+    RightWall,
+    LeftFurniture,
+    RightFurniture,
+    LeftProp,
+    RightProp
 }
 
 public class ItemDatabase 
@@ -181,14 +184,14 @@ public class ItemDatabase
         FurnitureTypeList = new FurnitureType[_dataFurniture.Count];
         for(int i = 0; i < _dataFurniture.Count; i++)
         {
-            FurnitureList.Add(new Item(_dataFurniture[i]["Id"].ToString(),
-                    _dataFurniture[i]["Name"].ToString(),
-                    _dataFurniture[i]["Description"].ToString(),
-                    (int)_dataFurniture[i]["Price"],
-                    "등급",
-                    "맵",
+            FurnitureList.Add(new Item(_dataFurniture[i]["ID"].ToString(),
+                    _dataFurniture[i]["이름"].ToString(),
+                    _dataFurniture[i]["설명"].ToString(),
+                    (int)_dataFurniture[i]["가격"],
+                    _dataFurniture[i]["ID"].ToString().Substring(3,1),
+                    _dataFurniture[i]["맵ID"].ToString(),
                     Test)); //아직 이미지는 받아오지 않음
-            FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
+            //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
 
         DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();

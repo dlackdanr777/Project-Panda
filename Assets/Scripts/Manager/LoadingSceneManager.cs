@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,8 @@ public class LoadingSceneManager : MonoBehaviour
 {
     public static string _nextScene;
 
-    void Start()
+
+    private void Start()
     {
         StartCoroutine(LoadScene());
     }
@@ -16,6 +18,7 @@ public class LoadingSceneManager : MonoBehaviour
 
     public static void LoadScene(string sceneName)
     {
+
         _nextScene = sceneName;
         ChangeSceneManager.Instance.ChangeScene(() => SceneManager.LoadScene("LoadingScene"));
     }

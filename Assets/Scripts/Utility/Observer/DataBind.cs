@@ -11,7 +11,7 @@ namespace Muks.DataBind
 
         private static Dictionary<string, BindData<UnityAction>> _dataBindingUnityAction;
 
-        private static Dictionary<string, BindData<Action>> _dataBindingAction;
+        private static Dictionary<string, BindData<Action>> _dataBindingAction; //사용하지 않음
 
         private static Dictionary<string, BindData<Sprite>> _dataBindingSprite;
 
@@ -120,6 +120,21 @@ namespace Muks.DataBind
         }
 
 
+        public static UnityAction GetAction(string dataID)
+        {
+            if (_dataBindingUnityAction == null)
+                _dataBindingUnityAction = new Dictionary<string, BindData<UnityAction>>();
+
+            if (!_dataBindingUnityAction.TryGetValue(dataID, out BindData<UnityAction> actionData))
+            {
+                Debug.Log("존재하지 않음");
+                actionData = new BindData<UnityAction>();
+                _dataBindingUnityAction.Add(dataID, actionData);
+            }
+            return actionData.Item;
+        }
+
+
         public static void SetAtcionValue(string dataID, Action action)
         {
             if (_dataBindingAction == null)
@@ -152,6 +167,7 @@ namespace Muks.DataBind
         }
 
 
+
         public static void SetObjectValue(string dataID, object obj)
         {
             if (_dataBindingObject == null)
@@ -182,6 +198,5 @@ namespace Muks.DataBind
             }
             return objectData;
         }
-
     }
 }

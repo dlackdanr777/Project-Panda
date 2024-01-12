@@ -54,14 +54,14 @@ public class UserInfo
 
     public void Register()
     {
-        LoadUserInfoData();
+        CreateUserInfoData();
+        //LoadUserInfoData();
     }
 
 
     //유저의 데이터를 가져오는 함수
     public void LoadUserInfoData()
     {
-        Debug.Log(_path);
         if (!File.Exists(_path))
         {
             Debug.Log("유저 저장 문서가 존재하지 않습니다.");
@@ -114,8 +114,9 @@ public class UserInfo
         IsTodayRewardReceipt = false;
 
 
-        string json = JsonUtility.ToJson(this, true);
-        File.WriteAllText(_path, json);
+/*        string json = JsonUtility.ToJson(this, true);
+        File.WriteAllText(_path, json);*/
+//TODO: 모바일 테스트 중 잠금
     }
 
 

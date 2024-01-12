@@ -29,26 +29,27 @@ public class BambooFieldSystem : MonoBehaviour
 
     [SerializeField] private GameObject _harvestBamboos;
     [SerializeField] private GameObject _harvestBamboo;
-    private GameObject[] _bambooPrefabs = new GameObject[50];
+    private GameObject[] _bambooPrefabs = new GameObject[300];
     private int _bambooPrefabCount;
 
     private void Awake()
     {
-        _fieldIndex = 3; // 나중에 수정
         Init();
     }
 
     private void Start()
     {
-        FirstCheckGrowth();
+        Invoke("FirstCheckGrowth", 0.1f);
     }
 
     private void Init()
     {
         _fieldSlots = _fieldSlotParent.GetComponentsInChildren<FieldSlot>();
-        for(int i = 0; i <= _fieldIndex; i++)
+        _fieldIndex = _fieldSlots.Length - 1;
+
+        for (int i = 0; i <= _fieldIndex; i++)
         {
-            _fieldSlots[i].Init(this, 0);// 0: 우선 죽순ID로 설정
+            _fieldSlots[i].Init(this, "BM001");// 0: 우선 죽순ID로 설정
         }
         for(int i = 0; i < _bambooPrefabs.Length; i++)
         {

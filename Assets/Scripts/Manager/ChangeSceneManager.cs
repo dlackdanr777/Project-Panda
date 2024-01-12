@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Muks.Tween;
 using System;
 
+
 public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 {
     [SerializeField] private Image _fadeImage;
@@ -15,11 +16,16 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     [SerializeField] private TweenMode _fadeTweenMode;
 
+    [Space]
+    [SerializeField] private GameObject _dontTouchArea;
+
     private Vector3 _tempPos;
     private Vector3 _tempSize;
 
     private Vector3 _targetPos;
     private Vector3 _targetSize;
+
+    private bool _isLoading;
 
     public void Start()
     {
@@ -29,13 +35,26 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
         _targetPos = _tempPos * _fadeScale;
         _targetSize = _tempSize * _fadeScale;
 
+        _isLoading = false;
+
         _fadeImage.gameObject.SetActive(false);
+        _dontTouchArea.SetActive(false);
     }
 
 
      public void ChangeScene(Action onComplete = null)
      {
-         _fadeImage.gameObject.SetActive(true);
+        if (_isLoading)
+            return;
+
+        _dontTouchArea.SetActive(true);
+        _fadeImage.gameObject.SetActive(true);
+
+        _isLoading = true;
+
+        GameManager.Instance.FriezeCameraMove = true;
+        GameManager.Instance.FriezeCameraZoom = true;
+        GameManager.Instance.FirezeInteraction = true;
 
         _fadeImage.rectTransform.anchoredPosition = _targetPos;
         _fadeImage.rectTransform.sizeDelta = _targetSize;
@@ -47,6 +66,7 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     public void HideFadeImage()
     {
+        _dontTouchArea.SetActive(true);
         _fadeImage.gameObject.SetActive(false);
     }
 
@@ -62,7 +82,15 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
         Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _targetPos, _fadeDuration, _fadeTweenMode, () => 
         {
             onComplete?.Invoke();
+
+            GameManager.Instance.FriezeCameraMove = false;
+            GameManager.Instance.FriezeCameraZoom = false;
+            GameManager.Instance.FirezeInteraction = false;
+
+            _isLoading = false;
+
             _fadeImage.gameObject.SetActive(false);
+            _dontTouchArea.SetActive(false);
         });
     }
 }

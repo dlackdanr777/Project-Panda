@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 using Muks.DataBind;
+using System.Collections.Generic;
 
 public class UICollection : MonoBehaviour
 {
@@ -18,26 +19,31 @@ public class UICollection : MonoBehaviour
     [SerializeField] private Image _resultTextImage;
     [SerializeField] private TextMeshProUGUI _resultText;
 
+    [SerializeField] private RectTransform[] _checkResultButtonPosition = new RectTransform[3];
     [SerializeField] private Button _checkResultButton;
     [SerializeField] private GameObject _pungImage;
     #endregion
 
+    private float _resultAlpha = 0.5f; // 결과창 보일 때 블러의 알파 값
+
     #region Collection
     //[SerializeField] private CollectionButton _collectionButton;
-    [SerializeField] private Collection _collection;
+    [SerializeField] private Collection[] _collection = new Collection[3];
     #endregion
 
-    private float _resultAlpha = 0.5f; // 결과창 보일 때 블러의 알파 값
+    private GatheringItemType _gathringItemType;
 
     void Start()
     {
         //_collectionButton.OnCollectionButtonClicked += FadeInOut;
-        _collection.OnCollectionButtonClicked += FadeInOut;
-
-        _collection.OnCollectionSuccess += SetSuccess;
-        _collection.OnCollectionFail += SetFail;
-
-        _collection.OnExitCollection += ExitUICollection;
+        
+        for(int i = 0; i < _collection.Length; i++)
+        {
+            _collection[i].OnCollectionButtonClicked += FadeInOut;
+            _collection[i].OnCollectionSuccess += SetSuccess;
+            _collection[i].OnCollectionFail += SetFail;
+            _collection[i].OnExitCollection += ExitUICollection;
+        }
 
         DataBind.SetButtonValue("CheckResultButton", OnCheckResultButton);
     }
@@ -45,19 +51,26 @@ public class UICollection : MonoBehaviour
     private void OnDestroy()
     {
         //_collectionButton.OnCollectionButtonClicked -= FadeInOut;
-        _collection.OnCollectionButtonClicked -= FadeInOut;
 
-        _collection.OnCollectionSuccess -= SetSuccess;
-        _collection.OnCollectionFail -= SetFail;
-
-        _collection.OnExitCollection -= ExitUICollection;
-
+        for (int i = 0; i < _collection.Length; i++)
+        {
+            _collection[i].OnCollectionButtonClicked -= FadeInOut;
+            _collection[i].OnCollectionSuccess -= SetSuccess;
+            _collection[i].OnCollectionFail -= SetFail;
+            _collection[i].OnExitCollection -= ExitUICollection;
+        }
     }
 
-    private void FadeInOut(float fadeTime)
+    private void FadeInOut(float fadeTime, GatheringItemType gatheringItemType)
     {
+        _gathringItemType = gatheringItemType;
+        if(gatheringItemType != GatheringItemType.None)
+        {
+            _checkResultButton.GetComponent<RectTransform>().anchoredPosition = _checkResultButtonPosition[(int)gatheringItemType].anchoredPosition;
+        }
+
         _fadeInOut.gameObject.SetActive(true);
-        Tween.IamgeAlpha(_fadeInOut.gameObject, 1, fadeTime, TweenMode.Quadratic, () =>
+        Tween.IamgeAlpha(_fadeInOut.gameObject, 1, fadeTime, TweenMode.Constant, () =>
         {
             Tween.IamgeAlpha(_fadeInOut.gameObject, 0, fadeTime, TweenMode.Quadratic, () =>
             {
@@ -66,16 +79,11 @@ public class UICollection : MonoBehaviour
         });
     }
 
-    private void DesplayResultText()
-    {
-
-    }
-
     private void OnCheckResultButton()
     {
         // 느낌표 터치하면 채집 성공 실패 여부 알려줌
         // 느낌표 터치하면 대기 애니메이션 재생 후 종료되면 성공 실패 여부 알려주는 것으로 수정
-        _collection.CollectionLatency();
+        _collection[(int)_gathringItemType].CollectionLatency();
         //_collection.IsSuccess();
         _checkResultButton.gameObject.SetActive(false);
     }
@@ -99,32 +107,47 @@ public class UICollection : MonoBehaviour
 
     /// <summary>
     /// 채집 성공 시 UI </summary>
-    private void SetSuccess(string id)
+    private void SetSuccess(string id, GatheringItemType gatheringItemType)
     {
         _pungImage.SetActive(true);
 
-        Item item = DatabaseManager.Instance.GetBugItemList().Find(item => item.Id.Equals(id));
+        GatheringItem gatheringItem = null;
 
-        if(item is GatheringItem gatheringItem)
-        {
-            SetSuccessFrame(gatheringItem.Season);
-        }
+        if(gatheringItemType == GatheringItemType.Bug)
+            gatheringItem = DatabaseManager.Instance.GetBugItemList().Find(item => item.Id.Equals(id));
+        else if (gatheringItemType == GatheringItemType.Fish)
+            gatheringItem = DatabaseManager.Instance.GetFishItemList().Find(item => item.Id.Equals(id));
+        else if (gatheringItemType == GatheringItemType.Fruit)
+            gatheringItem = DatabaseManager.Instance.GetFruitItemList().Find(item => item.Id.Equals(id));
+
+        SetSuccessFrame(gatheringItem.Season);
 
         _resultTextImage.gameObject.SetActive(true);
-        if(item.Name.Length > 7)
+
+        //string text;
+        //if (gatheringItemType == GatheringItemType.Fruit)
+        //{
+        //    text = "와!";
+        //}
+        //else
+        //{
+        //    text = "잡았다!";
+        //}
+
+        if (gatheringItem.Name.Length > 7)
         {
-            _resultText.text = "잡았다!\n" + item.Name + "!";
+            _resultText.text = "잡았다!\n" + gatheringItem.Name + "!";
         }
         else
         {
-            _resultText.text = "잡았다! " + item.Name + "!";
+            _resultText.text = "잡았다! " + gatheringItem.Name + "!";
         }
 
         _successImage.gameObject.SetActive(true);
 
         // 아이템 이미지 받아와서 띄우기
-        _collectionItemImage.sprite = item.Image;
-        _collectionItemText.text = item.Name;
+        _collectionItemImage.sprite = gatheringItem.Image;
+        _collectionItemText.text = gatheringItem.Name;
         Debug.Log("채집한 아이템 이미지 띄움"+id);
 
         _fadeInOut.gameObject.SetActive(true);
@@ -133,12 +156,20 @@ public class UICollection : MonoBehaviour
 
     /// <summary>
     /// 채집 실패 시 UI </summary>
-    private void SetFail()
+    private void SetFail(GatheringItemType gatheringItemType)
     {
         _pungImage.SetActive(true);
 
         _resultTextImage.gameObject.SetActive(true);
-        _resultText.text = ",,, 놓쳐 버렸다,,,";
+
+        if(gatheringItemType == GatheringItemType.Bug)
+        {
+            _resultText.text = ",,, 놓쳐 버렸다,,,";
+        }
+        else if(gatheringItemType == GatheringItemType.Fish)
+        {
+            _resultText.text = ",,, 물고기가 도망갔다,,,";
+        }
 
         _fadeInOut.gameObject.SetActive(true);
         Tween.IamgeAlpha(_fadeInOut.gameObject, _resultAlpha, 0.1f, TweenMode.Quadratic);
@@ -149,12 +180,6 @@ public class UICollection : MonoBehaviour
     private void ExitUICollection()
     {
         _pungImage.SetActive(false);
-
-        Tween.IamgeAlpha(_fadeInOut.gameObject, 0, 0.1f, TweenMode.Quadratic, () =>
-        {
-            _fadeInOut.gameObject.SetActive(false);
-
-        });
         _resultTextImage.gameObject.SetActive(false);
         _successImage.gameObject.SetActive(false);
     }

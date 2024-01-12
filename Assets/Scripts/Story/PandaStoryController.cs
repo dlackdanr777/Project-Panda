@@ -47,6 +47,7 @@ public class PandaStoryController : MonoBehaviour
     {
         StoryDialogue = DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(_storyID);
         OnStartHandler?.Invoke(_storyID, this);
+
         OnCheckActivateHandler?.Invoke(this);
 
         Vector3 targetPos = transform.position + _buttonPos;

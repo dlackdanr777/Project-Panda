@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Test : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         gameObject.GetComponent<Button>().onClick.AddListener(OnCostumeButtonClicked);
         //DataBind.SetButtonValue("CostumeButton", OnCostumeButtonClicked);

@@ -242,7 +242,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _startPandaInfo.SavePandaInfoData();
     }
 
-    public HarvestItem GetHarvestItemdata(int harvestItemID)
+    public HarvestItem GetHarvestItemdata(string harvestItemID)
     {
         return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
     }

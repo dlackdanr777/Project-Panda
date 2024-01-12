@@ -79,8 +79,18 @@ namespace Muks.DataBind
                 _spriteRenderer.sprite = _data.Item;
         }
 
+
         private void Disabled()
         {
+            _data.CallBack -= UpdateImage;
+        }
+
+
+        private void OnDestroy()
+        {
+            if (_data == null)
+                return;
+
             _data.CallBack -= UpdateImage;
         }
     }

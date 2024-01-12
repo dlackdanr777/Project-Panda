@@ -52,6 +52,11 @@ public class UIDialogue : UIView
         _rightButton.Init();
     }
 
+    public void OnDestroy()
+    {
+        PandaStoryController.OnStartInteractionHandler -= StartStory;
+    }
+
 
 
     public override void Hide()

@@ -46,6 +46,7 @@ public class UINavigation : MonoBehaviour
     private void Init()
     {
         _rootUiView.UIView.Init(this);
+        _viewDic.Clear();
 
         for (int i = 0, count = _uiViewList.Length; i < count; i++)
         {
@@ -76,7 +77,6 @@ public class UINavigation : MonoBehaviour
     {
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
         {
-
             foreach (UIView view in _viewDic.Values)
             {
                 if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
