@@ -674,6 +674,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICollection
       objectReference: {fileID: 0}
+    - target: {fileID: 2392313910747208351, guid: beda8feddfddfa848a786c62cbdeff13, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4226899825101717624, guid: beda8feddfddfa848a786c62cbdeff13, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1329,7 +1333,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 225332993}
   m_HandleRect: {fileID: 225332992}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -13291,6 +13295,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Collection
       objectReference: {fileID: 0}
+    - target: {fileID: 3954817516609640065, guid: a0de6d17c30baba439d22b3b6156d3d1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5852361647436018681, guid: a0de6d17c30baba439d22b3b6156d3d1, type: 3}
       propertyPath: _checkResultButton
       value: 
@@ -13347,6 +13355,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7275361078519513824, guid: a0de6d17c30baba439d22b3b6156d3d1, type: 3}
+      propertyPath: _speechBubble
+      value: 
+      objectReference: {fileID: 1744420588}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16182,6 +16194,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1744420588 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3945396963400753915, guid: a0de6d17c30baba439d22b3b6156d3d1, type: 3}
+  m_PrefabInstance: {fileID: 1397687347}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1745919012
 GameObject:
   m_ObjectHideFlags: 0
@@ -18300,7 +18317,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1564268724}
   m_HandleRect: {fileID: 1564268723}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -21701,6 +21718,8 @@ MonoBehaviour:
   VisibleState: 0
   _borderButton: {fileID: 8038653255866550975}
   _cameraMovePos: {x: -0.1048288, y: -4, z: -10}
+  _inSideWood: {fileID: 0}
+  _outSideWood: {fileID: 0}
 --- !u!224 &531570029533468533
 RectTransform:
   m_ObjectHideFlags: 0
