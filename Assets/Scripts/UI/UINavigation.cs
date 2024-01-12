@@ -218,14 +218,22 @@ public class UINavigation : MonoBehaviour
         }
     }
 
+    int _hideMainUICount = 0;
+
     public void HideMainUI()
     {
+        _hideMainUICount += 1;
         _rootUiView.UIView.gameObject?.SetActive(false);
     }
 
+
     public void ShowMainUI()
     {
-        _rootUiView.UIView.gameObject?.SetActive(true);
+        Debug.Log(_hideMainUICount);
+        _hideMainUICount = Mathf.Clamp(_hideMainUICount - 1, 0, 1000);
+
+        if(_hideMainUICount == 0)
+            _rootUiView.UIView.gameObject?.SetActive(true);
     }
 
 

@@ -37,7 +37,7 @@ public class UIInsideWood : UIView
         VisibleState = VisibleState.Appearing;
 
         _tempCameraSize = Camera.main.orthographicSize;
-        _uiNav.AllHide();
+        _uiNav.HideMainUI();
 
         _inSideWood.gameObject.SetActive(true);
         _inSideWood.color = new Color(_inSideWood.color.r, _inSideWood.color.g, _inSideWood.color.b, 0);
@@ -70,7 +70,7 @@ public class UIInsideWood : UIView
         {
             VisibleState = VisibleState.Disappeared;
             _inSideWood.gameObject.SetActive(false);
-            _uiNav.AllShow();
+            _uiNav.ShowMainUI();
             OnHideHandler?.Invoke();
         });
 
