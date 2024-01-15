@@ -55,13 +55,6 @@ public class Player
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
-
-        //Test 
-        for (int i = 0; i < DatabaseManager.Instance.GetNPCList().Count; i++)
-        {
-            DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
-
-        }
     }
 
     public bool SpendBamboo(int amount)

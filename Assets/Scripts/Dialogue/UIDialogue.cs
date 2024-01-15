@@ -203,6 +203,17 @@ public class UIDialogue : UIView
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
 
+        Debug.Log(storyDialogue.PandaID);
+        //판다 도감에 추가
+        for(int i=0;i<DatabaseManager.Instance.GetNPCList().Count;i++)
+        {
+            if (storyDialogue.PandaID.Equals(DatabaseManager.Instance.GetNPCList()[i].Id) && !DatabaseManager.Instance.GetNPCList()[i].IsReceived)
+            {
+                Debug.Log(storyDialogue.PandaID + "를 만났다");
+                DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
+            }
+        }
+
         Debug.Log(_eventDatas.Length);
     }
 

@@ -32,9 +32,13 @@ public class StoryManager : SingletonHandler<StoryManager>
             Debug.Log("이미 있는 인덱스 입니다.");
             return;
         }
-            
+
         _storyCompleteList.Add(id);
         CheckStoryActivates();
+
+        //메시지 전송
+        //GameManager.Instance.Player.Messages[0].AddById(id, MessageField.Mail); //스토리 ID에 따른 메시지 전송
+        //일기장 추가
     }
 
 
