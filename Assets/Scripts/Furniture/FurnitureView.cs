@@ -1,10 +1,6 @@
 using Muks.DataBind;
 using Muks.Tween;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +10,7 @@ public class FurnitureView : MonoBehaviour
 {
     private FurnitureViewModel _furnitureViewModel;
     [SerializeField] private GameObject _slots;
-    [SerializeField] private GameObject _wallPaper;
+    [SerializeField] private Image[] _furnitures; // 실제 가구 배치
     [SerializeField] private GameObject _leftDoor;
     [SerializeField] private GameObject _rightDoor;
     
@@ -51,9 +47,9 @@ public class FurnitureView : MonoBehaviour
         {
             if (furnitureInventory != null)
             {
-                _maxCount[i] = 0;
+                _maxCount[i] = 1;
                 _lists[i] = new List<Furniture>();
-
+                _lists[i].Add(null);
                 for (int j = 0; j < furnitureInventory.Count; j++)
                 {
                     if (furnitureInventory[j].ViewType == (EFurnitureViewType)i)
@@ -66,6 +62,18 @@ public class FurnitureView : MonoBehaviour
         }
 
         Init();
+
+        //_furnitures = _furniture.GetComponentsInChildren<Image>();
+        Toggle firstToggle = _field.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
+        if (firstToggle != null)
+        {
+            firstToggle.isOn = true;
+        }
+        GetCurrentField();
+        if ((int)(object)_currentField != -1)
+        {
+            UpdateListSlots();
+        }
     }
 
     private void OnDestroy()
@@ -103,6 +111,10 @@ public class FurnitureView : MonoBehaviour
             for (int j = 0; j < _maxCount[i]; j++)
             {
                 GameObject slot = Instantiate(_furnitureSlot, _spawnPoint[i]);
+                if(j == 0)
+                {
+                    slot.transform.GetChild(0).gameObject.SetActive(false);
+                }
                 int _slotIndex = j;
                 slot.GetComponent<Button>().onClick.AddListener(() => FurnitureImageBtnClick(_slotIndex));
             }
@@ -156,7 +168,7 @@ public class FurnitureView : MonoBehaviour
     {
         if (_lists[(int)_currentField] != null)
         {
-            for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
+            for (int j = 1; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
             {
                 if (j < _lists[(int)_currentField].Count)
                 {
@@ -258,30 +270,37 @@ public class FurnitureView : MonoBehaviour
         //}
 
         //_costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
-        if(index < _spawnPoint.Length)
+
+        if(index < 1)
         {
-            _furnitureViewModel.RemoveFurniture();
+            Debug.Log("가구 제거" + index);
+            _furnitureViewModel.RemoveFurniture(_currentField);
             return;
         }
-        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[index - _spawnPoint.Length]);
+
+        // 현재 필드의 index를 통해 가구 찾아 변경
+        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[_lists[(int)_currentField][index].Id]);
+        //_furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[index - 1]);
     }
 
     /// <summary>
     /// 입고있는 코스튬 ID가 변경될 경우 실행 </summary>
     private void UpdateFurnitureID(Furniture furnitureData)
     {
-        // 여러 부위가 있을 경우
-        //_panda.transform.GetChild((int)furnitureData.BodyParts).gameObject.SetActive(true);
-        //_panda.transform.GetChild((int)furnitureData.BodyParts).GetComponent<Image>().sprite = furnitureData.Image;
-
         if (furnitureData != null)
         {
-            _wallPaper.SetActive(true);
-            _wallPaper.GetComponent<Image>().sprite = furnitureData.Image;
+            _furnitures[(int)furnitureData.Type].gameObject.SetActive(true);
+            _furnitures[(int)furnitureData.Type].sprite = furnitureData.Image;
+        }
+        else if (_currentField == EFurnitureViewType.WallPaper || _currentField == EFurnitureViewType.Floor)
+        {
+            _furnitures[(int)_currentField].gameObject.SetActive(false);
         }
         else
-        {
-            _wallPaper.SetActive(false);
+        { 
+            int field = 2 + ((int)_currentField - 2) * 2;
+            _furnitures[field].gameObject.SetActive(false);
+            _furnitures[field + 1].gameObject.SetActive(false);
         }
 
     }
@@ -294,11 +313,6 @@ public class FurnitureView : MonoBehaviour
     private void ShowDetailView()
     {
         _detailView.SetActive(true);
-    }
-
-    private void OnCloseButtonClicked()
-    {
-        _detailView.SetActive(false);
     }
 
 }

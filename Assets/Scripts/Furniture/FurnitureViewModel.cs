@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 public class FurnitureViewModel
 {
@@ -11,24 +12,10 @@ public class FurnitureViewModel
     public event Action ShowDetailView;
 
     private FurnitureModel _furnitureModel;
+    private FurnitureType _furnitureType;
     //private bool _isSetSaveCostumeView;
 
-    public string WallPaperId
-    {
-        get { return _furnitureModel.WallPaperId; }
-        set
-        {
-            _furnitureModel.WallPaperId = value;
-            if (value == "")
-            {
-                FurnitureChanged?.Invoke(null);
-            }
-            else
-            {
-                FurnitureChanged?.Invoke(DatabaseManager.Instance.GetFurnitureItem()[value]);
-            }
-        }
-    }
+    public string[] FurnitureId { get{ return _furnitureModel.FurnitureId; } set{ } }
     public bool IsExitFurniture
     {
         get { return _furnitureModel.IsExitFurniture; }
@@ -67,11 +54,28 @@ public class FurnitureViewModel
         _furnitureModel.Init();
     }
 
+    private void ChangedFurnitureId()
+    {
+        _furnitureModel.FurnitureId = FurnitureId;
+
+        if (FurnitureId[(int)_furnitureType] == "")
+        {
+            FurnitureChanged?.Invoke(null);
+        }
+        else
+        {
+            FurnitureChanged?.Invoke(DatabaseManager.Instance.GetFurnitureItem()[FurnitureId[(int)_furnitureType]]);
+        }
+    }
+
+
     public void ChangedFurniture(Furniture furnitureData)
     {
+        _furnitureType = furnitureData.Type;
         if (_furnitureModel.ChangedFurniture(furnitureData)) // 가구 배치
         {
-            WallPaperId = furnitureData.Id;
+            FurnitureId[(int)_furnitureType] = furnitureData.Id;
+            ChangedFurnitureId();
         }
         else // 가구 정보 띄움
         {
@@ -81,9 +85,25 @@ public class FurnitureViewModel
         }
     }
 
-    public void RemoveFurniture()
+    /// <summary>
+    /// 가구 제거 </summary>
+    public void RemoveFurniture(EFurnitureViewType currentField)
     {
-        WallPaperId = "";
+        if (currentField == EFurnitureViewType.WallPaper || currentField == EFurnitureViewType.Floor)
+        {
+            _furnitureType = (FurnitureType)currentField;
+
+            FurnitureId[(int)_furnitureType] = "";
+        }
+        else
+        {
+            int field = 2 + ((int)currentField - 2) * 2;
+            _furnitureType = (FurnitureType)field;
+
+            FurnitureId[field] = "";
+            FurnitureId[field + 1] = "";
+        }
+            ChangedFurnitureId();
     }
 
     /// <summary>
