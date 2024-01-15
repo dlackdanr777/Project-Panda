@@ -24,7 +24,6 @@ public class MailBox : MonoBehaviour
         {
             count += player.Messages[0].CurrentNotCheckedMessage;
         }
-        Debug.Log("count : " + count);
         if (count == 0)
         {
             _mailNotice.SetActive(false);
