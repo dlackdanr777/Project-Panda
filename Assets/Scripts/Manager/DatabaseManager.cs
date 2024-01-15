@@ -117,6 +117,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         {
             _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
         }
+
         _npcDatabase.Register();
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();

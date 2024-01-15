@@ -32,7 +32,7 @@ public class UIDialogueButton : MonoBehaviour
         Tween.Stop(_innerImage.gameObject);
         Tween.Stop(_buttonText.gameObject);
         Tween.IamgeAlpha(_button.gameObject, 1, _animeDuration, TweenMode.Smoothstep);
-        Tween.IamgeAlpha(_outerImage.gameObject, 1, _animeDuration, TweenMode.Smoothstep, () => Debug.Log("1ตส"));
+        Tween.IamgeAlpha(_outerImage.gameObject, 1, _animeDuration, TweenMode.Smoothstep);
         Tween.IamgeAlpha(_innerImage.gameObject, 1, _animeDuration, TweenMode.Smoothstep);
         Tween.TMPAlpha(_buttonText.gameObject, 1, _animeDuration, TweenMode.Smoothstep, onComplate);
     }

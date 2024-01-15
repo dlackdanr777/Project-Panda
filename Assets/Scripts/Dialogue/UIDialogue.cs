@@ -34,12 +34,13 @@ public class UIDialogue : UIView
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
 
-    public static event Action<int> OnComplateHandler;
+    public static event Action<string> OnComplateHandler;
 
 
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
+        Debug.Log("init 실행 입니다");
         RectTransform = GetComponent<RectTransform>();
         _tempPos = RectTransform.anchoredPosition;
 
@@ -133,6 +134,8 @@ public class UIDialogue : UIView
         switch (_state)
         {
             case DialogueState.Context:
+                _isSkipEnabled = false;
+                Invoke("SkipDisable", 0.1f);
                 _state = DialogueState.None;
                 return;
 
@@ -202,8 +205,6 @@ public class UIDialogue : UIView
         _eventDatas = eventDatas;
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
-
-        Debug.Log(_eventDatas.Length);
     }
 
 
