@@ -74,4 +74,8 @@ public class UIDiaryList : UIList<Item, DiaryType>
             }
         }
     }
+
+    protected override void ClearContent()
+    {
+    }
 }

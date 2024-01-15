@@ -63,6 +63,25 @@ public class MessageList
         }
         
     }
+
+    public void AddByStoryId(string id, MessageField field)
+    {
+        switch (field)
+        {
+            case MessageField.Mail:
+                for (int i = 0; i < DatabaseManager.Instance.GetMailList().Count; i++)
+                {
+                    if (DatabaseManager.Instance.GetMailList()[i].StoryStep.Equals(id))
+                    {
+                        Add(DatabaseManager.Instance.GetMailList()[i]);
+                    }
+                }
+                break;
+            case MessageField.Wish:
+                break;
+        }
+    }
+
     public void RemoveByIndex(int index)
     {
         if(_messages.Count > 0)

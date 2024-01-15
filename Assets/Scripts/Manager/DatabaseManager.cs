@@ -229,6 +229,40 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
+    /// NPC ID로 이름 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public string GetNPCNameById(string id)
+    {
+        for(int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Name;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// NPC ID로 Image 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Sprite GetNPCImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Image;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Furniture ItemList
     /// </summary>
     /// <returns></returns>

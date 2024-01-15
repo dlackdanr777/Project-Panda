@@ -2,6 +2,7 @@ using Muks.DataBind;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -91,7 +92,7 @@ public class UIBookList : MonoBehaviour
             Button button = transform.GetChild(i).GetComponent<Button>();
             button.onClick.AddListener(()=> OnClickDetailView(index));
         }
-        _closeButton.onClick.AddListener(() => _detailView.SetActive(false));
+        _closeButton.onClick.AddListener(OnClickCloseButton);
         _leftButton.onClick.AddListener(()=>OnClickPageButton(0));
         _rightButton.onClick.AddListener(()=>OnClickPageButton(1));
     }
@@ -185,6 +186,19 @@ public class UIBookList : MonoBehaviour
     {
         GetContent(index);
         _detailView.SetActive(true);
+    }
+
+    private void OnClickCloseButton()
+    {
+        _detailView.SetActive(false);
+        ClearContent();
+    }
+
+    private void ClearContent()
+    {
+        DataBind.SetTextValue("BookItemDetailName", "");
+        DataBind.SetTextValue("BookItemDetailDescription", "");
+        DataBind.SetSpriteValue("BookItemDetailImage", null);
     }
 
     private void GetContent(int index)

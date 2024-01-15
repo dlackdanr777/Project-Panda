@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,5 +42,12 @@ public class UIItemList : UIList<Item, GatheringItemType>
                 _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
             }
         }
+    }
+
+    protected override void ClearContent()
+    {
+        DataBind.SetTextValue("ItemDetailName", "");
+        DataBind.SetTextValue("ItemDetailDescription", "");
+        DataBind.SetSpriteValue("ItemDetailImage", null);
     }
 }
