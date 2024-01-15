@@ -21,7 +21,7 @@ public class StoryEventData
 
 public class PandaStoryController : MonoBehaviour
 {
-    [SerializeField] private int _storyID;
+    [SerializeField] private string _storyID;
 
     [SerializeField] private StoryEventData[] _storyEvents;
 
@@ -38,7 +38,7 @@ public class PandaStoryController : MonoBehaviour
 
     public static event Action<PandaStoryController, StoryDialogue, StoryEventData[]> OnStartInteractionHandler;
 
-    public static event Action<int, PandaStoryController> OnStartHandler;
+    public static event Action<string, PandaStoryController> OnStartHandler;
 
     public static event Action<PandaStoryController> OnCheckActivateHandler;
 

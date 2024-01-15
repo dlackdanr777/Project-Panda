@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public List<int> _storyCompleteList { get; private set; }
+    public List<string> _storyCompleteList { get; private set; }
 
-    private Dictionary<int, PandaStoryController> _pandaStoryControllerDic = new Dictionary<int, PandaStoryController>();
+    private Dictionary<string, PandaStoryController> _pandaStoryControllerDic = new Dictionary<string, PandaStoryController>();
 
 
     public override void Awake()
@@ -18,14 +18,15 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void Init()
     {
-        _storyCompleteList = new List<int>();
+        _storyCompleteList = new List<string>();
+        Debug.Log("스토리 매니저 실행");
         UIDialogue.OnComplateHandler += AddComplateStory;
         PandaStoryController.OnStartHandler += SetStroyDic;
         PandaStoryController.OnCheckActivateHandler += CheckStoryActivate;
     }
 
 
-    private void AddComplateStory(int id)
+    private void AddComplateStory(string id)
     {
         if (_storyCompleteList.Contains(id))
         {
@@ -42,7 +43,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     }
 
 
-    private void SetStroyDic(int id, PandaStoryController pandaStoryController)
+    private void SetStroyDic(string id, PandaStoryController pandaStoryController)
     {
 
         if (_pandaStoryControllerDic.ContainsKey(id))
@@ -72,7 +73,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     private void CheckStoryActivate(PandaStoryController panda)
     {
         bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
-        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999;
+        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == "MS99Z";
 
         if (checkClear && checkPriorStoryID)
         {

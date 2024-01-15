@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DialogueManager
 {
-    private Dictionary<int, StoryDialogue> _storyDialogueDic;
+    private Dictionary<string, StoryDialogue> _storyDialogueDic;
 
     private DialogueParser _parser = new DialogueParser();
 
@@ -17,7 +17,7 @@ public class DialogueManager
     }
 
 
-    public StoryDialogue GetStoryDialogue(int index)
+    public StoryDialogue GetStoryDialogue(string index)
     {
         if (!_storyDialogueDic.TryGetValue(index, out StoryDialogue storyDialogue))
         {

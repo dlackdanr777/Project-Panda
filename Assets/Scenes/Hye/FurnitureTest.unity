@@ -791,7 +791,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slots: {fileID: 1249266137236978250, guid: b63202a4f98ad974c99811289f1572de, type: 3}
-  _wallPaper: {fileID: 418172070}
+  _furnitures:
+  - {fileID: 418172072}
+  - {fileID: 2004416609}
+  - {fileID: 150796878}
+  - {fileID: 1051119901}
+  - {fileID: 2010654368}
+  - {fileID: 446329259}
+  - {fileID: 166570036}
+  - {fileID: 1823761362}
   _leftDoor: {fileID: 1972434550}
   _rightDoor: {fileID: 1380845041}
   _exitButton: {fileID: 1067107109}
@@ -4058,6 +4066,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Content
       objectReference: {fileID: 0}
+    - target: {fileID: 4288161061158374344, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1670
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288161061158374344, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 695
+      objectReference: {fileID: 0}
     - target: {fileID: 4325414103929994061, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
       propertyPath: m_Spacing
       value: 90
@@ -4242,34 +4258,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7007885533479302305, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 215429018}
-    - targetCorrespondingSourceObject: {fileID: 2558660385764445801, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4484896339884089409}
   m_SourcePrefab: {fileID: 100100000, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
---- !u!1 &4484896339884089408 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2558660385764445801, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
-  m_PrefabInstance: {fileID: 4484896339884089407}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4484896339884089409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484896339884089408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dataID: FurnitureDetailViewCloseButton
 --- !u!114 &4484896339884089410 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4383700828629216966, guid: f1b771e59704c4c44bd9e9497f51752b, type: 3}
   m_PrefabInstance: {fileID: 4484896339884089407}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484896339884089408}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
