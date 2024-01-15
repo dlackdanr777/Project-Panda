@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class FurnitureModel
 {
-    public string WallPaperId; // null이면 입고 있는 옷 없음
+    public string[] FurnitureId; // null이면 입고 있는 옷 없음
     public bool IsExitFurniture;
     public bool IsSaveFurniture;
     public bool IsShowDetailView; // 설명창을 보여줘야 하면 true
 
     public bool ChangedFurniture(Furniture furnitureData)
     {
-        if (furnitureData.Type == FurnitureType.WallPaper)
-        {
-            if (WallPaperId != "") // 가구가 존재할 경우
+        //if (furnitureData.Type == furnitureType)
+        //{
+            if (FurnitureId[(int)furnitureData.Type] != "") // 가구가 존재할 경우
             {
 
                 // 가구가 겹칠 경우
-                if (WallPaperId == furnitureData.Id)
+                if (FurnitureId[(int)furnitureData.Type] == furnitureData.Id)
                 {
                     // 현재 가구 정보 띄움
                     DataBind.SetTextValue("FurnitureDetailName", furnitureData.Name);
@@ -27,7 +27,7 @@ public class FurnitureModel
                     return false;
                 }
             }
-        }
+        //}
         // 현재 배치한 가구 ID 저장
         return true;
 
@@ -35,8 +35,12 @@ public class FurnitureModel
 
     public void Init()
     {
-        WallPaperId = "";
-        Debug.Log("판다 모델 초기화 WallPaperID: " + WallPaperId);
+        FurnitureId = new string[System.Enum.GetValues(typeof(FurnitureType)).Length - 1];
+        for (int i = 0; i < FurnitureId.Length; i++)
+        {
+            FurnitureId[i] = "";
+        }
+        Debug.Log("판다 모델 초기화 WallPaperID: " + FurnitureId);
     }
 
 
