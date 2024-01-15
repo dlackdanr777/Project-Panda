@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-
 using UnityEngine;
 
 public class UserInfo
@@ -90,6 +89,7 @@ public class UserInfo
 
         GatheringItemReceived = userInfo.GatheringItemReceived;
         ToolItemReceived = userInfo.ToolItemReceived;
+        NPCItemReceived = userInfo.NPCItemReceived;
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -116,6 +116,7 @@ public class UserInfo
         MessageDataArray = new List<MessageData>();
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
+        NPCItemReceived = new List<string>();
 
         DayCount++;
         IsTodayRewardReceipt = false;
@@ -134,6 +135,7 @@ public class UserInfo
 
         SaveUserInventory();
         SaveUserReceivedItem();
+        SaveUserReceivedNPC();
         SaveUserMailData();
 
         string json = JsonUtility.ToJson(this, true);
@@ -332,15 +334,15 @@ public class UserInfo
             }
         }
 
-        List<ToolItem>[] tooItemDatabase = { DatabaseManager.Instance.GetGatheringToolItemList() };
+        List<ToolItem>[] toolItemDatabase = { DatabaseManager.Instance.GetGatheringToolItemList() };
         ToolItemReceived = new List<string>();
-        for (int i = 0; i < tooItemDatabase.Length; i++)
+        for (int i = 0; i < toolItemDatabase.Length; i++)
         {
-            for (int j = 0; j < tooItemDatabase[i].Count; j++)
+            for (int j = 0; j < toolItemDatabase[i].Count; j++)
             {
-                if (tooItemDatabase[i][j].IsReceived)
+                if (toolItemDatabase[i][j].IsReceived)
                 {
-                    ToolItemReceived.Add(tooItemDatabase[i][j].Id);
+                    ToolItemReceived.Add(toolItemDatabase[i][j].Id);
                 }
             }
         }
@@ -393,6 +395,40 @@ public class UserInfo
                 GameManager.Instance.Player.Messages[0].AddById(MessageDataArray[i].Id, MessageField.Mail);
                 GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsCheck = MessageDataArray[i].IsCheck;
                 GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsReceived = MessageDataArray[i].IsReceived;
+            }
+        }
+    }
+    #endregion
+
+    #region NPC
+    public void LoadUserReceivedNPC()
+    {
+        //NPC
+        for (int i = 0; i < NPCItemReceived.Count; i++)
+        {
+            for (int j = 0; j < DatabaseManager.Instance.GetNPCList().Count; j++)
+            {
+                if (NPCItemReceived[i].Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
+                {
+                    DatabaseManager.Instance.GetNPCList()[j].IsReceived = true;
+                }
+            }
+
+        }
+    }
+
+    private void SaveUserReceivedNPC()
+    {
+        List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
+        NPCItemReceived = new List<string>();
+        for (int i = 0; i < npcDatabase.Length; i++)
+        {
+            for (int j = 0; j < npcDatabase[i].Count; j++)
+            {
+                if (npcDatabase[i][j].IsReceived)
+                {
+                    NPCItemReceived.Add(npcDatabase[i][j].Id);
+                }
             }
         }
     }

@@ -4,32 +4,18 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class MailBox : MonoBehaviour, IInteraction
+public class MailBox : MonoBehaviour
 {
     [SerializeField] private UIMailList _uiMailList;
     [SerializeField] private GameObject _mailNotice;
     private Player player;
-    private void Start()
+    
+    private void Awake()
     {
         player = GameManager.Instance.Player;
         player.Messages[0].NoticeHandler += SetNotice;
         _uiMailList.NoticeHandler += SetNotice;
     }
-
-    public void ExitInteraction()
-    {
-    }
-
-    public void StartInteraction()
-    {
-        Debug.Log("우체통이 눌렸습니다");
-        _uiMailList.transform.parent.gameObject.SetActive(true);
-    }
-
-    public void UpdateInteraction()
-    {
-    }
-
 
     private void SetNotice() //알림 설정, 알림 갯수 설정
     {

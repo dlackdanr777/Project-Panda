@@ -52,7 +52,8 @@ public class UIMailList : MonoBehaviour
     private void UpdateList()
     {
         _mailList = GameManager.Instance.Player.Messages[0]; //메시지리스트 받아옴
-        Debug.Log("메일: " + _mailList.MessagesCount);
+
+        NoticeHandler?.Invoke();
         for (int i = 0; i < _spawnPoint.childCount; i++)
         {
             if (i < _mailList.MessagesCount)
@@ -98,7 +99,6 @@ public class UIMailList : MonoBehaviour
         DataBind.SetButtonValue("MailDetailGiftButton", OnClickGiftButton);
         
         _mailList.GetMessageList()[index].IsCheck = true;
-        NoticeHandler?.Invoke();
 
         _detailView.gameObject.SetActive(true);
 
