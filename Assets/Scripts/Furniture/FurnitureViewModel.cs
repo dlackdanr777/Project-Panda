@@ -5,7 +5,7 @@ using UnityEngine;
 public class FurnitureViewModel
 {
     public event PropertyChangedEventHandler PropertyChanged;
-    public event Action<CostumeData> FurnitureChanged;
+    public event Action<Furniture> FurnitureChanged;
     public event Action<bool> FurnitureSceneChanged;
     public event Action<bool> SetSaveFurnitureView;
     public event Action ShowDetailView;
@@ -13,19 +13,19 @@ public class FurnitureViewModel
     private FurnitureModel _furnitureModel;
     //private bool _isSetSaveCostumeView;
 
-    public string WallID
+    public string WallPaperId
     {
-        get { return _furnitureModel.WallID; }
+        get { return _furnitureModel.WallPaperId; }
         set
         {
-            _furnitureModel.WallID = value;
+            _furnitureModel.WallPaperId = value;
             if (value == "")
             {
                 FurnitureChanged?.Invoke(null);
             }
             else
             {
-                FurnitureChanged?.Invoke(CostumeManager.Instance.GetCostumeData(value));
+                FurnitureChanged?.Invoke(DatabaseManager.Instance.GetFurnitureItem()[value]);
             }
         }
     }
@@ -67,11 +67,11 @@ public class FurnitureViewModel
         _furnitureModel.Init();
     }
 
-    public void ChangedFurniture(CostumeData costumeData)
+    public void ChangedFurniture(Furniture furnitureData)
     {
-        if (_furnitureModel.ChangedFurniture(costumeData)) // 가구 배치
+        if (_furnitureModel.ChangedFurniture(furnitureData)) // 가구 배치
         {
-            WallID = costumeData.CostumeID;
+            WallPaperId = furnitureData.Id;
         }
         else // 가구 정보 띄움
         {
@@ -83,7 +83,7 @@ public class FurnitureViewModel
 
     public void RemoveFurniture()
     {
-        WallID = "";
+        WallPaperId = "";
     }
 
     /// <summary>

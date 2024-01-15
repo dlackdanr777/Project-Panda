@@ -1,8 +1,10 @@
 using Muks.DataBind;
 using Muks.Tween;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,22 +17,54 @@ public class FurnitureView : MonoBehaviour
     [SerializeField] private GameObject _wallPaper;
     [SerializeField] private GameObject _leftDoor;
     [SerializeField] private GameObject _rightDoor;
+    
     [SerializeField] private Button _exitButton;
     [SerializeField] private GameObject _uiSave;
-    [SerializeField] private GameObject _detailView; // 상세설명 창
-    [SerializeField] private Button _closeButton; // 상세설명 창 닫기 버튼
 
-    // 우선 벽지만 넣음
-    [SerializeField] private GameObject _wallPaperImages;
+    [SerializeField] private GameObject _detailView; // 상세설명 창
+    [SerializeField] private Button _closeDetailViewButton; // 상세설명 창 닫기 버튼
+
+    [SerializeField] private int _firstToggleIndex;
+    [SerializeField] protected ToggleGroup _field; //토글 종류
+
+    [SerializeField] protected Transform[] _spawnPoint; //spawn할 위치
+    [SerializeField] private ScrollRect _scrollrect;
+
 
     [SerializeField] private GameObject _furnitureSlot;
-    private GameObject[] _furnitureImagePfs;
-    private Button[] _furnitureImageBtn;
+    //private GameObject[] _furnitureImagePfs;
+    //private Button[] _furnitureImageBtn;
 
+
+    private int _currentItemIndex;
+
+    protected List<Furniture>[] _lists = new List<Furniture>[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1]; //Field 개수만큼 리스트 존재(None 제외) //데이터를 저장할 공간
+    protected EFurnitureViewType _currentField;
+    protected int[] _maxCount = new int[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1];
 
     private void Start()
     {
         Bind();
+
+        List <Furniture> furnitureInventory = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory;
+        for (int i = 0; i < System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1; i++)
+        {
+            if (furnitureInventory != null)
+            {
+                _maxCount[i] = 0;
+                _lists[i] = new List<Furniture>();
+
+                for (int j = 0; j < furnitureInventory.Count; j++)
+                {
+                    if (furnitureInventory[j].ViewType == (EFurnitureViewType)i)
+                    {
+                        _maxCount[i]++;
+                        _lists[i].Add(furnitureInventory[j]);
+                    }
+                }
+            }
+        }
+
         Init();
     }
 
@@ -45,40 +79,155 @@ public class FurnitureView : MonoBehaviour
 
         // 문 열기
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-        //Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(390, 0), 1f, TweenMode.Quadratic);
-        //Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(10, 0), 1f, TweenMode.Quadratic);
 
-        // 가구 개수 가져오기 - 가구로 변경
-        _furnitureImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count + 1];
-        _furnitureImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count + 1];
+        CreateSlots(); //slot 생성
 
-        // 개수 + 1만큼 코스튬 프리팹 생성(0번째는 None)
-        for (int i = 0; i < DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count + 1; i++) // 가구 인벤토리 만들어야 함
+        //버튼 리스너
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>())
         {
-            int index = i;
-            _furnitureImagePfs[i] = Instantiate(_furnitureSlot, _wallPaperImages.transform).transform.GetChild(0).gameObject; // 일단 다 벽지에 넣음 - 딕셔너리 만들어서 구분.. A, B, C..
-            if (i == 0)
-            {
-                _furnitureImagePfs[i].GetComponent<Image>().color = new Color(0, 0, 0, 0);
-            }
-            else
-            {
-                _furnitureImagePfs[i].GetComponent<Image>().sprite = DatabaseManager.Instance.StartPandaInfo.CostumeInventory[i-1].Image;
-            }
-
-            _furnitureImageBtn[i] = _furnitureImagePfs[i].GetComponent<Button>();
-            if (_furnitureImageBtn[i] != null)
-            {
-                _furnitureImageBtn[i].onClick.AddListener(() => this.FurnitureImageBtnClick(index));
-                Debug.Log(i);
-            }
+            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
         }
 
-        _exitButton.onClick.AddListener(OnExitButtonClicked);
-        DataBind.SetButtonValue("FurnitureDetailViewCloseButton", OnCloseButtonClicked);
-        //DataBind.SetButtonValue("ExitCostumeButton", OnExitButtonClicked); // 수정
+        if (_detailView != null)
+        {
+            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
+
+        }
+    }
+
+    //list마다 해당 spawn 위치에 Instantiate하는 함수
+    private void CreateSlots()
+    {
+        for (int i = 0; i < _maxCount.Length; i++)
+        {
+            for (int j = 0; j < _maxCount[i]; j++)
+            {
+                GameObject slot = Instantiate(_furnitureSlot, _spawnPoint[i]);
+                int _slotIndex = j;
+                slot.GetComponent<Button>().onClick.AddListener(() => FurnitureImageBtnClick(_slotIndex));
+            }
+        }
+    }
+
+    private void GetCurrentField()
+    {
+        Toggle selectedField = GetOnToggle(); //선택된 토글
+        _currentField = GetFieldByTransform(selectedField);
+        SetActiveContent();
+    }
+
+    //spawnPosition 활성화 함수
+    private void SetActiveContent()
+    {
+        for (int i = 0; i < _spawnPoint.Length; i++) //content false로 변경
+        {
+            _spawnPoint[i].gameObject.SetActive(false);
+        }
+        if ((int)(object)_currentField >= 0)
+        {
+            GameObject activeContent = _spawnPoint[(int)(object)_currentField].gameObject;
+            activeContent.SetActive(true);//현재 토글의 content를 setactive 
+            _scrollrect.content = activeContent.GetComponent<RectTransform>(); //scrollview 변경 
+
+        }
+    }
+    private Toggle GetOnToggle()
+    {
+        foreach (Toggle toggle in _field.transform.GetComponentsInChildren<Toggle>())
+        {
+            if (toggle.isOn == true)
+            {
+                return toggle;
+            }
+        }
+        return null;
+    }
+
+    private void OnClickedFieldButton(bool isOn, Transform toggle)
+    {
+        GetCurrentField();
+        if ((int)(object)_currentField != -1)
+        {
+            UpdateListSlots();
+        }
 
     }
+    private void UpdateListSlots()
+    {
+        if (_lists[(int)_currentField] != null)
+        {
+            for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 인벤토리에 저장된 아이템 갯수
+            {
+                if (j < _lists[(int)_currentField].Count)
+                {
+                    Transform prefab = _spawnPoint[(int)_currentField].GetChild(j).GetChild(0);
+                    prefab.gameObject.SetActive(true); //구조 변경 => Getchild만 켜지도록
+                    prefab.GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
+                }
+                else
+                {
+                    _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    //Transform으로 Field값 찾기
+    private EFurnitureViewType GetFieldByTransform(Toggle toggle)
+    {
+        for (int i = 0; i < _field.transform.childCount; i++)
+        {
+            if (_field.transform.GetChild(i).GetComponent<Toggle>() == toggle)
+            {
+                return (EFurnitureViewType)(object)i;
+            }
+        }
+        return (EFurnitureViewType)(object)-1;
+    }
+
+    //private void Init()
+    //{
+    //    DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
+    //    _contents = _contentsParent.GetComponentsInChildren<Transform>().Select(t => t.gameObject).ToArray();
+    //    Debug.Log("_contents" + _contents);
+
+    //    // 문 열기
+    //    Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
+    //    //Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(390, 0), 1f, TweenMode.Quadratic);
+    //    //Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(10, 0), 1f, TweenMode.Quadratic);
+
+    //    // 가구 개수 가져오기 - 가구로 변경
+    //    _furnitureImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length];
+    //    _furnitureImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length];
+
+    //    // 개수 + 메뉴 개수만큼 코스튬 프리팹 생성(메뉴의 0번째는 비워두어야 하므로)
+    //    for (int i = 0; i < DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length; i++) // 가구 인벤토리 만들어야 함
+    //    {
+    //        int index = i;
+    //        Debug.Log("(int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType" + (int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType);
+    //        _furnitureImagePfs[i] = Instantiate(_furnitureSlot, _contents[(int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType].transform).transform.GetChild(0).gameObject; // 일단 다 벽지에 넣음 - 딕셔너리 만들어서 구분.. A, B, C..
+    //        if (i < _contents.Length) // 처음 5개는 빈칸
+    //        {
+    //            _furnitureImagePfs[i].GetComponent<Image>().color = new Color(0, 0, 0, 0);
+    //        }
+    //        else
+    //        {
+    //            _furnitureImagePfs[i].GetComponent<Image>().sprite = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i-1].Image;
+    //        }
+
+    //        _furnitureImageBtn[i] = _furnitureImagePfs[i].GetComponent<Button>();
+    //        if (_furnitureImageBtn[i] != null)
+    //        {
+    //            _furnitureImageBtn[i].onClick.AddListener(() => this.FurnitureImageBtnClick(index));
+    //            Debug.Log(i);
+    //        }
+    //    }
+
+    //    _exitButton.onClick.AddListener(OnExitButtonClicked);
+    //    DataBind.SetButtonValue("FurnitureDetailViewCloseButton", OnCloseButtonClicked);
+    //    //DataBind.SetButtonValue("ExitCostumeButton", OnExitButtonClicked); // 수정
+
+    //}
 
     /// <summary>
     /// 코스튬 뷰모델과 바인드 </summary>
@@ -91,9 +240,11 @@ public class FurnitureView : MonoBehaviour
             _furnitureViewModel.FurnitureChanged += UpdateFurnitureID;
             _furnitureViewModel.ShowDetailView += ShowDetailView;
         }
+
+        // 비어있는게 아니라면 불러올 때 원래 가구 미리 배치
         if (DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != "")
         {
-            _furnitureViewModel.ChangedFurniture(CostumeManager.Instance.GetCostumeData(DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID));
+            _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[DatabaseManager.Instance.StartPandaInfo.WallPaperID]);
         }
     }
 
@@ -107,26 +258,26 @@ public class FurnitureView : MonoBehaviour
         //}
 
         //_costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
-        if(index == 0)
+        if(index < _spawnPoint.Length)
         {
             _furnitureViewModel.RemoveFurniture();
             return;
         }
-        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.StartPandaInfo.CostumeInventory[index - 1]);
+        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[index - _spawnPoint.Length]);
     }
 
     /// <summary>
     /// 입고있는 코스튬 ID가 변경될 경우 실행 </summary>
-    private void UpdateFurnitureID(CostumeData costumeData)
+    private void UpdateFurnitureID(Furniture furnitureData)
     {
         // 여러 부위가 있을 경우
-        //_panda.transform.GetChild((int)costumeData.BodyParts).gameObject.SetActive(true);
-        //_panda.transform.GetChild((int)costumeData.BodyParts).GetComponent<Image>().sprite = costumeData.Image;
+        //_panda.transform.GetChild((int)furnitureData.BodyParts).gameObject.SetActive(true);
+        //_panda.transform.GetChild((int)furnitureData.BodyParts).GetComponent<Image>().sprite = furnitureData.Image;
 
-        if (costumeData != null)
+        if (furnitureData != null)
         {
             _wallPaper.SetActive(true);
-            _wallPaper.GetComponent<Image>().sprite = costumeData.Image;
+            _wallPaper.GetComponent<Image>().sprite = furnitureData.Image;
         }
         else
         {
