@@ -24,7 +24,10 @@ public class StarterPandaInfo
     #endregion
 
     public FurnitureViewModel FurnitureViewModel;
-
+    public string WallPaperID = "";
+    public int FurnitureCount = -1;
+    public List<string> FurnitureInventoryID;
+    public List<Furniture> FurnitureInventory;
 
     // 판다 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "PandaInfo.json");
@@ -32,7 +35,7 @@ public class StarterPandaInfo
 
     public void Register()
     {
-        //LoadPandaInfoData();
+        LoadPandaInfoData();
     }
 
     // 불러오기
@@ -58,10 +61,16 @@ public class StarterPandaInfo
         Mbti = pandaInfo.Mbti;
         Intimacy = pandaInfo.Intimacy;
         Happiness = pandaInfo.Happiness;
+
         WearingHeadCostumeID = pandaInfo.WearingHeadCostumeID;
         CostumeCount = pandaInfo.CostumeCount;
         CostumeInventoryID = pandaInfo.CostumeInventoryID;
         CostumeInventory = new List<CostumeData>();
+
+        WallPaperID = pandaInfo.WallPaperID;
+        FurnitureCount = pandaInfo.FurnitureCount;
+        FurnitureInventoryID = pandaInfo.FurnitureInventoryID;
+        FurnitureInventory = new List<Furniture>();
     }
 
     private void CreateUserInfoData()
@@ -69,6 +78,7 @@ public class StarterPandaInfo
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
         CostumeInventoryID = new List<string>();
+        FurnitureInventoryID = new List<string>();
     }
 
     public void SavePandaInfoData()
@@ -146,6 +156,44 @@ public class StarterPandaInfo
         }
     }
 
+    // 현재 가지고 있는 가구 불러오기
+    public void LoadMyFurniture()
+    {
+        if (DatabaseManager.Instance.GetFurnitureItem() != null)
+        {
+            foreach (string key in DatabaseManager.Instance.GetFurnitureItem().Keys)
+            {
+                Debug.Log($"FurnitureInventory ID {key}");
+                // 가구 인벤토리에 ID 찾기
+                if (FurnitureInventoryID == null)
+                {
+                    Debug.Log("가구 없음");
+                }
+                else
+                {
+                    Debug.Log($"FurnitureInventory ID {key}");
+                    if (FurnitureInventoryID.Find(id => id.Equals(DatabaseManager.Instance.GetFurnitureItem()[key].Id)) != null)
+                    {
+                        DatabaseManager.Instance.GetFurnitureItem()[key].IsMine = true;
+                        FurnitureInventory.Add(DatabaseManager.Instance.GetFurnitureItem()[key]);
+                    }
+                    else
+                    {
+                        DatabaseManager.Instance.GetFurnitureItem()[key].IsMine = false;
+                    }
+                }
+
+            }
+            // 가구 불러온 후 저장하기
+            SavePandaInfoData();
+
+        }
+        else
+        {
+            Debug.Log("가구 데이터베이스 null");
+        }
+    }
+
     // 현재 가지고 있는 옷 저장하기
     public void SaveMyCostume()
     {
@@ -159,17 +207,29 @@ public class StarterPandaInfo
         }
     }
 
-
-    public void AddCostume(string CostumeDicID)
+    public void AddCostume(string costumeDicID)
     {
         // 코스튬 추가 후 정렬
-        CostumeInventoryID.Add(CostumeManager.Instance.CostumeDic[CostumeDicID].CostumeID);
+        CostumeInventoryID.Add(CostumeManager.Instance.CostumeDic[costumeDicID].CostumeID);
         CostumeInventoryID = CostumeInventoryID.OrderBy(id => id).ToList();
 
-        CostumeInventory.Add(CostumeManager.Instance.CostumeDic[CostumeDicID]);
+        CostumeInventory.Add(CostumeManager.Instance.CostumeDic[costumeDicID]);
         CostumeInventory = CostumeInventory.OrderBy(costume => costume.CostumeID).ToList();
         CostumeCount++;
-        CostumeManager.Instance.CostumeDic[CostumeDicID].IsMine = true;
+        CostumeManager.Instance.CostumeDic[costumeDicID].IsMine = true;
+    }
+
+    public void AddFurniture(string furnitureId)
+    {
+        // 코스튬 추가 후 정렬
+        FurnitureInventoryID.Add(furnitureId);
+        FurnitureInventoryID = FurnitureInventoryID.OrderBy(id => id).ToList();
+
+        Furniture furniture = DatabaseManager.Instance.GetFurnitureItem()[furnitureId];
+        FurnitureInventory.Add(furniture);
+        FurnitureInventory = FurnitureInventory.OrderBy(furniture => furniture.Id).ToList();
+        FurnitureCount++;
+        furniture.IsMine = true;
     }
 }
 

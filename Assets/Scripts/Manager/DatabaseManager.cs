@@ -32,6 +32,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
+    [SerializeField] private ItemSpriteDatabase _furnitureItemImages;
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
     
@@ -93,6 +94,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         {
             _itemDatabase.ToolItemSpriteArray[i] = _toolItemImages[i];
         }
+
+        _itemDatabase.FurnitureItemSprite = _furnitureItemImages;
+
         _itemDatabase.Register();
 
         //_weatherDatabase.Register();
@@ -212,9 +216,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// Furniture ItemList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetFurnitureItem()
+    public Dictionary<string, Furniture> GetFurnitureItem()
     {
-        return _itemDatabase.FurnitureList;
+        return _itemDatabase.FurnitureDic;
     }
 
     /// <summary>
