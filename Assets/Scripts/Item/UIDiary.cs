@@ -47,6 +47,7 @@ public class UIDiary : UIView
         Tween.RectTransfromAnchoredPosition(_book.gameObject, _showPos, _bookAnimeDuration, TweenMode.Constant);
         Tween.RectTransfromAnchoredPosition(_book.gameObject, _hidePos, _animeDuration, _tweenMode, () =>
         {
+            _uiNav.ShowMainUI();
             _book.anchoredPosition = _hidePos;
             VisibleState = VisibleState.Disappeared;
             gameObject.SetActive(false);
@@ -58,6 +59,8 @@ public class UIDiary : UIView
         gameObject.SetActive(true);
         _dontTouchArea.SetActive(true);
         VisibleState = VisibleState.Appearing;
+
+        _uiNav.HideMainUI();
         _book.anchoredPosition = _hidePos;
 
         Tween.RectTransfromAnchoredPosition(_book.gameObject, _showPos, _animeDuration, _tweenMode, () => 
@@ -66,6 +69,7 @@ public class UIDiary : UIView
             _book.anchoredPosition = _showPos;
             Tween.RectTransfromAnchoredPosition(_book.gameObject, _showPos, _bookAnimeDuration, TweenMode.Constant, () =>
             {
+
                 _dontTouchArea.SetActive(false);
                 VisibleState = VisibleState.Appeared;
             });

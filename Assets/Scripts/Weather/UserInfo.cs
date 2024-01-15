@@ -41,6 +41,10 @@ public class UserInfo
     public List<string> CookItemReceived;
     public List<string> ToolItemReceived;
 
+    //Message
+    public List<MessageData> MessageDataArray; //저장할 메시지 데이터
+    private MessageList[] MessageLists; //게임 속 메시지리스트
+
 
     //==========================================================================================================
 
@@ -82,12 +86,14 @@ public class UserInfo
         IsExistingUser = userInfo.IsExistingUser;
         GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
         ToolInventoryDataArray = userInfo.ToolInventoryDataArray;
+        MessageDataArray = userInfo.MessageDataArray;
 
         GatheringItemReceived = userInfo.GatheringItemReceived;
         ToolItemReceived = userInfo.ToolItemReceived;
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
+        MessageLists = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
 
         IsTodayRewardReceipt = true;
 
@@ -107,6 +113,7 @@ public class UserInfo
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
+        MessageDataArray = new List<MessageData>();
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
 
@@ -114,9 +121,9 @@ public class UserInfo
         IsTodayRewardReceipt = false;
 
 
-/*        string json = JsonUtility.ToJson(this, true);
-        File.WriteAllText(_path, json);*/
-//TODO: 모바일 테스트 중 잠금
+        //string json = JsonUtility.ToJson(this, true);
+        //File.WriteAllText(_path, json);
+        //TODO: 모바일 테스트 중 잠금
     }
 
 
@@ -127,6 +134,7 @@ public class UserInfo
 
         SaveUserInventory();
         SaveUserReceivedItem();
+        SaveUserMailData();
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
@@ -197,7 +205,6 @@ public class UserInfo
                     {
                         fieldIndex = 0;
                     }
-                    Debug.Log(ToolInventoryDataArray[i].Id);
                     GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
                 }
             }
@@ -335,6 +342,57 @@ public class UserInfo
                 {
                     ToolItemReceived.Add(tooItemDatabase[i][j].Id);
                 }
+            }
+        }
+    }
+    #endregion
+
+    #region Mail
+    [Serializable]
+    public class MessageData
+    {
+        public string Id;
+        public bool IsCheck;
+        public bool IsReceived;
+        public MessageData(string id, bool isCheck, bool isReceived)
+        {
+            Id = id;
+            IsCheck = isCheck;
+            IsReceived = isReceived;
+        }
+    }
+
+    public void SaveUserMailData()
+    {
+        MessageLists = GameManager.Instance.Player.Messages;
+
+        if (MessageLists != null)
+        {
+            MessageDataArray = new List<MessageData>();
+            for (int i = 0; i < MessageLists.Length; i++)
+            {
+                for (int j = 0; j < MessageLists[i].MessagesCount; j++)
+                {
+                    MessageDataArray.Add(new MessageData(
+                        MessageLists[i].GetMessageList()[j].Id,
+                        MessageLists[i].GetMessageList()[j].IsCheck,
+                        MessageLists[i].GetMessageList()[j].IsReceived));
+                }
+
+            }
+        }
+    }
+
+    public void LoadUserMailData()
+    {
+        for(int i = 0; i < MessageDataArray.Count; i++)
+        {
+            if (MessageDataArray[i].Id.StartsWith("ML"))
+            {
+                Debug.Log(MessageDataArray[i].Id);
+                GameManager.Instance.Player.Messages[0].AddById(MessageDataArray[i].Id, MessageField.Mail);
+                GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsCheck = MessageDataArray[i].IsCheck;
+                GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsReceived = MessageDataArray[i].IsReceived;
             }
         }
     }

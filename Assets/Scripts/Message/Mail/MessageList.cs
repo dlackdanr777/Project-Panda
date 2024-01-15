@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,20 +7,19 @@ using System.Collections.Generic;
 [Serializable]
 public class MessageList
 {
+    public Action NoticeHandler;
     public int MaxMessageCount { get; private set; } = 20;
-    public int MessagesCount => Messages.Count;
-    public List<Message> Messages = new List<Message>();
+    public int MessagesCount => _messages.Count;
+    private List<Message> _messages = new List<Message>();
 
-    public List<bool> IsCheckMessage = new List<bool>();
-    public List<bool> IsReceiveGift = new List<bool>();
     public int CurrentNotCheckedMessage
     {
         get
         {
             int count = 0;
-            for (int i = 0; i < IsCheckMessage.Count; i++)
+            for (int i = 0; i < _messages.Count; i++)
             {
-                if (!IsCheckMessage[i])
+                if (!_messages[i].IsCheck)
                     count++;
             }
             return count;
@@ -28,24 +28,46 @@ public class MessageList
 
     public List<Message> GetMessageList()
     {
-        return Messages;
+        return _messages;
     }
     public void Add(Message message)
     {
-        if (Messages.Count >= MaxMessageCount)
+        if (_messages.Count >= MaxMessageCount)
         {
-            Messages.RemoveAt(0);
+            _messages.RemoveAt(0);
         }
-        Messages.Add(message);
-        IsCheckMessage.Add(false);
-        IsReceiveGift.Add(false);
+        _messages.Add(message);
+        NoticeHandler?.Invoke();
+    }
+
+    /// <summary>
+    /// AddById
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="fieldIndex">0:Mail, 1:WishTree</param>
+    public void AddById(string id, MessageField field)
+    {
+        switch (field)
+        {
+            case MessageField.Mail:
+                for (int i = 0; i < DatabaseManager.Instance.GetMailList().Count; i++)
+                {
+                    if (DatabaseManager.Instance.GetMailList()[i].Id.Equals(id))
+                    {
+                        Add(DatabaseManager.Instance.GetMailList()[i]);
+                    }
+                }
+                break;
+            case MessageField.Wish:
+                break;
+        }
+        
     }
     public void RemoveByIndex(int index)
     {
-        if(Messages.Count > 0)
+        if(_messages.Count > 0)
         {
-            Messages.RemoveAt(index);
+            _messages.RemoveAt(index);
         } 
     }
-
 }
