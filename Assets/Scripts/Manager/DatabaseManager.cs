@@ -32,6 +32,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
+    [SerializeField] private ItemSpriteDatabase[] _npcImages;
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
     
@@ -106,6 +107,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
 
+        //Image
+        for (int i = 0; i < _npcDatabase.NPCSpriteArray.Length; i++)
+        {
+            _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
+        }
         _npcDatabase.Register();
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
@@ -206,6 +212,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public List<ToolItem> GetGatheringToolItemList()
     {
         return _itemDatabase.ItemToolList;
+    }
+
+    /// <summary>
+    /// NPC List
+    /// </summary>
+    public List<NPC> GetNPCList()
+    {
+        return _npcDatabase.NpcList;
     }
 
     /// <summary>
