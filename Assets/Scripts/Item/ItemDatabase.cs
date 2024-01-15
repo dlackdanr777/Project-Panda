@@ -45,6 +45,16 @@ public enum FurnitureType
     RightProp
 }
 
+public enum EFurnitureViewType
+{
+    None = -1,
+    WallPaper,
+    Floor,
+    Wall,
+    Furniture,
+    Prop
+}
+
 public enum MessageField
 {
     None = -1,
@@ -62,7 +72,7 @@ public class ItemDatabase
 
     //Furniture
     public FurnitureType[] FurnitureTypeList;
-    public List<Item> FurnitureList = new List<Item>();
+    public Dictionary<string, Furniture> FurnitureDic = new Dictionary<string, Furniture>();
     private List<Dictionary<string, object>> _dataFurniture;
 
     //GatheringItem
@@ -87,7 +97,8 @@ public class ItemDatabase
     //ToolItem
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
-
+    //FurnitureItem
+    public ItemSpriteDatabase FurnitureItemSprite;
 
     private Sprite Test;
 
@@ -188,20 +199,29 @@ public class ItemDatabase
         #endregion
 
         //Furniture //아직 수정 중
-        FurnitureTypeList = new FurnitureType[_dataFurniture.Count];
-        for(int i = 0; i < _dataFurniture.Count; i++)
+        Dictionary<char, FurnitureType> FurnitureTypes = new Dictionary<char, FurnitureType>();
+
+        // 가구 종류 설정
+        for (int i = 0; i < System.Enum.GetValues(typeof(FurnitureType)).Length - 1; i++)
         {
-            FurnitureList.Add(new Item(_dataFurniture[i]["ID"].ToString(),
+            FurnitureTypes.Add((char)((int)'A' + i), (FurnitureType)i);
+        }
+
+        for (int i = 0; i < _dataFurniture.Count; i++)
+        {
+            FurnitureDic.Add(_dataFurniture[i]["ID"].ToString(), new Furniture(_dataFurniture[i]["ID"].ToString(),
                     _dataFurniture[i]["이름"].ToString(),
                     _dataFurniture[i]["설명"].ToString(),
                     (int)_dataFurniture[i]["가격"],
-                    _dataFurniture[i]["ID"].ToString().Substring(3,1),
+                    null,
                     _dataFurniture[i]["맵ID"].ToString(),
-                    Test)); //아직 이미지는 받아오지 않음
+                    FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
+                    FurnitureItemSprite.ItemSprites[i].Image));
             //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
 
         DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();
+        DatabaseManager.Instance.StartPandaInfo.LoadMyFurniture();
     }
 
     private Sprite GetItemSpriteById(string id, GatheringItemType type)

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Collection : MonoBehaviour, IInteraction
+public class Collection : MonoBehaviour
 {
     public Action<string, GatheringItemType> OnCollectionSuccess;
     public Action<string> OnSuccessFrame;
@@ -16,17 +16,16 @@ public class Collection : MonoBehaviour, IInteraction
     private bool _isCollection = false; // 채집 중인가?
     private bool _isExit = false;
 
-    #region Collection
+
     //[SerializeField] private CollectionButton _collectionButton;
     [SerializeField] private Animator _speechBubble;
+    [SerializeField] private GameObject _starButton;
     private Animator _collectionAnim;
-    private BoxCollider2D _boxCollider;
-    private SpriteRenderer _spriteRenderer;
-    #endregion
+
 
     #region 판다
-    [SerializeField]
-    private Sprite _pandaCollectionSprite;
+    [Tooltip("판다 채집 이미지")]
+    [SerializeField] private Sprite _pandaCollectionSprite;
     private Sprite _pandaImage;
     private Animator _pandaCollectionAnim;
     private SpriteRenderer _pandaSpriteRenderer;
@@ -35,9 +34,11 @@ public class Collection : MonoBehaviour, IInteraction
     #region 위치 지정
     private Vector3 _targetPos; // 카메라 위치
 
+    [Tooltip("채집과 판다 사이의 세부 위치 조정")]
     [SerializeField] private Vector3 _pandaPosition = new Vector3(-0.83f, -3.72f, 0); // 채집과 판다 위치 차이
     private Vector3 _lastPandaPosition; // 판다의 마지막 위치
 
+    [Tooltip("채집 위치 지정")]
     [SerializeField] private Transform[] _collectionPosition;
     private Vector3 _currentCollectionPosition;
     #endregion
@@ -106,17 +107,30 @@ public class Collection : MonoBehaviour, IInteraction
     private void Start()
     {
         _waitTime = _spawnTime -1;
-        _collectionAnim = GetComponent<Animator>();
-        _boxCollider = GetComponent<BoxCollider2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _collectionAnim = _starButton.GetComponent<Animator>();
         //_collectionButton.OnCollectionButtonClicked += ClickCollectionButton;
 
-    }
-    private void OnDestroy()
-    {
-        //_collectionButton.OnCollectionButtonClicked -= ClickCollectionButton;
+        string starButton = "";
+        switch (_gatheringType)
+        {
+            case GatheringItemType.Bug:
+                starButton = "BugStarButton";
+                break;
+            case GatheringItemType.Fish:
+                starButton = "FishStarButton";
+                break;
+            case GatheringItemType.Fruit:
+                starButton = "FruitStarButton";
+                break;
+        }
+        DataBind.SetButtonValue(starButton, ClickStarButton);
 
     }
+    //private void OnDestroy()
+    //{
+    //    _collectionButton.OnCollectionButtonClicked -= ClickCollectionButton;
+
+    //}
 
     private void Update()
     {
@@ -133,9 +147,8 @@ public class Collection : MonoBehaviour, IInteraction
             _currentCollectionPosition = _collectionPosition[UnityEngine.Random.Range(0, _collectionPosition.Length)].position;
             gameObject.transform.position = _currentCollectionPosition;
 
-            _spriteRenderer.enabled = true;
+            _starButton.SetActive(true);
             _collectionAnim.enabled = true;
-            _boxCollider.enabled = true;
         }
 
         if(_isCollection)
@@ -163,29 +176,18 @@ public class Collection : MonoBehaviour, IInteraction
         }
     }
 
-    public void StartInteraction()
+    public void ClickStarButton()
     {
         OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType); // 화면 FadeOut
         ClickCollectionButton();
 
         //// 채집 가능 아이콘 생성
         //_collectionButton.gameObject.SetActive(true);
-        _boxCollider.enabled = false;
+        _starButton.SetActive(false);
 
         DataBind.GetAction("HideMainUIButton")?.Invoke();
         CameraSet(true);
     }
-
-    public void UpdateInteraction()
-    {
-
-    }
-
-    public void ExitInteraction()
-    {
-
-    }
-
 
     private void ClickCollectionButton()
     {
@@ -198,7 +200,7 @@ public class Collection : MonoBehaviour, IInteraction
         StarterPanda starterPanda = DatabaseManager.Instance.StartPandaInfo.StarterPanda;
         _pandaSpriteRenderer = starterPanda.GetComponent<SpriteRenderer>();
 
-        _pandaImage = _spriteRenderer.sprite;
+        _pandaImage = _pandaSpriteRenderer.sprite;
         if(_pandaCollectionAnim == null)
         {
             _pandaCollectionAnim = starterPanda.GetComponent<Animator>();
@@ -208,14 +210,14 @@ public class Collection : MonoBehaviour, IInteraction
         _lastPandaPosition = starterPanda.gameObject.transform.position;
         starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaPosition;
 
-        _spriteRenderer.sprite = _pandaCollectionSprite;
+        _pandaSpriteRenderer.sprite = _pandaCollectionSprite;
 
         // 카메라 중심이 캐릭터로 고정되도록 이동
         _targetPos = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
 
         _isCollection = true;
-        _spriteRenderer.enabled = false;
+
         _collectionAnim.enabled = false;
 
         // 화면 켜지는 시간에 맞추어 채집 시작
@@ -303,7 +305,7 @@ public class Collection : MonoBehaviour, IInteraction
     private void ExitCollection()
     {
         _pandaCollectionAnim.enabled = false;
-        _spriteRenderer.sprite = _pandaImage;
+        _pandaSpriteRenderer.sprite = _pandaImage;
 
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.transform.position = _lastPandaPosition;
 
