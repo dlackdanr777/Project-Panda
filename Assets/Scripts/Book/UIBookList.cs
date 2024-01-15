@@ -1,12 +1,22 @@
 using Muks.DataBind;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum BookField
+{
+    None = -1,
+    Item,
+    NPC
+}
+
 public class UIBookList : MonoBehaviour
 {
+    [SerializeField] private BookField _bookField;
     [SerializeField] private InventoryItemField _itemField; //현재 어떤 필드의 아이템들인지
     [SerializeField] private int _typeField; //해당 필드의 몇번째 아이템들인지
     [SerializeField] private GameObject _detailView;
@@ -17,48 +27,64 @@ public class UIBookList : MonoBehaviour
 
     private List<GatheringItem> _gatheringDatabase;
     private List<ToolItem> _toolDatabase;
+    private List<NPC> _npcDatabase;
     private List<Item> _database;
     private int _current; //현재 페이지 위치
 
     private void Awake()
     {
         //현재 어떤 필드의 몇 번째 아이템인지 데이터 연결
-        switch (_itemField)
+        if(_bookField == BookField.Item)
         {
-            case InventoryItemField.GatheringItem:
-                if(_typeField == 0)
-                {
-                    _gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
-                }
-                else if(_typeField == 1)
-                {
-                    _gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
-                }
-                else if(_typeField == 2)
-                {
-                    _gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
-                }
-                else
-                {
-                    Debug.Log("해당 데이터가 없습니다.");
-                }
-                _database = ToItemType(_gatheringDatabase);
-            break;
-            case InventoryItemField.Cook:
-                break;
-            case InventoryItemField.Tool:
-                if(_typeField == 0)
-                {
-                    _toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
-                }
-                else
-                {
-                    Debug.Log("해당 데이터가 없습니다.");
-                }
-                _database = ToItemType(_toolDatabase);
-                break;
+            switch (_itemField)
+            {
+                case InventoryItemField.GatheringItem:
+                    if (_typeField == 0)
+                    {
+                        _gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
+                    }
+                    else if (_typeField == 1)
+                    {
+                        _gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
+                    }
+                    else if (_typeField == 2)
+                    {
+                        _gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
+                    }
+                    else
+                    {
+                        Debug.Log("해당 데이터가 없습니다.");
+                    }
+                    _database = GetDatabase(_gatheringDatabase);
+                    break;
+                case InventoryItemField.Cook:
+                    break;
+                case InventoryItemField.Tool:
+                    if (_typeField == 0)
+                    {
+                        _toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
+                    }
+                    else
+                    {
+                        Debug.Log("해당 데이터가 없습니다.");
+                    }
+                    _database = GetDatabase(_toolDatabase);
+                    break;
+            }
         }
-
+        else if(_bookField == BookField.NPC)
+        {
+            if (_typeField == 0)
+            {
+                _npcDatabase = DatabaseManager.Instance.GetNPCList();
+            }
+            else
+            {
+                Debug.Log("해당 데이터가 없습니다.");
+            }
+            _database = GetDatabase(_npcDatabase);
+        }
+   
         for(int i=0;i<transform.childCount;i++)
         {
             int index = i;
@@ -157,8 +183,8 @@ public class UIBookList : MonoBehaviour
 
     private void OnClickDetailView(int index)
     {
-        _detailView.SetActive(true);
         GetContent(index);
+        _detailView.SetActive(true);
     }
 
     private void GetContent(int index)
@@ -168,16 +194,23 @@ public class UIBookList : MonoBehaviour
         DataBind.SetSpriteValue("BookItemDetailImage", _database[(_current * 9) + index].Image);
     }
 
-    private List<Item> ToItemType(List<GatheringItem> gatheringItemList)
+    private List<Item> GetDatabase(List<GatheringItem> gatheringItemList)
     {
         List<Item> itemList = new List<Item>();
         itemList.AddRange(gatheringItemList);
         return itemList;
     }
-    private List<Item> ToItemType(List<ToolItem> toolItemList)
+    private List<Item> GetDatabase(List<ToolItem> toolItemList)
     {
         List<Item> itemList = new List<Item>();
         itemList.AddRange(toolItemList);
+        return itemList;
+    }
+
+    private List<Item> GetDatabase(List<NPC> npcList)
+    {
+        List<Item> itemList = new List<Item>();
+        itemList.AddRange(npcList);
         return itemList;
     }
 }

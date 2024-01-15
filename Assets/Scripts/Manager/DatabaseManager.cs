@@ -33,6 +33,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
     [SerializeField] private ItemSpriteDatabase _furnitureItemImages;
+    [SerializeField] private ItemSpriteDatabase[] _npcImages;
+
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
     
@@ -110,6 +112,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
 
+        //Image
+        for (int i = 0; i < _npcDatabase.NPCSpriteArray.Length; i++)
+        {
+            _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
+        }
         _npcDatabase.Register();
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
@@ -126,7 +133,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
-    /// mbti¿¡ µû¸¥ ÆÇ´Ù ÃëÇâ ¼³Á¤
+    /// mbtiï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="mbti"></param>
     /// <returns></returns>
@@ -156,21 +163,21 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
-    /// ÆÇ´Ù Ä£¹Ðµµ ¾÷µ¥ÀÌÆ® </summary>
+    /// ï¿½Ç´ï¿½ Ä£ï¿½Ðµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® </summary>
     public void UpdatePandaIntimacy(int pandaID, float intimacy)
     {
         _pandaDatabase.UpdatePandaIntimacy(pandaID, intimacy);
     }
 
     /// <summary>
-    /// ÆÇ´Ù Çàº¹µµ ¾÷µ¥ÀÌÆ® </summary>
+    /// ï¿½Ç´ï¿½ ï¿½àº¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® </summary>
     public void UpdatePandaHappiness(int pandaID, float happiness)
     {
         _pandaDatabase.UpdatePandaHappiness(pandaID, happiness);
     }
 
     /// <summary>
-    /// ½ºÅ¸ÅÍ ÆÇ´Ù mbti ¼³Á¤</summary>
+    /// ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ç´ï¿½ mbti ï¿½ï¿½ï¿½ï¿½</summary>
     public void SetStarterMBTI(string mbti)
     {
         _pandaDatabase.SetStarterMBTI(mbti);
@@ -210,6 +217,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public List<ToolItem> GetGatheringToolItemList()
     {
         return _itemDatabase.ItemToolList;
+    }
+
+    /// <summary>
+    /// NPC List
+    /// </summary>
+    public List<NPC> GetNPCList()
+    {
+        return _npcDatabase.NpcList;
     }
 
     /// <summary>
