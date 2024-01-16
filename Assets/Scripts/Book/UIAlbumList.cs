@@ -48,8 +48,6 @@ public class UIAlbumList : MonoBehaviour
                 else
                 {
                     child.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = ""; //설명
-
-                    Debug.Log(child.GetChild(1).GetChild(0).GetChild(1));
                     child.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = ""; //이름
                     child.GetChild(1).GetChild(1).GetComponent<Image>().sprite = null; //이미지
                 }
