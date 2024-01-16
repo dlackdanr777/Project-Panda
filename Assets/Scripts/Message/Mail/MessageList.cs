@@ -71,7 +71,7 @@ public class MessageList
             case MessageField.Mail:
                 for (int i = 0; i < DatabaseManager.Instance.GetMailList().Count; i++)
                 {
-                    if (DatabaseManager.Instance.GetMailList()[i].StoryStep.Equals(id))
+                    if (DatabaseManager.Instance.GetMailList()[i].StoryStep.Equals(id) && !IsAlreadyHave(DatabaseManager.Instance.GetMailList()[i].Id))
                     {
                         Add(DatabaseManager.Instance.GetMailList()[i]);
                     }
@@ -88,5 +88,17 @@ public class MessageList
         {
             _messages.RemoveAt(index);
         } 
+    }
+
+    private bool IsAlreadyHave(string id)
+    {
+        for(int i=0;i<_messages.Count;i++)
+        {
+            if (_messages[i].Id.Equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
