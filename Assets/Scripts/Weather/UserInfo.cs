@@ -115,15 +115,15 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
-        GatheringItemInventory = new Inventory[3];
+        CookInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
-        MessageDataArray = new List<MessageData>();
+
+      MessageDataArray = new List<MessageData>();
 
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
         NPCItemReceived = new List<string>();
 
-        //DayCount++;
         IsTodayRewardReceipt = false;
         //string json = JsonUtility.ToJson(this, true);
         //File.WriteAllText(_path, json);
@@ -150,7 +150,7 @@ public class UserInfo
 
         JsonData json = bro.FlattenRows();
 
-        if(json.Count <= 0)
+        if (json.Count <= 0)
         {
             Debug.LogWarning("데이터가 존재하지 않습니다.");
         }
@@ -162,42 +162,27 @@ public class UserInfo
             IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
-            for(int i = 0; i< json[0]["GatheringInventoryDataArray"].Count; i++)
+            for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
             {
                 InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
                 GatheringInventoryDataArray.Add(item);
             }
 
-            for (int i = 0; i < json[0]["GatheringItemInventory"].Count; i++)
+            for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
             {
-                Inventory data = JsonUtility.FromJson<Inventory>(json[0]["GatheringItemInventory"][i].ToJson());
-                GatheringItemInventory[i] = data;
-                Debug.Log(data.ItemsCount);
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["CookInventoryDataArray"][i].ToJson());
+                CookInventoryDataArray.Add(item);
             }
 
-            for (int i = 0; i < json[0]["GatheringItemReceived"].Count; i++)
+            for (int i = 0, count = json[0]["ToolInventoryDataArray"].Count; i < count; i++)
             {
-                string data = json[0]["GatheringItemReceived"][i].ToString();
-                GatheringItemReceived.Add(data);
-                Debug.Log(data);
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["ToolInventoryDataArray"][i].ToJson());
+                ToolInventoryDataArray.Add(item);
             }
 
-            /*
-            param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
-               param.Add("GatheringItemInventory", GatheringItemInventory);
+            LoadUserInventory();
 
-               param.Add("CookInventoryDataArray", CookInventoryDataArray);
-               param.Add("CookItemInventory", CookItemInventory);
-
-               param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
-               param.Add("ToolItemInventory", ToolItemInventory);
-
-               param.Add("GatheringItemReceived", GatheringItemReceived);
-               param.Add("NPCItemReceived", NPCItemReceived);
-               param.Add("CookItemReceived", CookItemReceived);
-               param.Add("ToolItemReceived", ToolItemReceived);
-
-               param.Add("MessageDataArray", MessageDataArray);*/
+           //param.Add("MessageDataArray", MessageDataArray);
         }
 
     }
@@ -250,20 +235,15 @@ public class UserInfo
         param.Add("IsExistingUser", IsExistingUser);
 
         param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
-        param.Add("GatheringItemInventory", GatheringItemInventory);
-
         param.Add("CookInventoryDataArray", CookInventoryDataArray);
-        param.Add("CookItemInventory", CookItemInventory);
-
         param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
-        param.Add("ToolItemInventory", ToolItemInventory);
 
-        param.Add("GatheringItemReceived", GatheringItemReceived);
+    /*    param.Add("GatheringItemReceived", GatheringItemReceived);
         param.Add("NPCItemReceived", NPCItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
 
-        param.Add("MessageDataArray", MessageDataArray);
+        param.Add("MessageDataArray", MessageDataArray);*/
         //param.Add("MessageLists", MessageLists);
 
         BackendReturnObject bro = null;
@@ -300,20 +280,15 @@ public class UserInfo
         param.Add("IsExistingUser", IsExistingUser);
 
         param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
-        param.Add("GatheringItemInventory", GatheringItemInventory);
-
         param.Add("CookInventoryDataArray", CookInventoryDataArray);
-        param.Add("CookItemInventory", CookItemInventory);
-
         param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
-        param.Add("ToolItemInventory", ToolItemInventory);
 
-        param.Add("GatheringItemReceived", GatheringItemReceived);
+/*        param.Add("GatheringItemReceived", GatheringItemReceived);
         param.Add("NPCItemReceived", NPCItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
-        param.Add("ToolItemReceived", ToolItemReceived);
+        param.Add("ToolItemReceived", ToolItemReceived);*/
 
-        param.Add("MessageDataArray", MessageDataArray);
+        //param.Add("MessageDataArray", MessageDataArray);
         //param.Add("MessageLists", MessageLists);
 
         BackendReturnObject bro = null;
@@ -335,13 +310,9 @@ public class UserInfo
             Debug.LogErrorFormat("게임 정보 데이터 수정에 실패 했습니다. : {0}", bro);
         }
 
-/*        string json = JsonUtility.ToJson(this, true);
-        File.WriteAllText(_path, json);
-        Debug.Log(_path);*/
     }
 
     #region Inventory
-    [Serializable]
     public class InventoryData
     {
         public string Id;
