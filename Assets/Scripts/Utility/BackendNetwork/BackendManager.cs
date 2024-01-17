@@ -1,4 +1,5 @@
 using BackEnd;
+using LitJson;
 using UnityEngine;
 
 
@@ -39,6 +40,38 @@ namespace Muks.BackEnd
                 Backend.AsyncPoll();
             }
         }
+
+
+        /// <summary> 게임 정보 ID를 받아 JsonData를 넘겨주는 함수 </summary>
+        public JsonData GetMyData(string selectedProbabilityFileId)
+        {
+            BackendReturnObject backendReturnObject = Backend.GameData.GetMyData(selectedProbabilityFileId, new Where());
+
+            if (!backendReturnObject.IsSuccess())
+            {
+                Debug.Log("정보를 받아오지 못했습니다.");
+                return null;
+            }
+                
+            return backendReturnObject.FlattenRows();
+        }
+
+
+        /// <summary> 차트ID를 받아 JsonData를 넘겨주는 함수 </summary>
+        public JsonData GetChartData(string selectedProbabilityFileId)
+        {
+            BackendReturnObject backendReturnObject = Backend.Chart.GetOneChartAndSave(selectedProbabilityFileId);
+
+            if (!backendReturnObject.IsSuccess())
+            {
+                Debug.Log("정보를 받아오지 못했습니다.");
+                return null;
+            }
+
+            return backendReturnObject.FlattenRows();
+        }
+
+
     }
 }
 

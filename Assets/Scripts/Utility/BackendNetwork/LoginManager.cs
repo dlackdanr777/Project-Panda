@@ -95,6 +95,7 @@ namespace Muks.BackEnd
         private void LoadNextScene()
         {
             LoadingSceneManager.LoadScene("NewUserSceneMuksTest");
+            DatabaseManager.Instance.DialogueDatabase.LoadData();
         }
     }
 }

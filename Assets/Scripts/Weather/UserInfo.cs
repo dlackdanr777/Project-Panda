@@ -1,3 +1,6 @@
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
 using Muks.WeightedRandom;
 using Newtonsoft.Json;
 using System;
@@ -58,27 +61,24 @@ public class UserInfo
     public void Register()
     {
         CreateUserInfoData();
-        //LoadUserInfoData();
     }
 
 
     //유저의 데이터를 가져오는 함수
     public void LoadUserInfoData()
     {
-        if (!File.Exists(_path))
-        {
-            Debug.Log("유저 저장 문서가 존재하지 않습니다.");
+        JsonData json = BackendManager.Instance.GetMyData("UserInfo");
 
+        if(json == null)
+        {
+            Debug.Log("정보를 불러오지 못했습니다.");
             CreateUserInfoData();
             return;
         }
 
+
         UserInfo userInfo = new UserInfo();
 
-        string loadJson = File.ReadAllText(_path);
-        userInfo = JsonUtility.FromJson<UserInfo>(loadJson);
-
-        UserId = userInfo.UserId;
         string paser = userInfo._lastAccessDay.ToString();
         _lastAccessDay = paser;
         DayCount = userInfo.DayCount;  
@@ -137,6 +137,13 @@ public class UserInfo
         SaveUserReceivedItem();
         SaveUserReceivedNPC();
         SaveUserMailData();
+
+        Param param = new Param();
+
+        param.Add("UserId", UserId);
+        param.Add("DayCount", DayCount);
+
+        BackendReturnObject bro = Backend.GameData.Insert("UserInfo", param);
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
