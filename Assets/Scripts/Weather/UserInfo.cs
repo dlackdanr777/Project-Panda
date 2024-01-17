@@ -57,6 +57,8 @@ public class UserInfo
 
     public static string PhotoPath => "Data/";
 
+    private string _gameDataRowInDate = string.Empty;
+
 
     public void Register()
     {
@@ -106,7 +108,7 @@ public class UserInfo
         }
     }
 
-    private void CreateUserInfoData()
+    public void CreateUserInfoData()
     {
         IsExistingUser = false;
         string paser = DateTime.Now.ToString();
@@ -118,17 +120,93 @@ public class UserInfo
         ToolItemReceived = new List<string>();
         NPCItemReceived = new List<string>();
 
-        DayCount++;
+        //DayCount++;
         IsTodayRewardReceipt = false;
-
-
         //string json = JsonUtility.ToJson(this, true);
         //File.WriteAllText(_path, json);
         //TODO: 모바일 테스트 중 잠금
     }
 
-
     public void SaveUserInfoData()
+    {
+        if (!Backend.IsLogin)
+        {
+            Debug.Log("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+            
+        BackendReturnObject bro = Backend.GameData.Get("UserInfo", new Where());
+
+        if(bro.GetReturnValuetoJSON() != null)
+        {
+            if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+            {
+                InsertUserInfoData();
+            }
+            else
+            {
+                UpdateUserInfoData();
+            }
+        }
+        else
+        {
+            InsertUserInfoData();
+        }
+
+
+    }
+
+    public void InsertUserInfoData()
+    {
+        SaveUserInventory();
+        SaveUserReceivedItem();
+        SaveUserReceivedNPC();
+        SaveUserMailData();
+
+        Param param = new Param();
+
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
+
+        param.Add("UserId", UserId);
+        param.Add("DayCount", DayCount);
+        param.Add("LastAccessDay", _lastAccessDay);
+        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
+        param.Add("IsExistingUser", IsExistingUser);
+
+        param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
+        param.Add("GatheringItemInventory", GatheringItemInventory);
+
+        param.Add("CookInventoryDataArray", CookInventoryDataArray);
+        param.Add("CookItemInventory", CookItemInventory);
+
+        param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
+        param.Add("ToolItemInventory", ToolItemInventory);
+
+        param.Add("GatheringItemReceived", GatheringItemReceived);
+        param.Add("NPCItemReceived", NPCItemReceived);
+        param.Add("CookItemReceived", CookItemReceived);
+        param.Add("ToolItemReceived", ToolItemReceived);
+
+        param.Add("MessageDataArray", MessageDataArray);
+        //param.Add("MessageLists", MessageLists);
+
+        BackendReturnObject bro = null;
+        bro = Backend.GameData.Insert("UserInfo", param);
+
+        if (bro.IsSuccess())
+        {
+            Debug.Log("유저 데이터 삽입 성공");
+            _gameDataRowInDate = bro.GetInDate();
+        }
+        else
+        {
+            Debug.LogErrorFormat("유저 데이터 삽입 실패 : {0}", bro);
+        }
+    }
+
+
+    public void UpdateUserInfoData()
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
@@ -142,12 +220,49 @@ public class UserInfo
 
         param.Add("UserId", UserId);
         param.Add("DayCount", DayCount);
+        param.Add("LastAccessDay", _lastAccessDay);
+        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
+        param.Add("IsExistingUser", IsExistingUser);
 
-        BackendReturnObject bro = Backend.GameData.Insert("UserInfo", param);
+        param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
+        param.Add("GatheringItemInventory", GatheringItemInventory);
 
-        string json = JsonUtility.ToJson(this, true);
+        param.Add("CookInventoryDataArray", CookInventoryDataArray);
+        param.Add("CookItemInventory", CookItemInventory);
+
+        param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
+        param.Add("ToolItemInventory", ToolItemInventory);
+
+        param.Add("GatheringItemReceived", GatheringItemReceived);
+        param.Add("NPCItemReceived", NPCItemReceived);
+        param.Add("CookItemReceived", CookItemReceived);
+        param.Add("ToolItemReceived", ToolItemReceived);
+
+        param.Add("MessageDataArray", MessageDataArray);
+        //param.Add("MessageLists", MessageLists);
+
+        BackendReturnObject bro = null;
+
+        bro = Backend.GameData.Get("UserInfo", new Where());
+        string inDate = bro.GetInDate();
+
+        Debug.Log(inDate);
+        Debug.LogFormat("{0}의 게임 정보 데이터 수정을 요청합니다.", bro);
+
+        bro = Backend.GameData.UpdateV2("UserInfo", inDate, Backend.UserInDate, param);
+
+        if (bro.IsSuccess())
+        {
+            Debug.LogFormat("게임 정보 데이터 수정에 성공 했습니다. : {0}", bro);
+        }
+        else
+        {
+            Debug.LogErrorFormat("게임 정보 데이터 수정에 실패 했습니다. : {0}", bro);
+        }
+
+/*        string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
-        Debug.Log(_path);
+        Debug.Log(_path);*/
     }
 
     #region Inventory

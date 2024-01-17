@@ -35,7 +35,6 @@ public class DialogueManager
         {
             string storyID = json[i]["StoryID"].ToString();
             string storyName = json[i]["StoryName"].ToString();
-            Debug.Log(json[i]["RequiredIntimacy"].ToString());
             int requiredIntimacy = int.Parse(json[i]["RequiredIntimacy"].ToString());
             string priorStoryID = json[i]["PriorStoryID"].ToString();
             string nextStoryID = json[i]["NextStoryID"].ToString();
