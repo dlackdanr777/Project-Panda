@@ -44,18 +44,26 @@ namespace Muks.BackEnd
             string pw = _passwordInput.text;
 
             Debug.Log("로그인을 요청합니다.");
-            BackendReturnObject bro = Backend.BMember.CustomLogin(id, pw);
+            Backend.BMember.CustomLogin(id, pw, callback =>
+            {
+                if (callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
+                {
+                    Debug.LogError("로그인 실패 : " + callback);
+                }
 
-            if (bro.IsSuccess())
-            {
-                Debug.Log("로그인이 성공했습니다. : " + bro);
-                HideLoginUI();
-                Invoke("LoadNextScene", 3);
-            }
-            else
-            {
-                Debug.LogError("로그인이 실패했습니다. : " + bro);
-            }
+                if (callback.IsSuccess())
+                {
+                    Debug.Log("로그인에 성공했습니다. : " + callback);
+
+                    HideLoginUI();
+                    LoadNextScene();
+                }
+                else
+                {
+                    Debug.LogError("로그인에 실패했습니다. : " + callback);
+                }
+            });
+          
         }
 
 
@@ -66,16 +74,23 @@ namespace Muks.BackEnd
             string pw = _passwordInput.text;
 
             Debug.Log("회원가입을 요청합니다.");
-            BackendReturnObject bro = Backend.BMember.CustomSignUp(id, pw);
 
-            if (bro.IsSuccess())
+            Backend.BMember.CustomSignUp(id, pw, callback =>
             {
-                Debug.Log("회원가입에 성공했습니다. : " + bro);
-            }
-            else
-            {
-                Debug.LogError("회원가입에 실패했습니다. : " + bro);
-            }
+                if(callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
+                {
+                    Debug.LogError("회원가입 실패");
+                }
+
+                if (callback.IsSuccess())
+                {
+                    Debug.Log("회원가입에 성공했습니다. : " + callback);
+                }
+                else
+                {
+                    Debug.LogError("회원가입에 실패했습니다. : " + callback);
+                }
+            });
         }
 
 

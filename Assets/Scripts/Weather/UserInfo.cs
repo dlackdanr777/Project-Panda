@@ -58,9 +58,6 @@ public class UserInfo
 
     public static string PhotoPath => "Data/";
 
-    private string _gameDataRowInDate = string.Empty;
-
-
     public void Register()
     {
         CreateUserInfoData();
@@ -118,7 +115,7 @@ public class UserInfo
         CookInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
 
-      MessageDataArray = new List<MessageData>();
+        MessageDataArray = new List<MessageData>();
 
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
@@ -139,53 +136,60 @@ public class UserInfo
             return;
         }
 
-
-        BackendReturnObject bro = Backend.GameData.GetMyData("UserInfo", new Where());
-
-        if (!bro.IsSuccess())
+        Backend.GameData.GetMyData("UserInfo", new Where(), callback =>
         {
-            Debug.LogErrorFormat("로드 실패 : {0}", bro);
-            return;
-        }
-
-        JsonData json = bro.FlattenRows();
-
-        if (json.Count <= 0)
-        {
-            Debug.LogWarning("데이터가 존재하지 않습니다.");
-        }
-        else
-        {
-            UserId = json[0]["UserId"].ToString();
-            DayCount = int.Parse(json[0]["DayCount"].ToString());
-            _lastAccessDay = json[0]["LastAccessDay"].ToString();
-            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
-            IsExistingUser = (bool)json[0]["IsExistingUser"];
-
-            for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
+            if (callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
             {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
-                GatheringInventoryDataArray.Add(item);
+                Debug.LogErrorFormat("로드 실패 : {0}", callback);
+                LoadUserInfoData();
+                return;
             }
 
-            for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
+            if (!callback.IsSuccess())
             {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["CookInventoryDataArray"][i].ToJson());
-                CookInventoryDataArray.Add(item);
+                Debug.LogErrorFormat("로드 실패 : {0}", callback);
+                LoadUserInfoData();
+                return;
             }
 
-            for (int i = 0, count = json[0]["ToolInventoryDataArray"].Count; i < count; i++)
+            JsonData json = callback.FlattenRows();
+
+            if (json.Count <= 0)
             {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["ToolInventoryDataArray"][i].ToJson());
-                ToolInventoryDataArray.Add(item);
+                Debug.LogWarning("데이터가 존재하지 않습니다.");
+                return;
             }
+            else
+            {
+                UserId = json[0]["UserId"].ToString();
+                DayCount = int.Parse(json[0]["DayCount"].ToString());
+                _lastAccessDay = json[0]["LastAccessDay"].ToString();
+                IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
+                IsExistingUser = (bool)json[0]["IsExistingUser"];
 
-            LoadUserInventory();
+                for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
+                {
+                    InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
+                    GatheringInventoryDataArray.Add(item);
+                }
 
-           //param.Add("MessageDataArray", MessageDataArray);
-        }
+                for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
+                {
+                    InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["CookInventoryDataArray"][i].ToJson());
+                    CookInventoryDataArray.Add(item);
+                }
 
+                for (int i = 0, count = json[0]["ToolInventoryDataArray"].Count; i < count; i++)
+                {
+                    InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["ToolInventoryDataArray"][i].ToJson());
+                    ToolInventoryDataArray.Add(item);
+                }
+                LoadUserInventory();
+                Debug.Log("Load성공");
+            }
+        });
     }
+
 
     public void SaveUserInfoData()
     {
@@ -194,10 +198,24 @@ public class UserInfo
             Debug.Log("뒤끝에 로그인 되어있지 않습니다.");
             return;
         }
-            
+
         BackendReturnObject bro = Backend.GameData.Get("UserInfo", new Where());
 
-        if(bro.GetReturnValuetoJSON() != null)
+        if (bro.IsServerError() || bro.IsClientRequestFailError() || bro.GetMessage().Contains("signature"))
+        {
+            Debug.LogErrorFormat("로드 실패 : {0}", bro);
+            SaveUserInfoData();
+            return;
+        }
+
+        if (!bro.IsSuccess())
+        {
+            Debug.LogErrorFormat("로드 실패 : {0}", bro);
+            SaveUserInfoData();
+            return;
+        }
+
+        if (bro.GetReturnValuetoJSON() != null)
         {
             if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
             {
@@ -205,16 +223,15 @@ public class UserInfo
             }
             else
             {
-                UpdateUserInfoData();
+                UpdateUserInfoData(bro.GetInDate());
             }
         }
         else
         {
             InsertUserInfoData();
         }
-
-
     }
+
 
     public void InsertUserInfoData()
     {
@@ -246,22 +263,29 @@ public class UserInfo
         param.Add("MessageDataArray", MessageDataArray);*/
         //param.Add("MessageLists", MessageLists);
 
-        BackendReturnObject bro = null;
-        bro = Backend.GameData.Insert("UserInfo", param);
+        Backend.GameData.Insert("UserInfo", param, callback =>
+        {
+            if (callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
+            {
+                Debug.LogErrorFormat("유저 데이터 삽입 실패 : {0}", callback);
+                return;
+            }
 
-        if (bro.IsSuccess())
-        {
-            Debug.Log("유저 데이터 삽입 성공");
-            _gameDataRowInDate = bro.GetInDate();
-        }
-        else
-        {
-            Debug.LogErrorFormat("유저 데이터 삽입 실패 : {0}", bro);
-        }
+            if (callback.IsSuccess())
+            {
+                Debug.Log("유저 데이터 삽입 성공");
+            }
+            else
+            {
+                Debug.LogErrorFormat("유저 데이터 삽입 실패 : {0}", callback);
+            }
+        });
+
+
     }
 
 
-    public void UpdateUserInfoData()
+    public void UpdateUserInfoData(string inDate)
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
@@ -291,24 +315,27 @@ public class UserInfo
         //param.Add("MessageDataArray", MessageDataArray);
         //param.Add("MessageLists", MessageLists);
 
-        BackendReturnObject bro = null;
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
 
-        bro = Backend.GameData.Get("UserInfo", new Where());
-        string inDate = bro.GetInDate();
-
-        Debug.Log(inDate);
-        Debug.LogFormat("{0}의 게임 정보 데이터 수정을 요청합니다.", bro);
-
-        bro = Backend.GameData.UpdateV2("UserInfo", inDate, Backend.UserInDate, param);
-
-        if (bro.IsSuccess())
+        Backend.GameData.UpdateV2("UserInfo", inDate, Backend.UserInDate, param, callback => 
         {
-            Debug.LogFormat("게임 정보 데이터 수정에 성공 했습니다. : {0}", bro);
-        }
-        else
-        {
-            Debug.LogErrorFormat("게임 정보 데이터 수정에 실패 했습니다. : {0}", bro);
-        }
+            if (callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
+            {
+                Debug.LogErrorFormat("유저 데이터 수정 실패 : {0}", callback);
+                return;
+            }
+
+            if (callback.IsSuccess())
+            {
+                Debug.LogFormat("게임 정보 데이터 수정에 성공 했습니다. : {0}", callback);
+            }
+            else
+            {
+                Debug.LogErrorFormat("게임 정보 데이터 수정에 실패 했습니다. : {0}", callback);
+            }
+        });
+
+       
 
     }
 
