@@ -1,4 +1,5 @@
 using BackEnd;
+using BackEnd.MultiCharacter;
 using LitJson;
 using Muks.BackEnd;
 using Muks.WeightedRandom;
@@ -66,12 +67,12 @@ public class UserInfo
     }
 
 
-    //유저의 데이터를 가져오는 함수
+ /*   //유저의 데이터를 가져오는 함수
     public void LoadUserInfoData()
     {
         JsonData json = BackendManager.Instance.GetMyData("UserInfo");
 
-        if(json == null)
+        if (json == null)
         {
             Debug.Log("정보를 불러오지 못했습니다.");
             CreateUserInfoData();
@@ -83,7 +84,7 @@ public class UserInfo
 
         string paser = userInfo._lastAccessDay.ToString();
         _lastAccessDay = paser;
-        DayCount = userInfo.DayCount;  
+        DayCount = userInfo.DayCount;
         IsExistingUser = userInfo.IsExistingUser;
         GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
         ToolInventoryDataArray = userInfo.ToolInventoryDataArray;
@@ -106,7 +107,7 @@ public class UserInfo
             DayCount++;
             IsTodayRewardReceipt = false;
         }
-    }
+    }*/
 
     public void CreateUserInfoData()
     {
@@ -114,8 +115,10 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
         GatheringInventoryDataArray = new List<InventoryData>();
+        GatheringItemInventory = new Inventory[3];
         ToolInventoryDataArray = new List<InventoryData>();
         MessageDataArray = new List<MessageData>();
+
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
         NPCItemReceived = new List<string>();
@@ -125,6 +128,78 @@ public class UserInfo
         //string json = JsonUtility.ToJson(this, true);
         //File.WriteAllText(_path, json);
         //TODO: 모바일 테스트 중 잠금
+    }
+
+
+    public void LoadUserInfoData()
+    {
+        if (!Backend.IsLogin)
+        {
+            Debug.Log("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+
+        BackendReturnObject bro = Backend.GameData.GetMyData("UserInfo", new Where());
+
+        if (!bro.IsSuccess())
+        {
+            Debug.LogErrorFormat("로드 실패 : {0}", bro);
+            return;
+        }
+
+        JsonData json = bro.FlattenRows();
+
+        if(json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+        }
+        else
+        {
+            UserId = json[0]["UserId"].ToString();
+            DayCount = int.Parse(json[0]["DayCount"].ToString());
+            _lastAccessDay = json[0]["LastAccessDay"].ToString();
+            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
+            IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+            for(int i = 0; i< json[0]["GatheringInventoryDataArray"].Count; i++)
+            {
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
+                GatheringInventoryDataArray.Add(item);
+            }
+
+            for (int i = 0; i < json[0]["GatheringItemInventory"].Count; i++)
+            {
+                Inventory data = JsonUtility.FromJson<Inventory>(json[0]["GatheringItemInventory"][i].ToJson());
+                GatheringItemInventory[i] = data;
+                Debug.Log(data.ItemsCount);
+            }
+
+            for (int i = 0; i < json[0]["GatheringItemReceived"].Count; i++)
+            {
+                string data = json[0]["GatheringItemReceived"][i].ToString();
+                GatheringItemReceived.Add(data);
+                Debug.Log(data);
+            }
+
+            /*
+            param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
+               param.Add("GatheringItemInventory", GatheringItemInventory);
+
+               param.Add("CookInventoryDataArray", CookInventoryDataArray);
+               param.Add("CookItemInventory", CookItemInventory);
+
+               param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
+               param.Add("ToolItemInventory", ToolItemInventory);
+
+               param.Add("GatheringItemReceived", GatheringItemReceived);
+               param.Add("NPCItemReceived", NPCItemReceived);
+               param.Add("CookItemReceived", CookItemReceived);
+               param.Add("ToolItemReceived", ToolItemReceived);
+
+               param.Add("MessageDataArray", MessageDataArray);*/
+        }
+
     }
 
     public void SaveUserInfoData()
