@@ -24,7 +24,7 @@ public class StarterPandaInfo
     #endregion
 
     public FurnitureViewModel FurnitureViewModel;
-    public string WallPaperID = "";
+    public FurnitureModel.FurnitureId[] FurnitureRooms = new FurnitureModel.FurnitureId[System.Enum.GetValues(typeof(ERoom)).Length];
     public int FurnitureCount = -1;
     public List<string> FurnitureInventoryID;
     public List<Furniture> FurnitureInventory;
@@ -67,7 +67,7 @@ public class StarterPandaInfo
         CostumeInventoryID = pandaInfo.CostumeInventoryID;
         CostumeInventory = new List<CostumeData>();
 
-        WallPaperID = pandaInfo.WallPaperID;
+        FurnitureRooms = pandaInfo.FurnitureRooms;
         FurnitureCount = pandaInfo.FurnitureCount;
         FurnitureInventoryID = pandaInfo.FurnitureInventoryID;
         FurnitureInventory = new List<Furniture>();
@@ -79,6 +79,10 @@ public class StarterPandaInfo
         File.WriteAllText(_path, json);
         CostumeInventoryID = new List<string>();
         FurnitureInventoryID = new List<string>();
+        for(int i = 0; i < FurnitureRooms.Length; i++)
+        {
+            FurnitureRooms[i] = new FurnitureModel.FurnitureId();
+        }
     }
 
     public void SavePandaInfoData()
@@ -159,11 +163,11 @@ public class StarterPandaInfo
     // 현재 가지고 있는 가구 불러오기
     public void LoadMyFurniture()
     {
+        Debug.Log("LoadMyFurniture");
         if (DatabaseManager.Instance.GetFurnitureItem() != null)
         {
             foreach (string key in DatabaseManager.Instance.GetFurnitureItem().Keys)
             {
-                Debug.Log($"FurnitureInventory ID {key}");
                 // 가구 인벤토리에 ID 찾기
                 if (FurnitureInventoryID == null)
                 {
@@ -171,7 +175,6 @@ public class StarterPandaInfo
                 }
                 else
                 {
-                    Debug.Log($"FurnitureInventory ID {key}");
                     if (FurnitureInventoryID.Find(id => id.Equals(DatabaseManager.Instance.GetFurnitureItem()[key].Id)) != null)
                     {
                         DatabaseManager.Instance.GetFurnitureItem()[key].IsMine = true;

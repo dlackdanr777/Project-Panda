@@ -62,6 +62,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         _userInfo = new UserInfo();
