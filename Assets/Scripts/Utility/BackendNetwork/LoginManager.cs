@@ -43,27 +43,13 @@ namespace Muks.BackEnd
             string id = _idInput.text;
             string pw = _passwordInput.text;
 
-            Debug.Log("로그인을 요청합니다.");
-            Backend.BMember.CustomLogin(id, pw, callback =>
+            BackendManager.Instance.CustomLogin(id, pw, 10, (bro) =>
             {
-                if (callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
-                {
-                    Debug.LogError("로그인 실패 : " + callback);
-                }
-
-                if (callback.IsSuccess())
-                {
-                    Debug.Log("로그인에 성공했습니다. : " + callback);
-
-                    HideLoginUI();
-                    LoadNextScene();
-                }
-                else
-                {
-                    Debug.LogError("로그인에 실패했습니다. : " + callback);
-                }
+                HideLoginUI();
+                LoadNextScene();
             });
-          
+
+
         }
 
 
@@ -111,7 +97,7 @@ namespace Muks.BackEnd
         private void LoadNextScene()
         {
             LoadingSceneManager.LoadScene("NewUserSceneMuksTest");
-            DatabaseManager.Instance.UserInfo.LoadUserInfoData();
+            BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
             DatabaseManager.Instance.DialogueDatabase.LoadData();
         }
     }

@@ -292,8 +292,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     {
         _photoDatabase.Save();
         _furniturePosDatabase.Save();
-        _userInfo.SaveUserInfoData();
-        //_userInfo.SaveUserInfoData();
+        _userInfo.SaveUserInfoData(10);
         _startPandaInfo.SavePandaInfoData();
     }
 
