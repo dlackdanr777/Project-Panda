@@ -195,16 +195,16 @@ public class UserInfo
                 {
                     if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
                     {
-                        InsertUserInfoData();
+                        InsertUserInfoData(selectedProbabilityFileId);
                     }
                     else
                     {
-                        UpdateUserInfoData(bro.GetInDate());
+                        UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
                     }
                 }
                 else
                 {
-                    InsertUserInfoData();
+                    InsertUserInfoData(selectedProbabilityFileId);
                 }
 
                 Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
@@ -213,7 +213,7 @@ public class UserInfo
     }
 
 
-    public void InsertUserInfoData()
+    public void InsertUserInfoData(string selectedProbabilityFileId)
     {
         SaveUserInventory();
         SaveUserReceivedItem();
@@ -227,11 +227,11 @@ public class UserInfo
 
         Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
 
-        BackendManager.Instance.GameDataInsert("UserInfo", 10, param);
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
     }
 
 
-    public void UpdateUserInfoData(string inDate)
+    public void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
@@ -245,7 +245,7 @@ public class UserInfo
 
         Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
 
-        BackendManager.Instance.GameDataUpdate("UserInfo", inDate, 10, param);
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
     }
 
 

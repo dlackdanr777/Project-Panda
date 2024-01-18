@@ -317,6 +317,7 @@ namespace Muks.BackEnd
         }
 
 
+        /// <summary> 서버와 연결 상태를 체크하고 BackendState값을 반환하는 함수 </summary>
         public BackendState ErrorCheck(BackendReturnObject bro)
         {
             if (bro.IsSuccess())
@@ -370,15 +371,21 @@ namespace Muks.BackEnd
 
 
 
+        /// <summary> 뒤끝 토큰 재발급 함수 </summary>
+        /// maxRepeatCount : 서버 연결 실패시 재 시도할 횟수
         public bool RefreshTheBackendToken(int maxRepeatCount)
         {
             if (maxRepeatCount <= 0)
             {
+                Debug.Log("토큰 발급 실패");
                 return false;
             }
-            var callback = Backend.BMember.RefreshTheBackendToken();
+            
+            BackendReturnObject callback = Backend.BMember.RefreshTheBackendToken();
+
             if (callback.IsSuccess())
             {
+                Debug.Log("토큰 발급 성공");
                 return true;
             }
             else
