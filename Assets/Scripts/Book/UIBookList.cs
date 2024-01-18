@@ -176,7 +176,14 @@ public class UIBookList : MonoBehaviour
             _current++;
             if(_current > _database.Count / 9)
             {
-                _current = _database.Count/9;
+                _current = _database.Count / 9;
+            }
+            else if(_current == _database.Count / 9)
+            {
+                if (_database.Count % 9 == 0)
+                {
+                    _current = _database.Count / 9 - 1;
+                }
             }
         }
         UpdateContents();

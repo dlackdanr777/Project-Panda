@@ -52,6 +52,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private MessageDatabase _messageDatabase;
     public MessageDatabase MessageDatabase => _messageDatabase;
 
+    //Album
+    [SerializeField] private ItemSpriteDatabase _albumImages;
+    private AlbumDatabase _albumDatabase;
+    public AlbumDatabase AlbumDatabase => _albumDatabase;
+
     public override void Awake()
     {
         var obj = FindObjectsOfType<DatabaseManager>();
@@ -62,6 +67,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         _userInfo = new UserInfo();
@@ -78,6 +84,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase = new HarvestItemManager();
         _npcDatabase = new NPCDatabase();
         _messageDatabase = new MessageDatabase();
+        _albumDatabase = new AlbumDatabase();
 
 
         UserInfo.Register();
@@ -122,6 +129,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
 
+        _albumDatabase.AlbumSpriteArray = _albumImages;
+        _albumDatabase.Register();
     }
 
     /// <summary>
@@ -286,6 +295,27 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public List<Message> GetMailList()
     {
         return _messageDatabase.MailList;
+    }
+
+    /// <summary>
+    /// Album List
+    /// </summary>
+    /// <returns></returns>
+    public List<Album> GetAlbumList()
+    {
+        return _albumDatabase.AlbumList;
+    }
+
+    public void SetReceiveAlbumById(string id)
+    {
+        for(int i=0;i< GetAlbumList().Count; i++)
+        {
+            if (GetAlbumList()[i].StoryStep.Equals(id))
+            {
+                GetAlbumList()[i].IsReceived = true;
+                return;
+            }
+        }
     }
 
     public void OnApplicationQuit()

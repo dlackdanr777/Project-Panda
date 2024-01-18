@@ -15,7 +15,7 @@ public class FurnitureViewModel
     private FurnitureType _furnitureType;
     //private bool _isSetSaveCostumeView;
 
-    public string[] FurnitureId { get{ return _furnitureModel.FurnitureId; } set{ } }
+    public FurnitureModel.FurnitureId[] FurnitureRooms { get{ return _furnitureModel.FurnitureRooms; } set{ } }
     public bool IsExitFurniture
     {
         get { return _furnitureModel.IsExitFurniture; }
@@ -54,28 +54,30 @@ public class FurnitureViewModel
         _furnitureModel.Init();
     }
 
-    private void ChangedFurnitureId()
+    /// <summary>
+    /// FurnitureId 변경 시 실행 </summary>
+    private void ChangedFurnitureId(ERoom room)
     {
-        _furnitureModel.FurnitureId = FurnitureId;
+        _furnitureModel.FurnitureRooms = FurnitureRooms;
 
-        if (FurnitureId[(int)_furnitureType] == "")
+        if (FurnitureRooms[(int)room].FurnitureIds[(int)_furnitureType] == "")
         {
             FurnitureChanged?.Invoke(null);
         }
         else
         {
-            FurnitureChanged?.Invoke(DatabaseManager.Instance.GetFurnitureItem()[FurnitureId[(int)_furnitureType]]);
+            FurnitureChanged?.Invoke(DatabaseManager.Instance.GetFurnitureItem()[FurnitureRooms[(int)room].FurnitureIds[(int)_furnitureType]]);
         }
     }
 
 
-    public void ChangedFurniture(Furniture furnitureData)
+    public void ChangedFurniture(Furniture furnitureData, ERoom room)
     {
         _furnitureType = furnitureData.Type;
-        if (_furnitureModel.ChangedFurniture(furnitureData)) // 가구 배치
+        if (_furnitureModel.ChangedFurniture(furnitureData, room)) // 가구 배치
         {
-            FurnitureId[(int)_furnitureType] = furnitureData.Id;
-            ChangedFurnitureId();
+            FurnitureRooms[(int)room].FurnitureIds[(int)_furnitureType] = furnitureData.Id;
+            ChangedFurnitureId(room);
         }
         else // 가구 정보 띄움
         {
@@ -87,23 +89,23 @@ public class FurnitureViewModel
 
     /// <summary>
     /// 가구 제거 </summary>
-    public void RemoveFurniture(EFurnitureViewType currentField)
+    public void RemoveFurniture(EFurnitureViewType currentField, ERoom room)
     {
         if (currentField == EFurnitureViewType.WallPaper || currentField == EFurnitureViewType.Floor)
         {
             _furnitureType = (FurnitureType)currentField;
 
-            FurnitureId[(int)_furnitureType] = "";
+            FurnitureRooms[(int)room].FurnitureIds[(int)_furnitureType] = "";
         }
         else
         {
             int field = 2 + ((int)currentField - 2) * 2;
             _furnitureType = (FurnitureType)field;
 
-            FurnitureId[field] = "";
-            FurnitureId[field + 1] = "";
+            FurnitureRooms[(int)room].FurnitureIds[field] = "";
+            FurnitureRooms[(int)room].FurnitureIds[field + 1] = "";
         }
-            ChangedFurnitureId();
+        ChangedFurnitureId(room);
     }
 
     /// <summary>

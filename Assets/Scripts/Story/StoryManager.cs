@@ -38,9 +38,10 @@ public class StoryManager : SingletonHandler<StoryManager>
         CheckStoryActivates();
 
         //메시지 전송
-        Debug.Log("스토리 끝 메시지 전송 : " + id);
+        Debug.Log("스토리 끝 메시지 전송, 일기장 추가 : " + id);
         GameManager.Instance.Player.Messages[0].AddByStoryId(id, MessageField.Mail); //스토리 ID에 따른 메시지 전송
         //일기장 추가
+        DatabaseManager.Instance.SetReceiveAlbumById(id);
     }
 
 

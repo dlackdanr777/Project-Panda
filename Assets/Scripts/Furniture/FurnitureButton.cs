@@ -12,7 +12,9 @@ public class FurnitureButton : MonoBehaviour
 
     private void OnCostumeButtonClicked()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI();
-        SceneManager.LoadScene("FurnitureTest");
+        if (DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI())
+        {
+            SceneManager.LoadScene("FurnitureTest");
+        }
     }
 }
