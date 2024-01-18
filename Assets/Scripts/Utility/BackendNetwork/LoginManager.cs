@@ -59,24 +59,7 @@ namespace Muks.BackEnd
             string id = _idInput.text;
             string pw = _passwordInput.text;
 
-            Debug.Log("회원가입을 요청합니다.");
-
-            Backend.BMember.CustomSignUp(id, pw, callback =>
-            {
-                if(callback.IsServerError() || callback.IsClientRequestFailError() || callback.GetMessage().Contains("signature"))
-                {
-                    Debug.LogError("회원가입 실패");
-                }
-
-                if (callback.IsSuccess())
-                {
-                    Debug.Log("회원가입에 성공했습니다. : " + callback);
-                }
-                else
-                {
-                    Debug.LogError("회원가입에 실패했습니다. : " + callback);
-                }
-            });
+            BackendManager.Instance.CustomSignup(id, pw);
         }
 
 

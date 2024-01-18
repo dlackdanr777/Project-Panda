@@ -110,6 +110,65 @@ namespace Muks.BackEnd
             }
         }
 
+        /// <summary> id, pw, 서버 연결 실패시 반복횟수, 완료 시 실행할 함수를 받아 회원가입을 진행하는 함수 </summary>
+        public void CustomSignup(string id, string pw, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
+        {
+            Debug.Log("회원가입을 요청합니다.");
+
+            if (maxRepeatCount <= 0)
+            {
+                Debug.LogError("회원가입 실패");
+                return;
+            }
+
+            BackendReturnObject bro = Backend.BMember.CustomSignUp(id, pw);
+
+            if (bro.IsSuccess())
+            {
+                onCompleted?.Invoke(bro);
+                Debug.Log("회원가입 성공!");
+            }
+            else
+            {
+                if (bro.IsClientRequestFailError()) // 클라이언트의 일시적인 네트워크 끊김 시
+                {
+                    CustomSignup(id, pw, maxRepeatCount - 1, onCompleted);
+                }
+                else if (bro.IsServerError()) // 서버의 이상 발생 시
+                {
+                    CustomSignup(id, pw, maxRepeatCount - 1, onCompleted);
+                }
+                else if (bro.IsMaintenanceError()) // 서버 상태가 '점검'일 시
+                {
+                    //점검 팝업창 + 로그인 화면으로 보내기
+                    Debug.Log("게임 점검중입니다.");
+                    return;
+                }
+                else if (bro.IsTooManyRequestError()) // 단기간에 많은 요청을 보낼 경우 발생하는 403 Forbbiden 발생 시
+                {
+                    //단기간에 많은 요청을 보내면 발생합니다. 5분동안 뒤끝의 함수 요청을 중지해야합니다.  
+                    return;
+                }
+                else if (bro.IsBadAccessTokenError())
+                {
+                    bool isRefreshSuccess = RefreshTheBackendToken(3); // 최대 3번 리프레시 실행
+
+                    if (isRefreshSuccess)
+                    {
+                        CustomSignup(id, pw, maxRepeatCount - 1, onCompleted);
+                    }
+                    else
+                    {
+                        Debug.Log("토큰을 받지 못했습니다.");
+                    }
+                }
+
+            }
+        }
+
+
+
+
 
         /// <summary> 게임 정보 ID를 받아 JsonData를 넘겨주는 함수 </summary>
         public void GetMyData(string selectedProbabilityFileId, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
