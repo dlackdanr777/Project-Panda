@@ -12,6 +12,8 @@ public class DialogueManager
 
     private DialogueParser _parser = new DialogueParser();
 
+    private bool _enableBackend = false;
+
     //뒤끝 차트의 파일 ID
     private string _chartID = "104969";
 
@@ -52,7 +54,6 @@ public class DialogueManager
                 dialogDataList.Add(new DialogData(talkPandaID, contexts, choiceContext1, choiceContext2));
                 if (++i < json.Count)
                 {
-
                 }
                 else
                 {
@@ -70,13 +71,19 @@ public class DialogueManager
 
     public StoryDialogue GetStoryDialogue(string index)
     {
+        //만약 서버에서 데이터를 받아오지 못했으면 임시로 데이터를 불러온다
+        //차후 제거 예정
+        if (_storyDialogueDic == null) 
+        {
+            _storyDialogueDic = _parser.StroyParse("StoryDialogue");
+        }
+
         if (!_storyDialogueDic.TryGetValue(index, out StoryDialogue storyDialogue))
         {
             Debug.LogError("해당 스토리 ID가 존재하지 않습니다.");
             return default;
         }
             
-
         return storyDialogue;
     }
 

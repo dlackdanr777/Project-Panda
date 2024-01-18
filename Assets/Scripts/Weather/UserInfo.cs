@@ -172,62 +172,43 @@ public class UserInfo
             return;
         }
 
-        BackendReturnObject callback = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
 
-        if (callback.IsSuccess())
+        switch (BackendManager.Instance.ErrorCheck(bro))
         {
-            if (callback.GetReturnValuetoJSON() != null)
-            {
-                if (callback.GetReturnValuetoJSON()["rows"].Count <= 0)
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertUserInfoData();
+                    }
+                    else
+                    {
+                        UpdateUserInfoData(bro.GetInDate());
+                    }
+                }
+                else
                 {
                     InsertUserInfoData();
                 }
-                else
-                {
-                    UpdateUserInfoData(callback.GetInDate());
-                }
-            }
-            else
-            {
-                InsertUserInfoData();
-            }
 
-            Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-        }
-        else
-        {
-            if (callback.IsClientRequestFailError()) // 클라이언트의 일시적인 네트워크 끊김 시
-            {
-                SaveUserInfoData(maxRepeatCount - 1);
-            }
-            else if (callback.IsServerError()) // 서버의 이상 발생 시
-            {
-                SaveUserInfoData(maxRepeatCount - 1);
-            }
-            else if (callback.IsMaintenanceError()) // 서버 상태가 '점검'일 시
-            {
-                //점검 팝업창 + 로그인 화면으로 보내기
-                Debug.Log("게임 점검중입니다.");
-                return;
-            }
-            else if (callback.IsTooManyRequestError()) // 단기간에 많은 요청을 보낼 경우 발생하는 403 Forbbiden 발생 시
-            {
-                //단기간에 많은 요청을 보내면 발생합니다. 5분동안 뒤끝의 함수 요청을 중지해야합니다.  
-                return;
-            }
-            else if (callback.IsBadAccessTokenError())
-            {
-                bool isRefreshSuccess = BackendManager.Instance.RefreshTheBackendToken(3); // 최대 3번 리프레시 실행
-
-                if (isRefreshSuccess)
-                {
-                    SaveUserInfoData(maxRepeatCount - 1);
-                }
-                else
-                {
-                    Debug.Log("토큰을 받지 못했습니다.");
-                }
-            }
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
         }
     }
 

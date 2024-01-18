@@ -34,6 +34,7 @@ public class UIDialogue : UIView
     private bool _isStoryStart;
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
+    private Coroutine _skipDisableRoutine;
 
     public static event Action<string> OnComplateHandler;
 
@@ -68,12 +69,13 @@ public class UIDialogue : UIView
         _rightButton.Disabled();
 
         _currentIndex = 0;
-        CancelInvoke("SkipDisable");
         _isSkipEnabled = false;
-
 
         if (_contextAnimeRoutine != null)
             StopCoroutine(_contextAnimeRoutine);
+
+        if (_skipDisableRoutine != null)
+            StopCoroutine(_skipDisableRoutine);
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
@@ -135,6 +137,10 @@ public class UIDialogue : UIView
         {
             case DialogueState.Context:
                 _state = DialogueState.None;
+
+                if (_skipDisableRoutine != null)
+                    StopCoroutine(_skipDisableRoutine);
+                _skipDisableRoutine = StartCoroutine(SkipDisable(0.3f));
                 return;
 
             case DialogueState.Choice: return;
@@ -213,20 +219,19 @@ public class UIDialogue : UIView
                 DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
             }
         }
-
-        Debug.Log(_eventDatas.Length);
     }
 
 
     private IEnumerator ContextAnime(DialogData data)
     {
         _state = DialogueState.Context;
-        _isSkipEnabled = false;
+
+        if (_skipDisableRoutine != null)
+            StopCoroutine(_skipDisableRoutine);
+        _skipDisableRoutine = StartCoroutine(SkipDisable(0.2f));
 
         _pandaImage.sprite = DatabaseManager.Instance.GetPandaImage(1).NomalImage;
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
-
-        Invoke("SkipDisable", 0.5f);
 
         DataBind.SetTextValue("DialogueName", DatabaseManager.Instance.GetNPCNameById(data.TalkPandaID));
         if (data.TalkPandaID.Equals("Ω∫≈∏≈Õ"))
@@ -282,10 +287,10 @@ public class UIDialogue : UIView
 
     }
 
-
-    private void SkipDisable()
+    private IEnumerator SkipDisable(float value)
     {
+        _isSkipEnabled = false;
+        yield return new WaitForSeconds(value);
         _isSkipEnabled = true;
     }
-
 }

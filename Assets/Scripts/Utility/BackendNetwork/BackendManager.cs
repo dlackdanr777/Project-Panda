@@ -21,9 +21,11 @@ namespace Muks.BackEnd
         public override void Awake()
         {
             base.Awake();
-
             BackendInit(10);
         }
+
+
+        /// <summary>뒤끝 초기 설정</summary>
 
         private void BackendInit(int maxRepeatCount = 10)
         {
@@ -39,17 +41,24 @@ namespace Muks.BackEnd
             //SDK를 초기화 후 BackendReturnObject클래스 리턴
             BackendReturnObject bro = Backend.Initialize(true);
 
-            //초기화가 성공했을 경우?
-            if (bro.IsSuccess())
+            switch (ErrorCheck(bro))
             {
-                //성공일 경우 statusCode 204 Success
-                Debug.LogFormat("초기화 성공: {0}", bro);
-            }
-            else
-            {
-                // 실패일 경우 statusCode 400대 에러 발생 
-                Debug.LogFormat("초기화 실패: {0}", bro);
-                BackendInit(maxRepeatCount - 1);
+                case BackendState.Failure:
+                    Debug.LogError("초기화 실패");
+                    break;
+
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
+
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    BackendInit(maxRepeatCount - 1);
+                    break;
+
+                case BackendState.Success:
+                    Debug.Log("초기화 성공");
+                    break;
             }
         }
 
@@ -64,6 +73,8 @@ namespace Muks.BackEnd
             }
         }
 
+
+        /// <summary> id, pw, 서버 연결 실패시 반복횟수, 완료 시 실행할 함수를 받아 로그인을 진행하는 함수 </summary>
         public void CustomLogin(string id, string pw, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
             Debug.Log("로그인을 요청합니다.");
