@@ -80,17 +80,20 @@ namespace BT
 
         private void Update()
         {
-            PandaMouseClick();
-            ShowStateImage();
-            GiveAGift();
-
             // 씬 전환되면 1초 뒤 실행
             if (IsSwitchingScene)
             {
                 IsSwitchingScene = false;
-                Invoke("SwitchingScene", 1f);
+                Invoke("SwitchingScene", 0.5f);
             }
 
+            if(_uiPanda != null)
+            {
+                //PandaMouseClick();
+                ShowStateImage();
+                GiveAGift();
+            }
+            
             // 판다 행복도 지속적으로 감소
             ChangeHappiness(-Time.deltaTime * 0.001f);
 
@@ -257,9 +260,19 @@ namespace BT
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
         }
 
-        public void SetFalseUI()
+        /// <summary>
+        /// UI가 존재하면 true 반환 </summary>
+        public bool SetFalseUI()
         {
-            _uiPanda.gameObject.SetActive(false);
+            if(_uiPanda != null)
+            {
+                _uiPanda.gameObject.SetActive(false);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
