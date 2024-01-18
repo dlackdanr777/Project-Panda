@@ -43,6 +43,7 @@ public class UserInfo
     public List<string> NPCItemReceived = new List<string>();
     public List<string> CookItemReceived = new List<string>();
     public List<string> ToolItemReceived = new List<string>();
+    public List<string> AlbumReceived = new List<string>();
 
     //Message
     public List<MessageData> MessageDataArray = new List<MessageData>(); //저장할 메시지 데이터
@@ -137,6 +138,12 @@ public class UserInfo
                 ToolItemReceived.Add(item);
             }
 
+            for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["AlbumReceived"][i].ToString();
+                AlbumReceived.Add(item);
+            }
+
             for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
             {
                 MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
@@ -229,30 +236,15 @@ public class UserInfo
     {
         SaveUserInventory();
         SaveUserReceivedItem();
-        SaveUserReceivedNPC();
+        SaveUserReceived();
         SaveUserMailData();
-
-        Param param = new Param();
 
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        param.Add("UserId", UserId);
-        param.Add("DayCount", DayCount);
-        param.Add("LastAccessDay", _lastAccessDay);
-        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
-        param.Add("IsExistingUser", IsExistingUser);
+        Param param = GetUserInfoParam();
 
-        param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
-        param.Add("CookInventoryDataArray", CookInventoryDataArray);
-        param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
-
-        param.Add("GatheringItemReceived", GatheringItemReceived);
-        param.Add("NPCItemReceived", NPCItemReceived);
-        param.Add("CookItemReceived", CookItemReceived);
-        param.Add("ToolItemReceived", ToolItemReceived);
-
-        param.Add("MessageDataArray", MessageDataArray);
+        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
 
         BackendManager.Instance.GameDataInsert("UserInfo", 10, param);
     }
@@ -265,9 +257,19 @@ public class UserInfo
 
         SaveUserInventory();
         SaveUserReceivedItem();
-        SaveUserReceivedNPC();
+        SaveUserReceived();
         SaveUserMailData();
 
+        Param param = GetUserInfoParam();
+
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate("UserInfo", inDate, 10, param);
+    }
+
+
+    public Param GetUserInfoParam()
+    {
         Param param = new Param();
 
         param.Add("UserId", UserId);
@@ -284,12 +286,11 @@ public class UserInfo
         param.Add("NPCItemReceived", NPCItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
+        param.Add("AlbumReceived", AlbumReceived);
 
         param.Add("MessageDataArray", MessageDataArray);
 
-        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
-
-        BackendManager.Instance.GameDataUpdate("UserInfo", inDate, 10, param);
+        return param;
     }
 
     #region Inventory
@@ -547,7 +548,7 @@ public class UserInfo
     }
     #endregion
 
-    #region NPC
+    #region NPC, Album
     public void LoadUserReceivedNPC()
     {
         //NPC
@@ -564,7 +565,23 @@ public class UserInfo
         }
     }
 
-    private void SaveUserReceivedNPC()
+    public void LoadUserReceivedAlbum()
+    {
+        // Album
+        for (int i = 0; i < AlbumReceived.Count; i++)
+        {
+            for (int j = 0; j < DatabaseManager.Instance.GetAlbumList().Count; j++)
+            {
+                if (AlbumReceived[i].Equals(DatabaseManager.Instance.GetAlbumList()[j].Id))
+                {
+                    DatabaseManager.Instance.GetAlbumList()[j].IsReceived = true;
+                }
+            }
+
+        }
+    }
+
+    private void SaveUserReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
         NPCItemReceived = new List<string>();
@@ -576,6 +593,16 @@ public class UserInfo
                 {
                     NPCItemReceived.Add(npcDatabase[i][j].Id);
                 }
+            }
+        }
+
+        List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
+        AlbumReceived = new List<string>();
+        for (int i = 0; i < albumDatabase.Count; i++)
+        {
+            if (albumDatabase[i].IsReceived)
+            {
+                AlbumReceived.Add(albumDatabase[i].Id);
             }
         }
     }
