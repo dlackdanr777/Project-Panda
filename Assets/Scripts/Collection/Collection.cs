@@ -13,6 +13,7 @@ public class Collection : MonoBehaviour
     public Action OnExitCollection; // 채집 화면 종료
     public Action<float, GatheringItemType> OnCollectionButtonClicked;
 
+    private bool _isClickStarButton;
     private bool _isCollection = false; // 채집 중인가?
     private bool _isExit = false;
 
@@ -178,6 +179,11 @@ public class Collection : MonoBehaviour
 
     public void ClickStarButton()
     {
+        if (_isClickStarButton)
+        {
+            return;
+        }
+        _isClickStarButton = true;
         OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType); // 화면 FadeOut
         ClickCollectionButton();
 
@@ -313,6 +319,7 @@ public class Collection : MonoBehaviour
         CameraSet(false);
         _targetPos = new Vector3(_lastPandaPosition.x, _lastPandaPosition.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
+        _isClickStarButton = false;
     }
 
     /// <summary>
