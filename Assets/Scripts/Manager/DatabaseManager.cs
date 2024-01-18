@@ -52,6 +52,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private MessageDatabase _messageDatabase;
     public MessageDatabase MessageDatabase => _messageDatabase;
 
+    //Album
+    [SerializeField] private ItemSpriteDatabase _albumImages;
+    private AlbumDatabase _albumDatabase;
+    public AlbumDatabase AlbumDatabase => _albumDatabase;
+
     public override void Awake()
     {
         var obj = FindObjectsOfType<DatabaseManager>();
@@ -79,6 +84,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase = new HarvestItemManager();
         _npcDatabase = new NPCDatabase();
         _messageDatabase = new MessageDatabase();
+        _albumDatabase = new AlbumDatabase();
 
 
         UserInfo.Register();
@@ -118,10 +124,13 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         {
             _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
         }
+
         _npcDatabase.Register();
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
 
+        _albumDatabase.AlbumSpriteArray = _albumImages;
+        _albumDatabase.Register();
     }
 
     /// <summary>
@@ -229,6 +238,40 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
+    /// NPC ID로 이름 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public string GetNPCNameById(string id)
+    {
+        for(int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Name;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// NPC ID로 Image 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Sprite GetNPCImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Image;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Furniture ItemList
     /// </summary>
     /// <returns></returns>
@@ -252,6 +295,27 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public List<Message> GetMailList()
     {
         return _messageDatabase.MailList;
+    }
+
+    /// <summary>
+    /// Album List
+    /// </summary>
+    /// <returns></returns>
+    public List<Album> GetAlbumList()
+    {
+        return _albumDatabase.AlbumList;
+    }
+
+    public void SetReceiveAlbumById(string id)
+    {
+        for(int i=0;i< GetAlbumList().Count; i++)
+        {
+            if (GetAlbumList()[i].StoryStep.Equals(id))
+            {
+                GetAlbumList()[i].IsReceived = true;
+                return;
+            }
+        }
     }
 
     public void OnApplicationQuit()

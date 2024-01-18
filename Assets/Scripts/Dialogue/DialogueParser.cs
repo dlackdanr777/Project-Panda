@@ -31,22 +31,20 @@ public class DialogueParser
     }
 
 
-    public Dictionary<int, StoryDialogue> StroyParse(string CSVFileName)
+    public Dictionary<string, StoryDialogue> StroyParse(string CSVFileName)
     {
-        Dictionary<int, StoryDialogue> dialogueDic = new Dictionary<int, StoryDialogue>();
+        Dictionary<string, StoryDialogue> dialogueDic = new Dictionary<string, StoryDialogue>();
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);//csv파일 로드
         string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
-
         for (int i = 1; i < data.Length;)
         {
             string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
-            int storyID = int.Parse(row[0]);
+            string storyID = row[0];
             string storyName = row[1];
             int requiredIntimacy = int.Parse(row[2]);
-            int priorStoryID = int.Parse(row[3]);
-            int nextStoryID = int.Parse(row[4]);
-            int pandaID = int.Parse(row[5]);
-
+            string priorStoryID = row[3];
+            string nextStoryID = row[4];
+            string pandaID = row[5];
 
             List<DialogData> dialogDataList = new List<DialogData>();
 

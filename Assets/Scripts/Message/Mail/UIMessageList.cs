@@ -137,4 +137,8 @@ public class UIMessageList : UIList<Message, MessageField>
             }
         }
     }
+
+    protected override void ClearContent()
+    {
+    }
 }

@@ -19,6 +19,7 @@ public enum DialogueState
 public class UIDialogue : UIView
 {
     [SerializeField] private Image _pandaImage;
+    [SerializeField] private Sprite _starterImage;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -34,7 +35,7 @@ public class UIDialogue : UIView
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
 
-    public static event Action<int> OnComplateHandler;
+    public static event Action<string> OnComplateHandler;
 
 
     public override void Init(UINavigation uiNav)
@@ -203,6 +204,16 @@ public class UIDialogue : UIView
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
 
+        //판다 도감에 추가
+        for(int i=0;i<DatabaseManager.Instance.GetNPCList().Count;i++)
+        {
+            if (storyDialogue.PandaID.Equals(DatabaseManager.Instance.GetNPCList()[i].Id) && !DatabaseManager.Instance.GetNPCList()[i].IsReceived)
+            {
+                Debug.Log(storyDialogue.PandaID + "를 만났다");
+                DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
+            }
+        }
+
         Debug.Log(_eventDatas.Length);
     }
 
@@ -216,7 +227,16 @@ public class UIDialogue : UIView
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
 
         Invoke("SkipDisable", 0.5f);
-        DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
+
+        DataBind.SetTextValue("DialogueName", DatabaseManager.Instance.GetNPCNameById(data.TalkPandaID));
+        if (data.TalkPandaID.Equals("스타터"))
+        {
+            DataBind.SetSpriteValue("DialoguePandaImage", _starterImage);
+        }
+        else
+        {
+            DataBind.SetSpriteValue("DialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
+        }
 
         char[] tempChars = data.Contexts.ToCharArray();
         string tempString = string.Empty;

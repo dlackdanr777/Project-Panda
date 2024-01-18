@@ -39,11 +39,12 @@ public class UserInfo
     public List<string> NPCItemReceived;
     public List<string> CookItemReceived;
     public List<string> ToolItemReceived;
+    //Album
+    public List<string> AlbumReceived;
 
     //Message
     public List<MessageData> MessageDataArray; //저장할 메시지 데이터
     private MessageList[] MessageLists; //게임 속 메시지리스트
-
 
     //==========================================================================================================
 
@@ -90,6 +91,7 @@ public class UserInfo
         GatheringItemReceived = userInfo.GatheringItemReceived;
         ToolItemReceived = userInfo.ToolItemReceived;
         NPCItemReceived = userInfo.NPCItemReceived;
+        AlbumReceived = userInfo.AlbumReceived;
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -117,6 +119,7 @@ public class UserInfo
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
         NPCItemReceived = new List<string>();
+        AlbumReceived = new List<string>();
 
         DayCount++;
         IsTodayRewardReceipt = false;
@@ -135,7 +138,7 @@ public class UserInfo
 
         SaveUserInventory();
         SaveUserReceivedItem();
-        SaveUserReceivedNPC();
+        SaveUserReceived();
         SaveUserMailData();
 
         string json = JsonUtility.ToJson(this, true);
@@ -400,7 +403,7 @@ public class UserInfo
     }
     #endregion
 
-    #region NPC
+    #region NPC, Album
     public void LoadUserReceivedNPC()
     {
         //NPC
@@ -417,7 +420,23 @@ public class UserInfo
         }
     }
 
-    private void SaveUserReceivedNPC()
+    public void LoadUserReceivedAlbum() 
+    { 
+        // Album
+        for (int i = 0; i < AlbumReceived.Count; i++)
+        {
+            for (int j = 0; j < DatabaseManager.Instance.GetAlbumList().Count; j++)
+            {
+                if (AlbumReceived[i].Equals(DatabaseManager.Instance.GetAlbumList()[j].Id))
+                {
+                    DatabaseManager.Instance.GetAlbumList()[j].IsReceived = true;
+                }
+            }
+
+        }
+    }
+
+    private void SaveUserReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
         NPCItemReceived = new List<string>();
@@ -429,6 +448,16 @@ public class UserInfo
                 {
                     NPCItemReceived.Add(npcDatabase[i][j].Id);
                 }
+            }
+        }
+
+        List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
+        AlbumReceived = new List<string>();
+        for (int i = 0; i < albumDatabase.Count; i++)
+        {
+            if (albumDatabase[i].IsReceived)
+            {
+                AlbumReceived.Add(albumDatabase[i].Id);
             }
         }
     }

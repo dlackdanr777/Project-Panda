@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public List<int> _storyCompleteList { get; private set; }
+    public List<string> _storyCompleteList { get; private set; }
 
-    private Dictionary<int, PandaStoryController> _pandaStoryControllerDic = new Dictionary<int, PandaStoryController>();
+    private Dictionary<string, PandaStoryController> _pandaStoryControllerDic = new Dictionary<string, PandaStoryController>();
 
 
     public override void Awake()
@@ -18,27 +18,34 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void Init()
     {
-        _storyCompleteList = new List<int>();
+        _storyCompleteList = new List<string>();
+        Debug.Log("스토리 매니저 실행");
         UIDialogue.OnComplateHandler += AddComplateStory;
         PandaStoryController.OnStartHandler += SetStroyDic;
         PandaStoryController.OnCheckActivateHandler += CheckStoryActivate;
     }
 
 
-    private void AddComplateStory(int id)
+    private void AddComplateStory(string id)
     {
         if (_storyCompleteList.Contains(id))
         {
             Debug.Log("이미 있는 인덱스 입니다.");
             return;
         }
-            
+
         _storyCompleteList.Add(id);
         CheckStoryActivates();
+
+        //메시지 전송
+        Debug.Log("스토리 끝 메시지 전송, 일기장 추가 : " + id);
+        GameManager.Instance.Player.Messages[0].AddByStoryId(id, MessageField.Mail); //스토리 ID에 따른 메시지 전송
+        //일기장 추가
+        DatabaseManager.Instance.SetReceiveAlbumById(id);
     }
 
 
-    private void SetStroyDic(int id, PandaStoryController pandaStoryController)
+    private void SetStroyDic(string id, PandaStoryController pandaStoryController)
     {
 
         if (_pandaStoryControllerDic.ContainsKey(id))
@@ -68,7 +75,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     private void CheckStoryActivate(PandaStoryController panda)
     {
         bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
-        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == 9999;
+        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == "MS99Z";
 
         if (checkClear && checkPriorStoryID)
         {

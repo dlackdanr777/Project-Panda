@@ -9,6 +9,13 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
 {
     private int _currentItemIndex;
 
+    protected override void ClearContent()
+    {
+        DataBind.SetTextValue("InventoryDetailName", "");
+        DataBind.SetTextValue("InventoryDetailDescription", "");
+        DataBind.SetSpriteValue("InventoryDetailImage", null);
+    }
+
     protected override void GetContent(int index)
     {
         _currentItemIndex = index;
@@ -49,13 +56,6 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
 
     private void Awake()
     {
-        //Test
-        //GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, "IBG03");
-        //GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, "IFI15");
-        //GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, "IFR15");
-        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG03");
-        //GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, "ITG06");
-
         //미리 생성 => spawn 계속하면 안좋음
         for (int i = 0; i < System.Enum.GetValues(typeof(InventoryItemField)).Length - 1; i++)
         {

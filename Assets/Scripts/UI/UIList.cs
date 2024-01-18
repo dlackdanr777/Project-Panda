@@ -19,6 +19,11 @@ public abstract class UIList<T, Enum> : MonoBehaviour
     protected int[] _maxCount = new int[System.Enum.GetValues(typeof(Enum)).Length - 1];
 
     /// <summary>
+    /// DetailView 나오기 전에 clear하는 함수
+    /// </summary>
+    /// <param name="index"></param>
+    protected abstract void ClearContent();
+    /// <summary>
     /// DetailView Text 받아오는 함수
     /// </summary>
     protected abstract void GetContent(int index);
@@ -58,7 +63,7 @@ public abstract class UIList<T, Enum> : MonoBehaviour
 
         if (_detailView != null)
         {
-            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
+            _closeDetailViewButton.onClick.AddListener(OnClickCloseButton);
 
         }
     }
@@ -112,9 +117,16 @@ public abstract class UIList<T, Enum> : MonoBehaviour
         return null;
     }
 
+    private void OnClickCloseButton()
+    {
+        _detailView.SetActive(false);
+        ClearContent();
+    }
+
     //SlotClick 이벤트
     private void OnClickSlot(int index)
     {
+        ClearContent();
         GetContent(index); //텍스트 바인딩
         if(_detailView != null)
         {

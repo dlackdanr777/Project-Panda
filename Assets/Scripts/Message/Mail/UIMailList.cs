@@ -24,11 +24,6 @@ public class UIMailList : MonoBehaviour
 
     private void Awake()
     {
-        //Test 
-        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[0].Id, MessageField.Mail); //ML01 메일 추가
-        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[1].Id, MessageField.Mail); //ML01 메일 추가
-        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[2].Id, MessageField.Mail); //ML01 메일 추가
-        //GameManager.Instance.Player.Messages[0].AddById(DatabaseManager.Instance.GetMailList()[3].Id, MessageField.Mail); //ML01 메일 추가
         for (int i = 0; i < GameManager.Instance.Player.Messages[0].MaxMessageCount; i++) //미리 slot 생성
         {
             int index = GameManager.Instance.Player.Messages[0].MaxMessageCount - 1 - i;
