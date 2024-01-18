@@ -26,7 +26,6 @@ public class FurnitureModel
                     DataBind.SetTextValue("FurnitureDetailName", furnitureData.Name);
                     DataBind.SetTextValue("FurnitureDetailDescription", furnitureData.Description);
                     DataBind.SetSpriteValue("FurnitureDetailImage", furnitureData.Image);
-                    Debug.Log("SetDetail");
                     return false;
                 }
             }
