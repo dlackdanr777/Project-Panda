@@ -55,6 +55,9 @@ public class Player
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG01");
+        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG02");
+        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG03");
     }
 
     public bool SpendBamboo(int amount)
