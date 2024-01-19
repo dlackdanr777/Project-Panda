@@ -11,6 +11,8 @@ public class SaveFurnitureView : MonoBehaviour
     [SerializeField] private Button _yesButton;
     [SerializeField] private Button _noButton;
     [SerializeField] private Button _notExitButton;
+    //[SerializeField] private Button _exitButton;
+    //[SerializeField] private Sprite _exitDoorCloseImage;
 
     private FurnitureViewModel _furnitureViewModel;
 
@@ -31,7 +33,7 @@ public class SaveFurnitureView : MonoBehaviour
     {
         _yesButton.onClick.AddListener(OnSaveYesButtonClicked);
         _noButton.onClick.AddListener(OnSaveNoButtonClicked);
-        _notExitButton.onClick.AddListener(NotExitCostumeButtonClicked);
+        _notExitButton.onClick.AddListener(NotExitButtonClicked);
 
         Bind();
     }
@@ -61,18 +63,19 @@ public class SaveFurnitureView : MonoBehaviour
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
         _furnitureViewModel.SaveFurniture();
-        SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
+        SceneManager.LoadScene("FurnitureTestMainScene"); // 나중에 메인 씬으로 변경
     }
     private void OnSaveNoButtonClicked()
     {
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
         DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
-        SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
+        SceneManager.LoadScene("FurnitureTestMainScene"); // 나중에 메인 씬으로 변경
     }
 
-    private void NotExitCostumeButtonClicked()
+    private void NotExitButtonClicked()
     {
         _furnitureViewModel.IsExitFurniture = false;
+        //_exitButton.GetComponent<Image>().sprite = _exitDoorCloseImage;
 
         Tween.IamgeAlpha(_saveFurniture, 0, _loadTime, TweenMode.Quadratic, () =>
         {

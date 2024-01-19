@@ -1,48 +1,56 @@
 using Muks.DataBind;
 using Muks.Tween;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+// 방 종류
+public enum ERoom
+{
+    Starter,
+    Jiji
+}
 
 public class FurnitureView : MonoBehaviour
 {
     private FurnitureViewModel _furnitureViewModel;
     [SerializeField] private GameObject _slots;
-    [SerializeField] private Image[] _furnitures; // 실제 가구 배치
+
+    private ERoom _currnetRoom = ERoom.Starter;
+    [SerializeField] private GameObject[] _rooms = new GameObject[System.Enum.GetValues(typeof(ERoom)).Length]; // 방 종류
+    public RoomFurniture[] _roomFurnitures = new RoomFurniture[System.Enum.GetValues(typeof(ERoom)).Length]; // 실제 가구 배치
+
     [SerializeField] private GameObject _leftDoor;
     [SerializeField] private GameObject _rightDoor;
     
     [SerializeField] private Button _exitButton;
+    //[SerializeField] private Sprite _exitDoorOpenImage;
     [SerializeField] private GameObject _uiSave;
 
+    [SerializeField] private Sprite _transparentSprite; // 투명 이미지
     [SerializeField] private GameObject _detailView; // 상세설명 창
     [SerializeField] private Button _closeDetailViewButton; // 상세설명 창 닫기 버튼
 
     [SerializeField] private int _firstToggleIndex;
-    [SerializeField] protected ToggleGroup _field; //토글 종류
+    [SerializeField] private ToggleGroup _field; //토글 종류
 
-    [SerializeField] protected Transform[] _spawnPoint; //spawn할 위치
+    [SerializeField] private Transform[] _spawnPoint; //spawn할 위치
     [SerializeField] private ScrollRect _scrollrect;
 
 
     [SerializeField] private GameObject _furnitureSlot;
-    //private GameObject[] _furnitureImagePfs;
-    //private Button[] _furnitureImageBtn;
 
-
-    private int _currentItemIndex;
-
-    protected List<Furniture>[] _lists = new List<Furniture>[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1]; //Field 개수만큼 리스트 존재(None 제외) //데이터를 저장할 공간
-    protected EFurnitureViewType _currentField;
-    protected int[] _maxCount = new int[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1];
+    private List<Furniture>[] _lists = new List<Furniture>[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1]; //Field 개수만큼 리스트 존재(None 제외) //데이터를 저장할 공간
+    private EFurnitureViewType _currentField;
+    private int[] _maxCount = new int[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1];
 
     private void Start()
     {
         Bind();
 
         List <Furniture> furnitureInventory = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory;
+
         for (int i = 0; i < System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1; i++)
         {
             if (furnitureInventory != null)
@@ -62,8 +70,74 @@ public class FurnitureView : MonoBehaviour
         }
 
         Init();
+    }
 
-        //_furnitures = _furniture.GetComponentsInChildren<Image>();
+    private void OnDestroy()
+    {
+        _furnitureViewModel.FurnitureChanged -= UpdateFurnitureID;
+    }
+
+    #region 초기 설정
+    /// <summary>
+    /// 코스튬 뷰모델과 바인드 </summary>
+    private void Bind()
+    {
+        if (_furnitureViewModel == null)
+        {
+            _furnitureViewModel = new FurnitureViewModel();
+            DatabaseManager.Instance.StartPandaInfo.FurnitureViewModel = _furnitureViewModel;
+            _furnitureViewModel.FurnitureChanged += UpdateFurnitureID;
+            //_furnitureViewModel.ShowDetailView += (() => Invoke("ShowDetailView", 0.2f));
+            _furnitureViewModel.ShowDetailView += (() => _detailView.SetActive(true));
+        }
+
+        // 비어있는게 아니라면 불러올 때 원래 가구 미리 배치
+        FurnitureModel.FurnitureId[] furnitureRooms = DatabaseManager.Instance.StartPandaInfo.FurnitureRooms;
+
+        for (int i = 0; i < furnitureRooms.Length; i++) // 방 설정
+        {
+            for (int j = 0; j < furnitureRooms[i].FurnitureIds.Length; j++) // 가구 배치
+            {
+                if (furnitureRooms[i].FurnitureIds[j] != "")
+                {
+                    _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[furnitureRooms[i].FurnitureIds[j]], (ERoom)i);
+                }
+                else
+                {
+                    _roomFurnitures[i]._furnitures[j].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    private void Init()
+    {
+        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
+
+        // 문 열기
+        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
+        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(0, 0), 1.5f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(620, 0), 1.5f, TweenMode.Quadratic);
+
+        CreateSlots(); //slot 생성
+
+        //버튼 리스너
+        DataBind.SetButtonValue("LeftRoomButton", () => ChangeRoom(true));
+        DataBind.SetButtonValue("RightRoomButton", () => ChangeRoom(false));
+
+        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>())
+        {
+            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
+        }
+
+        if (_detailView != null)
+        {
+            _closeDetailViewButton.onClick.AddListener(OnCloseDetailView);
+
+        }
+
+        _exitButton.onClick.AddListener(OnExitButtonClicked);
+
         Toggle firstToggle = _field.transform.GetChild(_firstToggleIndex).GetComponent<Toggle>(); //다시 들어가도 첫번째가 활성화되도록
         if (firstToggle != null)
         {
@@ -76,33 +150,6 @@ public class FurnitureView : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        _furnitureViewModel.FurnitureChanged -= UpdateFurnitureID;
-    }
-
-    private void Init()
-    {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
-
-        // 문 열기
-        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-
-        CreateSlots(); //slot 생성
-
-        //버튼 리스너
-        foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>())
-        {
-            toggle.onValueChanged.AddListener((bool isOn) => OnClickedFieldButton(isOn, toggle.transform));
-        }
-
-        if (_detailView != null)
-        {
-            _closeDetailViewButton.onClick.AddListener(() => _detailView.SetActive(false));
-
-        }
-    }
-
     //list마다 해당 spawn 위치에 Instantiate하는 함수
     private void CreateSlots()
     {
@@ -110,16 +157,22 @@ public class FurnitureView : MonoBehaviour
         {
             for (int j = 0; j < _maxCount[i]; j++)
             {
-                GameObject slot = Instantiate(_furnitureSlot, _spawnPoint[i]);
+                GameObject slot;
                 if(j == 0)
                 {
-                    slot.transform.GetChild(0).gameObject.SetActive(false);
+                    slot = _spawnPoint[i].GetChild(0).gameObject;
+                    //slot.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                else
+                {
+                    slot = Instantiate(_furnitureSlot, _spawnPoint[i]);
                 }
                 int _slotIndex = j;
                 slot.GetComponent<Button>().onClick.AddListener(() => FurnitureImageBtnClick(_slotIndex));
             }
         }
     }
+    #endregion
 
     private void GetCurrentField()
     {
@@ -197,90 +250,19 @@ public class FurnitureView : MonoBehaviour
         return (EFurnitureViewType)(object)-1;
     }
 
-    //private void Init()
-    //{
-    //    DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
-    //    _contents = _contentsParent.GetComponentsInChildren<Transform>().Select(t => t.gameObject).ToArray();
-    //    Debug.Log("_contents" + _contents);
-
-    //    // 문 열기
-    //    Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-    //    //Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(390, 0), 1f, TweenMode.Quadratic);
-    //    //Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(10, 0), 1f, TweenMode.Quadratic);
-
-    //    // 가구 개수 가져오기 - 가구로 변경
-    //    _furnitureImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length];
-    //    _furnitureImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length];
-
-    //    // 개수 + 메뉴 개수만큼 코스튬 프리팹 생성(메뉴의 0번째는 비워두어야 하므로)
-    //    for (int i = 0; i < DatabaseManager.Instance.StartPandaInfo.FurnitureInventory.Count + _contents.Length; i++) // 가구 인벤토리 만들어야 함
-    //    {
-    //        int index = i;
-    //        Debug.Log("(int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType" + (int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType);
-    //        _furnitureImagePfs[i] = Instantiate(_furnitureSlot, _contents[(int)DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i].ViewType].transform).transform.GetChild(0).gameObject; // 일단 다 벽지에 넣음 - 딕셔너리 만들어서 구분.. A, B, C..
-    //        if (i < _contents.Length) // 처음 5개는 빈칸
-    //        {
-    //            _furnitureImagePfs[i].GetComponent<Image>().color = new Color(0, 0, 0, 0);
-    //        }
-    //        else
-    //        {
-    //            _furnitureImagePfs[i].GetComponent<Image>().sprite = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[i-1].Image;
-    //        }
-
-    //        _furnitureImageBtn[i] = _furnitureImagePfs[i].GetComponent<Button>();
-    //        if (_furnitureImageBtn[i] != null)
-    //        {
-    //            _furnitureImageBtn[i].onClick.AddListener(() => this.FurnitureImageBtnClick(index));
-    //            Debug.Log(i);
-    //        }
-    //    }
-
-    //    _exitButton.onClick.AddListener(OnExitButtonClicked);
-    //    DataBind.SetButtonValue("FurnitureDetailViewCloseButton", OnCloseButtonClicked);
-    //    //DataBind.SetButtonValue("ExitCostumeButton", OnExitButtonClicked); // 수정
-
-    //}
-
-    /// <summary>
-    /// 코스튬 뷰모델과 바인드 </summary>
-    private void Bind()
-    {
-        if (_furnitureViewModel == null)
-        {
-            _furnitureViewModel = new FurnitureViewModel();
-            DatabaseManager.Instance.StartPandaInfo.FurnitureViewModel = _furnitureViewModel;
-            _furnitureViewModel.FurnitureChanged += UpdateFurnitureID;
-            _furnitureViewModel.ShowDetailView += ShowDetailView;
-        }
-
-        // 비어있는게 아니라면 불러올 때 원래 가구 미리 배치
-        if (DatabaseManager.Instance.StartPandaInfo.WearingHeadCostumeID != "")
-        {
-            _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[DatabaseManager.Instance.StartPandaInfo.WallPaperID]);
-        }
-    }
-
+    
     /// <summary>
     /// 코스튬 선택 버튼 </summary>
     private void FurnitureImageBtnClick(int index)
     {
-        //if (CostumeManager.Instance.GetCostumeData(index).IsMine)
-        //{
-        //    _costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
-        //}
-
-        //_costumeViewModel.WearingCostume(CostumeManager.Instance.GetCostumeData(index));
-
         if(index < 1)
         {
-            Debug.Log("가구 제거" + index);
-            _furnitureViewModel.RemoveFurniture(_currentField);
+            _furnitureViewModel.RemoveFurniture(_currentField, _currnetRoom);
             return;
         }
 
         // 현재 필드의 index를 통해 가구 찾아 변경
-        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[_lists[(int)_currentField][index].Id]);
-        //_furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.StartPandaInfo.FurnitureInventory[index - 1]);
+        _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[_lists[(int)_currentField][index].Id], _currnetRoom);
     }
 
     /// <summary>
@@ -289,30 +271,70 @@ public class FurnitureView : MonoBehaviour
     {
         if (furnitureData != null)
         {
-            _furnitures[(int)furnitureData.Type].gameObject.SetActive(true);
-            _furnitures[(int)furnitureData.Type].sprite = furnitureData.Image;
+            _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].gameObject.SetActive(true);
+            _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].sprite = furnitureData.Image;
         }
         else if (_currentField == EFurnitureViewType.WallPaper || _currentField == EFurnitureViewType.Floor)
         {
-            _furnitures[(int)_currentField].gameObject.SetActive(false);
+            _roomFurnitures[(int)_currnetRoom]._furnitures[(int)_currentField].gameObject.SetActive(false);
         }
         else
         { 
             int field = 2 + ((int)_currentField - 2) * 2;
-            _furnitures[field].gameObject.SetActive(false);
-            _furnitures[field + 1].gameObject.SetActive(false);
+            _roomFurnitures[(int)_currnetRoom]._furnitures[field].gameObject.SetActive(false);
+            _roomFurnitures[(int)_currnetRoom]._furnitures[field + 1].gameObject.SetActive(false);
         }
 
     }
 
+    /// <summary>
+    /// 방 변경 시 호출 </summary>
+    private void ChangeRoom(bool isLeft)
+    {
+        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(547, 0), 1.5f, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(80, 0), 1.5f, TweenMode.Constant, () =>
+        {
+            _rooms[(int)_currnetRoom].gameObject.SetActive(false);
+            int eroomLength = System.Enum.GetValues(typeof(ERoom)).Length;
+            if (isLeft)
+            {
+                _currnetRoom = (ERoom)(((int)_currnetRoom + eroomLength - 1) % eroomLength);
+            }
+            else
+            {
+                _currnetRoom = (ERoom)(((int)_currnetRoom + 1) % eroomLength);
+            }
+            _rooms[(int)_currnetRoom].gameObject.SetActive(true);
+            Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(547, 0), 0.5f, TweenMode.Constant);
+            Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(80, 0), 0.5f, TweenMode.Constant, () =>
+            {
+                Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(0, 0), 1.5f, TweenMode.Quadratic);
+                Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(620, 0), 1.5f, TweenMode.Quadratic);
+            });     
+        });
+    }
+
     private void OnExitButtonClicked()
     {
+        //_exitButton.GetComponent<Image>().sprite = _exitDoorOpenImage;
         _furnitureViewModel.ExitFurniture();
     }
 
-    private void ShowDetailView()
+    private void OnCloseDetailView()
     {
-        _detailView.SetActive(true);
+        DataBind.SetSpriteValue("FurnitureDetailImage", _transparentSprite);
+        _detailView.SetActive(false);
+    }
+
+    [System.Serializable]
+    public class RoomFurniture
+    {
+        public Image[] _furnitures;
+
+        public RoomFurniture()
+        {
+            _furnitures = new Image[System.Enum.GetValues(typeof(FurnitureType)).Length];
+        }
     }
 
 }

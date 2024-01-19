@@ -109,7 +109,10 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        ToggleUIPandaButton();
+        if(_uiPanda != null)
+        {
+            ToggleUIPandaButton();
+        }
     }
 
     public void UpdateInteraction()
@@ -119,22 +122,22 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     public void ExitInteraction()
     {
-        ToggleUIPandaButton();
+        //ToggleUIPandaButton();
     }
 
     // 나중에 삭제
-    protected void PandaMouseClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider == GetComponent<Collider2D>())
-            {
-                ToggleUIPandaButton();
-            }
-        }
-    }
+    //protected void PandaMouseClick()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+    //        if (hit.collider == GetComponent<Collider2D>())
+    //        {
+    //            ToggleUIPandaButton();
+    //        }
+    //    }
+    //}
 
     protected void SetPandaData(PandaData pandaData)
     {
