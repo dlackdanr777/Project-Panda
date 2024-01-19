@@ -26,6 +26,10 @@ namespace Muks.BackEnd
         [Tooltip("로그인 성공 텍스트")]
         [SerializeField] private Text _loginText;
 
+        [SerializeField] private InputField _input;
+
+        [SerializeField] private Button _hashButton;
+
 
         void Start()
         {
@@ -34,6 +38,22 @@ namespace Muks.BackEnd
             //버튼 클릭 이벤트 추가
             _loginButton.onClick.AddListener(Login);
             _signupButton.onClick.AddListener(SignUp);
+
+            _hashButton.onClick.AddListener(GetGoogleHash);
+        }
+
+
+        public void GetGoogleHash()
+        {
+            string googleHashKey = Backend.Utils.GetGoogleHash();
+
+            if (!string.IsNullOrEmpty(googleHashKey))
+            {
+                Debug.Log(googleHashKey);
+                if (_input != null)
+                    _input.text = googleHashKey;
+
+            }
         }
 
 
