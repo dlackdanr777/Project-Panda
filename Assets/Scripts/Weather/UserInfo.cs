@@ -64,8 +64,8 @@ public class UserInfo
 
     public void Register()
     {
-        //CreateUserInfoData();
-        LoadUserInfoData();
+        CreateUserInfoData();
+        //LoadUserInfoData();
     }
 
 
@@ -135,8 +135,8 @@ public class UserInfo
         IsTodayRewardReceipt = false;
 
 
-        string json = JsonUtility.ToJson(this, true);
-        File.WriteAllText(_path, json);
+        //string json = JsonUtility.ToJson(this, true);
+        //File.WriteAllText(_path, json);
         //TODO: 모바일 테스트 중 잠금
     }
 
