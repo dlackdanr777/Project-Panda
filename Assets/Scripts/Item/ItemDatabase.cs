@@ -1,3 +1,6 @@
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -125,7 +128,7 @@ public class ItemDatabase
         _dataTool = CSVReader.Read("ItemTool");
         _dataFurniture = CSVReader.Read("Furniture");
 
-        #region Gathering Item
+       /* #region Gathering Item
         //Bug
         for (int i = 0; i < _dataBug.Count; i++)
         {
@@ -173,7 +176,7 @@ public class ItemDatabase
                     _dataFruit[i]["계절"].ToString()
                     ));
         }
-        #endregion
+        #endregion*/
 
         #region Tool Item
         for (int i = 0; i < _dataTool.Count; i++)
@@ -227,5 +230,78 @@ public class ItemDatabase
     {
         Sprite sprite = _toolItemSpriteDic[(int)type][id];
         return sprite;
+    }
+
+    public void LoadData()
+    {
+        BackendManager.Instance.GetChartData("105320", 1, BugItemParser);
+        BackendManager.Instance.GetChartData("105331", 1, FishItemParser);
+        BackendManager.Instance.GetChartData("105332", 1, FruitItemParser);
+    }
+
+
+    /// <summary>서버에서 곤충 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void BugItemParser(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        for (int i = 0, count = json.Count; i < count; i++)
+        {
+            string itemID = json[i]["ItemID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int price = int.Parse(json[i]["Price"].ToString());
+            string time = json[i]["Time"].ToString();
+            string season = json[i]["Season"].ToString();
+            string rating = json[i]["Rating"].ToString();
+            string mapID = json[i]["MapID"].ToString();
+
+            ItemBugList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Bug), time, season));
+        }
+        Debug.Log("곤충 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>서버에서 생선 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FishItemParser(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        for (int i = 0, count = json.Count; i < count; i++)
+        {
+            string itemID = json[i]["ItemID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int price = int.Parse(json[i]["Price"].ToString());
+            string time = json[i]["Time"].ToString();
+            string season = json[i]["Season"].ToString();
+            string rating = json[i]["Rating"].ToString();
+            string mapID = json[i]["MapID"].ToString();
+
+            ItemFishList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Fish), time, season));
+        }
+        Debug.Log("생선 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>서버에서 과일 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FruitItemParser(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        for (int i = 0, count = json.Count; i < count; i++)
+        {
+            string itemID = json[i]["ItemID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int price = int.Parse(json[i]["Price"].ToString());
+            string time = json[i]["Time"].ToString();
+            string season = json[i]["Season"].ToString();
+            string rating = json[i]["Rating"].ToString();
+            string mapID = json[i]["MapID"].ToString();
+
+            ItemFruitList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Fruit), time, season));
+        }
+        Debug.Log("과일 아이템 받아오기 성공!");
     }
 }

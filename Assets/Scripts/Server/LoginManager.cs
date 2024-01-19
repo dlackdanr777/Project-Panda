@@ -81,8 +81,10 @@ namespace Muks.BackEnd
         {
             LoadingSceneManager.LoadScene("NewUserSceneMuksTest");
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
+            DatabaseManager.Instance.ItemDatabase.LoadData();
             DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
+
         }
     }
 }

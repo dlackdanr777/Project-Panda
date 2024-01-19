@@ -12,8 +12,6 @@ public class DialogueManager
 
     private DialogueParser _parser = new DialogueParser();
 
-    private bool _enableBackend = false;
-
     //뒤끝 차트의 파일 ID
     private string _chartID = "104969";
 
