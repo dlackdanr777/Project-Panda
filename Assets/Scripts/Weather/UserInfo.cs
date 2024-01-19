@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UserInfo
@@ -46,6 +48,10 @@ public class UserInfo
     public List<MessageData> MessageDataArray; //저장할 메시지 데이터
     private MessageList[] MessageLists; //게임 속 메시지리스트
 
+    //Sticker
+    public List<string> StickerReceived;
+    public List<StickerData> StickerDataArray;
+
     //==========================================================================================================
 
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
@@ -58,8 +64,8 @@ public class UserInfo
 
     public void Register()
     {
-        CreateUserInfoData();
-        //LoadUserInfoData();
+        //CreateUserInfoData();
+        LoadUserInfoData();
     }
 
 
@@ -87,11 +93,13 @@ public class UserInfo
         GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
         ToolInventoryDataArray = userInfo.ToolInventoryDataArray;
         MessageDataArray = userInfo.MessageDataArray;
+        StickerDataArray = userInfo.StickerDataArray;
 
         GatheringItemReceived = userInfo.GatheringItemReceived;
         ToolItemReceived = userInfo.ToolItemReceived;
         NPCItemReceived = userInfo.NPCItemReceived;
         AlbumReceived = userInfo.AlbumReceived;
+        StickerReceived = userInfo.StickerReceived;
 
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -116,17 +124,19 @@ public class UserInfo
         GatheringInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
         MessageDataArray = new List<MessageData>();
+        StickerDataArray = new List<StickerData>();
         GatheringItemReceived = new List<string>();
         ToolItemReceived = new List<string>();
         NPCItemReceived = new List<string>();
         AlbumReceived = new List<string>();
+        StickerReceived = new List<string>(); 
 
         DayCount++;
         IsTodayRewardReceipt = false;
 
 
-        //string json = JsonUtility.ToJson(this, true);
-        //File.WriteAllText(_path, json);
+        string json = JsonUtility.ToJson(this, true);
+        File.WriteAllText(_path, json);
         //TODO: 모바일 테스트 중 잠금
     }
 
@@ -140,6 +150,7 @@ public class UserInfo
         SaveUserReceivedItem();
         SaveUserReceived();
         SaveUserMailData();
+        SaveUserStickerData();
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
@@ -403,7 +414,7 @@ public class UserInfo
     }
     #endregion
 
-    #region NPC, Album
+    #region NPC, Album, Sticker Received
     public void LoadUserReceivedNPC()
     {
         //NPC
@@ -436,6 +447,16 @@ public class UserInfo
         }
     }
 
+    public void LoadUserReceivedSticker()
+    {
+        // Sticker
+        for (int i = 0; i < StickerReceived.Count; i++)
+        {
+            GameManager.Instance.Player.StickerInventory.AddById(
+               StickerReceived[i], GetStickerImage(StickerReceived[i]));
+        }
+    }
+
     private void SaveUserReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
@@ -460,6 +481,84 @@ public class UserInfo
                 AlbumReceived.Add(albumDatabase[i].Id);
             }
         }
+
+        StickerReceived = new List<string>();
+        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
+        {
+            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
+        }
+    }
+    #endregion
+
+    #region Sticker
+    public void SaveUserStickerData()
+    {
+        StickerDataArray = GameManager.Instance.Player.StickerPosList;
+    }
+
+    public void LoadUserStickerData()
+    {
+        GameManager.Instance.Player.StickerPosList = StickerDataArray;
+    }
+
+    private Sprite GetStickerImage(string id)
+    {
+        string code = id.Substring(0, 3);
+        Sprite image = null;
+        switch (code)
+        {
+            case "IBG":
+                image = FindSpriteById(id, DatabaseManager.Instance.GetBugItemList());
+                break;
+            case "IFI":
+                image = FindSpriteById(id, DatabaseManager.Instance.GetFishItemList());
+                break;
+            case "IFR":
+                image = FindSpriteById(id, DatabaseManager.Instance.GetFruitItemList());
+                break;
+            case "ITG":
+                image = FindSpriteById(id, DatabaseManager.Instance.GetGatheringToolItemList());
+                break;
+            case "NPC":
+                image = FindSpriteById(id, DatabaseManager.Instance.GetNPCList());
+                break;
+        }
+
+        return image;
+    }
+
+    private Sprite FindSpriteById(string id, List<GatheringItem> database)
+    {
+        for(int i=0;i<database.Count; i++)
+        {
+            if (database[i].Id.Equals(id))
+            {
+                return database[i].Image;
+            }
+        }
+        return null;
+    }
+    private Sprite FindSpriteById(string id, List<ToolItem> database)
+    {
+        for (int i = 0; i < database.Count; i++)
+        {
+            if (database[i].Id.Equals(id))
+            {
+                return database[i].Image;
+            }
+        }
+        return null;
+    }
+    private Sprite FindSpriteById(string id, List<NPC> database)
+    {
+        for (int i = 0; i < database.Count; i++)
+        {
+            if (database[i].Id.Equals(id))
+            {
+                return database[i].Image;
+            }
+        }
+        return null;
     }
     #endregion
 }

@@ -21,6 +21,7 @@ public class Player
 
     [Header("Sticker")]
     public StickerList StickerInventory;
+    public List<StickerData> StickerPosList;
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -58,16 +59,19 @@ public class Player
 
         //Sticker
         StickerInventory = new StickerList();
-   
-        DatabaseManager.Instance.UserInfo.LoadUserInventory();
-        DatabaseManager.Instance.UserInfo.LoadUserMailData();
+        StickerPosList = new List<StickerData>();
 
+        //가장 처음 그냥 주는 스티커 3개
         ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;
         for (int i = 0; i < stickerImages.Length; i++)
         {
             StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);
-            Debug.Log(stickerImages[i].Id);
         }
+   
+        DatabaseManager.Instance.UserInfo.LoadUserInventory();
+        DatabaseManager.Instance.UserInfo.LoadUserMailData();
+        DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
+        DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
@@ -119,3 +123,4 @@ public class Player
         return inventoryArray;
     }
 }
+

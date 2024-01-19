@@ -16,7 +16,7 @@ public class StickerList
 
     public void Add(Sticker sticker)
     {
-        if(_stickerList.Count > MaxStickerCount)
+        if(_stickerList.Count < MaxStickerCount)
         {
             for(int i=0;i<Count;i++)
             {
