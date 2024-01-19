@@ -17,7 +17,10 @@ public class Player
     public Inventory[] ToolItemInventory; 
 
     [Header("Message")]
-    public MessageList[] Messages; //0:Mail, 1:Wish 
+    public MessageList[] Messages; //0:Mail, 1:Wish
+
+    [Header("Sticker")]
+    public Dictionary<string, Sprite> StickerInventory;
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -27,12 +30,14 @@ public class Player
     {
         MaxBamboo = 1000;
 
+        //Message
         Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
         for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
         {
             Messages[i] = new MessageList();
         }
 
+        //Inventory
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
         ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -51,13 +56,18 @@ public class Player
             ToolItemInventory[i] = new Inventory();
         }
 
+        //Sticker
+        StickerInventory = new Dictionary<string, Sprite>();
+        ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;
+        for (int i = 0; i < stickerImages.Length; i++)
+        {
+            StickerInventory.Add(stickerImages[i].Id, stickerImages[i].Image);
+        }
+
         DatabaseManager.Instance.UserInfo.LoadUserInventory();
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
-        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG01");
-        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG02");
-        ToolItemInventory[0].AddById(InventoryItemField.Tool, 0, "ITG03");
     }
 
     public bool SpendBamboo(int amount)
