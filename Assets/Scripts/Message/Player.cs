@@ -20,7 +20,7 @@ public class Player
     public MessageList[] Messages; //0:Mail, 1:Wish
 
     [Header("Sticker")]
-    public Dictionary<string, Sprite> StickerInventory;
+    public StickerList StickerInventory;
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -57,15 +57,17 @@ public class Player
         }
 
         //Sticker
-        StickerInventory = new Dictionary<string, Sprite>();
+        StickerInventory = new StickerList();
+   
+        DatabaseManager.Instance.UserInfo.LoadUserInventory();
+        DatabaseManager.Instance.UserInfo.LoadUserMailData();
+
         ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;
         for (int i = 0; i < stickerImages.Length; i++)
         {
-            StickerInventory.Add(stickerImages[i].Id, stickerImages[i].Image);
+            StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);
+            Debug.Log(stickerImages[i].Id);
         }
-
-        DatabaseManager.Instance.UserInfo.LoadUserInventory();
-        DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }

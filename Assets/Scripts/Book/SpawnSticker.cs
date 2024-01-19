@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class SpawnSticker : MonoBehaviour, IPointerDownHandler
 {
-    [SerializeField] private Transform _stickerZone;
+    public Transform StickerZone;
     [SerializeField] private GameObject _stickerClone;
 
     public void OnPointerDown(PointerEventData eventData)
     {
         _stickerClone.GetComponent<Image>().sprite = transform.GetChild(0).gameObject.GetComponent<Image>().sprite;
-        Instantiate(_stickerClone, _stickerZone);
+        Instantiate(_stickerClone, StickerZone);
     }
 }
