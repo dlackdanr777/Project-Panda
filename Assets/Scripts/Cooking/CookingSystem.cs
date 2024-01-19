@@ -61,6 +61,13 @@ public class CookingSystem : MonoBehaviour
 
     private void Init()
     {
+        //만약 데이터를 네트워크에서 받아오지 못해 정보가 없을 경우 로컬에서 정보를 받아온다.
+        //차후 삭제 예정
+        if (_recipeDataDic.Count <= 0)
+        {
+            DatabaseManager.Instance.RecipeDatabase.LocalRecipeParse();
+            Debug.Log("레시피 정보가 없어 로컬에서 정보를 받아옵니다...");
+        }
 
     }
 
