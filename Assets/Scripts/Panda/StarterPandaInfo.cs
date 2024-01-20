@@ -35,7 +35,14 @@ public class StarterPandaInfo
 
     public void Register()
     {
-        LoadPandaInfoData();
+        //LoadPandaInfoData();
+        CostumeInventoryID = new List<string>();
+        FurnitureInventoryID = new List<string>();
+        for (int i = 0; i < FurnitureRooms.Length; i++)
+        {
+            FurnitureRooms[i] = new FurnitureModel.FurnitureId();
+        }
+        
     }
 
     // 불러오기
@@ -75,25 +82,25 @@ public class StarterPandaInfo
 
     private void CreateUserInfoData()
     {
-        string json = JsonUtility.ToJson(this, true);
+       /* string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(_path, json);
         CostumeInventoryID = new List<string>();
         FurnitureInventoryID = new List<string>();
         for(int i = 0; i < FurnitureRooms.Length; i++)
         {
             FurnitureRooms[i] = new FurnitureModel.FurnitureId();
-        }
+        }*/
     }
 
     public void SavePandaInfoData()
     {
-        // 클래스를 Json 형식으로 전환
+      /*  // 클래스를 Json 형식으로 전환
         string json = JsonUtility.ToJson(this, true);
 
         // 이미 저장된 파일이 있다면 덮어쓰고, 없다면 새로 만들어서 저장
         File.WriteAllText(_path, json );
 
-        Debug.Log(_path);
+        Debug.Log(_path);*/
     }
 
     // 현재 가지고 있는 옷 불러오기

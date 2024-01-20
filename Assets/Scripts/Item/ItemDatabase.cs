@@ -119,7 +119,6 @@ public class ItemDatabase
                 _toolItemSpriteDic[i].Add(ToolItemSpriteArray[i].ItemSprites[j].Id, ToolItemSpriteArray[i].ItemSprites[j].Image);
             }
         }
-
         //GatheringItem
         _dataBug = CSVReader.Read("ItemBug");
         _dataFish = CSVReader.Read("ItemFish");
@@ -243,8 +242,9 @@ public class ItemDatabase
     /// <summary>서버에서 곤충 아이템의 정보를 받아와 List에 넣는 함수</summary>
     public void BugItemParser(BackendReturnObject callback)
     {
+        Debug.Log("Bug 1");
         JsonData json = callback.FlattenRows();
-
+        Debug.Log("Bug 2");
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -255,8 +255,10 @@ public class ItemDatabase
             string season = json[i]["Season"].ToString();
             string rating = json[i]["Rating"].ToString();
             string mapID = json[i]["MapID"].ToString();
+            Debug.Log("Bug 3");
 
             ItemBugList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Bug), time, season));
+            Debug.Log("Bug 4");
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
