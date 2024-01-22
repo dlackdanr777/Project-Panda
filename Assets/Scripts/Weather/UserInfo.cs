@@ -96,51 +96,6 @@ public class UserInfo
             IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
-            for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
-            {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
-                GatheringInventoryDataArray.Add(item);
-                Debug.Log(item.Id);
-                Debug.Log(GatheringInventoryDataArray.Count);
-            }
-
-            for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
-            {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["CookInventoryDataArray"][i].ToJson());
-                CookInventoryDataArray.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["ToolInventoryDataArray"].Count; i < count; i++)
-            {
-                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["ToolInventoryDataArray"][i].ToJson());
-                ToolInventoryDataArray.Add(item);
-            }
-
-
-            for (int i = 0, count = json[0]["GatheringItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["GatheringItemReceived"][i].ToString();
-                GatheringItemReceived.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["NPCItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["NPCItemReceived"][i].ToString();
-                NPCItemReceived.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["CookItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["CookItemReceived"][i].ToString();
-                CookItemReceived.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["ToolItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["ToolItemReceived"][i].ToString();
-                ToolItemReceived.Add(item);
-            }
-
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
                 string item = json[0]["AlbumReceived"][i].ToString();
@@ -152,7 +107,8 @@ public class UserInfo
                 MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
                 MessageDataArray.Add(item);
             }
-            LoadUserInventory();
+
+            LoadUserReceivedAlbum();
             Debug.Log("UserInfo Load성공");
         }
     }
@@ -217,14 +173,10 @@ public class UserInfo
 
     public void InsertUserInfoData(string selectedProbabilityFileId)
     {
-        SaveUserInventory();
-        SaveUserReceivedItem();
-        SaveUserReceived();
-        SaveUserMailData();
-
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
+        SaveUserMailData();
         Param param = GetUserInfoParam();
 
         Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
@@ -238,9 +190,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserInventory();
-        SaveUserReceivedItem();
-        SaveUserReceived();
         SaveUserMailData();
 
         Param param = GetUserInfoParam();
@@ -250,7 +199,26 @@ public class UserInfo
         BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
     }
 
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetUserInfoParam()
+    {
+        Param param = new Param();
+
+        param.Add("UserId", UserId);
+        param.Add("DayCount", DayCount);
+        param.Add("LastAccessDay", _lastAccessDay);
+        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
+        param.Add("IsExistingUser", IsExistingUser);
+
+        param.Add("AlbumReceived", AlbumReceived);
+        param.Add("MessageDataArray", MessageDataArray);
+
+        return param;
+    }
+
     #endregion
+
 
     #region SaveAndLoadInventory
 
@@ -266,18 +234,10 @@ public class UserInfo
 
         else
         {
-            UserId = json[0]["UserId"].ToString();
-            DayCount = int.Parse(json[0]["DayCount"].ToString());
-            _lastAccessDay = json[0]["LastAccessDay"].ToString();
-            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
-            IsExistingUser = (bool)json[0]["IsExistingUser"];
-
             for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
             {
                 InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
                 GatheringInventoryDataArray.Add(item);
-                Debug.Log(item.Id);
-                Debug.Log(GatheringInventoryDataArray.Count);
             }
 
             for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
@@ -317,19 +277,9 @@ public class UserInfo
                 ToolItemReceived.Add(item);
             }
 
-            for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["AlbumReceived"][i].ToString();
-                AlbumReceived.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
-            {
-                MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
-                MessageDataArray.Add(item);
-            }
             LoadUserInventory();
-            Debug.Log("UserInfo Load성공");
+            LoadUserReceivedNPC();
+            Debug.Log("Inventory Load성공");
         }
     }
 
@@ -391,6 +341,8 @@ public class UserInfo
     }
 
 
+    /// <summary> 서버 인벤토리 데이터 삽입 함수 </summary>
+
     public void InsertInventoryData(string selectedProbabilityFileId)
     {
         SaveUserInventory();
@@ -399,21 +351,18 @@ public class UserInfo
 
         Param param = GetInventoryParam();
 
-        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
+        Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
 
         BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
     }
 
 
+    /// <summary> 서버 인벤토리 데이터 수정 함수 </summary>
     public void UpdateInventoryData(string selectedProbabilityFileId, string inDate)
     {
-        string paser = DateTime.Now.ToString();
-        _lastAccessDay = paser;
-
         SaveUserInventory();
         SaveUserReceivedItem();
         SaveUserReceived();
-
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -421,11 +370,11 @@ public class UserInfo
         BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
     }
 
-    #endregion
+
+    /// <summary> 서버에 저장할 인벤토리 데이터를 모아 반환하는 클래스 </summary>
     public Param GetInventoryParam()
     {
         Param param = new Param();
-
         param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
         param.Add("CookInventoryDataArray", CookInventoryDataArray);
         param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
@@ -434,9 +383,11 @@ public class UserInfo
         param.Add("NPCItemReceived", NPCItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
-
         return param;
     }
+
+    #endregion
+
 
     #region Inventory
     public class InventoryData
@@ -455,7 +406,6 @@ public class UserInfo
     {
         //GatheringItem
         List<Item> GatheringItems = new List<Item>();
-        Debug.Log(GatheringInventoryDataArray.Count);
         GatheringItems.AddRange(DatabaseManager.Instance.GetBugItemList());
         GatheringItems.AddRange(DatabaseManager.Instance.GetFishItemList());
         GatheringItems.AddRange(DatabaseManager.Instance.GetFruitItemList());

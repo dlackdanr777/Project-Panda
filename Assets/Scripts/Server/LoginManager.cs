@@ -102,6 +102,7 @@ namespace Muks.BackEnd
             LoadingSceneManager.LoadScene("NewUserSceneMuksTest");
             DatabaseManager.Instance.ItemDatabase.LoadData();
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
+            BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);
             DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
