@@ -68,7 +68,6 @@ public class CookingSystem : MonoBehaviour
             DatabaseManager.Instance.RecipeDatabase.LocalRecipeParse();
             Debug.Log("레시피 정보가 없어 로컬에서 정보를 받아옵니다...");
         }
-
     }
 
 
