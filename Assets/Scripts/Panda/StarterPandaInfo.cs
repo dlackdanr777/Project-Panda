@@ -1,4 +1,8 @@
+using BackEnd;
+using BackEnd.MultiCharacter;
 using BT;
+using LitJson;
+using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +15,6 @@ public class StarterPandaInfo
     public string Mbti;
     public float Intimacy;
     public float Happiness;
-    public bool IsExistingUser; // 나중에 userInfo에 있는 거 사용하기
     
 
     #region 코스튬
@@ -19,15 +22,15 @@ public class StarterPandaInfo
     public string WearingHeadCostumeID = "";
     public int CostumeCount = -1;
     //public bool[] IsMine;
-    public List<string> CostumeInventoryID;
-    public List<CostumeData> CostumeInventory;
+    public List<string> CostumeInventoryID = new List<string>();
+    public List<CostumeData> CostumeInventory = new List<CostumeData>();
     #endregion
 
     public FurnitureViewModel FurnitureViewModel;
     public FurnitureModel.FurnitureId[] FurnitureRooms = new FurnitureModel.FurnitureId[System.Enum.GetValues(typeof(ERoom)).Length];
     public int FurnitureCount = -1;
-    public List<string> FurnitureInventoryID;
-    public List<Furniture> FurnitureInventory;
+    public List<string> FurnitureInventoryID = new List<string>();
+    public List<Furniture> FurnitureInventory = new List<Furniture>();
 
     // 판다 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "PandaInfo.json");
@@ -36,16 +39,14 @@ public class StarterPandaInfo
     public void Register()
     {
         //LoadPandaInfoData();
-        CostumeInventoryID = new List<string>();
-        FurnitureInventoryID = new List<string>();
-        for (int i = 0; i < FurnitureRooms.Length; i++)
+/*        for (int i = 0; i < FurnitureRooms.Length; i++)
         {
             FurnitureRooms[i] = new FurnitureModel.FurnitureId();
-        }
+        }*/
         
     }
 
-    // 불러오기
+/*    // 불러오기
     private void LoadPandaInfoData()
     {
         Debug.Log(_path);
@@ -59,8 +60,6 @@ public class StarterPandaInfo
             return;
         }
 
-        IsExistingUser = true;
-        // 저장된 게임이 있다면 저장된 파일 읽어오기
         StarterPandaInfo pandaInfo = new StarterPandaInfo();
         string loadJson = File.ReadAllText(_path);
         pandaInfo = JsonUtility.FromJson<StarterPandaInfo>(loadJson);
@@ -78,6 +77,29 @@ public class StarterPandaInfo
         FurnitureCount = pandaInfo.FurnitureCount;
         FurnitureInventoryID = pandaInfo.FurnitureInventoryID;
         FurnitureInventory = new List<Furniture>();
+    }*/
+
+
+    /// <summary>판다 데이터를 서버에서 불러오는 함수</summary>
+    public void LoadPandaInfoData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            //이쪽에 불러올 데이터 추가
+            Mbti = json[0]["Mbti"].ToString();
+            Intimacy = float.Parse(json[0]["Intimacy"].ToString());
+            Happiness = float.Parse(json[0]["Happiness"].ToString());
+
+            Debug.Log("StarterPandaInfo Load성공");
+        }
     }
 
     private void CreateUserInfoData()
@@ -91,6 +113,92 @@ public class StarterPandaInfo
             FurnitureRooms[i] = new FurnitureModel.FurnitureId();
         }*/
     }
+
+
+    public void SavePandaInfoData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "StarterPandaInfo";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SavePandaInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertPandaInfoData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdatePandaInfoData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertPandaInfoData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertPandaInfoData(string selectedProbabilityFileId)
+    {
+
+        Param param = GetPandaInfoParam();
+        Debug.LogFormat("스타터 판다 데이터 삽입을 요청합니다.");
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdatePandaInfoData(string selectedProbabilityFileId, string inDate)
+    {
+        Param param = GetPandaInfoParam();
+        Debug.LogFormat("스타터 판다 데이터 수정을 요청합니다.");
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+
+    public Param GetPandaInfoParam()
+    {
+        Param param = new Param();
+        param.Add("Mbti", Mbti);
+        param.Add("Intimacy", Intimacy);
+        param.Add("Happiness", Happiness);
+        return param;
+    }
+
 
     public void SavePandaInfoData()
     {

@@ -150,7 +150,7 @@ namespace Muks.BackEnd
             }
 
         }
-        
+
 
 
 
@@ -171,30 +171,28 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.GameData.GetMyData(selectedProbabilityFileId, new Where(), callback =>
+            BackendReturnObject bro = Backend.GameData.GetMyData(selectedProbabilityFileId, new Where());
+
+            switch (ErrorCheck(bro))
             {
-                switch (ErrorCheck(callback))
-                {
-                    case BackendState.Failure:
-                        Debug.LogError("연결 실패");
-                        break;
+                case BackendState.Failure:
+                    Debug.LogError("연결 실패");
+                    break;
 
-                    case BackendState.Maintainance:
-                        Debug.LogError("서버 점검 중");
-                        break;
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
 
-                    case BackendState.Retry:
-                        Debug.LogWarning("연결 재시도");
-                        GetMyData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
-                        break;
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    GetMyData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
+                    break;
 
-                    case BackendState.Success:
-                        Debug.Log("내 정보 받아오기 성공");
-                        onCompleted?.Invoke(callback);
-                        break;
-                }
-   
-            });
+                case BackendState.Success:
+                    Debug.Log("내 정보 받아오기 성공");
+                    onCompleted?.Invoke(bro);
+                    break;
+            }
         }
 
 
@@ -213,29 +211,28 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.Chart.GetOneChartAndSave(selectedProbabilityFileId, callback =>
+            BackendReturnObject bro = Backend.Chart.GetOneChartAndSave(selectedProbabilityFileId);
+
+            switch (ErrorCheck(bro))
             {
-                switch (ErrorCheck(callback))
-                {
-                    case BackendState.Failure:
-                        Debug.LogError("연결 실패");
-                        break;
+                case BackendState.Failure:
+                    Debug.LogError("연결 실패");
+                    break;
 
-                    case BackendState.Maintainance:
-                        Debug.LogError("서버 점검 중");
-                        break;
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
 
-                    case BackendState.Retry:
-                        Debug.LogWarning("연결 재시도");
-                        GetChartData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
-                        break;
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    GetChartData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
+                    break;
 
-                    case BackendState.Success:
-                        Debug.Log("차트 정보 받기 성공");
-                        onCompleted?.Invoke(callback);
-                        break;
-                }
-            });
+                case BackendState.Success:
+                    Debug.Log("차트 정보 받기 성공");
+                    onCompleted?.Invoke(bro);
+                    break;
+            }
         }
 
 

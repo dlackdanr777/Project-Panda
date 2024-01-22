@@ -36,7 +36,7 @@ namespace BT
             //스타터 판다 mbti를 판다 데이터에 저장
             DatabaseManager.Instance.SetStarterMBTI(DatabaseManager.Instance.StartPandaInfo.Mbti);
             
-            if (DatabaseManager.Instance.StartPandaInfo.IsExistingUser)
+            if (DatabaseManager.Instance.UserInfo.IsExistingUser)
             {
                 DatabaseManager.Instance.UpdatePandaIntimacy(_pandaID, DatabaseManager.Instance.StartPandaInfo.Intimacy);
                 DatabaseManager.Instance.UpdatePandaHappiness(_pandaID, DatabaseManager.Instance.StartPandaInfo.Happiness);

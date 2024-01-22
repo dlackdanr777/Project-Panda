@@ -318,13 +318,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
     }
 
-    public void OnApplicationQuit()
-    {
-        _photoDatabase.Save();
-        _furniturePosDatabase.Save();
-        _userInfo.SaveUserInfoData(10);
-        _startPandaInfo.SavePandaInfoData();
-    }
 
     public HarvestItem GetHarvestItemdata(string harvestItemID)
     {

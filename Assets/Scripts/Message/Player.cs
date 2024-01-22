@@ -51,7 +51,6 @@ public class Player
             ToolItemInventory[i] = new Inventory();
         }
 
-        DatabaseManager.Instance.UserInfo.LoadUserInventory();
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
