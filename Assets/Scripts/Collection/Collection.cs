@@ -54,11 +54,9 @@ public class Collection : MonoBehaviour
 
     #region 현재 계절, 시간, 맵
     // 현재 게임 시간, 계절 임의로 설정
-    [SerializeField] 
-    private int _hour; // 나중에 _hour은 유저 정보의 시간 정보로 수정
+    public int Hour => TimeManager.Instance.GameHour; // 나중에 _hour은 유저 정보의 시간 정보로 수정
     private string[] _timeIds = new string[6]; // 현재 채집 가능한 모든 시간 ID
-    [SerializeField] 
-    private string _season; // 나중에 _season은 유저 정보의 시간 정보로 수정
+    public string Season => TimeManager.Instance.GameWeatherId; // 나중에 _season은 유저 정보의 시간 정보로 수정
     private string[] _seasonIds = new string[4]; // 현재 채집 가능한 모든 계절 ID
 
     [SerializeField] private string _map;
@@ -203,6 +201,8 @@ public class Collection : MonoBehaviour
 
     private void ReadyCollection()
     {
+        TimeManager.Instance.CheckTime();
+
         StarterPanda starterPanda = DatabaseManager.Instance.StartPandaInfo.StarterPanda;
         _pandaSpriteRenderer = starterPanda.GetComponent<SpriteRenderer>();
 
@@ -326,15 +326,13 @@ public class Collection : MonoBehaviour
     /// 게임 시간이 변경되었다면 그에 맞추어 채집할 수 있도록 설정 </summary>
     private void TimeChanged()
     {
-        if (_timeIds[5] != "GTS" + (21 + _hour)) // 나중에 _hour는 유저 정보의 시간 정보로 수정
+        if (_timeIds[5] != "GTS" + (21 + Hour)) // 나중에 _hour는 유저 정보의 시간 정보로 수정
         {
             SetTime();
-            Debug.Log("setTime");
-            if (_seasonIds[3] != _season)
+
+            if (_seasonIds[3] != Season)
             {
                 SetSeason();
-                Debug.Log("setseason");
-
             }
 
             List<GatheringItem> getItemList = new List<GatheringItem>();
@@ -382,25 +380,25 @@ public class Collection : MonoBehaviour
     {
         //시간 설정
         _timeIds[0] = "GTS00";
-        _timeIds[1] = "GTS0" + (1 + _hour / 12);
-        _timeIds[2] = "GTS0" + (3 + _hour / 6);
-        if (7 + _hour / 4 > 10)
+        _timeIds[1] = "GTS0" + (1 + Hour / 12);
+        _timeIds[2] = "GTS0" + (3 + Hour / 6);
+        if (7 + Hour / 4 > 10)
         {
-            _timeIds[3] = "GTS" + (7 + _hour / 4);
+            _timeIds[3] = "GTS" + (7 + Hour / 4);
         }
         else
         {
-            _timeIds[3] = "GTS0" + (7 + _hour / 4);
+            _timeIds[3] = "GTS0" + (7 + Hour / 4);
         }
-        _timeIds[4] = "GTS" + (13 + _hour / 3);
-        _timeIds[5] = "GTS" + (21 + _hour);
+        _timeIds[4] = "GTS" + (13 + Hour / 3);
+        _timeIds[5] = "GTS" + (21 + Hour);
     }
 
     private void SetSeason()
     {
         _seasonIds[0] = "WAS";
 
-        switch (_season)
+        switch (Season)
         {
             case "WSP":
                 _seasonIds[1] = "WSS";
@@ -420,7 +418,7 @@ public class Collection : MonoBehaviour
                 break;
         }
 
-        _seasonIds[3] = _season;
+        _seasonIds[3] = Season;
     }
 
     /// <summary>
