@@ -18,7 +18,7 @@ public class FurnitureView : MonoBehaviour
     [SerializeField] private GameObject _slots;
 
     private ERoom _currnetRoom = ERoom.Starter;
-    [SerializeField] private GameObject[] _rooms = new GameObject[System.Enum.GetValues(typeof(ERoom)).Length];
+    [SerializeField] private GameObject[] _rooms = new GameObject[System.Enum.GetValues(typeof(ERoom)).Length]; // 방 종류
     public RoomFurniture[] _roomFurnitures = new RoomFurniture[System.Enum.GetValues(typeof(ERoom)).Length]; // 실제 가구 배치
 
     [SerializeField] private GameObject _leftDoor;
@@ -28,8 +28,8 @@ public class FurnitureView : MonoBehaviour
     //[SerializeField] private Sprite _exitDoorOpenImage;
     [SerializeField] private GameObject _uiSave;
 
+    [SerializeField] private Sprite _transparentSprite; // 투명 이미지
     [SerializeField] private GameObject _detailView; // 상세설명 창
-    [SerializeField] private Sprite _transparentSprite;
     [SerializeField] private Button _closeDetailViewButton; // 상세설명 창 닫기 버튼
 
     [SerializeField] private int _firstToggleIndex;
@@ -77,6 +77,7 @@ public class FurnitureView : MonoBehaviour
         _furnitureViewModel.FurnitureChanged -= UpdateFurnitureID;
     }
 
+    #region 초기 설정
     /// <summary>
     /// 코스튬 뷰모델과 바인드 </summary>
     private void Bind()
@@ -171,6 +172,7 @@ public class FurnitureView : MonoBehaviour
             }
         }
     }
+    #endregion
 
     private void GetCurrentField()
     {
@@ -316,11 +318,6 @@ public class FurnitureView : MonoBehaviour
     {
         //_exitButton.GetComponent<Image>().sprite = _exitDoorOpenImage;
         _furnitureViewModel.ExitFurniture();
-    }
-
-    private void ShowDetailView()
-    {
-        _detailView.SetActive(true);
     }
 
     private void OnCloseDetailView()
