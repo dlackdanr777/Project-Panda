@@ -229,7 +229,6 @@ public class UINavigation : MonoBehaviour
 
     public void ShowMainUI()
     {
-        Debug.Log(_hideMainUICount);
         _hideMainUICount = Mathf.Clamp(_hideMainUICount - 1, 0, 1000);
 
         if(_hideMainUICount == 0)

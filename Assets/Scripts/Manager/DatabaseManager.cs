@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -56,6 +57,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private ItemSpriteDatabase _albumImages;
     private AlbumDatabase _albumDatabase;
     public AlbumDatabase AlbumDatabase => _albumDatabase;
+
+    //Sticker
+    [SerializeField] private ItemSpriteDatabase _stickerImages;
 
     public override void Awake()
     {
@@ -318,13 +322,16 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
     }
 
-    public void OnApplicationQuit()
+
+    /// <summary>
+    /// 기존의 스티커 이미지 출력
+    /// </summary>
+    /// <returns></returns>
+    public ItemSpriteDatabase GetStickerImage()
     {
-        _photoDatabase.Save();
-        _furniturePosDatabase.Save();
-        _userInfo.SaveUserInfoData();
-        _startPandaInfo.SavePandaInfoData();
+        return _stickerImages;
     }
+
 
     public HarvestItem GetHarvestItemdata(string harvestItemID)
     {

@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-[Serializable]
 public class MessageList
 {
     public Action NoticeHandler;
