@@ -24,6 +24,7 @@ public class NPCDatabase
     public Dictionary<string, Sprite>[] _npcSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(NPCType)).Length - 1];
 
     private string _chartID => "105699";
+
     public void Register()
     {
         //Image
@@ -38,6 +39,7 @@ public class NPCDatabase
 
         NPCParserByLocal();
     }
+
 
     public void LoadData()
     {
