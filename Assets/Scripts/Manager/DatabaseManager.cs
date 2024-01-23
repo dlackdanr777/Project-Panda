@@ -322,6 +322,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
     }
 
+
     /// <summary>
     /// 기존의 스티커 이미지 출력
     /// </summary>
@@ -331,13 +332,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _stickerImages;
     }
 
-    public void OnApplicationQuit()
-    {
-        _photoDatabase.Save();
-        _furniturePosDatabase.Save();
-        _userInfo.SaveUserInfoData();
-        _startPandaInfo.SavePandaInfoData();
-    }
 
     public HarvestItem GetHarvestItemdata(string harvestItemID)
     {

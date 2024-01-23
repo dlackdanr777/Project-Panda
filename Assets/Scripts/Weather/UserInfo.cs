@@ -1,3 +1,7 @@
+using BackEnd;
+using BackEnd.MultiCharacter;
+using LitJson;
+using Muks.BackEnd;
 using Muks.WeightedRandom;
 using Newtonsoft.Json;
 using System;
@@ -27,30 +31,30 @@ public class UserInfo
     public bool IsExistingUser; //기존 유저인가?
 
     //Inventory
-    public List<InventoryData> GatheringInventoryDataArray; //저장할 인벤토리 데이터
+    public List<InventoryData> GatheringInventoryDataArray = new List<InventoryData>(); //저장할 인벤토리 데이터
     private Inventory[] GatheringItemInventory; //게임 속 인벤토리
 
-    public List<InventoryData> CookInventoryDataArray;
+    public List<InventoryData> CookInventoryDataArray = new List<InventoryData>();
     private Inventory[] CookItemInventory;
 
-    public List<InventoryData> ToolInventoryDataArray;
+    public List<InventoryData> ToolInventoryDataArray = new List<InventoryData>();
     private Inventory[] ToolItemInventory;
 
     //Item
-    public List<string> GatheringItemReceived;
-    public List<string> NPCItemReceived;
-    public List<string> CookItemReceived;
-    public List<string> ToolItemReceived;
-    //Album
-    public List<string> AlbumReceived;
+    public List<string> GatheringItemReceived = new List<string>();
+    public List<string> NPCItemReceived = new List<string>();
+    public List<string> CookItemReceived = new List<string>();
+    public List<string> ToolItemReceived = new List<string>();
+    public List<string> AlbumReceived = new List<string>();
 
     //Message
-    public List<MessageData> MessageDataArray; //저장할 메시지 데이터
+    public List<MessageData> MessageDataArray = new List<MessageData>(); //저장할 메시지 데이터
     private MessageList[] MessageLists; //게임 속 메시지리스트
 
+
     //Sticker
-    public List<string> StickerReceived;
-    public List<StickerData> StickerDataArray;
+    public List<string> StickerReceived = new List<string>();
+    public List<StickerData> StickerDataArray = new List<StickerData>();
 
     //==========================================================================================================
 
@@ -65,13 +69,15 @@ public class UserInfo
     public void Register()
     {
         CreateUserInfoData();
-        //LoadUserInfoData();
     }
 
 
-    //유저의 데이터를 가져오는 함수
-    public void LoadUserInfoData()
+    /*public void CreateUserInfoData()
     {
+
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
+
         if (!File.Exists(_path))
         {
             Debug.Log("유저 저장 문서가 존재하지 않습니다.");
@@ -114,14 +120,15 @@ public class UserInfo
             DayCount++;
             IsTodayRewardReceipt = false;
         }
-    }
+    }*/
 
     private void CreateUserInfoData()
     {
-        IsExistingUser = false;
+
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
-        GatheringInventoryDataArray = new List<InventoryData>();
+        //IsExistingUser = false;
+/*      GatheringInventoryDataArray = new List<InventoryData>();
         ToolInventoryDataArray = new List<InventoryData>();
         MessageDataArray = new List<MessageData>();
         StickerDataArray = new List<StickerData>();
@@ -132,8 +139,7 @@ public class UserInfo
         StickerReceived = new List<string>(); 
 
         DayCount++;
-        IsTodayRewardReceipt = false;
-
+        IsTodayRewardReceipt = false;*/
 
         //string json = JsonUtility.ToJson(this, true);
         //File.WriteAllText(_path, json);
@@ -141,24 +147,318 @@ public class UserInfo
     }
 
 
-    public void SaveUserInfoData()
+    #region SaveAndLoadUserInfo
+    public void LoadUserInfoData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            UserId = json[0]["UserId"].ToString();
+            DayCount = int.Parse(json[0]["DayCount"].ToString());
+            _lastAccessDay = json[0]["LastAccessDay"].ToString();
+            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
+            IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+            for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["AlbumReceived"][i].ToString();
+                AlbumReceived.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
+            {
+                MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
+                MessageDataArray.Add(item);
+            }
+
+            LoadUserReceivedAlbum();
+            Debug.Log("UserInfo Load성공");
+        }
+    }
+
+
+    public void SaveUserInfoData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "UserInfo";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertUserInfoData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertUserInfoData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertUserInfoData(string selectedProbabilityFileId)
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
+        SaveUserMailData();
+        Param param = GetUserInfoParam();
+
+        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
+    {
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
+
+        SaveUserMailData();
+
+        Param param = GetUserInfoParam();
+
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetUserInfoParam()
+    {
+        Param param = new Param();
+
+        param.Add("UserId", UserId);
+        param.Add("DayCount", DayCount);
+        param.Add("LastAccessDay", _lastAccessDay);
+        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
+        param.Add("IsExistingUser", IsExistingUser);
+
+        param.Add("AlbumReceived", AlbumReceived);
+        param.Add("MessageDataArray", MessageDataArray);
+
+        return param;
+    }
+
+    #endregion
+
+
+    #region SaveAndLoadInventory
+
+    public void LoadInventoryData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            for (int i = 0; i < json[0]["GatheringInventoryDataArray"].Count; i++)
+            {
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["GatheringInventoryDataArray"][i].ToJson());
+                GatheringInventoryDataArray.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["CookInventoryDataArray"].Count; i < count; i++)
+            {
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["CookInventoryDataArray"][i].ToJson());
+                CookInventoryDataArray.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["ToolInventoryDataArray"].Count; i < count; i++)
+            {
+                InventoryData item = JsonUtility.FromJson<InventoryData>(json[0]["ToolInventoryDataArray"][i].ToJson());
+                ToolInventoryDataArray.Add(item);
+            }
+
+
+            for (int i = 0, count = json[0]["GatheringItemReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["GatheringItemReceived"][i].ToString();
+                GatheringItemReceived.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["NPCItemReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["NPCItemReceived"][i].ToString();
+                NPCItemReceived.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["CookItemReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["CookItemReceived"][i].ToString();
+                CookItemReceived.Add(item);
+            }
+
+            for (int i = 0, count = json[0]["ToolItemReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["ToolItemReceived"][i].ToString();
+                ToolItemReceived.Add(item);
+            }
+
+            LoadUserInventory();
+            LoadUserReceivedNPC();
+            Debug.Log("Inventory Load성공");
+        }
+    }
+
+
+    public void SaveInventoryData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Inventory";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveInventoryData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertInventoryData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateInventoryData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertInventoryData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    /// <summary> 서버 인벤토리 데이터 삽입 함수 </summary>
+
+    public void InsertInventoryData(string selectedProbabilityFileId)
+    {
         SaveUserInventory();
         SaveUserReceivedItem();
         SaveUserReceived();
-        SaveUserMailData();
-        SaveUserStickerData();
+        Param param = GetInventoryParam();
 
-        string json = JsonUtility.ToJson(this, true);
-        File.WriteAllText(_path, json);
-        Debug.Log(_path);
+        Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
     }
 
+
+    /// <summary> 서버 인벤토리 데이터 수정 함수 </summary>
+    public void UpdateInventoryData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveUserInventory();
+        SaveUserReceivedItem();
+        SaveUserReceived();
+        Param param = GetInventoryParam();
+
+        Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 인벤토리 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetInventoryParam()
+    {
+        Param param = new Param();
+        param.Add("GatheringInventoryDataArray", GatheringInventoryDataArray);
+        param.Add("CookInventoryDataArray", CookInventoryDataArray);
+        param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
+
+        param.Add("GatheringItemReceived", GatheringItemReceived);
+        param.Add("NPCItemReceived", NPCItemReceived);
+        param.Add("CookItemReceived", CookItemReceived);
+        param.Add("ToolItemReceived", ToolItemReceived);
+        return param;
+    }
+
+    #endregion
+
+
     #region Inventory
-    [Serializable]
     public class InventoryData
     {
         public string Id;
@@ -179,8 +479,9 @@ public class UserInfo
         GatheringItems.AddRange(DatabaseManager.Instance.GetFishItemList());
         GatheringItems.AddRange(DatabaseManager.Instance.GetFruitItemList());
 
-        for (int i=0;i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
+        for (int i=0; i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
+            Debug.Log(GatheringItems.Count);
             for (int j = 0; j < GatheringItems.Count; j++) //데이터베이스
             {
                 int fieldIndex = -1;
@@ -364,7 +665,6 @@ public class UserInfo
     #endregion
 
     #region Mail
-    [Serializable]
     public class MessageData
     {
         public string Id;
@@ -431,8 +731,8 @@ public class UserInfo
         }
     }
 
-    public void LoadUserReceivedAlbum() 
-    { 
+    public void LoadUserReceivedAlbum()
+    {
         // Album
         for (int i = 0; i < AlbumReceived.Count; i++)
         {

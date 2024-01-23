@@ -69,6 +69,7 @@ public class Player
         }
    
         DatabaseManager.Instance.UserInfo.LoadUserInventory();
+
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
         DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
