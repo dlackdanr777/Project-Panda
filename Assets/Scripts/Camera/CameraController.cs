@@ -19,7 +19,11 @@ public class CameraController : MonoBehaviour
     public Vector2 MapSize => _mapSize;
 
     [SerializeField] private Vector2 _mapCenter;
-    public Vector2 MapCenter => _mapCenter;
+    public Vector2 MapCenter
+    {
+        get { return _mapCenter; }
+        set { _mapCenter = value; }
+    }
 
     private Vector3 _tempTouchPos;
 

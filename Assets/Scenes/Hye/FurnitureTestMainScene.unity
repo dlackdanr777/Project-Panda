@@ -234,6 +234,53 @@ MonoBehaviour:
   _minZoomSize: 10
   _mapSize: {x: 29.5, y: 15}
   _mapCenter: {x: -0.65, y: -7}
+--- !u!1 &794587946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 794587948}
+  - component: {fileID: 794587947}
+  m_Layer: 0
+  m_Name: TimeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &794587947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794587946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce174dc870d7ad4fa8a419f891ce494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameHour: 0
+  GameHourId: 
+  GameWeatherId: 
+--- !u!4 &794587948
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794587946}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &855275532
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,8 +789,10 @@ MonoBehaviour:
   _toolItemImages:
   - {fileID: 11400000, guid: 30eef562256b26f4eaad8954500aa877, type: 2}
   _furnitureItemImages: {fileID: 11400000, guid: 373af7800107cdd4d85a5eac1c639dfd, type: 2}
+  _npcImages: []
   _harvestItemImage: {fileID: 11400000, guid: fed7aea151469db40b1ce6627d377c11, type: 2}
   _mailPaper: {fileID: 11400000, guid: 8a9ae7e32d465024d8dcf42473c525ce, type: 2}
+  _albumImages: {fileID: 0}
 --- !u!1 &2033562785
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,5 +1026,6 @@ SceneRoots:
   - {fileID: 1359643631}
   - {fileID: 1942182567}
   - {fileID: 4378575578996217898}
+  - {fileID: 794587948}
   - {fileID: 1794909679}
   - {fileID: 1622439614}

@@ -42,6 +42,8 @@ public class StoryManager : SingletonHandler<StoryManager>
         GameManager.Instance.Player.Messages[0].AddByStoryId(id, MessageField.Mail); //스토리 ID에 따른 메시지 전송
         //일기장 추가
         DatabaseManager.Instance.SetReceiveAlbumById(id);
+
+        DatabaseManager.Instance.Challenges.MainStoryDone(id);
     }
 
 
