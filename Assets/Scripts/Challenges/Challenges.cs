@@ -1,12 +1,17 @@
 using System;
 using UnityEngine;
 
-public class Challenges : SingletonHandler<Challenges>
+public class Challenges
 {
     public Action<string> ChallengeDone;
 
     // 채집 성공할 때마다 저장
     public int[] CollectionSuccessNum = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length -1]; // 채집 성공 횟수
+
+    public void Register()
+    {
+
+    }
 
     public void MainStoryDone(string id)
     {

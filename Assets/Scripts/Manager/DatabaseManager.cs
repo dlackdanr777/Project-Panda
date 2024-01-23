@@ -61,6 +61,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     //Sticker
     [SerializeField] private ItemSpriteDatabase _stickerImages;
 
+    private ChallengesDatabase _challengesDatabase;
+    private Challenges _challenges;
+    public Challenges Challenges => _challenges;
+
     public override void Awake()
     {
         var obj = FindObjectsOfType<DatabaseManager>();
@@ -89,7 +93,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _npcDatabase = new NPCDatabase();
         _messageDatabase = new MessageDatabase();
         _albumDatabase = new AlbumDatabase();
-
+        _challengesDatabase = new ChallengesDatabase();
+        _challenges = new Challenges();
 
         UserInfo.Register();
         StartPandaInfo.Register();
@@ -135,6 +140,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _albumDatabase.AlbumSpriteArray = _albumImages;
         _albumDatabase.Register();
+
+        _challengesDatabase.Register();
+        _challenges.Register();
     }
 
     /// <summary>
@@ -336,5 +344,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public HarvestItem GetHarvestItemdata(string harvestItemID)
     {
         return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
+    }
+
+    public Dictionary<string, ChallengesData> GetChallengesDic(int i)
+    {
+        return _challengesDatabase.GetChallengesDic(i);
     }
 }

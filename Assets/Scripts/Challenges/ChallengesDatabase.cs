@@ -10,16 +10,10 @@ public enum EChallenges
 }
 
 
-public class ChallengesDatabase : SingletonHandler<ChallengesDatabase>
+public class ChallengesDatabase
 {
-    public Dictionary<string, ChallengesData>[] ChallengesDic = new Dictionary<string, ChallengesData>[System.Enum.GetValues(typeof(EChallenges)).Length];
-    //public Dictionary<string, ChallengesData> ChallengesBeginnerDic;
-    //public Dictionary<string, ChallengesData> ChallengesMiddleDic;
+    private Dictionary<string, ChallengesData>[] ChallengesDic = new Dictionary<string, ChallengesData>[System.Enum.GetValues(typeof(EChallenges)).Length];
 
-    public override void Awake()
-    {
-        Register();
-    }
 
     public void Register()
     {
@@ -43,5 +37,10 @@ public class ChallengesDatabase : SingletonHandler<ChallengesDatabase>
             challengesDic.Add(row[0], new ChallengesData(row[0], row[1], row[2], int.Parse(row[3]), "IFR15")); // 나중에 아이템 받아오는 것으로 수정
         }
         return challengesDic;
+    }
+
+    public Dictionary<string, ChallengesData> GetChallengesDic(int i)
+    {
+        return ChallengesDic[i];
     }
 }
