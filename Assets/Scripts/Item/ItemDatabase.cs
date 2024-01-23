@@ -127,7 +127,7 @@ public class ItemDatabase
         _dataTool = CSVReader.Read("ItemTool");
         _dataFurniture = CSVReader.Read("Furniture");
 
-       /* #region Gathering Item
+        #region Gathering Item
         //Bug
         for (int i = 0; i < _dataBug.Count; i++)
         {
@@ -175,7 +175,7 @@ public class ItemDatabase
                     _dataFruit[i]["계절"].ToString()
                     ));
         }
-        #endregion*/
+        #endregion
 
         #region Tool Item
         for (int i = 0; i < _dataTool.Count; i++)
@@ -244,6 +244,7 @@ public class ItemDatabase
     {
         JsonData json = callback.FlattenRows();
 
+        ItemBugList.Clear();
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -266,6 +267,7 @@ public class ItemDatabase
     {
         JsonData json = callback.FlattenRows();
 
+        ItemFishList.Clear();
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -288,6 +290,7 @@ public class ItemDatabase
     {
         JsonData json = callback.FlattenRows();
 
+        ItemFruitList.Clear();
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
