@@ -18,6 +18,8 @@ public class UIInsideWood : UIView
 
     private float _tempCameraSize;
 
+    private Vector3 _tmpPos;
+
     public event Action OnShowHandler;
 
     public event Action OnHideHandler;
@@ -35,8 +37,8 @@ public class UIInsideWood : UIView
     public override void Show()
     {
         VisibleState = VisibleState.Appearing;
-
         _tempCameraSize = Camera.main.orthographicSize;
+        _tmpPos = Camera.main.transform.position;
         _uiNav.HideMainUI();
 
         _inSideWood.gameObject.SetActive(true);
@@ -48,7 +50,6 @@ public class UIInsideWood : UIView
             Tween.CameraSize(Camera.main.gameObject, 12, 1f, TweenMode.Smoothstep, () =>
             {
                 VisibleState = VisibleState.Appeared;
-
                 gameObject.SetActive(true);
                 OnShowHandler?.Invoke();
             });
@@ -64,8 +65,9 @@ public class UIInsideWood : UIView
         gameObject.SetActive(false);
 
         _inSideWood.color = new Color(_inSideWood.color.r, _inSideWood.color.g, _inSideWood.color.b, 1);
-
+        Vector3 targetPos = _tmpPos;
         Tween.SpriteRendererAlpha(_inSideWood.gameObject, 0, 1, TweenMode.Smoothstep);
+        Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smoothstep);
         Tween.CameraSize(Camera.main.gameObject, _tempCameraSize, 1f, TweenMode.Smoothstep, () =>
         {
             VisibleState = VisibleState.Disappeared;
