@@ -27,16 +27,16 @@ public class UIChallenges : MonoBehaviour
         _challengeDonePfDic = new Dictionary<string, Image>();
 
         // 개수만큼 프리팹 생성
-        for(int i = 0; i < System.Enum.GetValues(typeof(EChallenges)).Length; i++) // 도전과제 종류
-        {
-            foreach (string key in DatabaseManager.Instance.GetChallengesDic(i).Keys)
+        //for(int i = 0; i < System.Enum.GetValues(typeof(EChallenges)).Length; i++) // 도전과제 종류
+        //{
+            foreach (string key in DatabaseManager.Instance.GetChallengesDic().Keys)
             {
                 GameObject challengeSlot = Instantiate(_challengesSlotPf, _content.transform);
-                challengeSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = DatabaseManager.Instance.GetChallengesDic(i)[key].Name;
-                challengeSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = DatabaseManager.Instance.GetChallengesDic(i)[key].Description;
+                challengeSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = DatabaseManager.Instance.GetChallengesDic()[key].Name;
+                challengeSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = DatabaseManager.Instance.GetChallengesDic()[key].Description;
                 _challengeDonePfDic.Add(key, challengeSlot.transform.GetChild(2).GetComponent<Image>());
             }
-        }
+        //}
         
         DataBind.SetButtonValue("ShowChallengesButton", ()=>_uiChallengesPanel.SetActive(true));
         DataBind.SetButtonValue("CloseChallengesButton", ()=>_uiChallengesPanel.SetActive(false));
