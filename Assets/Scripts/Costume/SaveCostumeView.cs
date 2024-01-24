@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Muks.Tween;
 using TMPro;
+using BT;
 
 public class SaveCostumeView : MonoBehaviour
 {
@@ -58,15 +59,15 @@ public class SaveCostumeView : MonoBehaviour
 
     private void OnSaveYesButtonClicked()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
+        StarterPanda.Instance.gameObject.SetActive(true);
+        StarterPanda.Instance.IsSwitchingScene = true;
         _costumeViewModel.SaveCostume();
         SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
     }
     private void OnSaveNoButtonClicked()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(true);
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.IsSwitchingScene = true;
+        StarterPanda.Instance.gameObject.SetActive(true);
+        StarterPanda.Instance.IsSwitchingScene = true;
         SceneManager.LoadScene("CostumeTestMainScene"); // 나중에 메인 씬으로 변경
     }
 

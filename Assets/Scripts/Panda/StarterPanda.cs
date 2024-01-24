@@ -6,6 +6,8 @@ namespace BT
 {
     public class StarterPanda : Panda
     {
+        public static StarterPanda Instance;
+
         public bool IsSwitchingScene;
         private BehaviorTree _behaviorTree;
 
@@ -19,6 +21,7 @@ namespace BT
             var obj = FindObjectsOfType<StarterPanda>();
             if (obj.Length == 1)
             {
+                Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
             else
@@ -51,11 +54,9 @@ namespace BT
 
             _behaviorTree = new BehaviorTree(SettingBT());
 
-            SetUIPanda();
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
             //_preference = DatabaseManager.Instance.SetPreference(Mbti);
-            DatabaseManager.Instance.StartPandaInfo.StarterPanda = this;
 
             //test 잘 설정되었는지 확인 - 나중에 지우기
             Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);

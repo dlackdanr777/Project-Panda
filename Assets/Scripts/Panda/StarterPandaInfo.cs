@@ -11,7 +11,6 @@ using UnityEngine;
 
 public class StarterPandaInfo
 {
-    public StarterPanda StarterPanda; // 저장 필요 x
     public string Mbti;
     public float Intimacy;
     public float Happiness;
