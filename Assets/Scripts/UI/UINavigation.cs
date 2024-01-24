@@ -95,9 +95,9 @@ public class UINavigation : MonoBehaviour
             {
                 _uiViews.Remove(uiView);
                 _uiViews.Add(uiView);
+                uiView.gameObject.SetActive(true);
             }
 
-            uiView.gameObject.SetActive(true);
             uiView.RectTransform.SetAsLastSibling();
             CheckViewListCount();
         }
