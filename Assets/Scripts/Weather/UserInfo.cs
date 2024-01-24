@@ -481,7 +481,6 @@ public class UserInfo
 
         for (int i=0; i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
-            Debug.Log(GatheringItems.Count);
             for (int j = 0; j < GatheringItems.Count; j++) //데이터베이스
             {
                 int fieldIndex = -1;

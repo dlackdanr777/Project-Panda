@@ -53,11 +53,7 @@ namespace Muks.Tween
                 tween.OnComplete = null;
                 tween.DataSequences.Clear();
             }
-
         }
-
-
-
 
 
         /// <summary>

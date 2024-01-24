@@ -1,3 +1,4 @@
+using BT;
 using Muks.DataBind;
 using Muks.Tween;
 using System;
@@ -39,7 +40,7 @@ public class CostumeView : MonoBehaviour
 
     private void Init()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
+        StarterPanda.Instance.gameObject.SetActive(false);
 
         // 커튼 열기
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);

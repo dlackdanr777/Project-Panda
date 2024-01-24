@@ -203,7 +203,7 @@ public class Collection : MonoBehaviour
     {
         TimeManager.Instance.CheckTime();
 
-        StarterPanda starterPanda = DatabaseManager.Instance.StartPandaInfo.StarterPanda;
+        StarterPanda starterPanda = StarterPanda.Instance;
         _pandaSpriteRenderer = starterPanda.GetComponent<SpriteRenderer>();
 
         _pandaImage = _pandaSpriteRenderer.sprite;
@@ -315,7 +315,7 @@ public class Collection : MonoBehaviour
         _pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.sprite = _pandaImage;
 
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.transform.position = _lastPandaPosition;
+        StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
 
         DataBind.GetAction("ShowMainUIButton")?.Invoke();
         CameraSet(false);

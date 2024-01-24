@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Muks.DataBind;
+using BT;
 
 public class FurnitureButton : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class FurnitureButton : MonoBehaviour
 
     private void OnCostumeButtonClicked()
     {
-        if (DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI())
+        if (StarterPanda.Instance.SetFalseUI())
         {
             SceneManager.LoadScene("FurnitureTest");
         }

@@ -105,8 +105,11 @@ namespace Muks.BackEnd
             BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);
+            CostumeManager.Instance.LoadData();
+            DatabaseManager.Instance.NPCDatabase.LoadData();
             DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
+            DatabaseManager.Instance.AlbumDatabase.LoadData();
         }
     }
 }

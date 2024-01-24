@@ -2,6 +2,7 @@ using Muks.DataBind;
 using UnityEngine;
 using UnityEngine.UI;  
 using UnityEngine.SceneManagement;
+using BT;
 
 public class Test : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class Test : MonoBehaviour
 
     private void OnCostumeButtonClicked()
     {
-        if (DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI())
+        if (StarterPanda.Instance.SetFalseUI())
         {
             SceneManager.LoadScene("CostumeTest");
         }

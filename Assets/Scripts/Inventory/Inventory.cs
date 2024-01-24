@@ -18,7 +18,7 @@ public class Inventory
         return _items;
     }
 
-    public void Add(Item item)
+    public void Add(Item item, InventoryItemField field)
     {
         if(_items.Count > 0) 
         {
@@ -26,14 +26,21 @@ public class Inventory
             {
                 if (_items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
                 {
-                    if (_items[i].Count == MaxInventoryItemCount) //개수가 최대 개수와 같은지 확인
+                    if(field == InventoryItemField.Tool) //도구는 한 개만 얻을 수 있음
                     {
-                        continue;
+                        return;
                     }
                     else
                     {
-                        _items[i].Count++;
-                        return;
+                        if (_items[i].Count == MaxInventoryItemCount) //개수가 최대 개수와 같은지 확인
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            _items[i].Count++;
+                            return;
+                        }
                     }
                 }
             }
@@ -73,7 +80,7 @@ public class Inventory
                 {
                     if (gatheringDatabase[i].Id.Equals(id))
                     {
-                        Add(gatheringDatabase[i]);
+                        Add(gatheringDatabase[i], field);
                         gatheringDatabase[i].IsReceived = true;
                     }
                 }
@@ -90,11 +97,26 @@ public class Inventory
                 {
                     if (toolDatabase[i].Id.Equals(id))
                     {
-                        Add(toolDatabase[i]);
+                        Add(toolDatabase[i], field);
                         toolDatabase[i].IsReceived = true;
                     }
                 }
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 수량만큼 인벤토리에 더함
+    /// </summary>
+    /// <param name="field"></param>
+    /// <param name="fieldIndex"></param>
+    /// <param name="id"></param>
+    /// <param name="count"></param>
+    public void AddById(InventoryItemField field, int fieldIndex, string id, int count)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            AddById(field, fieldIndex, id);
         }
     }
 
@@ -134,6 +156,10 @@ public class Inventory
         }
     }
 
+    /// <summary>
+    /// id로 아이템 제거
+    /// </summary>
+    /// <param name="id"></param>
     public void RemoveById(string id)
     {
         for (int i = 0; i < ItemsCount; i++)
@@ -152,5 +178,35 @@ public class Inventory
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// id로 수량만큼 아이템 제거
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="count"></param>
+    public bool RemoveById(string id, int count)
+    {
+        for (int i = 0; i < ItemsCount; i++)
+        {
+            if (_items[i].Id.Equals(id)) //id가 같은 아이템이 있다면
+            {
+                if (_items[i].Count >= count)
+                {
+                    _items[i].Count -= count;
+                    if (_items[i].Count == 0) //0인지 확인
+                    {
+                        _items.RemoveAt(i);
+                        if (_items.Count == 0)
+                        {
+                            _items.Clear();
+
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

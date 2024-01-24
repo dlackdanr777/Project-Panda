@@ -1,3 +1,4 @@
+using BT;
 using Muks.DataBind;
 using Muks.Tween;
 using System;
@@ -112,7 +113,7 @@ public class FurnitureView : MonoBehaviour
 
     private void Init()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.gameObject.SetActive(false);
+        StarterPanda.Instance.gameObject.SetActive(false);
 
         // ¹® ¿­±â
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);

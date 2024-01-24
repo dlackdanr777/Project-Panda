@@ -74,17 +74,12 @@ public class ItemDatabase
     //GatheringItem
     //Fish
     public List<GatheringItem> ItemFishList = new List<GatheringItem>();
-    private List<Dictionary<string, object>> _dataFish;
     //Bug
     public List<GatheringItem> ItemBugList = new List<GatheringItem>();
-    private List<Dictionary<string, object>> _dataBug;
     //Fruit
     public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
-    private List<Dictionary<string, object>> _dataFruit;
-
     //ToolItem
     public List<ToolItem> ItemToolList = new List<ToolItem>();
-    private List<Dictionary<string, object>> _dataTool;
 
     //Image
     //GatheringItem
@@ -119,79 +114,13 @@ public class ItemDatabase
                 _toolItemSpriteDic[i].Add(ToolItemSpriteArray[i].ItemSprites[j].Id, ToolItemSpriteArray[i].ItemSprites[j].Image);
             }
         }
-        //GatheringItem
-        _dataBug = CSVReader.Read("ItemBug");
-        _dataFish = CSVReader.Read("ItemFish");
-        _dataFruit = CSVReader.Read("ItemFruit");
-        //ToolItem
-        _dataTool = CSVReader.Read("ItemTool");
+
         _dataFurniture = CSVReader.Read("Furniture");
 
-        #region Gathering Item
-        //Bug
-        for (int i = 0; i < _dataBug.Count; i++)
-        {
-            ItemBugList.Add(new GatheringItem(
-                    _dataBug[i]["ID"].ToString(),
-                    _dataBug[i]["이름"].ToString(),
-                    _dataBug[i]["설명"].ToString(),
-                    (int)_dataBug[i]["가격"],
-                    _dataBug[i]["등급"].ToString(),
-                    _dataBug[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(_dataBug[i]["ID"].ToString(), GatheringItemType.Bug),
-                    _dataBug[i]["시간"].ToString(),
-                    _dataBug[i]["계절"].ToString()
-                    ));
-        }
-
-        //Fish
-        for (int i = 0; i < _dataFish.Count; i++)
-        {
-            ItemFishList.Add(new GatheringItem(
-                    _dataFish[i]["ID"].ToString(),
-                    _dataFish[i]["이름"].ToString(),
-                    _dataFish[i]["설명"].ToString(),
-                    (int)_dataFish[i]["가격"],
-                    _dataFish[i]["등급"].ToString(),
-                    _dataFish[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(_dataFish[i]["ID"].ToString(), GatheringItemType.Fish),
-                    _dataFish[i]["시간"].ToString(),
-                    _dataFish[i]["계절"].ToString()
-                    ));   
-        }
-
-        //Fruit
-        for (int i = 0; i < _dataFruit.Count; i++)
-        {
-            ItemFruitList.Add(new GatheringItem(
-                    _dataFruit[i]["ID"].ToString(),
-                    _dataFruit[i]["이름"].ToString(),
-                    _dataFruit[i]["설명"].ToString(),
-                    (int)_dataFruit[i]["가격"],
-                    _dataFruit[i]["등급"].ToString(),
-                    _dataFruit[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(_dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
-                    _dataFruit[i]["시간"].ToString(),
-                    _dataFruit[i]["계절"].ToString()
-                    ));
-        }
-        #endregion
-
-        #region Tool Item
-        for (int i = 0; i < _dataTool.Count; i++)
-        {
-            ItemToolList.Add(new ToolItem(
-                    _dataTool[i]["ID"].ToString(),
-                    _dataTool[i]["이름"].ToString(),
-                    _dataTool[i]["설명"].ToString(),
-                    (int)_dataTool[i]["가격"],
-                    _dataTool[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(_dataTool[i]["ID"].ToString(), ToolItemType.GatheringTool),
-                    (int)_dataTool[i]["채집 확률"],
-                    (int)_dataTool[i]["스토리 단계"]
-                    ));
-        }
-        #endregion
+        BugItemParserByLocal();
+        FishItemParserByLocal();
+        FruitItemParserByLocal();
+        ToolItemParserByLocal();
 
         //Furniture //아직 수정 중
         Dictionary<char, FurnitureType> FurnitureTypes = new Dictionary<char, FurnitureType>();
@@ -233,14 +162,16 @@ public class ItemDatabase
 
     public void LoadData()
     {
-        BackendManager.Instance.GetChartData("105320", 1, BugItemParser);
-        BackendManager.Instance.GetChartData("105331", 1, FishItemParser);
-        BackendManager.Instance.GetChartData("105332", 1, FruitItemParser);
+        BackendManager.Instance.GetChartData("105320", 10, BugItemParserByServer);
+        BackendManager.Instance.GetChartData("105331", 10, FishItemParserByServer);
+        BackendManager.Instance.GetChartData("105332", 10, FruitItemParserByServer);
+        BackendManager.Instance.GetChartData("105888", 10, ToolItemParserByServer);
     }
 
+    #region Load Server
 
     /// <summary>서버에서 곤충 아이템의 정보를 받아와 List에 넣는 함수</summary>
-    public void BugItemParser(BackendReturnObject callback)
+    public void BugItemParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
 
@@ -263,7 +194,7 @@ public class ItemDatabase
 
 
     /// <summary>서버에서 생선 아이템의 정보를 받아와 List에 넣는 함수</summary>
-    public void FishItemParser(BackendReturnObject callback)
+    public void FishItemParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
 
@@ -286,7 +217,7 @@ public class ItemDatabase
 
 
     /// <summary>서버에서 과일 아이템의 정보를 받아와 List에 넣는 함수</summary>
-    public void FruitItemParser(BackendReturnObject callback)
+    public void FruitItemParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
 
@@ -306,4 +237,125 @@ public class ItemDatabase
         }
         Debug.Log("과일 아이템 받아오기 성공!");
     }
+
+
+    /// <summary>서버에서 장비 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void ToolItemParserByServer(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        ItemToolList.Clear();
+        for (int i = 0; i < json.Count; i++)
+        {
+            string itemID = json[i]["ItemID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int price = int.Parse(json[i]["Price"].ToString());
+            int gatheringPercentage = int.Parse(json[i]["GatheringPercentage"].ToString());
+            int storyStep = int.Parse(json[i]["StoryStep"].ToString());
+            string mapID = json[i]["MapID"].ToString();
+
+            ItemToolList.Add(new ToolItem(
+                  itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
+                  ,gatheringPercentage, storyStep));
+        }
+    }
+
+    #endregion
+
+
+    #region Load Local
+
+    /// <summary>리소스 폴더에서 곤충 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void BugItemParserByLocal()
+    {
+        List<Dictionary<string, object>> dataBug = CSVReader.Read("ItemBug");
+
+        for (int i = 0; i < dataBug.Count; i++)
+        {
+            ItemBugList.Add(new GatheringItem(
+                    dataBug[i]["ID"].ToString(),
+                    dataBug[i]["이름"].ToString(),
+                    dataBug[i]["설명"].ToString(),
+                    (int)dataBug[i]["가격"],
+                    dataBug[i]["등급"].ToString(),
+                    dataBug[i]["맵 ID"].ToString(),
+                    GetItemSpriteById(dataBug[i]["ID"].ToString(), GatheringItemType.Bug),
+                    dataBug[i]["시간"].ToString(),
+                    dataBug[i]["계절"].ToString()
+                    ));
+        }
+        Debug.Log("곤충 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>리소스 폴더에서 생선 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FishItemParserByLocal()
+    {
+        List<Dictionary<string, object>> dataFish = CSVReader.Read("ItemFish");
+
+        for (int i = 0; i < dataFish.Count; i++)
+        {
+            ItemFishList.Add(new GatheringItem(
+                    dataFish[i]["ID"].ToString(),
+                    dataFish[i]["이름"].ToString(),
+                    dataFish[i]["설명"].ToString(),
+                    (int)dataFish[i]["가격"],
+                    dataFish[i]["등급"].ToString(),
+                    dataFish[i]["맵 ID"].ToString(),
+                    GetItemSpriteById(dataFish[i]["ID"].ToString(), GatheringItemType.Fish),
+                    dataFish[i]["시간"].ToString(),
+                    dataFish[i]["계절"].ToString()
+                    ));
+        }
+        Debug.Log("생선 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>리소스 폴더에서 과일 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FruitItemParserByLocal()
+    {
+        List<Dictionary<string, object>> dataFruit = CSVReader.Read("ItemFruit");
+
+        for (int i = 0; i < dataFruit.Count; i++)
+        {
+            ItemFruitList.Add(new GatheringItem(
+                    dataFruit[i]["ID"].ToString(),
+                    dataFruit[i]["이름"].ToString(),
+                    dataFruit[i]["설명"].ToString(),
+                    (int)dataFruit[i]["가격"],
+                    dataFruit[i]["등급"].ToString(),
+                    dataFruit[i]["맵 ID"].ToString(),
+                    GetItemSpriteById(dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
+                    dataFruit[i]["시간"].ToString(),
+                    dataFruit[i]["계절"].ToString()
+                    ));
+        }
+
+        Debug.Log("과일 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>리소스 폴더에서 장비 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void ToolItemParserByLocal()
+    {
+        List<Dictionary<string, object>>  dataTool = CSVReader.Read("ItemTool");
+
+        for (int i = 0; i < dataTool.Count; i++)
+        {
+            ItemToolList.Add(new ToolItem(
+                    dataTool[i]["ID"].ToString(),
+                    dataTool[i]["이름"].ToString(),
+                    dataTool[i]["설명"].ToString(),
+                    (int)dataTool[i]["가격"],
+                    dataTool[i]["맵 ID"].ToString(),
+                    GetItemSpriteById(dataTool[i]["ID"].ToString(), ToolItemType.GatheringTool),
+                    (int)dataTool[i]["채집 확률"],
+                    (int)dataTool[i]["스토리 단계"]
+                    ));
+        }
+        Debug.Log("장비 아이템 받아오기 성공!");
+    }
+
+    #endregion
 }
