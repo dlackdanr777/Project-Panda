@@ -10,38 +10,18 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 {
     [SerializeField] private Image _fadeImage;
 
-    [SerializeField] private Image[] _backgroundImages;
-
-
-    [SerializeField] private float _fadeScale;
-
     [SerializeField] private float _fadeDuration;
 
     [SerializeField] private TweenMode _fadeTweenMode;
-
-    [Space]
-    [SerializeField] private GameObject _dontTouchArea;
-
-    private Vector3 _tempPos;
-    private Vector3 _tempSize;
-
-    private Vector3 _targetPos;
-    private Vector3 _targetSize;
 
     private bool _isLoading;
 
     public void Start()
     {
-        _tempPos = _fadeImage.rectTransform.anchoredPosition;
-        _tempSize = _fadeImage.rectTransform.sizeDelta;
-
-        _targetPos = _tempPos * _fadeScale;
-        _targetSize = _tempSize * _fadeScale;
-
         _isLoading = false;
-
+        Image fadeImage = _fadeImage.GetComponent<Image>();
+        fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);
         _fadeImage.gameObject.SetActive(false);
-        _dontTouchArea.SetActive(false);
     }
 
 
@@ -50,39 +30,21 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
         if (_isLoading)
             return;
 
-        _dontTouchArea.SetActive(true);
-        _fadeImage.gameObject.SetActive(true);
-
         _isLoading = true;
 
         GameManager.Instance.FriezeCameraMove = true;
         GameManager.Instance.FriezeCameraZoom = true;
         GameManager.Instance.FirezeInteraction = true;
 
-        _fadeImage.rectTransform.anchoredPosition = _targetPos;
-        _fadeImage.rectTransform.sizeDelta = _targetSize;
-
-        Tween.RectTransfromSizeDelta(_fadeImage.gameObject, _tempSize, _fadeDuration, _fadeTweenMode);
-        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _tempPos, _fadeDuration, _fadeTweenMode, onComplete);
+        _fadeImage.gameObject.SetActive(true);
+        Tween.IamgeAlpha(_fadeImage.gameObject, 1, _fadeDuration, _fadeTweenMode, onComplete);
      }
-
-
-    public void HideFadeImage()
-    {
-        _dontTouchArea.SetActive(true);
-        _fadeImage.gameObject.SetActive(false);
-    }
 
 
     public void ResetFadeImage(Action onComplete = null)
     {
         _fadeImage.gameObject.SetActive(true);
-        _fadeImage.rectTransform.anchoredPosition = _tempPos;
-        _fadeImage.rectTransform.sizeDelta = _tempSize;
-        StartCoroutine(FixImage());
-
-        Tween.RectTransfromSizeDelta(_fadeImage.gameObject, _targetSize, _fadeDuration, _fadeTweenMode);
-        Tween.RectTransfromAnchoredPosition(_fadeImage.gameObject, _targetPos, _fadeDuration, _fadeTweenMode, () => 
+        Tween.IamgeAlpha(_fadeImage.gameObject, 0, _fadeDuration, _fadeTweenMode, () => 
         {
             onComplete?.Invoke();
 
@@ -92,23 +54,6 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
             _isLoading = false;
             _fadeImage.gameObject.SetActive(false);
-            _dontTouchArea.SetActive(false);
         });
-    }
-
-
-    private IEnumerator FixImage()
-    {
-        foreach(Image image in _backgroundImages)
-        {
-            image.maskable = false;
-        }
-
-        yield return new WaitForFixedUpdate();
-
-        foreach (Image image in _backgroundImages)
-        {
-            image.maskable = true;
-        }
     }
 }

@@ -38,5 +38,10 @@ namespace Muks.Tween
 
             _camera.orthographicSize = Mathf.LerpUnclamped(StartSize, TargetSize, percent);
         }
+
+        protected override void TweenCompleted()
+        {
+            _camera.orthographicSize = TargetSize;
+        }
     }
 }

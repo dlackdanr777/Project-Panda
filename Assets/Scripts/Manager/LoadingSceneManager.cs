@@ -9,6 +9,8 @@ public class LoadingSceneManager : MonoBehaviour
 {
     public static string _nextScene;
 
+    [Tooltip("로딩이 최소 몇 초가 걸리게 할지 설정")]
+    [SerializeField] private float _changeSceneTime;
 
     private void Start()
     {
@@ -29,7 +31,7 @@ public class LoadingSceneManager : MonoBehaviour
         yield return null;
 
         AsyncOperation op = SceneManager.LoadSceneAsync(_nextScene);
-        ChangeSceneManager.Instance.HideFadeImage();
+
         op.allowSceneActivation = false;
         float timer = 0f;
         
@@ -40,7 +42,7 @@ public class LoadingSceneManager : MonoBehaviour
 
             if(0.9f <= op.progress)
             {
-                if(timer > 2)
+                if(_changeSceneTime < timer)
                 {
                     op.allowSceneActivation = true;
                     ChangeSceneManager.Instance.ResetFadeImage();

@@ -109,6 +109,7 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.NPCDatabase.LoadData();
             DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
+            DatabaseManager.Instance.AlbumDatabase.LoadData();
         }
     }
 }

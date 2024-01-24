@@ -45,5 +45,12 @@ namespace Muks.Tween
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }
+
+
+        protected override void TweenCompleted()
+        {
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TargetSizeDelta.x);
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TargetSizeDelta.y);
+        }
     }
 }

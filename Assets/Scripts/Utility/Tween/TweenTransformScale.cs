@@ -29,5 +29,11 @@ namespace Muks.Tween
 
             transform.localScale = Vector3.LerpUnclamped(StartScale, TargetScale, percent);
         }
+
+
+        protected override void TweenCompleted()
+        {
+            transform.localScale = TargetScale;
+        }
     }
 }

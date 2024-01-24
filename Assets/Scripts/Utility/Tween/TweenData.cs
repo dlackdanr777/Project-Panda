@@ -76,10 +76,19 @@ namespace Muks.Tween
                 }
                 else
                 {
+                    TweenCompleted();
                     enabled = false;
                 }
             }
         }
+
+
+        /// <summary>Tween애니메이션이 종료될 경우 불러올 함수 </summary>
+
+        protected virtual void TweenCompleted()
+        {
+        }
+
 
         public void AddDataSequence(DataSequence dataSequence)
         {
