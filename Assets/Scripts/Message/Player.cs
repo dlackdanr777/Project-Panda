@@ -68,8 +68,6 @@ public class Player
             StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);
         }
    
-        DatabaseManager.Instance.UserInfo.LoadUserInventory();
-
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
         DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
