@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 
 public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
 {
+    [SerializeField] private bool _isShop;
+
     private int _currentItemIndex;
 
     protected override void ClearContent()
@@ -23,6 +26,10 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
         DataBind.SetTextValue("InventoryDetailName", _lists[(int)_currentField][index].Name);
         DataBind.SetTextValue("InventoryDetailDescription", _lists[(int)_currentField][index].Description);
         DataBind.SetSpriteValue("InventoryDetailImage", _lists[(int)_currentField][index].Image);
+        if (_isShop)
+        {
+            DataBind.SetTextValue("InventoryDetailPrice", _lists[(int)_currentField][index].Price.ToString());
+        }
     }
 
     protected override void UpdateListSlots()
@@ -35,6 +42,7 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
             {
                 if (j < _lists[(int)_currentField].Count)
                 {
+                    _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = true;
                     Transform prefab = _spawnPoint[(int)_currentField].GetChild(j).GetChild(0);
                     prefab.gameObject.SetActive(true); //구조 변경 => Getchild만 켜지도록
                     prefab.GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
@@ -42,10 +50,22 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
                     {
                         prefab.GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
                     }
+                    else
+                    {
+                        prefab.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+                    }
 
+                    if (_isShop) //상점에서는 판매할 수 없도록
+                    {
+                        if (_currentField == InventoryItemField.Tool)
+                        {
+                            _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = false;
+                        }
+                    }
                 }
                 else
                 {
+                    _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = false;
                     _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).gameObject.SetActive(false);
 
 
@@ -78,6 +98,8 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
             
         }
         Init();
+
+        ShopButton.InventoryItemHandler += UpdateListSlots; 
     }
 
     private void UpdateList() 
