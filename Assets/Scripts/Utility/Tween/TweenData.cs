@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Muks.Tween
@@ -15,7 +16,7 @@ namespace Muks.Tween
 
     public class TweenData : MonoBehaviour
     {
-        public Queue<DataSequence> DataSequences;
+        public Queue<DataSequence> DataSequences = new Queue<DataSequence>();
 
         ///  <summary> 현재 경과 시간 </summary>
         public float ElapsedDuration;
@@ -28,9 +29,11 @@ namespace Muks.Tween
 
         public TweenMode TweenMode;
 
-
+        public bool IsLoop;
 
         protected Dictionary<TweenMode, Func<float, float, float>> _percentHandler;
+
+        private bool _isRightMove = true;
 
         public virtual void SetData(DataSequence dataSequence)
         {
@@ -40,9 +43,30 @@ namespace Muks.Tween
         }
 
 
+        //무한 반복
+        public void Loop()
+        {
+            DataSequence sequence = DataSequences.Last();
+            DataSequences.Clear();
+            DataSequences.Enqueue(sequence);
+            SetData(DataSequences.Dequeue());
+            IsLoop = true;
+        }
+
+        //반복 횟수 설정
+        public void Repeat(int count)
+        {
+            DataSequence sequence = DataSequences.Last();
+
+            for (int i = 1; i < count; i++)
+            {
+                AddDataSequence(sequence);
+            }
+        }
+
+
         private void Awake()
         {
-            DataSequences = new Queue<DataSequence>();
             _percentHandler = new Dictionary<TweenMode, Func<float, float, float>>
             {
                 { TweenMode.Constant, Constant },
@@ -55,36 +79,57 @@ namespace Muks.Tween
                 { TweenMode.Sinerp, Sinerp },
                 { TweenMode.Coserp, Coserp }
             };
-
         }
 
 
         protected virtual void Update()
         {
-            ElapsedDuration += Time.deltaTime;
-
-            //현재 경과 시간이 총 경과시간을 넘었을때
-            if (ElapsedDuration > TotalDuration)
+            //만약 반복 설정이 되어있다면?
+            if (IsLoop)
             {
-                OnComplete?.Invoke();
-                OnComplete = null;
+                ElapsedDuration += _isRightMove ? Time.deltaTime : -Time.deltaTime;
+                ElapsedDuration = Mathf.Clamp(ElapsedDuration, 0, TotalDuration);
 
-                if (DataSequences.Count > 0)
+                if (_isRightMove && TotalDuration <= ElapsedDuration)
                 {
-                    ElapsedDuration = 0;
-                    SetData(DataSequences.Dequeue());
+                    _isRightMove = false;
                 }
-                else
+                else if (!_isRightMove && ElapsedDuration <= 0)
                 {
-                    TweenCompleted();
-                    enabled = false;
+                    _isRightMove = true;
+
                 }
             }
+
+            else
+            {
+                ElapsedDuration += Time.deltaTime;
+                ElapsedDuration = Mathf.Clamp(ElapsedDuration, 0, TotalDuration);
+
+                //현재 경과 시간이 총 경과시간을 넘었을때
+                if (TotalDuration <= ElapsedDuration)
+                {
+
+                    OnComplete?.Invoke();
+                    OnComplete = null;
+
+                    if (0 < DataSequences.Count)
+                    {
+                        ElapsedDuration = 0;
+                        SetData(DataSequences.Dequeue());
+                    }
+                    else
+                    {
+                        TweenCompleted();
+                        enabled = false;
+                    }
+                }
+            }
+          
         }
 
 
         /// <summary>Tween애니메이션이 종료될 경우 불러올 함수 </summary>
-
         protected virtual void TweenCompleted()
         {
         }
@@ -112,7 +157,6 @@ namespace Muks.Tween
         }
 
 
-        //스무스하게 움직임
         private float Smoothstep(float elapsedDuration, float totalDuration)
         {
             float percent = elapsedDuration / totalDuration;
@@ -121,7 +165,6 @@ namespace Muks.Tween
         }
 
 
-        //더욱 더 스무스하게 움직임
         private float Smootherstep(float elapsedDuration, float totalDuration)
         {
             float percent = elapsedDuration / totalDuration;

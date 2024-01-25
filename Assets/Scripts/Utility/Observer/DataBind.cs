@@ -103,9 +103,7 @@ namespace Muks.DataBind
         }
 
 
-        /// <summary>
-        /// 텍스트 데이터의 연결장소를 불러오는 함수
-        /// </summary>
+        /// <summary>dataID를 통해 이미지 데이터의 연결 장소를 불러오는 함수 </summary>
         public static BindData<Sprite> GetSpriteValue(string dataID)
         {
             if (_dataBindingSprite == null)
@@ -120,6 +118,7 @@ namespace Muks.DataBind
         }
 
 
+        /// <summary>dataID를 통해 UnityAction 함수를 반환하는 함수 </summary>
         public static UnityAction GetAction(string dataID)
         {
             if (_dataBindingUnityAction == null)
@@ -127,7 +126,6 @@ namespace Muks.DataBind
 
             if (!_dataBindingUnityAction.TryGetValue(dataID, out BindData<UnityAction> actionData))
             {
-                Debug.Log("존재하지 않음");
                 actionData = new BindData<UnityAction>();
                 _dataBindingUnityAction.Add(dataID, actionData);
             }
@@ -135,39 +133,7 @@ namespace Muks.DataBind
         }
 
 
-        public static void SetAtcionValue(string dataID, Action action)
-        {
-            if (_dataBindingAction == null)
-                _dataBindingAction = new Dictionary<string, BindData<Action>>();
-
-            if (!_dataBindingAction.TryGetValue(dataID, out BindData<Action> actionData))
-            {
-                actionData = new BindData<Action>();
-                _dataBindingAction.Add(dataID, actionData);
-            }
-            actionData.Item = action;
-        }
-
-
-
-        /// <summary>
-        /// 버튼 텍스트 데이터의 연결장소를 불러오는 함수
-        /// </summary>
-        public static BindData<Action> GetActionValue(string dataID)
-        {
-            if (_dataBindingAction == null)
-                _dataBindingAction = new Dictionary<string, BindData<Action>>();
-
-            if (!_dataBindingAction.TryGetValue(dataID, out BindData<Action> actionData))
-            {
-                actionData = new BindData<Action>();
-                _dataBindingAction.Add(dataID, actionData);
-            }
-            return actionData;
-        }
-
-
-
+        /// <summary>dataID를 통해 오브젝트 자료형 데이터를 연결하는 함수 </summary>
         public static void SetObjectValue(string dataID, object obj)
         {
             if (_dataBindingObject == null)
@@ -183,10 +149,8 @@ namespace Muks.DataBind
 
 
 
-        /// <summary>
-        /// 버튼 텍스트 데이터의 연결장소를 불러오는 함수
-        /// </summary>
-        public static BindData<object> GetObjectValue(string dataID)
+        /// <summary>dataID를 통해 연결된 오브젝트 자료형 데이터를 반환하는 함수 </summary>
+        public static object GetObjectValue(string dataID)
         {
             if (_dataBindingObject == null)
                 _dataBindingObject = new Dictionary<string, BindData<object>>();
@@ -196,7 +160,8 @@ namespace Muks.DataBind
                 objectData = new BindData<object>();
                 _dataBindingObject.Add(dataID, objectData);
             }
-            return objectData;
+
+            return objectData.Item;
         }
     }
 }
