@@ -51,6 +51,7 @@ public class CameraApplication : MonoBehaviour
     public void Screenshot()
     {
         StartCoroutine(ScreenshotByAreaImage());
+        DatabaseManager.Instance.Challenges.Photo(true); // 도전과제 달성 체크
     }
 
     private IEnumerator ScreenshotByAreaImage()

@@ -95,6 +95,7 @@ public class Player
         {
             Bamboo += amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+            DatabaseManager.Instance.Challenges.StackedBambooCount += amount; // 도전과제 달성 체크
             return true;
         }
         else
