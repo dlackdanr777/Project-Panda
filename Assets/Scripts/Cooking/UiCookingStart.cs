@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,6 +83,7 @@ public class UiCookingStart : MonoBehaviour
         gameObject.SetActive(true);
         CheckAllAddValueButtons();
 
+
         _complatedText.text = "뒤집기";
     }
 
@@ -121,7 +121,7 @@ public class UiCookingStart : MonoBehaviour
         Debug.Log(grade + " 획득");
 
         GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].Add(_currentRecipeData.Item, InventoryItemField.GatheringItem);
-        //TODO : 여기서 오류
+        //TODO : 여기서 오류 차후 수정
 
         GameObject animeObj = grade == "F" ? Instantiate(_failedAnimePrefab) : Instantiate(_complatedAnimePrefab);
         animeObj.transform.SetParent(_animeParent);
