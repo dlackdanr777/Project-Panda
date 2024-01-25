@@ -44,6 +44,9 @@ public class Challenges
     private int _purchaseCount;
     private int _salesCount;
 
+    // 가구
+    private int _furnitureCount;
+
     // 요리 제작 횟수
     private int CookingCount = 0;
 
@@ -200,7 +203,7 @@ public class Challenges
         // 구매
         if (isPurchase)
         {
-
+            
         }
         // 판매
         else
@@ -211,9 +214,21 @@ public class Challenges
 
     /// <summary>
     /// n개의 가구 테마 완성 </summary>
-    private void FurnitureArrangement()
+    public void FurnitureArrangement(string id)
     {
+        int count = _challengesDatas[(int)EChallengesKategorie.furniture][_challengesNum[(int)EChallengesKategorie.furniture]].Count;
+        string challengesId = _challengesDatas[(int)EChallengesKategorie.furniture][_challengesNum[(int)EChallengesKategorie.furniture]].Id;
 
+        // 추가된 가구와 같은 테마의 가구가 8개면 한 테마 완성
+        if (DatabaseManager.Instance.StartPandaInfo.FurnitureInventoryID.Where(furnitureId => furnitureId.Substring(0,4) == id.Substring(0,4)).Count() == 8)
+        {
+            _furnitureCount++;
+            if (_furnitureCount > count)
+            {
+                ChallengeDone?.Invoke(challengesId);
+                _challengesNum[(int)EChallengesKategorie.furniture]++;
+            }
+        }
     }
 
     /// <summary>

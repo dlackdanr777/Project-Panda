@@ -338,9 +338,10 @@ public class StarterPandaInfo
 
     public void AddFurniture(string furnitureId)
     {
-        // 코스튬 추가 후 정렬
+        // 가구 추가 후 정렬
         FurnitureInventoryID.Add(furnitureId);
         FurnitureInventoryID = FurnitureInventoryID.OrderBy(id => id).ToList();
+        DatabaseManager.Instance.Challenges.FurnitureArrangement(furnitureId);
 
         Furniture furniture = DatabaseManager.Instance.GetFurnitureItem()[furnitureId];
         FurnitureInventory.Add(furniture);
