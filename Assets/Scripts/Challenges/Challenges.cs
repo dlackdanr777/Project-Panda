@@ -5,7 +5,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public enum EUnlockingBook
 {
@@ -328,9 +327,6 @@ public class Challenges
 
         // æ∆¿Ã≈€ »πµÊ - µµ±∏
         GameManager.Instance.Player.ToolItemInventory[0].AddById
-            (InventoryItemField.Tool, (int)ToolItemType.GatheringTool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
-
-
-
+            (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
     }
 }
