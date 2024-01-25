@@ -41,7 +41,7 @@ public class ShopButton : MonoBehaviour
         {
             if (GameManager.Instance.Player.SpendBamboo(int.Parse(_price.text)))
             {
-                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool,
+                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool,
                     GetIdByName(DataBind.GetTextValue("ShopBuyItemDetailName").Item), int.Parse(_count.text)); //아이템에 따라 달라짐(현재는 도구)
                 ShopItemHandler?.Invoke();
                 InventoryItemHandler?.Invoke();
