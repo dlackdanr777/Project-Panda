@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UIInsideWood : UIView
 {
-    [SerializeField] private GameObject _borderButton;
+    [SerializeField] private GameObject _dontTouchArea;
 
     [SerializeField] private Vector3 _cameraMovePos;
 
@@ -29,7 +29,7 @@ public class UIInsideWood : UIView
         base.Init(uiNav);
 
        _inSideWood.gameObject.SetActive(false);
-        DataBind.SetButtonValue("WoodBorderButton", OnBorderButtonClicked);
+        DataBind.SetButtonValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
     }
@@ -42,6 +42,7 @@ public class UIInsideWood : UIView
         _uiNav.HideMainUI();
 
         _inSideWood.gameObject.SetActive(true);
+        _dontTouchArea.SetActive(true);
         _inSideWood.color = new Color(_inSideWood.color.r, _inSideWood.color.g, _inSideWood.color.b, 0);
 
         Tween.TransformMove(Camera.main.gameObject, _cameraMovePos, 1f, TweenMode.Smoothstep, () =>
@@ -72,6 +73,7 @@ public class UIInsideWood : UIView
         {
             VisibleState = VisibleState.Disappeared;
             _inSideWood.gameObject.SetActive(false);
+            _dontTouchArea.SetActive(false);
             _uiNav.ShowMainUI();
             OnHideHandler?.Invoke();
         });
@@ -105,7 +107,7 @@ public class UIInsideWood : UIView
     }
 
 
-    private void OnBorderButtonClicked()
+    private void OnWishTreeExitButtonClicked()
     {
         _uiNav.Pop();
     }
