@@ -48,7 +48,7 @@ public class UIInsideWood : UIView
         Tween.TransformMove(Camera.main.gameObject, _cameraMovePos, 1f, TweenMode.Smoothstep, () =>
         {
             Tween.SpriteRendererAlpha(_inSideWood.gameObject, 1, 1, TweenMode.Smoothstep);
-            Tween.CameraSize(Camera.main.gameObject, 12, 1f, TweenMode.Smoothstep, () =>
+            Tween.CameraOrthographicSize(Camera.main.gameObject, 12, 1f, TweenMode.Smoothstep, () =>
             {
                 VisibleState = VisibleState.Appeared;
                 gameObject.SetActive(true);
@@ -69,7 +69,7 @@ public class UIInsideWood : UIView
         Vector3 targetPos = _tmpPos;
         Tween.SpriteRendererAlpha(_inSideWood.gameObject, 0, 1, TweenMode.Smoothstep);
         Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smoothstep);
-        Tween.CameraSize(Camera.main.gameObject, _tempCameraSize, 1f, TweenMode.Smoothstep, () =>
+        Tween.CameraOrthographicSize(Camera.main.gameObject, _tempCameraSize, 1f, TweenMode.Smoothstep, () =>
         {
             VisibleState = VisibleState.Disappeared;
             _inSideWood.gameObject.SetActive(false);
