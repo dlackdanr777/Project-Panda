@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,20 +8,18 @@ public class Inventory
 {
     public int MaxInventoryItem { get; private set; } = 30; //inventory 최대 저장 개수
     public int MaxInventoryItemCount { get; private set; } = 10;//한 아이템당 최대 개수
-
-    private List<InventoryItem> _items = new List<InventoryItem>();
-    
     public int ItemsCount => _items.Count;
 
+    private List<InventoryItem> _items = new List<InventoryItem>();
 
     public List<InventoryItem> GetInventoryList()
     {
         return _items;
     }
 
-    public void Add(Item item, InventoryItemField field)
+    private void Add(Item item, InventoryItemField field)
     {
-        if(_items.Count > 0) 
+        if(_items.Count > 0)
         {
             for (int i = 0; i < _items.Count; i++)
             {
@@ -58,21 +57,22 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public void AddById(InventoryItemField field, int fieldIndex, string id)
+    public void AddById(InventoryItemField field, string id)
     {
+        string startId = id.Substring(0, 3);
         switch (field)
         {
             case InventoryItemField.GatheringItem:
                 List<GatheringItem> gatheringDatabase = null;
-                if (fieldIndex == 0)
+                if (startId.Equals("IBG"))
                 {
                     gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
                 }
-                else if (fieldIndex == 1)
+                else if (startId.Equals("IFI"))
                 {
                     gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
                 }
-                else if (fieldIndex == 2)
+                else if (startId.Equals("IFR"))
                 {
                     gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
                 }
@@ -89,7 +89,7 @@ public class Inventory
                 break;
             case InventoryItemField.Tool:
                 List<ToolItem> toolDatabase = null;
-                if(fieldIndex == 0)
+                if(startId.Equals("ITG"))
                 {
                     toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
                 }
@@ -112,11 +112,35 @@ public class Inventory
     /// <param name="fieldIndex"></param>
     /// <param name="id"></param>
     /// <param name="count"></param>
-    public void AddById(InventoryItemField field, int fieldIndex, string id, int count)
+    public void AddById(InventoryItemField field, string id, int count)
     {
         for(int i = 0; i < count; i++)
         {
-            AddById(field, fieldIndex, id);
+            AddById(field, id);
+        }
+    }
+
+    /// <summary>
+    /// Item으로 인벤토리에 더함
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="field"></param>
+    public void AddItem(Item item, InventoryItemField field)
+    {
+        AddById(field, item.Id);
+    }
+
+    /// <summary>
+    /// Item으로 수량만큼 인벤토리에 더함
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="field"></param>
+    /// <param name="count"></param>
+    public void AddItem(Item item, InventoryItemField field, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            AddById(field, item.Id);
         }
     }
 
