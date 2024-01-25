@@ -136,19 +136,18 @@ public class UIMailList : MonoBehaviour
         switch (giftId)
         {
             case "IBG":
-                GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Bug, _mailList.GetMessageList()[index].Gift.Id);
+                GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
                 break;
             case "IFI":
-                GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fish, _mailList.GetMessageList()[index].Gift.Id);
+                GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
                 break;
             case "IFR":
-                GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, (int)GatheringItemType.Fruit, _mailList.GetMessageList()[index].Gift.Id);
+                GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
                 break;
             case "ITG":
-                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, (int)ToolItemType.GatheringTool, _mailList.GetMessageList()[index].Gift.Id);
+                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, _mailList.GetMessageList()[index].Gift.Id);
                 break;
         }
-        Debug.Log("receiveIndex : " + index);
         _mailList.GetMessageList()[index].IsReceived = true;
     }
 

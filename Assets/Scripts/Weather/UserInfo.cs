@@ -498,10 +498,7 @@ public class UserInfo
                     {
                         fieldIndex = 2;
                     }
-                    for (int k = 0; k < GatheringInventoryDataArray[i].Count; k++)
-                    {
-                        GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.GatheringItem, fieldIndex, GatheringInventoryDataArray[i].Id);
-                    }
+                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.GatheringItem, GatheringInventoryDataArray[i].Id, GatheringInventoryDataArray[i].Count);
                 }
             }
         }
@@ -521,7 +518,7 @@ public class UserInfo
                     {
                         fieldIndex = 0;
                     }
-                    GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, fieldIndex, ToolInventoryDataArray[i].Id);
+                    GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, ToolInventoryDataArray[i].Id);
                 }
             }
         }

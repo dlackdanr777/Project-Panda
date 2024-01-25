@@ -295,7 +295,7 @@ public class Collection : MonoBehaviour
         OnCollectionSuccess?.Invoke(collectionID, _gatheringType);
 
         // 인벤토리로 아이템 이동
-        GameManager.Instance.Player.GatheringItemInventory[(int)_gatheringType].AddById(InventoryItemField.GatheringItem, (int)_gatheringType, collectionID);
+        GameManager.Instance.Player.GatheringItemInventory[(int)_gatheringType].AddById(InventoryItemField.GatheringItem, collectionID);
 
 
         // 도감 업데이트
