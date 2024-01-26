@@ -20,11 +20,32 @@ public enum TweenMode
     /// <summary>빠르게 위치로 갔다가 제자리로 돌아감</summary>
     Spike,
 
+    /// <summary>마지막에 두번 튕기고 위치로 이동</summary>
+    EaseInElastic,
+
     /// <summary>빠르게 위치로 가서 여러번 튕김</summary>
+    EaseOutElastic,
+
+    /// <summary>중간쯤 위치로 가서 여러번 튕김</summary>
     EaseInOutElastic,
+
+    /// <summary>한번 뒤로 갔다가 스무스 하게 해당 값으로 이동</summary>
+    EaseInBack,
+
+    /// <summary>위치로 가서 한번 튕긴 후 해당 값으로 이동</summary>
+    EaseOutBack,
 
     /// <summary>스무스하게 위치로 가서 한번 튕김</summary>
     EaseInOutBack,
+
+    /// <summary>현재 값에서 여러번 튕기다 해당 값으로 이동</summary>
+    EaseInBounce,
+
+    /// <summary>목표 값 이동 후 목표 값에서 여러번 튕김</summary>
+    EaseOutBounce,
+
+    /// <summary>현재 값에서 여러번 튕긴 후 중간에 목표 값 이동 후 목표 값에서도 여러번 튕김</summary>
+    EaseInOutBounce,
 
     /// <summary>Sin 그래프 이동</summary>
     Sinerp,

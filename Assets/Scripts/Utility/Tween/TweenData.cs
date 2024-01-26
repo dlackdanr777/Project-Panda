@@ -35,6 +35,7 @@ namespace Muks.Tween
 
         private bool _isRightMove = true;
 
+
         public virtual void SetData(DataSequence dataSequence)
         {
             TotalDuration = dataSequence.Duration;
@@ -43,7 +44,7 @@ namespace Muks.Tween
         }
 
 
-        //무한 반복
+        /// <summary>무한 반복</summary>
         public void Loop()
         {
             DataSequence sequence = DataSequences.Last();
@@ -53,7 +54,8 @@ namespace Muks.Tween
             IsLoop = true;
         }
 
-        //반복 횟수 설정
+
+        /// <summary>반복 횟수 설정</summary>
         public void Repeat(int count)
         {
             DataSequence sequence = DataSequences.Last();
@@ -74,8 +76,15 @@ namespace Muks.Tween
                 { TweenMode.Smoothstep, Smoothstep },
                 { TweenMode.Smootherstep, Smootherstep },
                 {TweenMode.Spike, Spike },
+                {TweenMode.EaseInElastic, EaseInElastic },
+                {TweenMode.EaseOutElastic, EaseOutElastic },
                 {TweenMode.EaseInOutElastic, EaseInOutElastic },
+                {TweenMode.EaseInBack, EaseInBack },
+                {TweenMode.EaseOutBack, EaseOutBack },
                 {TweenMode.EaseInOutBack, EaseInOutBack },
+                {TweenMode.EaseInBounce, EaseInBounce },
+                {TweenMode.EaseOutBounce, EaseOutBounce },
+                {TweenMode.EaseInOutBounce, EaseInOutBounce },
                 { TweenMode.Sinerp, Sinerp },
                 { TweenMode.Coserp, Coserp }
             };
@@ -145,6 +154,7 @@ namespace Muks.Tween
         private float Constant(float elapsedDuration, float totalDuration)
         {
             float percent = elapsedDuration / totalDuration;
+
             return percent;
         }
 
@@ -153,6 +163,7 @@ namespace Muks.Tween
         {
             float percent = elapsedDuration / totalDuration;
             percent = percent * percent;
+
             return percent;
         }
 
@@ -161,6 +172,7 @@ namespace Muks.Tween
         {
             float percent = elapsedDuration / totalDuration;
             percent = percent * percent * (3f - 2f * percent);
+
             return percent;
         }
 
@@ -169,6 +181,7 @@ namespace Muks.Tween
         {
             float percent = elapsedDuration / totalDuration;
             percent = percent * percent * percent * (percent * (6f * percent - 15f) + 10f);
+
             return percent;
         }
 
@@ -183,19 +196,54 @@ namespace Muks.Tween
         }
 
 
+        private float EaseInElastic(float elapsedDuration, float totalDuration)
+        {
+            float c = (2 * Mathf.PI) / 3f;
+            float percent = elapsedDuration / totalDuration;
+
+            return percent == 0 ? 0 : percent == 1 ?
+                1: -Mathf.Pow(2, 10 * percent - 10) * Mathf.Sin((percent * 10 - 10.75f) * c);
+        }
+
+
+        private float EaseOutElastic(float elapsedDuration, float totalDuration)
+        {
+            float c = (2 * Mathf.PI) / 3f;
+            float percent = elapsedDuration / totalDuration;
+
+            return percent == 0 ? 0 : percent == 1 ?
+                1 : Mathf.Pow(2, -10 * percent) * Mathf.Sin((percent * 10 - 0.75f) * c) + 1;
+        }
+
+
         private float EaseInOutElastic(float elapsedDuration, float totalDuration)
         {
             float c = (2 * Mathf.PI) / 4.5f;
             float percent = elapsedDuration / totalDuration;
 
-            return percent == 0
-            ? 0
-            : percent == 1
-            ? 1
-            : percent < 0.5f
+            return percent == 0 ? 0 : percent == 1 ? 1 : percent < 0.5f
             ? -(Mathf.Pow(2, 20 * percent - 10) * Mathf.Sin((20 * percent - 11.125f) * c)) / 2
             : (Mathf.Pow(2, -20 * percent + 10) * Mathf.Sin((20 * percent - 11.125f) * c)) / 2 + 1;
+        }
 
+
+        private float EaseInBack(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+            float c1 = 1.70158f;
+            float c2 = c1 + 1f;
+
+            return c2 * percent * percent * percent - c1 * percent * percent;
+        }
+
+
+        private float EaseOutBack(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+            float c1 = 1.70158f;
+            float c2 = c1 + 1f;
+
+            return 1 + c2 * Mathf.Pow(percent - 1, 3) + c1 * Mathf.Pow(percent - 1, 2);
         }
 
 
@@ -204,9 +252,75 @@ namespace Muks.Tween
             float percent = elapsedDuration / totalDuration;
             float c1 = 1.70158f;
             float c2 = c1 * 1.525f;
+
             return percent < 0.5f
                ? (Mathf.Pow(2 * percent, 2) * ((c2 + 1) * 2 * percent - c2)) / 2
                : (Mathf.Pow(2 * percent - 2, 2) * ((c2 + 1) * (percent * 2 - 2) + c2) + 2) / 2;
+        }
+
+
+        private float EaseInBounce(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+            return 1 - EaseOutBounce(1 - percent);
+        }
+
+
+        private float EaseOutBounce(float percent)
+        {
+            float n1 = 7.5625f;
+            float d1 = 2.75f;
+            if (percent < 1 / d1)
+            {
+                return n1 * percent * percent;
+            }
+            else if (percent < 2 / d1)
+            {
+                return n1 * (percent -= 1.5f / d1) * percent + 0.75f;
+            }
+            else if (percent < 2.5f / d1)
+            {
+                return n1 * (percent -= 2.25f / d1) * percent + 0.9375f;
+            }
+            else
+            {
+                return n1 * (percent -= 2.625f / d1) * percent + 0.984375f;
+            }
+        }
+
+
+        private float EaseOutBounce(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            float n1 = 7.5625f;
+            float d1 = 2.75f;
+            if (percent < 1 / d1)
+            {
+                return n1 * percent * percent;
+            }
+            else if (percent < 2 / d1)
+            {
+                return n1 * (percent -= 1.5f / d1) * percent + 0.75f;
+            }
+            else if (percent < 2.5f / d1)
+            {
+                return n1 * (percent -= 2.25f / d1) * percent + 0.9375f;
+            }
+            else
+            {
+                return n1 * (percent -= 2.625f / d1) * percent + 0.984375f;
+            }
+        }
+
+
+        private float EaseInOutBounce(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return percent < 0.5f
+               ? (1 - EaseOutBounce(1 - 2 * percent)) / 2
+               : (1 + EaseOutBounce(2 * percent - 1)) / 2;
         }
 
 
@@ -215,6 +329,7 @@ namespace Muks.Tween
         {
             float percent = elapsedDuration / totalDuration;
             percent = Mathf.Sin(percent * Mathf.PI * 0.5f);
+
             return percent;
         }
 
@@ -224,6 +339,7 @@ namespace Muks.Tween
         {
             float percent = elapsedDuration / totalDuration;
             percent = Mathf.Cos(percent * Mathf.PI * 0.5f);
+
             return percent;
         }
     }
