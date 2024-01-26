@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using Muks.Tween;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ public class Challenges
     private int[] _challengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
 
     // 다른 씬에 있을 때 완료된 도전 과제 Id 저장 후 메인 씬에 돌아와서 한꺼번에 실행
-    private List<string> _doneChallenges = new List<string>();
+    //private List<string> _doneChallenges = new List<string>();
 
     #region 개수
     // 채집 성공할 때마다 저장
@@ -81,6 +82,15 @@ public class Challenges
                 }
             }
         }
+
+        // 도감 Count 초기화
+        _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+
+        // 레시피 - 추가하기
+
     }
 
     public void MainStoryDone(string id)
@@ -132,14 +142,14 @@ public class Challenges
         if(type == "NPC")
         {
             // 처음 초기화 할 때만 이렇게 받아오고 그 후에 ++ 해주기
-            _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.NPC]++;
 
             eUnlockingBook = EUnlockingBook.NPC;
         }
         // 곤충
         else if(type == "IBG")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Bug]++;
 
             eUnlockingBook = EUnlockingBook.Bug;
             type = "Bug";
@@ -147,7 +157,7 @@ public class Challenges
         // 물고기
         else if(type == "IFI")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Fish]++;
 
             eUnlockingBook = EUnlockingBook.Fish;
             type = "Fish";
@@ -155,7 +165,7 @@ public class Challenges
         // 과일
         else if(type == "IFR")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Fruit]++;
 
             eUnlockingBook = EUnlockingBook.Fruit;
             type = "Fruit";
