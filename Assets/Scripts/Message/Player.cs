@@ -69,8 +69,8 @@ public class Player
         }
    
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
-        DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
+        //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
+        //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }

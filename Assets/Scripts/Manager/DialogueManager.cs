@@ -10,7 +10,7 @@ public class DialogueManager
 {
     private Dictionary<string, StoryDialogue> _storyDialogueDic;
 
-    private DialogueParser _parser = new DialogueParser();
+    private Parser _parser = new Parser();
 
     //뒤끝 차트의 파일 ID
     private string _chartID = "104969";

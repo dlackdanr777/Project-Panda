@@ -101,7 +101,7 @@ public class MBTI : StartClass
     {
         _startClass = startClass;
 
-        DialogueParser theParser = new DialogueParser();
+        Parser theParser = new Parser();
         MBTIDialogue[] dialogues = theParser.MBTIParse(_csvFileName);
         _uiMBTI.SetActive(false);
 

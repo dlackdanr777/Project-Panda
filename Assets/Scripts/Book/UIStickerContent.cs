@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Muks.DataBind;
 
 public class UIStickerContent : MonoBehaviour
 {
@@ -15,11 +16,12 @@ public class UIStickerContent : MonoBehaviour
 
     private void Awake()
     {
+        DataBind.SetButtonValue("StickerSaveButton", Save);
         _userSticker = GameManager.Instance.Player.StickerInventory;
         _clearButton.onClick.AddListener(OnClickClearButton);
         
         CreateSlots();
-        for(int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
+        for (int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
         {
             GameObject sticker = Instantiate(_stickerContentPf.GetComponent<SpawnSticker>().StickerClone, _stickerZone.transform);
             sticker.transform.position = GameManager.Instance.Player.StickerPosList[i].Pos;
@@ -28,6 +30,8 @@ public class UIStickerContent : MonoBehaviour
             sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
             sticker.transform.GetChild(0).gameObject.SetActive(false); //tool ²ô±â
         }
+
+
     }
 
     private void OnEnable()
@@ -35,16 +39,17 @@ public class UIStickerContent : MonoBehaviour
         UpdateSlots();
     }
 
-    private void OnDisable()
+
+    public void Save()
     {
-        for(int i = 0; i < _stickerZone.transform.childCount; i++)
+        GameManager.Instance.Player.StickerPosList.Clear();
+        for (int i = 0; i < _stickerZone.transform.childCount; i++)
         {
             GameManager.Instance.Player.StickerPosList.Add(new StickerData(
                 _stickerZone.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text,
                 _stickerZone.transform.GetChild(i).position,
                 _stickerZone.transform.GetChild(i).rotation,
                 _stickerZone.transform.GetChild(i).localScale));
-
         }
     }
 

@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 
-public class DialogueParser
+public class Parser
 {
     public MBTIDialogue[] MBTIParse(string CSVFileName)
     {

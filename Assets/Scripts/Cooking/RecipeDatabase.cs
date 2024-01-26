@@ -86,7 +86,7 @@ public class RecipeDatabase
     private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic = new Dictionary<Tuple<string, string>, RecipeData>();
     public Dictionary<Tuple<string, string>, RecipeData> RecipeDataDic => _recipeDataDic;
 
-    private DialogueParser _parser = new DialogueParser();
+    private Parser _parser = new Parser();
 
     private string _chartID => "104967";
 
