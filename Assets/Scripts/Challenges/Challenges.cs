@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using Muks.Tween;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ public class Challenges
     private int[] _challengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
 
     // 다른 씬에 있을 때 완료된 도전 과제 Id 저장 후 메인 씬에 돌아와서 한꺼번에 실행
-    private List<string> _doneChallenges = new List<string>();
+    //private List<string> _doneChallenges = new List<string>();
 
     #region 개수
     // 채집 성공할 때마다 저장
@@ -34,7 +35,7 @@ public class Challenges
     private int[] _unlockingBookCount = new int[System.Enum.GetValues(typeof(EUnlockingBook)).Length];
 
     // 대나무 누적 개수
-    private int _stackedBambooCount = 0;
+    private int _stackedBambooCount;
     public int StackedBambooCount 
     {
         get { return _stackedBambooCount; }
@@ -53,7 +54,7 @@ public class Challenges
     private int _furnitureCount;
 
     // 요리 제작 횟수
-    private int CookingCount = 0;
+    private int _cookingCount;
 
     // 사진
     private int _takePhotoCount;
@@ -81,6 +82,26 @@ public class Challenges
                 }
             }
         }
+
+        // 저장된 정보 불러오기
+        _challengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
+        GatheringSuccessCount = DatabaseManager.Instance.UserInfo.GatheringSuccessCount;
+        _stackedBambooCount = DatabaseManager.Instance.UserInfo.ChallengesCount[0];
+        _purchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
+        _salesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
+        _furnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
+        _cookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
+        _takePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
+        _sharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
+
+    // 도감 Count 초기화
+    _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+
+        // 레시피 - 추가하기
+
     }
 
     public void MainStoryDone(string id)
@@ -132,14 +153,14 @@ public class Challenges
         if(type == "NPC")
         {
             // 처음 초기화 할 때만 이렇게 받아오고 그 후에 ++ 해주기
-            _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.NPC]++;
 
             eUnlockingBook = EUnlockingBook.NPC;
         }
         // 곤충
         else if(type == "IBG")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Bug]++;
 
             eUnlockingBook = EUnlockingBook.Bug;
             type = "Bug";
@@ -147,7 +168,7 @@ public class Challenges
         // 물고기
         else if(type == "IFI")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Fish]++;
 
             eUnlockingBook = EUnlockingBook.Fish;
             type = "Fish";
@@ -155,7 +176,7 @@ public class Challenges
         // 과일
         else if(type == "IFR")
         {
-            _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+            _unlockingBookCount[(int)EUnlockingBook.Fruit]++;
 
             eUnlockingBook = EUnlockingBook.Fruit;
             type = "Fruit";
@@ -273,8 +294,8 @@ public class Challenges
         // A등급 이상인지 확인
         if (grade == "A" || grade == "S")
         {
-            CookingCount++;
-            if(CookingCount >= Count)
+            _cookingCount++;
+            if(_cookingCount >= Count)
             {
                 SuccessChallenge(challengesId);
                 _challengesNum[(int)EChallengesKategorie.cook]++;
@@ -318,6 +339,7 @@ public class Challenges
 
     private void SuccessChallenge(string challengesId)
     {
+        Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
 
         // 현재 메인 씬이면 바로 도전과제 UI에 반영
@@ -335,7 +357,7 @@ public class Challenges
     public void EarningRewards(string challengesId)
     {
         // 대나무 획득
-        GameManager.Instance.Player.GainBamboo(DatabaseManager.Instance.GetChallengesDic()[challengesId].BambooCount);
+
 
         // 아이템 획득 - 도구
         GameManager.Instance.Player.ToolItemInventory[0].AddById

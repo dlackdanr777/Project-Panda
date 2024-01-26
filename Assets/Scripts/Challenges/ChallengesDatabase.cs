@@ -36,6 +36,8 @@ public class ChallengesDatabase
             //ChallengesDic[i] = ChallengesParse(((EChallenges)i).ToString());
             ChallengesDic.AddRange(ChallengesParse(((EChallenges)i).ToString()));
         }
+
+        DatabaseManager.Instance.UserInfo.LoadUserChallenges();
     }
 
 
