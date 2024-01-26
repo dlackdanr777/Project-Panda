@@ -66,6 +66,12 @@ public class UserInfo
     public int[] ChallengesCount = new int[7];
 
     //==========================================================================================================
+    //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
+    private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
+
+    //public static string PhotoPath => Application.persistentDataPath;
+
+    public static string PhotoPath => "Data/";
 
     //쿼터니언 값을 서버에 올릴 수 없으므로 중간에 관리해 줄 Class List
     private List<SaveStickerData> _saveStickerDataList = new List<SaveStickerData>();

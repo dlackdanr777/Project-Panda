@@ -115,7 +115,6 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.AlbumDatabase.LoadData();
         }
     }
-
 }
 
 
