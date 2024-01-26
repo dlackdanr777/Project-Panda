@@ -131,6 +131,9 @@ public class UiCookingStart : MonoBehaviour
         _uiCookwares.EndCooking();
         _complatedButton.onClick.RemoveAllListeners();
 
+        // 도전과제 달성 체크
+        DatabaseManager.Instance.Challenges.Cooking(grade);
+
         yield return new WaitForSeconds(1.1f);
 
         Destroy(animeObj);

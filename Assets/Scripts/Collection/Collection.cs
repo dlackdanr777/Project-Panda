@@ -300,6 +300,8 @@ public class Collection : MonoBehaviour
 
         // 도감 업데이트
 
+        // 도전 과제 달성
+        DatabaseManager.Instance.Challenges.GatheringSuccess((int)_gatheringType);
     }
 
     private void CollectionFail()

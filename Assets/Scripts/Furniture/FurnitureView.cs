@@ -253,7 +253,7 @@ public class FurnitureView : MonoBehaviour
 
     
     /// <summary>
-    /// 코스튬 선택 버튼 </summary>
+    /// 가구 선택 버튼 </summary>
     private void FurnitureImageBtnClick(int index)
     {
         if(index < 1)
@@ -267,7 +267,7 @@ public class FurnitureView : MonoBehaviour
     }
 
     /// <summary>
-    /// 입고있는 코스튬 ID가 변경될 경우 실행 </summary>
+    /// 배치된 가구 ID가 변경될 경우 실행 </summary>
     private void UpdateFurnitureID(Furniture furnitureData)
     {
         if (furnitureData != null)
