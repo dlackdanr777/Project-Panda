@@ -56,6 +56,15 @@ public class UserInfo
     public List<string> StickerReceived = new List<string>();
     public List<StickerData> StickerDataArray = new List<StickerData>();
 
+    //Challenges
+    public List<string> ChallengeDoneId = new List<string>();
+    public List<string> ChallengeClearId = new List<string>();
+
+    public int[] ChallengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
+
+    public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
+    public int[] ChallengesCount = new int[7];
+
     //==========================================================================================================
 
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
@@ -165,6 +174,22 @@ public class UserInfo
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
             IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+            for(int i = 0, count = json[0]["ChallengesNum"].Count; i < count; i++)
+            {
+                ChallengesNum[i] = int.Parse(json[0]["ChallengesNum"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["GatheringSuccessCount"].Count; i < count; i++)
+            {
+                GatheringSuccessCount[i] = int.Parse(json[0]["GatheringSuccessCount"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["ChallengesCount"].Count; i < count; i++)
+            {
+                ChallengesCount[i] = int.Parse(json[0]["ChallengesCount"][i].ToString());
+            }
+
 
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
@@ -855,6 +880,23 @@ public class UserInfo
             }
         }
         return null;
+    }
+    #endregion
+
+    #region Challenges
+    public void LoadUserChallenges()
+    {
+        // 완료된 도전과제 불러오기
+        for (int i = 0; i < ChallengeDoneId.Count; i++)
+        {
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeDoneId[i]].IsDone = true;
+        }
+
+        // 완료 후 클릭한 도전과제 불러오기
+        for (int i = 0; i < ChallengeClearId.Count; i++)
+        {
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsDone = true;
+        }
     }
     #endregion
 }

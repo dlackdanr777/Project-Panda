@@ -71,7 +71,7 @@ public class BambooFieldSystem : MonoBehaviour
         _targetPos = Camera.main.ScreenToWorldPoint(_UIBamboo.transform.position);
         for (int i = 0; i <= _fieldIndex; i++)
         {
-            HarvestBamboo(0, _fieldSlots[i].Yield, i);
+            HarvestBamboo(0, _fieldSlots[i].Yield, _fieldSlots[i].transform);
             _fieldSlots[i].Yield = 0;
 
             // 성장 단계 초기화
@@ -83,21 +83,21 @@ public class BambooFieldSystem : MonoBehaviour
 
     /// <summary>
     /// 대나무 수확 </summary>
-    private void HarvestBamboo(int currentCount, int totalCount, int fieldSlotNum)
+    public void HarvestBamboo(int currentCount, int totalCount, Transform fieldSlotTransform)
     {
         int count = _bambooPrefabCount;
         _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
-        _bambooPrefabs[count].transform.position = _fieldSlots[fieldSlotNum].transform.position;
+        _bambooPrefabs[count].transform.position = fieldSlotTransform.position;
         _bambooPrefabs[count].SetActive(true);
         Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
         _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
 
 
-        Tween.TransformMove(_bambooPrefabs[count], _fieldSlots[fieldSlotNum].transform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
+        Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
         {
             if (currentCount != totalCount)
             { 
-                HarvestBamboo(currentCount + 1, totalCount, fieldSlotNum);
+                HarvestBamboo(currentCount + 1, totalCount, fieldSlotTransform);
             }
         });
 

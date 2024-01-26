@@ -6,11 +6,13 @@ using Muks.DataBind;
 
 public class UIChallenges : MonoBehaviour
 {
+    [SerializeField] private BambooFieldSystem _bambooFieldSystem; // 대나무 획득 위해 필요
 
     [SerializeField] private GameObject _uiChallengesPanel;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private Sprite _doneImage;
+    [SerializeField] private ScrollRect _scrollRect;
 
     [SerializeField] private GameObject _challengesSlotPf;
     private Dictionary<string, Image> _challengesSlotImageDic;
@@ -96,6 +98,9 @@ public class UIChallenges : MonoBehaviour
             _challengeClearImageDic[id].SetActive(true);
             _challengesSlotImageDic[id].color = new Color(0.5f, 0.5f, 0.5f, 1);
 
+            // 대나무 증가하는 애니메이션 실행
+            EarningBamboo(id);
+
             _clearChallenges.Add(id); // 완료된 도전과제 저장 후 창 종료 시 맨 아래로 이동
         }
     }
@@ -113,5 +118,14 @@ public class UIChallenges : MonoBehaviour
         }
 
         _clearChallenges.Clear();
+
+        // 스크롤 뷰 맨 위가 보이도록 설정
+        _scrollRect.verticalNormalizedPosition = 1f;
+    }
+
+
+    private void EarningBamboo(string id)
+    {
+        _bambooFieldSystem.HarvestBamboo(0, DatabaseManager.Instance.GetChallengesDic()[id].BambooCount, _challengeClearImageDic[id].transform);
     }
 }
