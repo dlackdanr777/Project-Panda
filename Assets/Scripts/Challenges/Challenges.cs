@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public enum EUnlockingBook
 {
+    None,
     NPC,
     Bug,
     Fish,
@@ -61,8 +62,6 @@ public class Challenges
 
     public void Register()
     {
-        ChallengeDone += EarningRewards;
-
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
 
         for (int i = 0; i < System.Enum.GetValues(typeof(EChallengesKategorie)).Length; i++)
@@ -89,7 +88,7 @@ public class Challenges
         if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4)) // 메인 스토리 한 장이 끝나면
         {
             string storyChallengeId = "RW" + id.Substring(0, 4);
-            ChallengeDone?.Invoke(storyChallengeId); // 도전과제 달성
+            SuccessChallenge(storyChallengeId); // 도전과제 달성
         }
     }
 
@@ -120,7 +119,14 @@ public class Challenges
     /// 도감 해제 </summary>
     public void UnlockingBook(string type) // 처음에 카운트 받아온 후 도감 해제될 때마다 실행하기... ? -> IsReceived 변경될 때마다 실행하기
     {
-        EUnlockingBook eUnlockingBook = EUnlockingBook.NPC;
+        EUnlockingBook eUnlockingBook = EUnlockingBook.None;
+
+        // 첫 도감 해제
+        if (_unlockingBookCount[(int)EUnlockingBook.None] == 0)
+        {
+            _unlockingBookCount[(int)EUnlockingBook.None] = -1;
+            SuccessChallenge(_challengesDatas[(int)EChallengesKategorie.book][0].Id);
+        }
 
         // NPC
         if(type == "NPC")
@@ -131,35 +137,39 @@ public class Challenges
             eUnlockingBook = EUnlockingBook.NPC;
         }
         // 곤충
-        else if(type == "Bug")
+        else if(type == "IBG")
         {
             _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
 
             eUnlockingBook = EUnlockingBook.Bug;
+            type = "Bug";
         }
         // 물고기
-        else if(type == "Fish")
+        else if(type == "IFI")
         {
             _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
 
             eUnlockingBook = EUnlockingBook.Fish;
+            type = "Fish";
         }
         // 과일
-        else if(type == "Fruit")
+        else if(type == "IFR")
         {
             _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
 
             eUnlockingBook = EUnlockingBook.Fruit;
+            type = "Fruit";
         }
         // 레시피
         else if(type == "Recipe")
         {
-            // 추가
+            // 아직 미완성 - 추가하기
             eUnlockingBook = EUnlockingBook.Recipe;
+            type = "Recipe";
         }
 
         // 한 가지 종류 도감 달성 체크
-        int challengesNum = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == type || n.IsSuccess == false);
+        int challengesNum = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == type || n.IsDone == false);
         int count = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Count;
         string challengesId = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Id;
         if (_unlockingBookCount[(int)eUnlockingBook] > count)
@@ -170,7 +180,7 @@ public class Challenges
         // 각각의 도감 n개 해제했는지 체크
         if (_challengesNum[(int)EChallengesKategorie.book] == -1)
         {
-            _challengesNum[(int)EChallengesKategorie.book] = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == "All" || n.IsSuccess == false);
+            _challengesNum[(int)EChallengesKategorie.book] = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == "All" || n.IsDone == false);
         }
 
         count = _challengesDatas[(int)EChallengesKategorie.book][_challengesNum[(int)EChallengesKategorie.book]].Count;
@@ -203,7 +213,8 @@ public class Challenges
 
     /// <summary>
     /// 상점 사용시 실행 </summary>
-    private void UsingShop(bool isPurchase) // 기능 구현되면 수정
+    /// <param name="isPurchase">구매: true 판매: false</param>
+    public void UsingShop(bool isPurchase) // 기능 구현되면 수정
     {
         // 구매
         if (isPurchase)
@@ -211,7 +222,7 @@ public class Challenges
             _purchaseCount++;
 
             // 리스트에서 달성하지 못한 과제 중 첫 번째 찾기
-            string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Purchase" || n.IsSuccess == false).Id;
+            string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Purchase" || n.IsDone == false).Id;
 
             // 달성했다면
             if (_purchaseCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
@@ -224,7 +235,7 @@ public class Challenges
         {
             _salesCount++;
 
-            string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Sales" || n.IsSuccess == false).Id;
+            string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Sales" || n.IsDone == false).Id;
 
             if (_salesCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
@@ -281,7 +292,7 @@ public class Challenges
             _takePhotoCount++;
 
             // 리스트에서 달성하지 못한 사진찍는 과제 중 첫 번째 찾기
-            string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Take" || n.IsSuccess == false).Id;
+            string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Take" || n.IsDone == false).Id;
             
             // 달성했다면
             if (_takePhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
@@ -295,7 +306,7 @@ public class Challenges
             _sharingPhotoCount++;
 
             // 리스트에서 달성하지 못한 사진공유 과제 중 첫 번째 찾기
-            string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Sharing" || n.IsSuccess == false).Id;
+            string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Sharing" || n.IsDone == false).Id;
 
             if (_sharingPhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
@@ -307,20 +318,21 @@ public class Challenges
 
     private void SuccessChallenge(string challengesId)
     {
-        DatabaseManager.Instance.GetChallengesDic()[challengesId].IsSuccess = true;
+        DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
 
-        // 현재 메인 씬이면 바로 도전과제 완료
+        // 현재 메인 씬이면 바로 도전과제 UI에 반영
         if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
         {
             ChallengeDone?.Invoke(challengesId);
         }
-        else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 완료
+        else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 UI에 반영
         {
-            _doneChallenges.Add(challengesId);
+            //_doneChallenges.Add(challengesId);
+            //EarningRewards(challengesId);
         }
     }
 
-    private void EarningRewards(string challengesId)
+    public void EarningRewards(string challengesId)
     {
         // 대나무 획득
         GameManager.Instance.Player.GainBamboo(DatabaseManager.Instance.GetChallengesDic()[challengesId].BambooCount);

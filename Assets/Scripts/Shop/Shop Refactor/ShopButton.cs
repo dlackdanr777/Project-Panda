@@ -47,6 +47,9 @@ public class ShopButton : MonoBehaviour
                 InventoryItemHandler?.Invoke();
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
+
+                // 도전 과제 달성 체크
+                DatabaseManager.Instance.Challenges.UsingShop(true);
             }
             else
             {
@@ -62,6 +65,9 @@ public class ShopButton : MonoBehaviour
                 InventoryItemHandler?.Invoke();
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
+
+                // 도전 과제 달성 체크
+                DatabaseManager.Instance.Challenges.UsingShop(false);
             }
             else
             {

@@ -9,10 +9,16 @@ public class UIChallenges : MonoBehaviour
 
     [SerializeField] private GameObject _uiChallengesPanel;
     [SerializeField] private GameObject _content;
+    [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private Sprite _doneImage;
 
     [SerializeField] private GameObject _challengesSlotPf;
-    private Dictionary<string, Image> _challengeDonePfDic;
+    private Dictionary<string, Image> _challengesSlotImageDic;
+    private Dictionary<string, Image> _challengeDoneImageDic;
+    private Dictionary<string, GameObject> _challengeClearImageDic;
+    private Dictionary<string, Button> _challengeButtonDic;
+
+    private List<string> _clearChallenges = new List<string>();
 
     private void Start()
     {
@@ -21,10 +27,12 @@ public class UIChallenges : MonoBehaviour
 
     private void Init()
     {
-
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
 
-        _challengeDonePfDic = new Dictionary<string, Image>();
+        _challengesSlotImageDic = new Dictionary<string, Image>();
+        _challengeDoneImageDic = new Dictionary<string, Image>();
+        _challengeClearImageDic = new Dictionary<string, GameObject>();
+        _challengeButtonDic = new Dictionary<string, Button>();
 
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
 
@@ -34,23 +42,76 @@ public class UIChallenges : MonoBehaviour
             GameObject challengeSlot = Instantiate(_challengesSlotPf, _content.transform);
             challengeSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = challengesDic[key].Name;
             challengeSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = challengesDic[key].Description;
-            _challengeDonePfDic.Add(key, challengeSlot.transform.GetChild(2).GetComponent<Image>());
+
+            _challengesSlotImageDic.Add(key, challengeSlot.GetComponent<Image>());
+            _challengeDoneImageDic.Add(key, challengeSlot.transform.GetChild(2).GetComponent<Image>());
+            _challengeClearImageDic.Add(key, challengeSlot.transform.GetChild(3).gameObject);
+
+            _challengeButtonDic[key] = challengeSlot.GetComponent<Button>();
+            if (_challengeButtonDic[key] != null)
+            {
+                _challengeButtonDic[key].onClick.AddListener(() => ChallengeClear(key));
+            }
+
 
             // 성공한 도전 과제라면 완료 이미지로 변경
-            if (challengesDic[key].IsSuccess == true)
+            if (challengesDic[key].IsDone == true)
             {
-                _challengeDonePfDic[key].sprite = _doneImage;
+                _challengeDoneImageDic[key].sprite = _doneImage;
+                if (challengesDic[key].IsClear == true)
+                {
+                    ChallengeClear(key);
+                }
             }
         }
 
-        
-        DataBind.SetButtonValue("ShowChallengesButton", ()=>_uiChallengesPanel.SetActive(true));
-        DataBind.SetButtonValue("CloseChallengesButton", ()=>_uiChallengesPanel.SetActive(false));
+        DataBind.SetButtonValue("ShowChallengesButton", () => 
+        {
+            _uiChallengesPanel.SetActive(true);
+            _backGroundImage.SetActive(true);
+        });
+        DataBind.SetButtonValue("CloseChallengesButton", CloseChallenges);
 
     }
 
+    /// <summary>
+    /// 도전과제 완료 </summary>
     private void ChallengeDone(string id)
     {
-        _challengeDonePfDic[id].sprite = _doneImage;
+        _challengeDoneImageDic[id].sprite = _doneImage;
+
+        // 완료한 도전과제를 리스트의 맨 위로 이동
+        RectTransform slotTransform = _challengesSlotImageDic[id].GetComponent<RectTransform>();
+        slotTransform.SetAsFirstSibling();
+    }
+
+    /// <summary>
+    /// 도전과제 완료 후 클릭 </summary>
+    private void ChallengeClear(string id)
+    {
+        if (DatabaseManager.Instance.GetChallengesDic()[id].IsDone == true)
+        {
+            DatabaseManager.Instance.Challenges.EarningRewards(id);
+            Destroy(_challengeButtonDic[id].GetComponent<Button>());
+            _challengeClearImageDic[id].SetActive(true);
+            _challengesSlotImageDic[id].color = new Color(0.5f, 0.5f, 0.5f, 1);
+
+            _clearChallenges.Add(id); // 완료된 도전과제 저장 후 창 종료 시 맨 아래로 이동
+        }
+    }
+
+    private void CloseChallenges()
+    {
+        _uiChallengesPanel.SetActive(false);
+        _backGroundImage.SetActive(false);
+
+        // 도전과제를 리스트의 맨 아래로 이동
+        for(int i = 0; i < _clearChallenges.Count; i++)
+        {
+            RectTransform slotTransform = _challengesSlotImageDic[_clearChallenges[i]].GetComponent<RectTransform>();
+            slotTransform.SetAsLastSibling();
+        }
+
+        _clearChallenges.Clear();
     }
 }

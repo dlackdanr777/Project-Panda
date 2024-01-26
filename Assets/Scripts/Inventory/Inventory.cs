@@ -81,7 +81,11 @@ public class Inventory
                     if (gatheringDatabase[i].Id.Equals(id))
                     {
                         Add(gatheringDatabase[i], field);
-                        gatheringDatabase[i].IsReceived = true;
+                        if (gatheringDatabase[i].IsReceived != true)
+                        {
+                            gatheringDatabase[i].IsReceived = true;
+                            DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
+                        }
                     }
                 }
                 break;

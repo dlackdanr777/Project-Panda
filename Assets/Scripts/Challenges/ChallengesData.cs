@@ -12,7 +12,8 @@ public class ChallengesData
     public EChallengesKategorie Kategorie;
     public string Type;
     public int Count;
-    public bool IsSuccess;
+    public bool IsDone;
+    public bool IsClear;
 
     public ChallengesData(string id, string name, string description, int bambooCount, string item, EChallengesKategorie kategorie, string type, int count)
     {
