@@ -4,6 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 using System;
+using Random = UnityEngine.Random;
+
+public enum LoadingType
+{
+    /// <summary>처음 로딩</summary>
+    FirstLoading,
+
+    /// <summary>씬 이동</summary>
+    SceneChange,
+}
 
 
 public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
@@ -14,6 +24,8 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     [SerializeField] private TweenMode _fadeTweenMode;
 
+    [SerializeField] private FirstLoadingImage[] _firstLoadingImages;
+
     private bool _isLoading;
 
     public void Start()
@@ -22,10 +34,15 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
         Image fadeImage = _fadeImage.GetComponent<Image>();
         fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);
         _fadeImage.gameObject.SetActive(false);
+
+        for(int i = 0, count = _firstLoadingImages.Length; i < count; i++)
+        {
+            _firstLoadingImages[i].Init(null);
+        }
     }
 
 
-     public void ChangeScene(Action onComplete = null)
+    public void ChangeScene(Action onComplete = null)
      {
         if (_isLoading)
             return;
@@ -55,5 +72,14 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
             _isLoading = false;
             _fadeImage.gameObject.SetActive(false);
         });
+    }
+
+
+    public void FirstLoading()
+    {
+        int randInt = Random.Range(0, _firstLoadingImages.Length);
+
+        ResetFadeImage();
+        _firstLoadingImages[randInt].Loading(_fadeDuration);
     }
 }
