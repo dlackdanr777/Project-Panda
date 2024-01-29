@@ -24,8 +24,8 @@ public class UIStickerContent : MonoBehaviour
         for (int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
         {
             GameObject sticker = Instantiate(_stickerContentPf.GetComponent<SpawnSticker>().StickerClone, _stickerZone.transform);
-            sticker.transform.position = GameManager.Instance.Player.StickerPosList[i].Pos;
-            sticker.transform.rotation = GameManager.Instance.Player.StickerPosList[i].Rot;
+            sticker.transform.localPosition = GameManager.Instance.Player.StickerPosList[i].Pos;
+            sticker.transform.localRotation = GameManager.Instance.Player.StickerPosList[i].Rot;
             sticker.transform.localScale = GameManager.Instance.Player.StickerPosList[i].Scale;
             sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
             sticker.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerPosList[i].Id;
@@ -47,8 +47,8 @@ public class UIStickerContent : MonoBehaviour
         {
             GameManager.Instance.Player.StickerPosList.Add(new StickerData(
                 _stickerZone.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text,
-                _stickerZone.transform.GetChild(i).position,
-                _stickerZone.transform.GetChild(i).rotation,
+                _stickerZone.transform.GetChild(i).localPosition,
+                _stickerZone.transform.GetChild(i).localRotation,
                 _stickerZone.transform.GetChild(i).localScale));
         }
     }
