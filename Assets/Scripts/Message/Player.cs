@@ -20,8 +20,8 @@ public class Player
     public MessageList[] Messages; //0:Mail, 1:Wish
 
     [Header("Sticker")]
-    public StickerList StickerInventory;
-    public List<StickerData> StickerPosList;
+    public StickerList StickerInventory = new StickerList();
+    public List<StickerData> StickerPosList = new List<StickerData>();
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -56,10 +56,6 @@ public class Player
         {
             ToolItemInventory[i] = new Inventory();
         }
-
-        //Sticker
-        StickerInventory = new StickerList();
-        StickerPosList = new List<StickerData>();
 
         //가장 처음 그냥 주는 스티커 3개
         ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;

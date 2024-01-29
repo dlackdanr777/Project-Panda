@@ -241,6 +241,10 @@ public class UserInfo
         param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
         param.Add("IsExistingUser", IsExistingUser);
 
+        param.Add("ChallengesNum", ChallengesNum);
+        param.Add("GatheringSuccessCount", GatheringSuccessCount);
+        param.Add("ChallengesCount", ChallengesCount);
+
         param.Add("AlbumReceived", AlbumReceived);
         param.Add("MessageDataArray", MessageDataArray);
 

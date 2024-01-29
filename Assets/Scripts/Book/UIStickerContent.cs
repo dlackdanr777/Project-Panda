@@ -19,7 +19,7 @@ public class UIStickerContent : MonoBehaviour
         DataBind.SetButtonValue("StickerSaveButton", Save);
         _userSticker = GameManager.Instance.Player.StickerInventory;
         _clearButton.onClick.AddListener(OnClickClearButton);
-        
+
         CreateSlots();
         for (int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
         {
@@ -30,9 +30,8 @@ public class UIStickerContent : MonoBehaviour
             sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
             sticker.transform.GetChild(0).gameObject.SetActive(false); //tool 끄기
         }
-
-
     }
+
 
     private void OnEnable()
     {
@@ -90,14 +89,16 @@ public class UIStickerContent : MonoBehaviour
 
     private Sprite GetStickerImage(string id)
     {
+        Debug.Log(GameManager.Instance.Player.StickerInventory.Count);
         for(int i=0;i< GameManager.Instance.Player.StickerInventory.Count; i++)
         {
             if (GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id.Equals(id))
             {
+                Debug.LogFormat("{0} 이미지 찾음", id);
                 return GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Image;
             }
         }
-
+        Debug.LogFormat("{0} 이미지 못찾음", id);
         return null;
     }
 }

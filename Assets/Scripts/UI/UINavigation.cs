@@ -134,7 +134,6 @@ public class UINavigation : MonoBehaviour
             _uiViews.Last().RectTransform.SetAsLastSibling();
 
         CheckViewListCount();
-
     }
 
 
