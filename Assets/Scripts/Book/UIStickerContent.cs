@@ -26,6 +26,7 @@ public class UIStickerContent : MonoBehaviour
             sticker.transform.rotation = GameManager.Instance.Player.StickerPosList[i].Rot;
             sticker.transform.localScale = GameManager.Instance.Player.StickerPosList[i].Scale;
             sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
+            sticker.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerPosList[i].Id;
             sticker.transform.GetChild(0).gameObject.SetActive(false); //tool ²ô±â
         }
     }
