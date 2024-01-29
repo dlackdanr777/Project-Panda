@@ -56,14 +56,25 @@ public class UserInfo
     public List<string> StickerReceived = new List<string>();
     public List<StickerData> StickerDataArray = new List<StickerData>();
 
-    //==========================================================================================================
+    //Challenges
+    public List<string> ChallengeDoneId = new List<string>();
+    public List<string> ChallengeClearId = new List<string>();
 
+    public int[] ChallengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
+
+    public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
+    public int[] ChallengesCount = new int[7];
+
+    //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
 
     //public static string PhotoPath => Application.persistentDataPath;
 
     public static string PhotoPath => "Data/";
+
+    //쿼터니언 값을 서버에 올릴 수 없으므로 중간에 관리해 줄 Class List
+    private List<SaveStickerData> _saveStickerDataList = new List<SaveStickerData>();
 
 
     public void Register()
@@ -72,78 +83,11 @@ public class UserInfo
     }
 
 
-    /*public void CreateUserInfoData()
-    {
-
-        string paser = DateTime.Now.ToString();
-        _lastAccessDay = paser;
-
-        if (!File.Exists(_path))
-        {
-            Debug.Log("유저 저장 문서가 존재하지 않습니다.");
-
-            CreateUserInfoData();
-            return;
-        }
-
-        UserInfo userInfo = new UserInfo();
-
-        string loadJson = File.ReadAllText(_path);
-        userInfo = JsonUtility.FromJson<UserInfo>(loadJson);
-
-        UserId = userInfo.UserId;
-        string paser = userInfo._lastAccessDay.ToString();
-        _lastAccessDay = paser;
-        DayCount = userInfo.DayCount;  
-        IsExistingUser = userInfo.IsExistingUser;
-        GatheringInventoryDataArray = userInfo.GatheringInventoryDataArray;
-        ToolInventoryDataArray = userInfo.ToolInventoryDataArray;
-        MessageDataArray = userInfo.MessageDataArray;
-        StickerDataArray = userInfo.StickerDataArray;
-
-        GatheringItemReceived = userInfo.GatheringItemReceived;
-        ToolItemReceived = userInfo.ToolItemReceived;
-        NPCItemReceived = userInfo.NPCItemReceived;
-        AlbumReceived = userInfo.AlbumReceived;
-        StickerReceived = userInfo.StickerReceived;
-
-        GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
-        ToolItemInventory = new Inventory[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
-        MessageLists = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
-
-        IsTodayRewardReceipt = true;
-
-
-        if (TODAY.Day > LastAccessDay.Day)
-        {
-            Debug.Log("실행");
-            DayCount++;
-            IsTodayRewardReceipt = false;
-        }
-    }*/
-
     private void CreateUserInfoData()
     {
 
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
-        //IsExistingUser = false;
-/*      GatheringInventoryDataArray = new List<InventoryData>();
-        ToolInventoryDataArray = new List<InventoryData>();
-        MessageDataArray = new List<MessageData>();
-        StickerDataArray = new List<StickerData>();
-        GatheringItemReceived = new List<string>();
-        ToolItemReceived = new List<string>();
-        NPCItemReceived = new List<string>();
-        AlbumReceived = new List<string>();
-        StickerReceived = new List<string>(); 
-
-        DayCount++;
-        IsTodayRewardReceipt = false;*/
-
-        //string json = JsonUtility.ToJson(this, true);
-        //File.WriteAllText(_path, json);
-        //TODO: 모바일 테스트 중 잠금
     }
 
 
@@ -165,6 +109,22 @@ public class UserInfo
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
             IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+            for(int i = 0, count = json[0]["ChallengesNum"].Count; i < count; i++)
+            {
+                ChallengesNum[i] = int.Parse(json[0]["ChallengesNum"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["GatheringSuccessCount"].Count; i < count; i++)
+            {
+                GatheringSuccessCount[i] = int.Parse(json[0]["GatheringSuccessCount"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["ChallengesCount"].Count; i < count; i++)
+            {
+                ChallengesCount[i] = int.Parse(json[0]["ChallengesCount"][i].ToString());
+            }
+
 
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
@@ -281,6 +241,10 @@ public class UserInfo
         param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
         param.Add("IsExistingUser", IsExistingUser);
 
+        param.Add("ChallengesNum", ChallengesNum);
+        param.Add("GatheringSuccessCount", GatheringSuccessCount);
+        param.Add("ChallengesCount", ChallengesCount);
+
         param.Add("AlbumReceived", AlbumReceived);
         param.Add("MessageDataArray", MessageDataArray);
 
@@ -288,7 +252,6 @@ public class UserInfo
     }
 
     #endregion
-
 
     #region SaveAndLoadInventory
 
@@ -457,6 +420,146 @@ public class UserInfo
 
     #endregion
 
+    #region SaveAndLoadSticker
+
+    public void LoadStickerData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            for (int i = 0, count = json[0]["StickerReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["StickerReceived"][i].ToString();
+                StickerReceived.Add(item);
+            }
+
+            _saveStickerDataList.Clear();
+            for (int i = 0; i < json[0]["StickerDataArray"].Count; i++)
+            {
+                SaveStickerData item = JsonUtility.FromJson<SaveStickerData>(json[0]["StickerDataArray"][i].ToJson());
+                _saveStickerDataList.Add(item);
+                StickerDataArray.Add(item.GetStickerData());
+            }
+
+            LoadUserReceivedSticker();
+            LoadUserStickerData();
+            Debug.Log("Sticker Load성공");
+        }
+    }
+
+
+    public void SaveStickerData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Sticker";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveInventoryData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertStickerData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateStickerData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertStickerData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    /// <summary> 서버 스티커 데이터 삽입 함수 </summary>
+    public void InsertStickerData(string selectedProbabilityFileId)
+    {
+        SaveUserStickerData();
+
+        _saveStickerDataList.Clear();
+        foreach (StickerData data in StickerDataArray)
+        {
+            _saveStickerDataList.Add(data.GetSaveStickerData());
+        }
+
+        Param param = GetStickerParam();
+
+        Debug.LogFormat("스티커 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 서버 스티커 데이터 수정 함수 </summary>
+    public void UpdateStickerData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveUserStickerData();
+
+        _saveStickerDataList.Clear();
+        foreach (StickerData data in StickerDataArray)
+        {
+            _saveStickerDataList.Add(data.GetSaveStickerData());
+        }
+
+        Param param = GetStickerParam();
+
+        Debug.LogFormat("스티커 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 스티커 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetStickerParam()
+    {
+        Param param = new Param();
+        param.Add("StickerReceived", StickerReceived);
+        param.Add("StickerDataArray", _saveStickerDataList);
+        return param;
+    }
+
+    #endregion
 
     #region Inventory
     public class InventoryData
@@ -855,6 +958,23 @@ public class UserInfo
             }
         }
         return null;
+    }
+    #endregion
+
+    #region Challenges
+    public void LoadUserChallenges()
+    {
+        // 완료된 도전과제 불러오기
+        for (int i = 0; i < ChallengeDoneId.Count; i++)
+        {
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeDoneId[i]].IsDone = true;
+        }
+
+        // 완료 후 클릭한 도전과제 불러오기
+        for (int i = 0; i < ChallengeClearId.Count; i++)
+        {
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsDone = true;
+        }
     }
     #endregion
 }

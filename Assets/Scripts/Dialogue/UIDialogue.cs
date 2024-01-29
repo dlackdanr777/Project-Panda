@@ -216,7 +216,11 @@ public class UIDialogue : UIView
             if (storyDialogue.PandaID.Equals(DatabaseManager.Instance.GetNPCList()[i].Id) && !DatabaseManager.Instance.GetNPCList()[i].IsReceived)
             {
                 Debug.Log(storyDialogue.PandaID + "를 만났다");
-                DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
+                if(DatabaseManager.Instance.GetNPCList()[i].IsReceived != true)
+                {
+                    DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
+                    DatabaseManager.Instance.Challenges.UnlockingBook("NPC"); // 도전 과제 달성 체크
+                }
             }
         }
     }

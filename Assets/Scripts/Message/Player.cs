@@ -20,8 +20,8 @@ public class Player
     public MessageList[] Messages; //0:Mail, 1:Wish
 
     [Header("Sticker")]
-    public StickerList StickerInventory;
-    public List<StickerData> StickerPosList;
+    public StickerList StickerInventory = new StickerList();
+    public List<StickerData> StickerPosList = new List<StickerData>();
 
     public int Bamboo { get; private set; }
     public int MaxBamboo;
@@ -57,10 +57,6 @@ public class Player
             ToolItemInventory[i] = new Inventory();
         }
 
-        //Sticker
-        StickerInventory = new StickerList();
-        StickerPosList = new List<StickerData>();
-
         //가장 처음 그냥 주는 스티커 3개
         ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;
         for (int i = 0; i < stickerImages.Length; i++)
@@ -69,8 +65,8 @@ public class Player
         }
    
         DatabaseManager.Instance.UserInfo.LoadUserMailData();
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
-        DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
+        //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
+        //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
@@ -95,6 +91,7 @@ public class Player
         {
             Bamboo += amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+            DatabaseManager.Instance.Challenges.StackedBambooCount += amount; // 도전과제 달성 체크
             return true;
         }
         else

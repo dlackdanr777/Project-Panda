@@ -120,7 +120,7 @@ public class UiCookingStart : MonoBehaviour
         string grade = _uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue);
         Debug.Log(grade + " 획득");
 
-        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(_currentRecipeData.Item, InventoryItemField.GatheringItem);
+        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(InventoryItemField.GatheringItem, _currentRecipeData.Item);
         //TODO : 여기서 오류 차후 수정
 
         GameObject animeObj = grade == "F" ? Instantiate(_failedAnimePrefab) : Instantiate(_complatedAnimePrefab);
@@ -130,6 +130,9 @@ public class UiCookingStart : MonoBehaviour
         _uiCookingTimer.EndTimer();
         _uiCookwares.EndCooking();
         _complatedButton.onClick.RemoveAllListeners();
+
+        // 도전과제 달성 체크
+        DatabaseManager.Instance.Challenges.Cooking(grade);
 
         yield return new WaitForSeconds(1.1f);
 
@@ -149,7 +152,7 @@ public class UiCookingStart : MonoBehaviour
         string grade = "F";
         Debug.Log(grade + " 획득");
 
-        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(_currentRecipeData.Item, InventoryItemField.GatheringItem);
+        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(InventoryItemField.GatheringItem, _currentRecipeData.Item);
         //TODO : 여기서 오류
 
         GameObject animeObj = Instantiate(_failedAnimePrefab);

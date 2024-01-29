@@ -9,13 +9,21 @@ public class ChallengesData
     public string Description;
     public int BambooCount;
     public string Item;
+    public EChallengesKategorie Kategorie;
+    public string Type;
+    public int Count;
+    public bool IsDone;
+    public bool IsClear;
 
-    public ChallengesData(string id, string name, string description, int bambooCount, string item)
+    public ChallengesData(string id, string name, string description, int bambooCount, string item, EChallengesKategorie kategorie, string type, int count)
     {
         Id = id;
         Name = name;
         Description = description;
         BambooCount = bambooCount;
         Item = item;
+        Kategorie = kategorie;
+        Type = type;
+        Count = count;
     }
 }

@@ -346,8 +346,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
     }
 
-    public Dictionary<string, ChallengesData> GetChallengesDic(int i)
+    public Dictionary<string, ChallengesData> GetChallengesDic()
     {
-        return _challengesDatabase.GetChallengesDic(i);
+        return _challengesDatabase.GetChallengesDic();
     }
 }

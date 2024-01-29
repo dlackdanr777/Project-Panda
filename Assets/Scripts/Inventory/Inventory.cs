@@ -81,7 +81,11 @@ public class Inventory
                     if (gatheringDatabase[i].Id.Equals(id))
                     {
                         Add(gatheringDatabase[i], field);
-                        gatheringDatabase[i].IsReceived = true;
+                        if (gatheringDatabase[i].IsReceived != true)
+                        {
+                            gatheringDatabase[i].IsReceived = true;
+                            DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
+                        }
                     }
                 }
                 break;
@@ -125,7 +129,7 @@ public class Inventory
     /// </summary>
     /// <param name="item"></param>
     /// <param name="field"></param>
-    public void AddItem(Item item, InventoryItemField field)
+    public void AddItem(InventoryItemField field, Item item)
     {
         AddById(field, item.Id);
     }
@@ -136,7 +140,7 @@ public class Inventory
     /// <param name="item"></param>
     /// <param name="field"></param>
     /// <param name="count"></param>
-    public void AddItem(Item item, InventoryItemField field, int count)
+    public void AddItem(InventoryItemField field, Item item, int count)
     {
         for (int i = 0; i < count; i++)
         {
