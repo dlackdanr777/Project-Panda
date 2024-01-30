@@ -38,8 +38,8 @@ public class FirstLoadingImage : MonoBehaviour
         _animeImage.transform.position = _tmpPos;
         Tween.TransformMove(_animeImage.gameObject, targetPos, 10, TweenMode.Constant);
 
-        Tween.IamgeAlpha(_animeImage.gameObject, 1, fadeDuration, TweenMode.Constant);
-        Tween.IamgeAlpha(_bgImage.gameObject, 1, fadeDuration, TweenMode.Constant, () =>
+        Tween.IamgeAlpha(_animeImage.gameObject, 1, fadeDuration * 0.5f, TweenMode.Constant);
+        Tween.IamgeAlpha(_bgImage.gameObject, 1, fadeDuration * 0.5f, TweenMode.Constant, () =>
         {
 
             Tween.TransformScale(_bgImage.gameObject, new Vector3(1, 1, 1), 3, TweenMode.Constant, () =>
