@@ -51,7 +51,6 @@ public class LoadingSceneManager : MonoBehaviour
                 {
                     op.allowSceneActivation = true;
 
-
                     switch (_loadingType)
                     {
                         case LoadingType.FirstLoading:
