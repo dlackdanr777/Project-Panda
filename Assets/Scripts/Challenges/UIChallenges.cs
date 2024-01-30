@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.DataBind;
 
-public class UIChallenges : MonoBehaviour
+public class UIChallenges : UIView
 {
     [SerializeField] private BambooFieldSystem _bambooFieldSystem; // 대나무 획득 위해 필요
 
@@ -22,13 +22,11 @@ public class UIChallenges : MonoBehaviour
 
     private List<string> _clearChallenges = new List<string>();
 
-    private void Start()
-    {
-        Init();
-    }
 
-    private void Init()
+    public override void Init(UINavigation uiNav)
     {
+        base.Init(uiNav);
+
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
 
         _challengesSlotImageDic = new Dictionary<string, Image>();
@@ -66,15 +64,21 @@ public class UIChallenges : MonoBehaviour
                 }
             }
         }
-
-        DataBind.SetButtonValue("ShowChallengesButton", () => 
-        {
-            _uiChallengesPanel.SetActive(true);
-            _backGroundImage.SetActive(true);
-        });
-        DataBind.SetButtonValue("CloseChallengesButton", CloseChallenges);
-
     }
+
+
+    public override void Show()
+    {
+        _uiChallengesPanel.SetActive(true);
+        _backGroundImage.SetActive(true);
+    }
+
+
+    public override void Hide()
+    {
+        CloseChallenges();
+    }
+
 
     /// <summary>
     /// 도전과제 완료 </summary>
