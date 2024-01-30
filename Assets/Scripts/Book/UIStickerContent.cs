@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Muks.DataBind;
 
 public class UIStickerContent : MonoBehaviour
 {
@@ -15,36 +16,40 @@ public class UIStickerContent : MonoBehaviour
 
     private void Awake()
     {
+        DataBind.SetButtonValue("StickerSaveButton", Save);
         _userSticker = GameManager.Instance.Player.StickerInventory;
         _clearButton.onClick.AddListener(OnClickClearButton);
-        
+
         CreateSlots();
-        for(int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
+        for (int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
         {
             GameObject sticker = Instantiate(_stickerContentPf.GetComponent<SpawnSticker>().StickerClone, _stickerZone.transform);
-            sticker.transform.position = GameManager.Instance.Player.StickerPosList[i].Pos;
-            sticker.transform.rotation = GameManager.Instance.Player.StickerPosList[i].Rot;
+            sticker.transform.localPosition = GameManager.Instance.Player.StickerPosList[i].Pos;
+            sticker.transform.localRotation = GameManager.Instance.Player.StickerPosList[i].Rot;
             sticker.transform.localScale = GameManager.Instance.Player.StickerPosList[i].Scale;
             sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
+            sticker.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerPosList[i].Id;
             sticker.transform.GetChild(0).gameObject.SetActive(false); //tool 끄기
         }
     }
+
 
     private void OnEnable()
     {
         UpdateSlots();
     }
 
-    private void OnDisable()
+
+    public void Save()
     {
-        for(int i = 0; i < _stickerZone.transform.childCount; i++)
+        GameManager.Instance.Player.StickerPosList.Clear();
+        for (int i = 0; i < _stickerZone.transform.childCount; i++)
         {
             GameManager.Instance.Player.StickerPosList.Add(new StickerData(
                 _stickerZone.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text,
-                _stickerZone.transform.GetChild(i).position,
-                _stickerZone.transform.GetChild(i).rotation,
+                _stickerZone.transform.GetChild(i).localPosition,
+                _stickerZone.transform.GetChild(i).localRotation,
                 _stickerZone.transform.GetChild(i).localScale));
-
         }
     }
 
@@ -85,14 +90,16 @@ public class UIStickerContent : MonoBehaviour
 
     private Sprite GetStickerImage(string id)
     {
+        Debug.Log(GameManager.Instance.Player.StickerInventory.Count);
         for(int i=0;i< GameManager.Instance.Player.StickerInventory.Count; i++)
         {
             if (GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id.Equals(id))
             {
+                Debug.LogFormat("{0} 이미지 찾음", id);
                 return GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Image;
             }
         }
-
+        Debug.LogFormat("{0} 이미지 못찾음", id);
         return null;
     }
 }

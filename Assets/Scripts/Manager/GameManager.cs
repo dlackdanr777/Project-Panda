@@ -32,9 +32,9 @@ public class GameManager : SingletonHandler<GameManager>
 
     public void OnApplicationQuit()
     {
-        DatabaseManager.Instance.PhotoDatabase.Save();
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
         DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+        DatabaseManager.Instance.UserInfo.SaveStickerData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);
         DatabaseManager.Instance.StartPandaInfo.SavePandaInfoData(10);
     }

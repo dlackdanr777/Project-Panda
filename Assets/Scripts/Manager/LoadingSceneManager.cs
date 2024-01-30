@@ -1,16 +1,20 @@
-using Muks.DataBind;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
+
 
 public class LoadingSceneManager : MonoBehaviour
 {
-    public static string _nextScene;
+
 
     [Tooltip("로딩이 최소 몇 초가 걸리게 할지 설정")]
     [SerializeField] private float _changeSceneTime;
+
+    private static string _nextScene;
+
+    private static LoadingType _loadingType;
 
     private void Start()
     {
@@ -18,11 +22,12 @@ public class LoadingSceneManager : MonoBehaviour
     }
 
 
-    public static void LoadScene(string sceneName)
+    public static void LoadScene(string sceneName, LoadingType type = LoadingType.SceneChange)
     {
-
         _nextScene = sceneName;
+        _loadingType = type;
         ChangeSceneManager.Instance.ChangeScene(() => SceneManager.LoadScene("LoadingScene"));
+
     }
 
 
@@ -45,7 +50,19 @@ public class LoadingSceneManager : MonoBehaviour
                 if(_changeSceneTime < timer)
                 {
                     op.allowSceneActivation = true;
-                    ChangeSceneManager.Instance.ResetFadeImage();
+
+
+                    switch (_loadingType)
+                    {
+                        case LoadingType.FirstLoading:
+                            ChangeSceneManager.Instance.FirstLoading();
+                            break;
+
+                        case LoadingType.SceneChange:
+                            ChangeSceneManager.Instance.ResetFadeImage();
+                            break;
+                    }
+                    
                     yield break;
                 }
             }

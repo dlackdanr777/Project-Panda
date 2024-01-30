@@ -1,4 +1,6 @@
 using BackEnd;
+using LitJson;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,10 +101,11 @@ namespace Muks.BackEnd
         /// 차후 첫 로그인 이면 NewUser씬, 아니면 기존유저 씬으로 넘어가게 해야함
         private void LoadNextScene()
         {
-            LoadingSceneManager.LoadScene("NewUserSceneMuksTest");
+            LoadingSceneManager.LoadScene("NewUserSceneMuksTest", LoadingType.FirstLoading);
             DatabaseManager.Instance.ItemDatabase.LoadData();
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
             BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
+            BackendManager.Instance.GetMyData("Sticker", 10, DatabaseManager.Instance.UserInfo.LoadStickerData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);
             CostumeManager.Instance.LoadData();

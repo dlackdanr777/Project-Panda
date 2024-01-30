@@ -12,7 +12,7 @@ public class PandaManager
     /// <summary>
     /// 모든 판다 이미지 데이터</summary>
     private Dictionary<int, PandaStateImage> _pandaImageDic;
-    private DialogueParser _parser = new DialogueParser();
+    private Parser _parser = new Parser();
 
     public void Register()
     {

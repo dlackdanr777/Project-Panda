@@ -62,6 +62,19 @@ namespace Muks.Tween
     /// <summary>트윈 애니메이션을 위한 정적 클래스</summary>
     public static class Tween
     {
+
+        /// <summary>해당 오브젝트의 일시정지된 모든 Tween 실행 함수</summary>
+        public static void Play(GameObject gameObject)
+        {
+            TweenData[] tweens = gameObject.GetComponents<TweenData>();
+
+            foreach (TweenData tween in tweens)
+            {
+                tween.enabled = true;
+            }
+        }
+
+
         /// <summary>해당 오브젝트의 모든 Tween 정지 함수</summary>
         public static void Stop(GameObject gameObject)
         {
@@ -72,13 +85,26 @@ namespace Muks.Tween
                 tween.enabled = false;
                 tween.IsLoop = false;
                 tween.OnComplete = null;
+                tween.OnUpdate = null;
                 tween.DataSequences.Clear();
             }
         }
 
 
+        /// <summary>해당 오브젝트의 모든 Tween 일시 정지 함수(Play() 호출 전까지 정지)</summary>
+        public static void Pause(GameObject gameObject)
+        {
+            TweenData[] tweens = gameObject.GetComponents<TweenData>();
+
+            foreach (TweenData tween in tweens)
+            {
+                tween.enabled = false;
+            }
+        }
+
+
         /// <summary>목표 값으로 지속 시간동안 오브젝트를 이동시키는 함수</summary>
-        public static TweenData TransformMove(GameObject targetObject, Vector3 targetPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TransformMove(GameObject targetObject, Vector3 targetPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTransformMove objToMove = !targetObject.GetComponent<TweenTransformMove>()
                 ? targetObject.AddComponent<TweenTransformMove>()
@@ -89,6 +115,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToMove.IsLoop = false;
             objToMove.AddDataSequence(tempData);
@@ -105,7 +132,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 오브젝트를 회전시키는 함수</summary>
-        public static TweenData TransformRotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TransformRotate(GameObject targetObject, Vector3 targetEulerAngles, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTransformRotate objToRotate = !targetObject.GetComponent<TweenTransformRotate>()
                 ? targetObject.AddComponent<TweenTransformRotate>()
@@ -116,6 +143,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToRotate.IsLoop = false;
             objToRotate.AddDataSequence(tempData);
@@ -132,7 +160,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 오브젝트의 크기를 조절하는 함수</summary>
-        public static TweenData TransformScale(GameObject targetObject, Vector3 targetScale, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TransformScale(GameObject targetObject, Vector3 targetScale, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTransformScale objToScale = !targetObject.GetComponent<TweenTransformScale>()
                 ? targetObject.AddComponent<TweenTransformScale>()
@@ -143,6 +171,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToScale.IsLoop = false;
             objToScale.AddDataSequence(tempData);
@@ -159,7 +188,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 UI의 크기를 조절하는 함수</summary>
-        public static TweenData RectTransfromSizeDelta(GameObject targetObject, Vector2 targetSizeDelta, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData RectTransfromSizeDelta(GameObject targetObject, Vector2 targetSizeDelta, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenRectTransformSizeDelta objToSizeDelta = !targetObject.GetComponent<TweenRectTransformSizeDelta>()
                 ? targetObject.AddComponent<TweenRectTransformSizeDelta>()
@@ -170,6 +199,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToSizeDelta.IsLoop = false;
             objToSizeDelta.AddDataSequence(tempData);
@@ -186,7 +216,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 UI의 위치를 이동시키는 함수</summary>
-        public static TweenData RectTransfromAnchoredPosition(GameObject targetObject, Vector2 targetAnchoredPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData RectTransfromAnchoredPosition(GameObject targetObject, Vector2 targetAnchoredPosition, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenRectTransformAnchoredPosition objToAnchoredPosition = !targetObject.GetComponent<TweenRectTransformAnchoredPosition>()
                 ? targetObject.AddComponent<TweenRectTransformAnchoredPosition>()
@@ -197,6 +227,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToAnchoredPosition.IsLoop = false;
             objToAnchoredPosition.AddDataSequence(tempData);
@@ -213,7 +244,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 텍스트 컬러 값을 변경하는 함수</summary>
-        public static TweenData TextColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TextColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTextColor objToColor = !targetObject.GetComponent<TweenTextColor>()
                 ? targetObject.AddComponent<TweenTextColor>()
@@ -224,6 +255,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -240,7 +272,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 텍스트 알파 값을 변경하는 함수</summary>
-        public static TweenData TextAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TextAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTextAlpha objToColor = !targetObject.GetComponent<TweenTextAlpha>()
                 ? targetObject.AddComponent<TweenTextAlpha>()
@@ -251,6 +283,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -267,7 +300,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 TMP 컬러 값을 변경하는 함수</summary>
-        public static TweenData TMPColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TMPColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTMPColor objToColor = !targetObject.GetComponent<TweenTMPColor>()
                 ? targetObject.AddComponent<TweenTMPColor>()
@@ -278,6 +311,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -294,7 +328,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 TMP 알파 값을 변경하는 함수</summary>
-        public static TweenData TMPAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData TMPAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenTMPAlpha objToColor = !targetObject.GetComponent<TweenTMPAlpha>()
                 ? targetObject.AddComponent<TweenTMPAlpha>()
@@ -305,6 +339,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -321,7 +356,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 이미지 컬러 값을 변경하는 함수</summary>
-        public static TweenData IamgeColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData IamgeColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenImageColor objToColor = !targetObject.GetComponent<TweenImageColor>()
                 ? targetObject.AddComponent<TweenImageColor>()
@@ -332,6 +367,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -348,7 +384,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 이미지 알파 값을 변경하는 함수</summary>
-        public static TweenData IamgeAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData IamgeAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenImageAlpha objToColor = !targetObject.GetComponent<TweenImageAlpha>()
                 ? targetObject.AddComponent<TweenImageAlpha>()
@@ -359,6 +395,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -375,7 +412,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 스프라이트 렌더러 컬러 값을 변경하는 함수</summary>
-        public static TweenData SpriteRendererColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData SpriteRendererColor(GameObject targetObject, Color targetColor, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenSpriteRendererColor objToColor = !targetObject.GetComponent<TweenSpriteRendererColor>()
                 ? targetObject.AddComponent<TweenSpriteRendererColor>()
@@ -386,6 +423,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -402,7 +440,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 스프라이트 렌더러 알파 값을 변경하는 함수</summary>
-        public static TweenData SpriteRendererAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData SpriteRendererAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenSpriteRendererAlpha objToColor = !targetObject.GetComponent<TweenSpriteRendererAlpha>()
                 ? targetObject.AddComponent<TweenSpriteRendererAlpha>()
@@ -413,6 +451,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
@@ -429,7 +468,7 @@ namespace Muks.Tween
 
 
         /// <summary>목표 값으로 지속 시간동안 카메라 사이즈 값을 변경하는 함수</summary>
-        public static TweenData CameraOrthographicSize(GameObject targetObject, float targetSize, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null)
+        public static TweenData CameraOrthographicSize(GameObject targetObject, float targetSize, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
             TweenCameraSize objToColor = !targetObject.GetComponent<TweenCameraSize>()
                 ? targetObject.AddComponent<TweenCameraSize>()
@@ -440,6 +479,7 @@ namespace Muks.Tween
             tempData.Duration = duration;
             tempData.TweenMode = tweenMode;
             tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
 
             objToColor.IsLoop = false;
             objToColor.AddDataSequence(tempData);
