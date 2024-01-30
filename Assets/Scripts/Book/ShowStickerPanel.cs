@@ -6,35 +6,33 @@ using UnityEngine;
 public class ShowStickerPanel : MonoBehaviour
 {
     [SerializeField] private GameObject _stickerPanel;
-
-
-    private Vector2 _tempPos;
-
-    private void Awake()
-    {
-        _tempPos = _stickerPanel.GetComponent<RectTransform>().anchoredPosition;
-    }
+    [SerializeField] private GameObject _dontTouchArea;
 
     private void OnEnable()
     {
+        Debug.Log("OnEnable");
         Anime1_Show();
     }
 
     private void OnDisable()
     {
+        Debug.Log("OnDisable");
         Hide();
     }
 
     private void Anime1_Show()
     {
         _stickerPanel.SetActive(true);
-        Tween.RectTransfromAnchoredPosition(_stickerPanel, new Vector2(0, -545), 1f, TweenMode.EaseInOutBack);
-
+        _dontTouchArea.SetActive(true);
+        Tween.RectTransfromAnchoredPosition(_stickerPanel, new Vector2(0, -545), 1.2f, TweenMode.EaseInOutBack, () =>
+        {
+            _dontTouchArea.SetActive(false);
+        });
     }
 
     private void Hide()
-    {
-        _stickerPanel.GetComponent<RectTransform>().anchoredPosition = _tempPos;
+    { 
+        _stickerPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1043);
         _stickerPanel.SetActive(false);
     }
 }

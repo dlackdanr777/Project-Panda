@@ -18,7 +18,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private DialogueManager _dialogueDatabase;
     public DialogueManager DialogueDatabase => _dialogueDatabase;
-
+ 
     private WeatherApp _weatherDatabase;
     public WeatherApp WeatherDatabase => _weatherDatabase;
 
@@ -47,6 +47,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private NPCDatabase _npcDatabase;
     public NPCDatabase NPCDatabase => _npcDatabase;
+
+    private SideStoryDialogueManager _sideStoryDialogueDatabase;
+    public SideStoryDialogueManager SideDialogueDatabase => _sideStoryDialogueDatabase;
 
     //Message
     [SerializeField] private ItemSpriteDatabase _mailPaper;
@@ -91,6 +94,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
         _npcDatabase = new NPCDatabase();
+        _sideStoryDialogueDatabase = new SideStoryDialogueManager();
         _messageDatabase = new MessageDatabase();
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
@@ -135,6 +139,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         }
 
         _npcDatabase.Register();
+        _sideStoryDialogueDatabase.Register();
         _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
 
