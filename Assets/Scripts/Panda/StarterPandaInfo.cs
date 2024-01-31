@@ -37,12 +37,20 @@ public class StarterPandaInfo
 
     public void Register()
     {
-        //LoadPandaInfoData();
-/*        for (int i = 0; i < FurnitureRooms.Length; i++)
+        for (int i = 0; i < FurnitureRooms.Length; i++)
         {
-            FurnitureRooms[i] = new FurnitureModel.FurnitureId();
-        }*/
-        
+            if (FurnitureRooms[i] == null)
+            {
+                FurnitureRooms[i] = new FurnitureModel.FurnitureId();
+            }
+        }
+
+        //LoadPandaInfoData();
+        /*        for (int i = 0; i < FurnitureRooms.Length; i++)
+                {
+                    FurnitureRooms[i] = new FurnitureModel.FurnitureId();
+                }*/
+
     }
 
 /*    // 불러오기
@@ -278,6 +286,124 @@ public class StarterPandaInfo
     public void LoadMyFurniture()
     {
         Debug.Log("LoadMyFurniture");
+
+        // 서버에 연결되면 삭제
+        FurnitureInventoryID.Add("RN01A");
+        FurnitureInventoryID.Add("RN01B");
+        FurnitureInventoryID.Add("RN01C");
+        FurnitureInventoryID.Add("RN01D");
+        FurnitureInventoryID.Add("RN01E");
+        FurnitureInventoryID.Add("RN01F");
+        FurnitureInventoryID.Add("RN01G");
+        FurnitureInventoryID.Add("RN01H");
+
+        FurnitureInventoryID.Add("RN02A");
+        FurnitureInventoryID.Add("RN02B");
+        FurnitureInventoryID.Add("RN02C");
+        FurnitureInventoryID.Add("RN02D");
+        FurnitureInventoryID.Add("RN02E");
+        FurnitureInventoryID.Add("RN02F");
+        FurnitureInventoryID.Add("RN02G");
+        FurnitureInventoryID.Add("RN02H");
+
+        FurnitureInventoryID.Add("RN03A");
+        FurnitureInventoryID.Add("RN03B");
+        FurnitureInventoryID.Add("RN03C");
+        FurnitureInventoryID.Add("RN03D");
+        FurnitureInventoryID.Add("RN03E");
+        FurnitureInventoryID.Add("RN03F");
+        FurnitureInventoryID.Add("RN03G");
+        FurnitureInventoryID.Add("RN03H");
+
+        FurnitureInventoryID.Add("RN04A");
+        FurnitureInventoryID.Add("RN04B");
+        FurnitureInventoryID.Add("RN04C");
+        FurnitureInventoryID.Add("RN04D");
+        FurnitureInventoryID.Add("RN04E");
+        FurnitureInventoryID.Add("RN04F");
+        FurnitureInventoryID.Add("RN04G");
+        FurnitureInventoryID.Add("RN04H");
+
+        FurnitureInventoryID.Add("RN05A");
+        FurnitureInventoryID.Add("RN05B");
+        FurnitureInventoryID.Add("RN05C");
+        FurnitureInventoryID.Add("RN05D");
+        FurnitureInventoryID.Add("RN05E");
+        FurnitureInventoryID.Add("RN05F");
+        FurnitureInventoryID.Add("RN05G");
+        FurnitureInventoryID.Add("RN05H");
+
+        FurnitureInventoryID.Add("RN06A");
+        FurnitureInventoryID.Add("RN06B");
+        FurnitureInventoryID.Add("RN06C");
+        FurnitureInventoryID.Add("RN06D");
+        FurnitureInventoryID.Add("RN06E");
+        FurnitureInventoryID.Add("RN06F");
+        FurnitureInventoryID.Add("RN06G");
+
+        FurnitureInventoryID.Add("RN07A");
+        FurnitureInventoryID.Add("RN07B");
+        FurnitureInventoryID.Add("RN07C");
+        FurnitureInventoryID.Add("RN07D");
+        FurnitureInventoryID.Add("RN07E");
+        FurnitureInventoryID.Add("RN07F");
+        FurnitureInventoryID.Add("RN07G");
+        FurnitureInventoryID.Add("RN07H");
+
+        FurnitureInventoryID.Add("RN08A");
+        FurnitureInventoryID.Add("RN08B");
+        FurnitureInventoryID.Add("RN08C");
+        FurnitureInventoryID.Add("RN08D");
+        FurnitureInventoryID.Add("RN08E");
+        FurnitureInventoryID.Add("RN08F");
+        FurnitureInventoryID.Add("RN08G");
+        FurnitureInventoryID.Add("RN08H");
+
+        FurnitureInventoryID.Add("RN09A");
+        FurnitureInventoryID.Add("RN09B");
+        FurnitureInventoryID.Add("RN09C");
+        FurnitureInventoryID.Add("RN09D");
+        FurnitureInventoryID.Add("RN09E");
+        FurnitureInventoryID.Add("RN09F");
+        FurnitureInventoryID.Add("RN09G");
+        FurnitureInventoryID.Add("RN09H");
+
+        FurnitureInventoryID.Add("RN10A");
+        FurnitureInventoryID.Add("RN10B");
+        FurnitureInventoryID.Add("RN10C");
+        FurnitureInventoryID.Add("RN10D");
+        FurnitureInventoryID.Add("RN10E");
+        FurnitureInventoryID.Add("RN10F");
+        FurnitureInventoryID.Add("RN10G");
+        FurnitureInventoryID.Add("RN10H");
+
+        FurnitureInventoryID.Add("RN11A");
+        FurnitureInventoryID.Add("RN11B");
+        FurnitureInventoryID.Add("RN11C");
+        FurnitureInventoryID.Add("RN11D");
+        FurnitureInventoryID.Add("RN11E");
+        FurnitureInventoryID.Add("RN11F");
+        FurnitureInventoryID.Add("RN11G");
+        FurnitureInventoryID.Add("RN11H");
+
+        FurnitureInventoryID.Add("RN12A");
+        FurnitureInventoryID.Add("RN12B");
+        FurnitureInventoryID.Add("RN12C");
+        FurnitureInventoryID.Add("RN12D");
+        FurnitureInventoryID.Add("RN12E");
+        FurnitureInventoryID.Add("RN12F");
+        FurnitureInventoryID.Add("RN12G");
+        FurnitureInventoryID.Add("RN12H");
+
+        FurnitureInventoryID.Add("RN13A");
+        FurnitureInventoryID.Add("RN13B");
+        FurnitureInventoryID.Add("RN13C");
+        FurnitureInventoryID.Add("RN13D");
+        FurnitureInventoryID.Add("RN13E");
+        FurnitureInventoryID.Add("RN13F");
+        FurnitureInventoryID.Add("RN13G");
+        FurnitureInventoryID.Add("RN13H");
+
         if (DatabaseManager.Instance.GetFurnitureItem() != null)
         {
             foreach (string key in DatabaseManager.Instance.GetFurnitureItem().Keys)
@@ -301,6 +427,7 @@ public class StarterPandaInfo
                 }
 
             }
+
             // 가구 불러온 후 저장하기
             SavePandaInfoData();
 

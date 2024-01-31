@@ -136,9 +136,10 @@ public class ItemDatabase
             FurnitureDic.Add(_dataFurniture[i]["ID"].ToString(), new Furniture(_dataFurniture[i]["ID"].ToString(),
                     _dataFurniture[i]["이름"].ToString(),
                     _dataFurniture[i]["설명"].ToString(),
+                    _dataFurniture[i]["스토리단계"].ToString(),
                     (int)_dataFurniture[i]["가격"],
                     null,
-                    _dataFurniture[i]["맵ID"].ToString(),
+                    "MN04",  //_dataFurniture[i]["맵ID"].ToString(), // 나중에 쓸 수 있음 일단은 "MN04"로 통일
                     FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
                     FurnitureItemSprite.ItemSprites[i].Image));
             //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
