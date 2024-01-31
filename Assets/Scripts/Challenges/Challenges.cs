@@ -343,15 +343,15 @@ public class Challenges
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
 
         // 현재 메인 씬이면 바로 도전과제 UI에 반영
-        if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
-        {
+        //if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
+        //{
             ChallengeDone?.Invoke(challengesId);
-        }
-        else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 UI에 반영
-        {
+        //}
+        //else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 UI에 반영
+        //{
             //_doneChallenges.Add(challengesId);
             //EarningRewards(challengesId);
-        }
+        //}
     }
 
     public void EarningRewards(string challengesId)
