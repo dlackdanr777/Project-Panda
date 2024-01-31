@@ -237,4 +237,37 @@ public class Inventory
         }
         return false;
     }
+
+    /// <summary>
+    /// 아이디로 아이템 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>해당 아이템이 있으면 true, 없으면 false</returns>
+    public bool FindItemById(string id)
+    {
+        for(int i=0;i<ItemsCount; i++)
+        {
+            if (_items[i].Id.Equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 스페셜 아이템이 있는지 확인
+    /// </summary>
+    /// <returns>있으면 true, 없으면 false</returns>
+    public bool FindSpecialItem()
+    {
+        for (int i = 0; i < ItemsCount; i++)
+        {
+            if (_items[i].Rank.Equals("스페셜"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

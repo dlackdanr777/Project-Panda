@@ -21,7 +21,6 @@ public class SideStoryDialogueManager : MonoBehaviour
                 _dataSideStory.Add(id, CSVReader.Read("SideStory/" + id)); //SS01 ~ 
 
                 Dictionary<string, SideStoryDialogue> dictionary = new Dictionary<string, SideStoryDialogue>();
-                Debug.Log(_dataSideStory[id][10]["일반 대화"].ToString());
                 for (int j = 0; j < _dataSideStory[id].Count; j++)
                 {
                     dictionary.Add(_dataSideStory[id][j]["스토리ID"].ToString(),
@@ -37,7 +36,7 @@ public class SideStoryDialogueManager : MonoBehaviour
                         _dataSideStory[id][j]["보상 아이템 ID"].ToString(),
                         GetIntType(_dataSideStory[id][j]["보상 수량"]),
                         GetIntType(_dataSideStory[id][j]["클리어 보상 친밀도"])));
-                    j = _goTo;
+                    j = _goTo; //대화 뛰어 넘기
                 }
 
                 SSDic.Add(id, dictionary);
@@ -54,8 +53,16 @@ public class SideStoryDialogueManager : MonoBehaviour
         List<SideDialogueData> dialogue = new List<SideDialogueData>();
         string current = _dataSideStory[i][j]["스토리ID"].ToString();
 
-        do
+        while(true)
         {
+            Debug.Log("j" + j);
+            if (j==_dataSideStory[i].Count || !_dataSideStory[i][j]["스토리ID"].ToString().Equals(current))
+            {
+                _goTo = j - 1;
+                break;
+            }
+            Debug.Log(current  + _dataSideStory[i][j]["스토리ID"].ToString());
+            Debug.Log(j+_dataSideStory[i][j]["일반 대화"].ToString());
             dialogue.Add(new SideDialogueData(_dataSideStory[i][j]["talkPandaID"].ToString(),
             _dataSideStory[i][j]["일반 대화"].ToString(),
             GetComplete(_dataSideStory[i][j]["스토리 성공 실패 체크"].ToString()),
@@ -65,10 +72,9 @@ public class SideStoryDialogueManager : MonoBehaviour
             _dataSideStory[i][j]["선택B_텍스트"].ToString(),
             _dataSideStory[i][j]["선택지B_대화 이동 ID"].ToString()));
             j++;
-        } while (_dataSideStory[i][j]["스토리ID"].ToString().Equals(current)); //현재 아이디와 같을 동안만
+        } 
 
-        _goTo = j;
-
+         
         return dialogue;
     }
 

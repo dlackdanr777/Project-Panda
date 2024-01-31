@@ -288,6 +288,18 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return null;
     }
 
+    public NPC GetNPC(string id)
+    {
+        for(int i=0;i<GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i];
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Furniture ItemList
     /// </summary>

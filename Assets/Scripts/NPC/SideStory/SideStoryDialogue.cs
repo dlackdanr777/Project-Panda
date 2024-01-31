@@ -5,15 +5,12 @@ using UnityEngine;
 public enum EventType
 {
     None = -1,
-    IFRSP, //과일 아이템 스페셜 확인
-    IBGSP, //곤충 아이템 스페셜 확인
-    IFISP, //물고기 아이템 스페셜 확인
+    GISP, //과일 아이템 스페셜 확인
     INM, //일반 아이템 소지(채집도구, 일반아이템 전부 포함)
+    MONEY, //돈
     NPCTK, //NPC 대화 확인
     REIT, //친밀도 수치 확인
-    IVFR, //과일 아이템 소지 개수
-    IVBG, //곤충 아이템 소지 개수
-    IVFI, //물고기 아이템 소지 개수
+    IVGI, //채집 아이템 소지 개수
     IVCK, //요리 레시피 완성 아이템 비교
     IVFU //가구 아이템 소지 확인
 }

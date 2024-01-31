@@ -10,13 +10,11 @@ public class ShowStickerPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("OnEnable");
         Anime1_Show();
     }
 
     private void OnDisable()
     {
-        Debug.Log("OnDisable");
         Hide();
     }
 
