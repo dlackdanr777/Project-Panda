@@ -13,10 +13,14 @@ public class FirstLoadingImage : MonoBehaviour
 
     private Action _onComplete;
 
+    private Vector3 _tmpPos;
+
 
     public void Init(Action onComplete)
     {
         _onComplete = onComplete;
+        _tmpPos = _animeImage.rectTransform.position;
+
         _bgImage.color = new Color(_bgImage.color.r, _bgImage.color.g, _bgImage.color.b, 0);
         _animeImage.color = new Color(_animeImage.color.r, _animeImage.color.g, _animeImage.color.b, 0);
         _bgImage.gameObject.SetActive(false);
@@ -27,8 +31,15 @@ public class FirstLoadingImage : MonoBehaviour
     {
         _bgImage.gameObject.SetActive(true);
 
-        Tween.IamgeAlpha(_animeImage.gameObject, 1, fadeDuration, TweenMode.Constant);
-        Tween.IamgeAlpha(_bgImage.gameObject, 1, fadeDuration, TweenMode.Constant, () =>
+        Vector3 targetPos = _tmpPos;
+        targetPos.x -= 200;
+        targetPos.y -= 200;
+
+        _animeImage.transform.position = _tmpPos;
+        Tween.TransformMove(_animeImage.gameObject, targetPos, 10, TweenMode.Constant);
+
+        Tween.IamgeAlpha(_animeImage.gameObject, 1, fadeDuration * 0.5f, TweenMode.Constant);
+        Tween.IamgeAlpha(_bgImage.gameObject, 1, fadeDuration * 0.5f, TweenMode.Constant, () =>
         {
 
             Tween.TransformScale(_bgImage.gameObject, new Vector3(1, 1, 1), 3, TweenMode.Constant, () =>

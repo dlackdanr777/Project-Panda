@@ -38,6 +38,10 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetButtonValue("ShowMainUIButton", OnShowMainUIButtonClicked);
         DataBind.SetButtonValue("HideMainUIButton", OnHideMainUIButtonClicked);
+
+        DataBind.SetButtonValue("ShowChallengesButton", OnShowChallengesButtonClicked);
+        DataBind.SetButtonValue("CloseChallengesButton", OnHideChallengesButtonClicked);
+
     }
 
     private void OnCameraButtonClicked()
@@ -153,5 +157,15 @@ public class UIMainScene : MonoBehaviour
     public void OnShowMainUIButtonClicked()
     {
         _uiNav.ShowMainUI();
+    }
+
+    public void OnShowChallengesButtonClicked()
+    {
+        _uiNav.Push("Challenges");
+    }
+
+    public void OnHideChallengesButtonClicked()
+    {
+        _uiNav.Pop("Challenges");
     }
 }
