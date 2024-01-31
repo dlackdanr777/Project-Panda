@@ -242,15 +242,20 @@ public class Inventory
     /// 아이디로 아이템 찾기
     /// </summary>
     /// <param name="id"></param>
-    /// <returns>해당 아이템이 있으면 true, 없으면 false</returns>
-    public bool FindItemById(string id)
+    /// <returns>해당 아이템이 count만큼 있으면 true, 없으면 false</returns>
+    public bool FindItemById(string id, int count)
     {
+        int amount = 0;
         for(int i=0;i<ItemsCount; i++)
         {
             if (_items[i].Id.Equals(id))
             {
-                return true;
+                amount += _items[i].Count;
             }
+        }
+        if(count >= amount)
+        {
+
         }
         return false;
     }
@@ -258,15 +263,20 @@ public class Inventory
     /// <summary>
     /// 스페셜 아이템이 있는지 확인
     /// </summary>
-    /// <returns>있으면 true, 없으면 false</returns>
-    public bool FindSpecialItem()
+    /// <returns>count만큼 있으면 true, 없으면 false</returns>
+    public bool FindSpecialItem(int count)
     {
+        int amount = 0;
         for (int i = 0; i < ItemsCount; i++)
         {
             if (_items[i].Rank.Equals("스페셜"))
             {
-                return true;
+                amount++;
             }
+        }
+        if(count >= amount)
+        {
+            return true;
         }
         return false;
     }

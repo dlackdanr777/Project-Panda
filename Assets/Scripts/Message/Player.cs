@@ -121,11 +121,11 @@ public class Player
 
     #region sidestory
     /// <summary>
-    /// 조건으로 받은 code에 따른 인벤토리 스페셜 확인
+    /// 조건으로 받은 code에 따른 인벤토리 스페셜 몇 개 이상있는지 확인
     /// </summary>
     /// <param name="code">IBG, IFI, IFR</param>
     /// <returns></returns>
-    public bool GetGISP(string code)
+    public bool GetGISP(string code, int count)
     {
         int index = 0;
 
@@ -142,7 +142,7 @@ public class Player
                 break;
         }
 
-        return GatheringItemInventory[index].FindSpecialItem();
+        return GatheringItemInventory[index].FindSpecialItem(count);
     }
 
     public bool GetINM(string id)
@@ -157,7 +157,7 @@ public class Player
                 break;
         }
 
-        return ToolItemInventory[index].FindItemById(id);
+        return ToolItemInventory[index].FindItemById(id, 1);
     }
 
     /// <summary>
@@ -165,16 +165,16 @@ public class Player
     /// </summary>
     /// <param name="amount"></param>
     /// <returns>가지고 있는 돈이 amount보다 크면 true, 아니면 false</returns>
-    public bool GetMONEY(string amount)
+    public bool GetMONEY(int amount)
     {
-        if(Bamboo >= int.Parse(amount))
+        if(Bamboo >= amount)
         {
             return true;
         }
         return false;
     }
 
-    public bool GetIVGI(string id)
+    public bool GetIVGI(string id, int count)
     {
         int index = 0;
         string code = id.Substring(0, 3);
@@ -192,32 +192,12 @@ public class Player
                 break;
         }
 
-        return GatheringItemInventory[index].FindItemById(id);
+        return GatheringItemInventory[index].FindItemById(id, count);
     }
 
-    public bool GetIVCK(string id)
+    public bool GetIVCK(string id, int count)
     {
-        return CookItemInventory[0].FindItemById(id);
-    }
-
-    public bool GetIVFU(string id)
-    {
-        int index = 0;
-
-        switch (id)
-        {
-            case "IBG":
-                index = 0;
-                break;
-            case "IFI":
-                index = 1;
-                break;
-            case "IFR":
-                index = 2;
-                break;
-        }
-
-        return GatheringItemInventory[index].FindItemById(id);
+        return CookItemInventory[0].FindItemById(id, count);
     }
     #endregion
 
