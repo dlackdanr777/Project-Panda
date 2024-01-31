@@ -50,6 +50,7 @@ public class FurnitureView : MonoBehaviour
     {
         Bind();
 
+        // 가구 인벤토리 내용 리스트에 저장
         List <Furniture> furnitureInventory = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory;
 
         for (int i = 0; i < System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1; i++)
@@ -99,7 +100,7 @@ public class FurnitureView : MonoBehaviour
         {
             for (int j = 0; j < furnitureRooms[i].FurnitureIds.Length; j++) // 가구 배치
             {
-                if (furnitureRooms[i].FurnitureIds[j] != "")
+                if (!string.IsNullOrEmpty(furnitureRooms[i].FurnitureIds[j])) // 문자열이 null이거나 빈 문자열인지 확인
                 {
                     _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[furnitureRooms[i].FurnitureIds[j]], (ERoom)i);
                 }
@@ -121,6 +122,7 @@ public class FurnitureView : MonoBehaviour
         Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(620, 0), 1.5f, TweenMode.Quadratic);
 
         CreateSlots(); //slot 생성
+        //BindRoomFurniture();
 
         //버튼 리스너
         DataBind.SetButtonValue("LeftRoomButton", () => ChangeRoom(true));
@@ -173,6 +175,19 @@ public class FurnitureView : MonoBehaviour
             }
         }
     }
+
+    ///// <summary>
+    ///// 방에 있는 가구들 Furniture와 연결 </summary>
+    //private void BindRoomFurniture()
+    //{
+    //    for(int i = 0; i < _roomFurnitures.Length; i++)
+    //    {
+    //        for(int j = 0; j < _roomFurnitures[i]._furnitures.Length; j++)
+    //        {
+
+    //        }
+    //    }
+    //}
     #endregion
 
     private void GetCurrentField()
