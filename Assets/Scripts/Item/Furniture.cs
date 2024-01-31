@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class Furniture : Item
 {
+    public string StoryId;
     public FurnitureType Type;
     public EFurnitureViewType ViewType;
     public bool IsMine;
+    //public GameObject RoomFurniture;
 
-    public Furniture(string id, string name, string description, int price, string rank, string map, FurnitureType type, Sprite image) : base(id, name, description, price, rank, map, image) 
+    public Furniture(string id, string name, string description, string storyId, int price, string rank, string map, FurnitureType type, Sprite image) : base(id, name, description, price, rank, map, image) 
     {
+        StoryId = storyId;
         Type = type;
         switch (type)
         {
