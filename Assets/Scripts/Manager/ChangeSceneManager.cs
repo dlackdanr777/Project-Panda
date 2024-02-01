@@ -77,7 +77,6 @@ public class ChangeSceneManager : SingletonHandler<ChangeSceneManager>
 
     public void FirstLoading()
     {
-
         int randInt = Random.Range(0, _firstLoadingImages.Length);
 
         Tween.TransformScale(gameObject, new Vector3(1, 1, 1), 0.1f, TweenMode.Constant, () =>

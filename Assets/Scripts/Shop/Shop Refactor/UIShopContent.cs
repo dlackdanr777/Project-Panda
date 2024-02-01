@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +17,14 @@ public class UIShopContent : MonoBehaviour
     private List<ToolItem> _shopItem; //아직 상점 데이터베이스가 없어서 툴로 사용
     private int _currentIndex;
 
+
     private void Awake()
     {
         ShopButton.ShopItemHandler += UpdateSoldOut;
+        DataBind.SetButtonValue("ShopExitButton", OnExitButtonClicked);
     }
+
+
     void Start()
     {
         _shopItem = DatabaseManager.Instance.GetGatheringToolItemList();
@@ -29,6 +32,7 @@ public class UIShopContent : MonoBehaviour
 
         CreateSlots();
     }
+
 
     private void CreateSlots()
     {
@@ -45,17 +49,20 @@ public class UIShopContent : MonoBehaviour
         }
     }
 
+
     private void OnClickDetailView(int index)
     {   
         GetContent(index);
         _detailView.SetActive(true);
     }
 
+
     private void OnClickCloseButton()
     {
         _detailView.SetActive(false);
         ClearContent();
     }
+
 
     private void ClearContent()
     {
@@ -64,6 +71,7 @@ public class UIShopContent : MonoBehaviour
         DataBind.SetTextValue("ShopBuyItemDetailPrice", "");
         DataBind.SetSpriteValue("ShopBuyItemDetailImage", null);
     }
+
 
     private void GetContent(int index)
     {
@@ -75,10 +83,18 @@ public class UIShopContent : MonoBehaviour
         DataBind.SetTextValue("ShopBuyItemDetailPrice", _shopItem[index].Price.ToString());
     }
 
+
     private void UpdateSoldOut()
     {
         //soldout
         _spawnPoint.GetChild(_currentIndex).GetComponent<Button>().interactable = false;
         _spawnPoint.GetChild(_currentIndex).GetChild(2).gameObject.SetActive(true);
     }
+
+
+    private void OnExitButtonClicked()
+    {
+        LoadingSceneManager.LoadScene("24_01_09_Integrated");
+    }
+
 }
