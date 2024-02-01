@@ -142,7 +142,7 @@ public class ItemDatabase
             Sprite roomSprite = FurnitureItemSprite.ItemSprites[i].Image;
             Sprite sprite = FurnitureItemSprite.ItemSprites[i].Thumbnails;
 
-            Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", type, roomSprite, sprite);
+            Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", type, sprite, roomSprite);
             FurnitureDic.Add(id, data);
        /*  FurnitureDic.Add(id, new Furniture(_dataFurniture[i]["ID"].ToString(),
                     _dataFurniture[i]["이름"].ToString(),
