@@ -22,7 +22,7 @@ public class Challenges
     public Action<string> ChallengeDone;
 
     private List<ChallengesData>[] _challengesDatas = new List<ChallengesData>[System.Enum.GetValues(typeof(EChallengesKategorie)).Length];
-    private int[] _challengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
+    public int[] ChallengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
 
     // 다른 씬에 있을 때 완료된 도전 과제 Id 저장 후 메인 씬에 돌아와서 한꺼번에 실행
     //private List<string> _doneChallenges = new List<string>();
@@ -47,18 +47,18 @@ public class Challenges
     }
 
     // 상점
-    private int _purchaseCount;
-    private int _salesCount;
+    public int PurchaseCount { get; private set; }
+    public int SalesCount { get; private set; }
 
     // 가구
-    private int _furnitureCount;
+    public int FurnitureCount { get; private set; }
 
     // 요리 제작 횟수
-    private int _cookingCount;
+    public int CookingCount { get; private set; }
 
     // 사진
-    private int _takePhotoCount;
-    private int _sharingPhotoCount;
+    public int TakePhotoCount { get; private set; }
+    public int SharingPhotoCount { get; private set; }
     #endregion
 
     public void Register()
@@ -84,18 +84,18 @@ public class Challenges
         }
 
         // 저장된 정보 불러오기
-        _challengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
+        ChallengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
         GatheringSuccessCount = DatabaseManager.Instance.UserInfo.GatheringSuccessCount;
         _stackedBambooCount = DatabaseManager.Instance.UserInfo.ChallengesCount[0];
-        _purchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
-        _salesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
-        _furnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
-        _cookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
-        _takePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
-        _sharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
+        PurchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
+        SalesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
+        FurnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
+        CookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
+        TakePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
+        SharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
 
-    // 도감 Count 초기화
-    _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+        // 도감 Count 초기화
+        _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
         _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
         _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
         _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
@@ -120,8 +120,8 @@ public class Challenges
         GatheringSuccessCount[gatheringType]++;
 
         // 몇 번 성공해야 하는지
-        int successNum = _challengesDatas[(int)EChallengesKategorie.gathering][_challengesNum[(int)EChallengesKategorie.gathering]].Count;
-        string challengesId = _challengesDatas[(int)EChallengesKategorie.gathering][_challengesNum[(int)EChallengesKategorie.gathering]].Id;
+        int successNum = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Count;
+        string challengesId = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Id;
 
         for (int i = 0; i < GatheringSuccessCount.Length; i++)
         {
@@ -133,7 +133,7 @@ public class Challenges
 
         // 도전 과제 달성 시
         SuccessChallenge(challengesId);
-        _challengesNum[(int)EChallengesKategorie.gathering]++; // 다음 도전과제 확인할 수 있도록 저장
+        ChallengesNum[(int)EChallengesKategorie.gathering]++; // 다음 도전과제 확인할 수 있도록 저장
     }
 
     /// <summary>
@@ -199,13 +199,13 @@ public class Challenges
         }
 
         // 각각의 도감 n개 해제했는지 체크
-        if (_challengesNum[(int)EChallengesKategorie.book] == -1)
+        if (ChallengesNum[(int)EChallengesKategorie.book] == -1)
         {
-            _challengesNum[(int)EChallengesKategorie.book] = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == "All" || n.IsDone == false);
+            ChallengesNum[(int)EChallengesKategorie.book] = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == "All" || n.IsDone == false);
         }
 
-        count = _challengesDatas[(int)EChallengesKategorie.book][_challengesNum[(int)EChallengesKategorie.book]].Count;
-        challengesId = _challengesDatas[(int)EChallengesKategorie.book][_challengesNum[(int)EChallengesKategorie.book]].Id;
+        count = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Count;
+        challengesId = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Id;
 
         for (int i = 0; i< System.Enum.GetValues(typeof(EUnlockingBook)).Length; i++ )
         {
@@ -215,20 +215,20 @@ public class Challenges
             }
         }
         SuccessChallenge(challengesId);
-        _challengesNum[(int)EChallengesKategorie.book] = -1;
+        ChallengesNum[(int)EChallengesKategorie.book] = -1;
     }
 
     /// <summary>
     /// 누적 대나무 수 달성 </summary>
     private void StackedBamboo()
     {
-        int count = _challengesDatas[(int)EChallengesKategorie.bamboo][_challengesNum[(int)EChallengesKategorie.bamboo]].Count;
-        string challengesId = _challengesDatas[(int)EChallengesKategorie.bamboo][_challengesNum[(int)EChallengesKategorie.bamboo]].Id;
+        int count = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Count;
+        string challengesId = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Id;
 
         if(_stackedBambooCount > count)
         {
             SuccessChallenge(challengesId);
-            _challengesNum[(int)EChallengesKategorie.bamboo]++;
+            ChallengesNum[(int)EChallengesKategorie.bamboo]++;
         }
     }
 
@@ -240,13 +240,13 @@ public class Challenges
         // 구매
         if (isPurchase)
         {
-            _purchaseCount++;
+            PurchaseCount++;
 
             // 리스트에서 달성하지 못한 과제 중 첫 번째 찾기
             string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Purchase" || n.IsDone == false).Id;
 
             // 달성했다면
-            if (_purchaseCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (PurchaseCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -254,11 +254,11 @@ public class Challenges
         // 판매
         else
         {
-            _salesCount++;
+            SalesCount++;
 
             string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Sales" || n.IsDone == false).Id;
 
-            if (_salesCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (SalesCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -269,17 +269,17 @@ public class Challenges
     /// n개의 가구 테마 완성 </summary>
     public void FurnitureArrangement(string id)
     {
-        int count = _challengesDatas[(int)EChallengesKategorie.furniture][_challengesNum[(int)EChallengesKategorie.furniture]].Count;
-        string challengesId = _challengesDatas[(int)EChallengesKategorie.furniture][_challengesNum[(int)EChallengesKategorie.furniture]].Id;
+        int count = _challengesDatas[(int)EChallengesKategorie.furniture][ChallengesNum[(int)EChallengesKategorie.furniture]].Count;
+        string challengesId = _challengesDatas[(int)EChallengesKategorie.furniture][ChallengesNum[(int)EChallengesKategorie.furniture]].Id;
 
         // 추가된 가구와 같은 테마의 가구가 8개면 한 테마 완성
         if (DatabaseManager.Instance.StartPandaInfo.FurnitureInventoryID.Where(furnitureId => furnitureId.Substring(0,4) == id.Substring(0,4)).Count() == 8)
         {
-            _furnitureCount++;
-            if (_furnitureCount > count)
+            FurnitureCount++;
+            if (FurnitureCount > count)
             {
                 SuccessChallenge(challengesId);
-                _challengesNum[(int)EChallengesKategorie.furniture]++;
+                ChallengesNum[(int)EChallengesKategorie.furniture]++;
             }
         }
     }
@@ -288,17 +288,17 @@ public class Challenges
     /// 요리 n회 이상 제작 </summary>
     public void Cooking(string grade)
     {
-        int Count = _challengesDatas[(int)EChallengesKategorie.cook][_challengesNum[(int)EChallengesKategorie.cook]].Count;
-        string challengesId = _challengesDatas[(int)EChallengesKategorie.cook][_challengesNum[(int)EChallengesKategorie.cook]].Id;
+        int Count = _challengesDatas[(int)EChallengesKategorie.cook][ChallengesNum[(int)EChallengesKategorie.cook]].Count;
+        string challengesId = _challengesDatas[(int)EChallengesKategorie.cook][ChallengesNum[(int)EChallengesKategorie.cook]].Id;
 
         // A등급 이상인지 확인
         if (grade == "A" || grade == "S")
         {
-            _cookingCount++;
-            if(_cookingCount >= Count)
+            CookingCount++;
+            if(CookingCount >= Count)
             {
                 SuccessChallenge(challengesId);
-                _challengesNum[(int)EChallengesKategorie.cook]++;
+                ChallengesNum[(int)EChallengesKategorie.cook]++;
             }
         }
     }
@@ -310,13 +310,13 @@ public class Challenges
         // 사진 찍기
         if(isTakePhoto)
         {
-            _takePhotoCount++;
+            TakePhotoCount++;
 
             // 리스트에서 달성하지 못한 사진찍는 과제 중 첫 번째 찾기
             string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Take" || n.IsDone == false).Id;
             
             // 달성했다면
-            if (_takePhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (TakePhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -324,12 +324,12 @@ public class Challenges
         // 사진 공유하기
         else
         {
-            _sharingPhotoCount++;
+            SharingPhotoCount++;
 
             // 리스트에서 달성하지 못한 사진공유 과제 중 첫 번째 찾기
             string challengesId = _challengesDatas[(int)EChallengesKategorie.camera].Find(n => n.Type == "Sharing" || n.IsDone == false).Id;
 
-            if (_sharingPhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (SharingPhotoCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -341,6 +341,7 @@ public class Challenges
     {
         Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+        DatabaseManager.Instance.UserInfo.ChallengeDoneId.Add(challengesId);
 
         // 현재 메인 씬이면 바로 도전과제 UI에 반영
         //if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
@@ -362,5 +363,8 @@ public class Challenges
         // 아이템 획득 - 도구
         GameManager.Instance.Player.ToolItemInventory[0].AddById
             (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
+
+        DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
+        DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);
     }
 }

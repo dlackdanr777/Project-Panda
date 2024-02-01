@@ -57,7 +57,7 @@ public class UIChallenges : UIView
             // 성공한 도전 과제라면 완료 이미지로 변경
             if (challengesDic[key].IsDone == true)
             {
-                _challengeDoneImageDic[key].sprite = _doneImage;
+                ChallengeDone(key);
                 if (challengesDic[key].IsClear == true)
                 {
                     ChallengeClear(key);

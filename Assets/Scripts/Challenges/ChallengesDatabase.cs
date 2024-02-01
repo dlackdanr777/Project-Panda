@@ -37,7 +37,7 @@ public class ChallengesDatabase
             ChallengesDic.AddRange(ChallengesParse(((EChallenges)i).ToString()));
         }
 
-        DatabaseManager.Instance.UserInfo.LoadUserChallenges();
+        DatabaseManager.Instance.UserInfo.LoadUserChallengesData();
     }
 
 
