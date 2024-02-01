@@ -89,7 +89,7 @@ public class ItemDatabase
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     //FurnitureItem
-    public ItemSpriteDatabase FurnitureItemSprite;
+    public FurnitureSpriteDatabase FurnitureItemSprite;
 
     private Sprite Test;
 
@@ -141,7 +141,9 @@ public class ItemDatabase
                     null,
                     "MN04",  //_dataFurniture[i]["맵ID"].ToString(), // 나중에 쓸 수 있음 일단은 "MN04"로 통일
                     FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
-                    FurnitureItemSprite.ItemSprites[i].Image));
+                    FurnitureItemSprite.ItemSprites[i].Thumbnails,
+                    FurnitureItemSprite.ItemSprites[i].Image
+                    ));
             //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
 
