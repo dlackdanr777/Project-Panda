@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "FurnitureImage", menuName = "Scriptable Object/FurnitureImage", order = int.MaxValue)]
 public class FurnitureSpriteDatabase : ScriptableObject
 {
-    public FurnitureSprite[] FurnitureSprites;
+    public FurnitureSprite[] ItemSprites;
 }
 
 [Serializable]

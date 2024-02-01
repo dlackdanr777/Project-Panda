@@ -141,8 +141,9 @@ public class ItemDatabase
                     null,
                     "MN04",  //_dataFurniture[i]["맵ID"].ToString(), // 나중에 쓸 수 있음 일단은 "MN04"로 통일
                     FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
-                    FurnitureItemSprite.FurnitureSprites[i].Image,
-                    FurnitureItemSprite.FurnitureSprites[i].Thumbnails));
+                    FurnitureItemSprite.ItemSprites[i].Thumbnails,
+                    FurnitureItemSprite.ItemSprites[i].Image
+                    ));
             //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
 

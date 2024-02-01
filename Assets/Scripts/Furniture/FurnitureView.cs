@@ -288,7 +288,7 @@ public class FurnitureView : MonoBehaviour
         if (furnitureData != null)
         {
             _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].gameObject.SetActive(true);
-            _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].sprite = furnitureData.Image;
+            _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].sprite = furnitureData.RoomImage;
         }
         else if (_currentField == EFurnitureViewType.WallPaper || _currentField == EFurnitureViewType.Floor)
         {
