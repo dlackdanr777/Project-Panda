@@ -101,8 +101,50 @@ public class Challenges
         _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
 
         // 레시피 - 추가하기
-
     }
+
+    public void LoadData()
+    {
+        Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
+
+        for (int i = 0; i < System.Enum.GetValues(typeof(EChallengesKategorie)).Length; i++)
+        {
+            _challengesDatas[i] = new List<ChallengesData>();
+        }
+
+        // 카테고리별로 도전 과제 분류
+        foreach (string key in challengesDic.Keys)
+        {
+            for (int i = 0; i < System.Enum.GetValues(typeof(EChallengesKategorie)).Length; i++)
+            {
+                if (challengesDic[key].Kategorie == (EChallengesKategorie)i)
+                {
+                    _challengesDatas[i].Add(challengesDic[key]);
+                    break;
+                }
+            }
+        }
+
+        // 저장된 정보 불러오기
+        ChallengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
+        GatheringSuccessCount = DatabaseManager.Instance.UserInfo.GatheringSuccessCount;
+        _stackedBambooCount = DatabaseManager.Instance.UserInfo.ChallengesCount[0];
+        PurchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
+        SalesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
+        FurnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
+        CookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
+        TakePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
+        SharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
+
+        // 도감 Count 초기화
+        _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+
+        // 레시피 - 추가하기
+    }
+
 
     public void MainStoryDone(string id)
     {
@@ -145,7 +187,6 @@ public class Challenges
         // 첫 도감 해제
         if (_unlockingBookCount[(int)EUnlockingBook.None] == 0)
         {
-            _unlockingBookCount[(int)EUnlockingBook.None] = -1;
             SuccessChallenge(_challengesDatas[(int)EChallengesKategorie.book][0].Id);
         }
 
@@ -365,6 +406,7 @@ public class Challenges
             (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
+        DatabaseManager.Instance.UserInfo.ChallengeDoneId.Remove(challengesId);
         DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);
     }
 }

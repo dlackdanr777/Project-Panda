@@ -151,13 +151,14 @@ public class UINavigation : MonoBehaviour
             return;
 
         //_currentView.Hide();
-        _uiViews.Last().Hide();
+        UIView selectView = _uiViews.Last();
+        selectView.Hide();
         _uiViews.RemoveAt(Count - 1);
 
         if (1 <= _uiViews.Count)
             _uiViews.Last().RectTransform.SetAsLastSibling();
 
-        CheckViewListCount();
+        StartCoroutine(CheckHideVisibleState(selectView));
     }
 
 
@@ -186,10 +187,10 @@ public class UINavigation : MonoBehaviour
         selectView.Hide();
         _uiViews.Remove(selectView);
 
+        StartCoroutine(CheckHideVisibleState(selectView));
+
         if (1 <= _uiViews.Count)
             _uiViews.Last().RectTransform.SetAsLastSibling();
-
-        CheckViewListCount();
     }
 
 
@@ -207,7 +208,6 @@ public class UINavigation : MonoBehaviour
                 return;
             }
         }
-
 
         while (_uiViews.Count > 0)
         {
@@ -272,6 +272,22 @@ public class UINavigation : MonoBehaviour
             GameManager.Instance.FriezeCameraMove = false;
             GameManager.Instance.FriezeCameraZoom = false;
             GameManager.Instance.FirezeInteraction = false;
+        }
+    }
+
+
+    /// <summary> UI가 완전히 닫혔을때를 체크하는 코루틴 </summary>
+    private IEnumerator CheckHideVisibleState(UIView hideView)
+    {
+        while(true)
+        {
+            if(hideView.VisibleState == VisibleState.Disappeared || hideView.VisibleState == VisibleState.Appeared)
+            {
+                CheckViewListCount();
+                break;
+            }
+
+            yield return YieldCache.WaitForSeconds(0.02f);
         }
     }
 }
