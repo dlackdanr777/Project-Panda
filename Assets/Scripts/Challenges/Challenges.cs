@@ -178,6 +178,7 @@ public class Challenges
         ChallengesNum[(int)EChallengesKategorie.gathering]++; // 다음 도전과제 확인할 수 있도록 저장
     }
 
+
     /// <summary>
     /// 도감 해제 </summary>
     public void UnlockingBook(string type) // 처음에 카운트 받아온 후 도감 해제될 때마다 실행하기... ? -> IsReceived 변경될 때마다 실행하기

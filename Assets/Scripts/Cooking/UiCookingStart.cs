@@ -115,6 +115,7 @@ public class UiCookingStart : MonoBehaviour
 
     private IEnumerator CookingComplatedRoutine()
     {
+        _dontTouchArea.gameObject.SetActive(true);
         float totalFireValue = (_tempfireValue + _fireValue) * 0.5f * 0.01f;
 
         string grade = _uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue);
@@ -125,6 +126,7 @@ public class UiCookingStart : MonoBehaviour
 
         GameObject animeObj = grade == "F" ? Instantiate(_failedAnimePrefab) : Instantiate(_complatedAnimePrefab);
         animeObj.transform.SetParent(_animeParent);
+        animeObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         //여기에 애니메이션
 
         _uiCookingTimer.EndTimer();
@@ -135,7 +137,7 @@ public class UiCookingStart : MonoBehaviour
         DatabaseManager.Instance.Challenges.Cooking(grade);
 
         yield return new WaitForSeconds(1.1f);
-
+        _dontTouchArea.gameObject.SetActive(false);
         Destroy(animeObj);
         _uiCookingEnd.Show(_currentRecipeData.Item);
         _uiCooking.UpdateUI();
