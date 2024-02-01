@@ -19,12 +19,19 @@ public class UINavigation : MonoBehaviour
     [Tooltip("최상위 lootUIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct _rootUiView;
 
+    [Tooltip("최상위 종료 UI를 넣는 곳")]
+    [SerializeField] private ViewDicStruct _exitUiView;
+
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-    [SerializeField]  private List<UIView> _uiViews = new List<UIView>();
+
+
+    private List<UIView> _uiViews = new List<UIView>();
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
+
+
 
     public int Count => _uiViews.Count;
 
@@ -39,14 +46,31 @@ public class UINavigation : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Pop();
+            //만약 켜져있는 UI가 있을 경우엔 UI를 끈다
+            if(0 < Count)
+            {
+                Pop();
+            }
+
+            //아닐 경우엔 게임 종료 UI를 띄운다.
+            else
+            {
+                Push(_exitUiView.Name);
+            }
+
         }
     }
 
     private void Init()
     {
-        _rootUiView.UIView.Init(this);
         _viewDic.Clear();
+        _rootUiView.UIView?.Init(this);
+
+        if(_exitUiView.UIView != null)
+        {
+            _exitUiView.UIView.Init(this);
+            _viewDic.Add(_exitUiView.Name, _exitUiView.UIView);
+        }
 
         for (int i = 0, count = _uiViewList.Length; i < count; i++)
         {
