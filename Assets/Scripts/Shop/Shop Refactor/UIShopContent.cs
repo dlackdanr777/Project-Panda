@@ -73,6 +73,7 @@ public class UIShopContent : MonoBehaviour
         DataBind.SetTextValue("ShopBuyItemDetailDescription", _shopItem[index].Description);
         DataBind.SetSpriteValue("ShopBuyItemDetailImage", _shopItem[index].Image);
         DataBind.SetTextValue("ShopBuyItemDetailPrice", _shopItem[index].Price.ToString());
+        DataBind.SetTextValue("ShopBuyItemDetailID", _shopItem[index].Id);
     }
 
     private void UpdateSoldOut()

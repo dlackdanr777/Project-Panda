@@ -22,6 +22,7 @@ public class ShowStickerPanel : MonoBehaviour
     {
         _stickerPanel.SetActive(true);
         _dontTouchArea.SetActive(true);
+        Tween.Stop(_stickerPanel);
         Tween.RectTransfromAnchoredPosition(_stickerPanel, new Vector2(0, -545), 1.2f, TweenMode.EaseInOutBack, () =>
         {
             _dontTouchArea.SetActive(false);

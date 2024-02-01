@@ -17,26 +17,31 @@ public class CountButton : MonoBehaviour
     private void OnEnable()
     {
         _countText.text = 1.ToString();
+        string itemName = null;
+
         if (_isBuy)
         {
+            itemName = GetToolItemIdByTName(DataBind.GetTextValue("ShopBuyItemDetailID").Item);
             _price = int.Parse(DataBind.GetTextValue("ShopBuyItemDetailPrice").Item);
         }
         else
         {
+            itemName = GetToolItemIdByTName(DataBind.GetTextValue("InventoryDetailID").Item);
             _price = int.Parse(DataBind.GetTextValue("InventoryDetailPrice").Item);
         }
-    }
 
-    void Start()
-    {
-        if (GetToolItemIdByTName(DataBind.GetTextValue("ShopBuyItemDetailName").Item).StartsWith("ITG")) //도구면 1개만 구매 가능
+        if (itemName != null) //도구면 1개만 구매 가능
         {
             _maxCount = 1;
         }
         else
         {
-            _maxCount = 10;
+            _maxCount = int.Parse(DataBind.GetTextValue("InventoryDetailCount").Item);
         }
+    }
+
+    void Start()
+    {
         _leftButton.onClick.AddListener(OnClickLeftButton);
         _rightButton.onClick.AddListener(OnClickRightButton);
     }
@@ -63,11 +68,11 @@ public class CountButton : MonoBehaviour
         _priceText.text = (result * _price).ToString();
     }
 
-    private string GetToolItemIdByTName(string name)
+    private string GetToolItemIdByTName(string id)
     {
         for (int i = 0; i < DatabaseManager.Instance.GetGatheringToolItemList().Count; i++) //shop database에서 아이디 찾기
         {
-            if (DatabaseManager.Instance.GetGatheringToolItemList()[i].Name.Equals(name))
+            if (DatabaseManager.Instance.GetGatheringToolItemList()[i].Id.Equals(id))
             {
                 return DatabaseManager.Instance.GetGatheringToolItemList()[i].Id;
             }

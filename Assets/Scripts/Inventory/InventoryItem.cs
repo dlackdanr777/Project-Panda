@@ -6,8 +6,8 @@ public class InventoryItem : Item
 {
     public int Count;
 
-    public InventoryItem(string id, string name, string description, int price, string rank, string map, Sprite image) : base(id, name, description, price, rank, map, image)
+    public InventoryItem(string id, string name, string description, int count, int price, string rank, string map, Sprite image) : base(id, name, description, price, rank, map, image)
     {
-        Count = 1;
+        Count = count;
     }
 }
