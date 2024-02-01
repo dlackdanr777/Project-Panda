@@ -29,6 +29,8 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
         if (_isShop)
         {
             DataBind.SetTextValue("InventoryDetailPrice", _lists[(int)_currentField][index].Price.ToString());
+            DataBind.SetTextValue("InventoryDetailID", _lists[(int)_currentField][index].Id);
+            DataBind.SetTextValue("InventoryDetailCount", _lists[(int)_currentField][index].Count.ToString());
         }
     }
 
@@ -43,9 +45,11 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
                 if (j < _lists[(int)_currentField].Count)
                 {
                     _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = true;
+
                     Transform prefab = _spawnPoint[(int)_currentField].GetChild(j).GetChild(0);
                     prefab.gameObject.SetActive(true); //구조 변경 => Getchild만 켜지도록
                     prefab.GetComponent<Image>().sprite = _lists[(int)_currentField][j].Image;
+                    
                     if(_lists[(int)_currentField][j].Count > 1) //1이상 
                     {
                         prefab.GetChild(0).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].Count.ToString();
@@ -65,10 +69,11 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
                 }
                 else
                 {
-                    _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = false;
-                    _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).gameObject.SetActive(false);
-
-
+                   if (_spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable)
+                    {
+                        _spawnPoint[(int)_currentField].GetChild(j).GetComponent<Button>().interactable = false;
+                        _spawnPoint[(int)_currentField].GetChild(j).GetChild(0).gameObject.SetActive(false);
+                    }
                 }
             }
         }
@@ -99,7 +104,13 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
         }
         Init();
 
-        ShopButton.InventoryItemHandler += UpdateListSlots; 
+        ShopButton.InventoryItemHandler += UpdateListSlots;
+    }
+
+    private void OnDestroy()
+    {
+        
+        ShopButton.InventoryItemHandler -= UpdateListSlots;
     }
 
     private void UpdateList() 
