@@ -89,7 +89,7 @@ public class ItemDatabase
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     //FurnitureItem
-    public ItemSpriteDatabase FurnitureItemSprite;
+    public FurnitureSpriteDatabase FurnitureItemSprite;
 
     private Sprite Test;
 
@@ -131,9 +131,20 @@ public class ItemDatabase
             FurnitureTypes.Add((char)((int)'A' + i), (FurnitureType)i);
         }
 
-        for (int i = 0; i < _dataFurniture.Count; i++)
+         for (int i = 0; i < _dataFurniture.Count; i++)
         {
-            FurnitureDic.Add(_dataFurniture[i]["ID"].ToString(), new Furniture(_dataFurniture[i]["ID"].ToString(),
+            string id = _dataFurniture[i]["ID"].ToString();
+            string name = _dataFurniture[i]["이름"].ToString();
+            string description = _dataFurniture[i]["설명"].ToString();
+            string storyId = _dataFurniture[i]["스토리단계"].ToString();
+            int price = (int)_dataFurniture[i]["가격"];
+            FurnitureType type = FurnitureTypes[char.Parse(id.Substring(4, 1))];
+            Sprite roomSprite = FurnitureItemSprite.ItemSprites[i].Image;
+            Sprite sprite = FurnitureItemSprite.ItemSprites[i].Thumbnails;
+
+            Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", type, sprite, roomSprite);
+            FurnitureDic.Add(id, data);
+       /*  FurnitureDic.Add(id, new Furniture(_dataFurniture[i]["ID"].ToString(),
                     _dataFurniture[i]["이름"].ToString(),
                     _dataFurniture[i]["설명"].ToString(),
                     _dataFurniture[i]["스토리단계"].ToString(),
@@ -141,9 +152,17 @@ public class ItemDatabase
                     null,
                     "MN04",  //_dataFurniture[i]["맵ID"].ToString(), // 나중에 쓸 수 있음 일단은 "MN04"로 통일
                     FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
+
                     FurnitureItemSprite.ItemSprites[i].Image));
             //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
+
+                    FurnitureItemSprite.ItemSprites[i].Thumbnails,
+                    FurnitureItemSprite.ItemSprites[i].Image
+                    )); */
+            //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
+        }
+
 
         DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();
         DatabaseManager.Instance.StartPandaInfo.LoadMyFurniture();

@@ -16,6 +16,7 @@ public class LoadingSceneManager : MonoBehaviour
 
     private static LoadingType _loadingType;
 
+
     private void Start()
     {
         StartCoroutine(LoadScene());

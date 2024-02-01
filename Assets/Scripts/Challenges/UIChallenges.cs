@@ -57,7 +57,7 @@ public class UIChallenges : UIView
             // 성공한 도전 과제라면 완료 이미지로 변경
             if (challengesDic[key].IsDone == true)
             {
-                _challengeDoneImageDic[key].sprite = _doneImage;
+                ChallengeDone(key);
                 if (challengesDic[key].IsClear == true)
                 {
                     ChallengeClear(key);
@@ -69,13 +69,13 @@ public class UIChallenges : UIView
 
     public override void Show()
     {
-        _uiChallengesPanel.SetActive(true);
-        _backGroundImage.SetActive(true);
+        gameObject.SetActive(true);
     }
 
 
     public override void Hide()
     {
+        gameObject.SetActive(false);
         CloseChallenges();
     }
 
@@ -111,9 +111,6 @@ public class UIChallenges : UIView
 
     private void CloseChallenges()
     {
-        _uiChallengesPanel.SetActive(false);
-        _backGroundImage.SetActive(false);
-
         // 도전과제를 리스트의 맨 아래로 이동
         for(int i = 0; i < _clearChallenges.Count; i++)
         {

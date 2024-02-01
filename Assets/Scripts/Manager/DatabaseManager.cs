@@ -33,7 +33,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
-    [SerializeField] private ItemSpriteDatabase _furnitureItemImages;
+    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
     [SerializeField] private ItemSpriteDatabase[] _npcImages;
 
     private ItemDatabase _itemDatabase;

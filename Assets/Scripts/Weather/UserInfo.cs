@@ -57,13 +57,13 @@ public class UserInfo
     public List<StickerData> StickerDataArray = new List<StickerData>();
 
     //Challenges
-    public List<string> ChallengeDoneId = new List<string>();
-    public List<string> ChallengeClearId = new List<string>();
+    public List<string> ChallengeDoneId = new List<string>(); // 도전과제 완료
+    public List<string> ChallengeClearId = new List<string>(); // 도전과제 완료 후 클릭
 
-    public int[] ChallengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제
+    public int[] ChallengesNum = new int[System.Enum.GetValues(typeof(EChallengesKategorie)).Length]; // 현재 도전과제 인덱스
 
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
-    public int[] ChallengesCount = new int[7];
+    public int[] ChallengesCount = new int[7]; // 도전과제 성공 횟수
 
     //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
@@ -110,21 +110,28 @@ public class UserInfo
             IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
+            // 도전과제 관련
             for(int i = 0, count = json[0]["ChallengesNum"].Count; i < count; i++)
             {
                 ChallengesNum[i] = int.Parse(json[0]["ChallengesNum"][i].ToString());
             }
-
             for (int i = 0, count = json[0]["GatheringSuccessCount"].Count; i < count; i++)
             {
                 GatheringSuccessCount[i] = int.Parse(json[0]["GatheringSuccessCount"][i].ToString());
             }
-
             for (int i = 0, count = json[0]["ChallengesCount"].Count; i < count; i++)
             {
                 ChallengesCount[i] = int.Parse(json[0]["ChallengesCount"][i].ToString());
             }
+            for (int i = 0, count = json[0]["ChallengeDoneId"].Count; i < count; i++)
+            {
+                ChallengeDoneId.Add(json[0]["ChallengeDoneId"][i].ToString());
+            }
 
+            for (int i = 0, count = json[0]["ChallengeClearId"].Count; i < count; i++)
+            {
+                ChallengeClearId.Add(json[0]["ChallengeClearId"][i].ToString());
+            }
 
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
@@ -207,6 +214,7 @@ public class UserInfo
         _lastAccessDay = paser;
 
         SaveUserMailData();
+        SaveUserChallengesData();
         Param param = GetUserInfoParam();
 
         Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
@@ -220,6 +228,7 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
+        SaveUserChallengesData();
         SaveUserMailData();
 
         Param param = GetUserInfoParam();
@@ -244,6 +253,8 @@ public class UserInfo
         param.Add("ChallengesNum", ChallengesNum);
         param.Add("GatheringSuccessCount", GatheringSuccessCount);
         param.Add("ChallengesCount", ChallengesCount);
+        param.Add("ChallengeDoneId", ChallengeDoneId);
+        param.Add("ChallengeClearId", ChallengeClearId);
 
         param.Add("AlbumReceived", AlbumReceived);
         param.Add("MessageDataArray", MessageDataArray);
@@ -625,7 +636,6 @@ public class UserInfo
                 }
             }
         }
-
     }
 
     private void SaveUserInventory()
@@ -962,7 +972,21 @@ public class UserInfo
     #endregion
 
     #region Challenges
-    public void LoadUserChallenges()
+    public void SaveUserChallengesData()
+    {
+        ChallengesNum = DatabaseManager.Instance.Challenges.ChallengesNum;
+        GatheringSuccessCount = DatabaseManager.Instance.Challenges.GatheringSuccessCount;
+
+        ChallengesCount[0] = DatabaseManager.Instance.Challenges.StackedBambooCount;
+        ChallengesCount[1] = DatabaseManager.Instance.Challenges.PurchaseCount;
+        ChallengesCount[2] = DatabaseManager.Instance.Challenges.SalesCount;
+        ChallengesCount[3] = DatabaseManager.Instance.Challenges.FurnitureCount;
+        ChallengesCount[4] = DatabaseManager.Instance.Challenges.CookingCount;
+        ChallengesCount[5] = DatabaseManager.Instance.Challenges.TakePhotoCount;
+        ChallengesCount[6] = DatabaseManager.Instance.Challenges.SharingPhotoCount;
+    }
+
+    public void LoadUserChallengesData()
     {
         // 완료된 도전과제 불러오기
         for (int i = 0; i < ChallengeDoneId.Count; i++)
@@ -973,7 +997,7 @@ public class UserInfo
         // 완료 후 클릭한 도전과제 불러오기
         for (int i = 0; i < ChallengeClearId.Count; i++)
         {
-            DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsDone = true;
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsClear = true;
         }
     }
     #endregion
