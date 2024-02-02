@@ -24,8 +24,8 @@ public class UIDiary : UIView
     private Vector3 _showPos;
     private Vector3 _hidePos;
 
-    //책 펴기 접기 애니메이션의 소요 시간( 현재는 1.9초 ) 
-    private float _bookAnimeDuration => 1.9f;
+    //책 펴기 접기 애니메이션의 소요 시간( 현재는 1.2초 ) 
+    private float _bookAnimeDuration => 1.1f;
 
     public override void Init(UINavigation uiNav)
     {
