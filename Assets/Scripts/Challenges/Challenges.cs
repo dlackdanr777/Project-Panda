@@ -186,7 +186,7 @@ public class Challenges
         EUnlockingBook eUnlockingBook = EUnlockingBook.None;
 
         // 첫 도감 해제
-        if (_unlockingBookCount[(int)EUnlockingBook.None] == 0)
+        if (DatabaseManager.Instance.GetChallengesDic()["RWBG03"].IsDone == false)
         {
             SuccessChallenge(_challengesDatas[(int)EChallengesKategorie.book][0].Id);
         }
