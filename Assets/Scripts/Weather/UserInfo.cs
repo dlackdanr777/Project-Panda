@@ -125,12 +125,12 @@ public class UserInfo
             }
             for (int i = 0, count = json[0]["ChallengeDoneId"].Count; i < count; i++)
             {
-                ChallengeDoneId[i] = json[0]["ChallengeDoneId"][i].ToString();
+                ChallengeDoneId.Add(json[0]["ChallengeDoneId"][i].ToString());
             }
 
             for (int i = 0, count = json[0]["ChallengeClearId"].Count; i < count; i++)
             {
-                ChallengeClearId[i] = json[0]["ChallengeClearId"][i].ToString();
+                ChallengeClearId.Add(json[0]["ChallengeClearId"][i].ToString());
             }
 
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
@@ -636,7 +636,6 @@ public class UserInfo
                 }
             }
         }
-
     }
 
     private void SaveUserInventory()

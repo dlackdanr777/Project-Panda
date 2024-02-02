@@ -90,7 +90,6 @@ public class UIStickerContent : MonoBehaviour
 
     private Sprite GetStickerImage(string id)
     {
-        Debug.Log(GameManager.Instance.Player.StickerInventory.Count);
         for(int i=0;i< GameManager.Instance.Player.StickerInventory.Count; i++)
         {
             if (GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id.Equals(id))

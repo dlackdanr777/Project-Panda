@@ -42,11 +42,11 @@ public class ShopButton : MonoBehaviour
             if (GameManager.Instance.Player.SpendBamboo(int.Parse(_price.text)))
             {
                 GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool,
-                    GetIdByName(DataBind.GetTextValue("ShopBuyItemDetailName").Item), int.Parse(_count.text)); //아이템에 따라 달라짐(현재는 도구)
-                ShopItemHandler?.Invoke();
-                InventoryItemHandler?.Invoke();
+                    DataBind.GetTextValue("ShopBuyItemDetailID").Item, int.Parse(_count.text)); //아이템에 따라 달라짐(현재는 도구)
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
+                ShopItemHandler?.Invoke(); //SoldOut
+                InventoryItemHandler?.Invoke(); //인벤토리 초기화
 
                 // 도전 과제 달성 체크
                 DatabaseManager.Instance.Challenges.UsingShop(true);
@@ -59,19 +59,18 @@ public class ShopButton : MonoBehaviour
         }
         else
         {
-            if(GameManager.Instance.Player.ToolItemInventory[0].RemoveById(GetIdByName(DataBind.GetTextValue("ShopBuyItemDetailName").Item), int.Parse(_count.text)))
+            if(RemoveItem(DataBind.GetTextValue("InventoryDetailID").Item, int.Parse(_count.text)))
             {
                 GameManager.Instance.Player.GainBamboo(int.Parse(_price.text));
-                InventoryItemHandler?.Invoke();
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
+                InventoryItemHandler?.Invoke(); 
 
                 // 도전 과제 달성 체크
                 DatabaseManager.Instance.Challenges.UsingShop(false);
             }
             else
             {
-                Debug.Log(GameManager.Instance.Player.ToolItemInventory[0].ItemsCount);
                 StartCoroutine(BuyItemRoutine());
             }
         }
@@ -90,15 +89,23 @@ public class ShopButton : MonoBehaviour
         _checkView.SetActive(false);
     }
 
-    private string GetIdByName(string name)
+    private bool RemoveItem(string id, int count)
     {
-        for(int i=0;i<DatabaseManager.Instance.GetGatheringToolItemList().Count;i++) //shop database에서 아이디 찾기
+        string code = id.Substring(0, 3);
+
+        switch (code)
         {
-            if (DatabaseManager.Instance.GetGatheringToolItemList()[i].Name.Equals(name))
-            {
-                return DatabaseManager.Instance.GetGatheringToolItemList()[i].Id;
-            }
+            case "IBG": 
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Bug].RemoveById(id, count);
+            case "IFI":
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fish].RemoveById(id, count);
+            case "IFR":
+                Debug.Log(GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].GetInventoryList().Count);
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].RemoveById(id, count);
+                //요리 추가해야함
+
         }
-        return null;
+
+        return false;
     }
 }

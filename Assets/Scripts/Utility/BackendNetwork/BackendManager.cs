@@ -17,10 +17,10 @@ namespace Muks.BackEnd
 
     public class BackendManager : SingletonHandler<BackendManager>
     {
-        //로그인 성공이면 이값이 참으로 전환
-        //이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)
-        private bool _isLoginSuccess;
-
+        /// <summary>
+        /// 이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)
+        /// </summary>
+        public bool Login;
 
         public override void Awake()
         {
@@ -108,7 +108,6 @@ namespace Muks.BackEnd
 
                 case BackendState.Success:
                     Debug.Log("로그인 성공");
-                    _isLoginSuccess = true;
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -239,7 +238,7 @@ namespace Muks.BackEnd
         /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 추가하는 함수 </summary>
         public void GameDataInsert(string selectedProbabilityFileId, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
         {
-            if (!Backend.IsLogin && _isLoginSuccess)
+            if (!Backend.IsLogin || !Login)
             {
                 Debug.LogError("서버에 로그인 되어있지 않습니다.");
                 return;
@@ -280,7 +279,7 @@ namespace Muks.BackEnd
         /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 추가하는 함수 </summary>
         public void GameDataUpdate(string selectedProbabilityFileId, string inDate, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
         {
-            if (!Backend.IsLogin && _isLoginSuccess)
+            if (!Backend.IsLogin || !Login)
             {
                 Debug.LogError("서버에 로그인 되어있지 않습니다.");
                 return;

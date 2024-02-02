@@ -2,6 +2,7 @@ using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 [Serializable]
 public class Inventory
@@ -17,37 +18,52 @@ public class Inventory
         return _items;
     }
 
-    private void Add(Item item, InventoryItemField field)
+    private void Add(Item item, InventoryItemField field, int count)
     {
-        if(_items.Count > 0)
+        int remainCount = count; // 남은 아이템 개수
+
+        // 이미 존재하는 아이템인지 확인
+        foreach (var existingItem in _items)
         {
-            for (int i = 0; i < _items.Count; i++)
+            if (existingItem.Id.Equals(item.Id))
             {
-                if (_items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
+                // 도구는 한 개만 얻을 수 있음
+                if (field == InventoryItemField.Tool)
                 {
-                    if(field == InventoryItemField.Tool) //도구는 한 개만 얻을 수 있음
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        if (_items[i].Count == MaxInventoryItemCount) //개수가 최대 개수와 같은지 확인
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            _items[i].Count++;
-                            return;
-                        }
-                    }
+                    return;
+                }
+
+                // 아이템 개수가 최대 개수에 도달한 경우 다음 아이템으로 이동
+                if (existingItem.Count == MaxInventoryItemCount)
+                {
+                    continue;
+                }
+
+                // 남은 아이템 수를 현재 인벤토리에 추가
+                int spaceLeft = MaxInventoryItemCount - existingItem.Count;
+                int addToInventory = Math.Min(spaceLeft, remainCount);
+                existingItem.Count += addToInventory;
+                remainCount -= addToInventory;
+
+                // 모든 아이템을 추가했으면 종료
+                if (remainCount == 0)
+                {
+                    return;
                 }
             }
         }
 
-        //최대 개수를 가진 아이템만 존재한다면 새로운 인벤토리 아이템 생성
-        InventoryItem addItem = new InventoryItem(item.Id, item.Name, item.Description, item.Price, item.Rank, item.Map, item.Image);
-        _items.Add(addItem); //새로운 인벤토리 생성
+
+        // 남은 아이템을 인벤토리에 추가
+        while (remainCount > 0)
+        {
+            int addToInventory = Math.Min(MaxInventoryItemCount, remainCount);
+            InventoryItem newItem = new InventoryItem(item.Id, item.Name, item.Description, addToInventory, item.Price, item.Rank, item.Map, item.Image);
+            _items.Add(newItem);
+            remainCount -= addToInventory;
+            UnityEngine.Debug.Log(remainCount);
+        }
+
     }
 
     /// <summary>
@@ -57,7 +73,7 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public void AddById(InventoryItemField field, string id)
+    public void AddById(InventoryItemField field, string id, int count)
     {
         string startId = id.Substring(0, 3);
         switch (field)
@@ -80,7 +96,7 @@ public class Inventory
                 {
                     if (gatheringDatabase[i].Id.Equals(id))
                     {
-                        Add(gatheringDatabase[i], field);
+                        Add(gatheringDatabase[i], field, count);
                         if (gatheringDatabase[i].IsReceived != true)
                         {
                             gatheringDatabase[i].IsReceived = true;
@@ -101,7 +117,7 @@ public class Inventory
                 {
                     if (toolDatabase[i].Id.Equals(id))
                     {
-                        Add(toolDatabase[i], field);
+                        Add(toolDatabase[i], field, count);
                         toolDatabase[i].IsReceived = true;
                     }
                 }
@@ -116,12 +132,9 @@ public class Inventory
     /// <param name="fieldIndex"></param>
     /// <param name="id"></param>
     /// <param name="count"></param>
-    public void AddById(InventoryItemField field, string id, int count)
+    public void AddById(InventoryItemField field, string id)
     {
-        for(int i = 0; i < count; i++)
-        {
-            AddById(field, id);
-        }
+        AddById(field, id, 1);
     }
 
     /// <summary>
@@ -131,7 +144,7 @@ public class Inventory
     /// <param name="field"></param>
     public void AddItem(InventoryItemField field, Item item)
     {
-        AddById(field, item.Id);
+        AddById(field, item.Id, 1);
     }
 
     /// <summary>
@@ -142,70 +155,12 @@ public class Inventory
     /// <param name="count"></param>
     public void AddItem(InventoryItemField field, Item item, int count)
     {
-        for (int i = 0; i < count; i++)
-        {
-            AddById(field, item.Id);
-        }
+        AddById(field, item.Id, count);
     }
 
     public void Remove(Item item)
     {
-        
-        for (int i = 0; i < ItemsCount; i++)
-        {
-            if (_items[i].Id.Equals(item.Id)) //id가 같은 아이템이 있다면
-            {
-                _items[i].Count--;
-                if (_items[i].Count == 0) //개수가 최대 개수와 같은지 확인
-                {
-                    _items.RemoveAt(i);
-                    if(ItemsCount == 0)
-                    {
-                        _items.Clear();
-
-                    }
-                }
-            }
-        }
-        
-    }
-
-    public void RemoveByIndex(int index)
-    {
-        _items[index].Count--;
-        if (_items[index].Count == 0)//0보다 작으면 아이템 삭제
-        {
-            _items.RemoveAt(index);
-            if (_items.Count == 0)
-            {
-                _items.Clear();
-            }
-
-        }
-    }
-
-    /// <summary>
-    /// id로 아이템 제거
-    /// </summary>
-    /// <param name="id"></param>
-    public void RemoveById(string id)
-    {
-        for (int i = 0; i < ItemsCount; i++)
-        {
-            if (_items[i].Id.Equals(id)) //id가 같은 아이템이 있다면
-            {
-                _items[i].Count--;
-                if (_items[i].Count == 0) //0인지 확인
-                {
-                    _items.RemoveAt(i);
-                    if (_items.Count == 0)
-                    {
-                        _items.Clear();
-
-                    }
-                }
-            }
-        }
+        RemoveById(item.Id,1);   
     }
 
     /// <summary>
@@ -215,25 +170,80 @@ public class Inventory
     /// <param name="count"></param>
     public bool RemoveById(string id, int count)
     {
+        // 해당 아이템과 id가 같은 아이템들을 개수 순으로 정렬합니다.
+        var items = _items.Where(item => item.Id.Equals(id)).OrderBy(item => item.Count).ToList();
+
+        int totalItemCount = items.Sum(item => item.Count);
+
+        // 제거하려는 아이템의 총 개수가 인벤토리에 있는 해당 아이템의 총 개수보다 많은지 확인합니다.
+        if (count > totalItemCount)
+        {
+            return false;
+        }
+
+        int itemCountToRemove = count;
+
+        // 아이템을 순회하면서 개수가 적은 순서대로 제거를 시도합니다.
+        foreach (var item in items)
+        {
+            if (item.Count >= itemCountToRemove)
+            {
+                item.Count -= itemCountToRemove;
+                if (item.Count == 0)
+                {
+                    _items.Remove(item);
+                }
+                return true; // 아이템을 성공적으로 제거하였음을 반환
+            }
+            else
+            {
+                _items.Remove(item);
+                itemCountToRemove -= item.Count;
+            }
+        }
+
+        return false; // 아이템을 제거하지 못했을 때
+    }
+
+    /// <summary>
+    /// 아이디로 아이템 찾기
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>해당 아이템이 count만큼 있으면 true, 없으면 false</returns>
+    public bool FindItemById(string id, int count)
+    {
+        int amount = 0;
+        for(int i=0;i<ItemsCount; i++)
+        {
+            if (_items[i].Id.Equals(id))
+            {
+                amount += _items[i].Count;
+            }
+        }
+        if(count >= amount)
+        {
+
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 스페셜 아이템이 있는지 확인
+    /// </summary>
+    /// <returns>count만큼 있으면 true, 없으면 false</returns>
+    public bool FindSpecialItem(int count)
+    {
+        int amount = 0;
         for (int i = 0; i < ItemsCount; i++)
         {
-            if (_items[i].Id.Equals(id)) //id가 같은 아이템이 있다면
+            if (_items[i].Rank.Equals("스페셜"))
             {
-                if (_items[i].Count >= count)
-                {
-                    _items[i].Count -= count;
-                    if (_items[i].Count == 0) //0인지 확인
-                    {
-                        _items.RemoveAt(i);
-                        if (_items.Count == 0)
-                        {
-                            _items.Clear();
-
-                        }
-                    }
-                    return true;
-                }
+                amount++;
             }
+        }
+        if(count >= amount)
+        {
+            return true;
         }
         return false;
     }
