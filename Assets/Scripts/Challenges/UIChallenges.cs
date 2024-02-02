@@ -74,7 +74,8 @@ public class UIChallenges : UIView
 
     private void OnDestroy()
     {
-        DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
+        if (DatabaseManager.Instance.Challenges != null)
+            DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
     }
 
 
