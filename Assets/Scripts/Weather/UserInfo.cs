@@ -997,6 +997,7 @@ public class UserInfo
         // 완료 후 클릭한 도전과제 불러오기
         for (int i = 0; i < ChallengeClearId.Count; i++)
         {
+            DatabaseManager.Instance.GetChallengesDic()[ChallengeDoneId[i]].IsDone = true;
             DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsClear = true;
         }
     }
