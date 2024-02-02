@@ -612,7 +612,10 @@ public class UserInfo
                     {
                         fieldIndex = 2;
                     }
-                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(InventoryItemField.GatheringItem, GatheringInventoryDataArray[i].Id, GatheringInventoryDataArray[i].Count);
+                    InventoryItemField field = InventoryItemField.GatheringItem;
+                    string id = GatheringInventoryDataArray[i].Id;
+                    int amount = GatheringInventoryDataArray[i].Count;
+                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(field, id, amount, ItemAddEventType.None);
                 }
             }
         }

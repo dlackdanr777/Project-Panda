@@ -44,7 +44,6 @@ namespace Muks.DataBind
         public void UpdateText(string text)
         {
             _text.text = text;
-            Debug.Log(gameObject.name + ": " + _text.text);
         }
 
         private void Enabled()
