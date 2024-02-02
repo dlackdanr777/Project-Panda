@@ -75,7 +75,6 @@ public class UIChallenges : UIView
 
     private void OnDestroy()
     {
-        if (DatabaseManager.Instance != null && DatabaseManager.Instance.Challenges != null)
             DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
     }
 
@@ -114,7 +113,9 @@ public class UIChallenges : UIView
             DatabaseManager.Instance.Challenges.EarningRewards(id);
 
             // 대나무 증가하는 애니메이션 실행
-            EarningBamboo(id);
+            //EarningBamboo(id);
+            int getBoombooAmount = DatabaseManager.Instance.GetChallengesDic()[id].BambooCount;
+            GameManager.Instance.Player.GainBamboo(getBoombooAmount);
 
             Destroy(_challengeButtonDic[id].GetComponent<Button>());
             _challengeClearImageDic[id].SetActive(true);

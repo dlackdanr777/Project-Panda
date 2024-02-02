@@ -20,8 +20,8 @@ public class UIDiary : UIView
     [SerializeField] private TweenMode _tweenMode;
 
 
-
     private Vector3 _showPos;
+
     private Vector3 _hidePos;
 
     //책 펴기 접기 애니메이션의 소요 시간( 현재는 1.2초 ) 
