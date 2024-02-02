@@ -36,9 +36,15 @@ namespace Muks.DataBind
             Invoke("Disabled", 0.02f);
         }
 
+        private void OnDestroy()
+        {
+            Disabled();
+        }
+
         public void UpdateText(string text)
         {
             _text.text = text;
+            Debug.Log(gameObject.name + ": " + _text.text);
         }
 
         private void Enabled()
@@ -50,6 +56,9 @@ namespace Muks.DataBind
 
         private void Disabled()
         {
+            if (_data == null)
+                return;
+
             _data.CallBack -= UpdateText;
         }
     }
