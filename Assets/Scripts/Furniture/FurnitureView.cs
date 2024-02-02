@@ -100,6 +100,7 @@ public class FurnitureView : MonoBehaviour
         {
             for (int j = 0; j < furnitureRooms[i].FurnitureIds.Length; j++) // 가구 배치
             {
+                Debug.Log("i: " + i + "j: " + j);
                 if (!string.IsNullOrEmpty(furnitureRooms[i].FurnitureIds[j])) // 문자열이 null이거나 빈 문자열인지 확인
                 {
                     _furnitureViewModel.ChangedFurniture(DatabaseManager.Instance.GetFurnitureItem()[furnitureRooms[i].FurnitureIds[j]], (ERoom)i);
@@ -118,8 +119,8 @@ public class FurnitureView : MonoBehaviour
 
         // 문 열기
         Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(0, 0), 1.5f, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(620, 0), 1.5f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(-200, 0), 1.5f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(820, 0), 1.5f, TweenMode.Quadratic);
 
         CreateSlots(); //slot 생성
         //BindRoomFurniture();
@@ -150,6 +151,15 @@ public class FurnitureView : MonoBehaviour
         if ((int)(object)_currentField != -1)
         {
             UpdateListSlots();
+        }
+
+        // 가구 레이어 조정 위해 RectTransform 저장
+        for(int i = 0; i<_roomFurnitures.Length; i++)
+        {
+            for(int j = 0; j < _roomFurnitures[i]._furnitures.Length; j++)
+            {
+                _roomFurnitures[i].FurnituresRectTransforms[j] = _roomFurnitures[i]._furnitures[j].gameObject.GetComponent<RectTransform>();
+            }
         }
     }
 
@@ -287,6 +297,7 @@ public class FurnitureView : MonoBehaviour
     {
         if (furnitureData != null)
         {
+            _roomFurnitures[(int)_currnetRoom].FurnituresRectTransforms[(int)furnitureData.Type].SetSiblingIndex(furnitureData.Layer);
             _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].gameObject.SetActive(true);
             _roomFurnitures[(int)_currnetRoom]._furnitures[(int)furnitureData.Type].sprite = furnitureData.RoomImage;
         }
@@ -324,8 +335,8 @@ public class FurnitureView : MonoBehaviour
             Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(547, 0), 0.5f, TweenMode.Constant);
             Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(80, 0), 0.5f, TweenMode.Constant, () =>
             {
-                Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(0, 0), 1.5f, TweenMode.Quadratic);
-                Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(620, 0), 1.5f, TweenMode.Quadratic);
+                Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(-200, 0), 1.5f, TweenMode.Quadratic);
+                Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(820, 0), 1.5f, TweenMode.Quadratic);
             });     
         });
     }
@@ -346,10 +357,12 @@ public class FurnitureView : MonoBehaviour
     public class RoomFurniture
     {
         public Image[] _furnitures;
+        public RectTransform[] FurnituresRectTransforms;
 
         public RoomFurniture()
         {
-            _furnitures = new Image[System.Enum.GetValues(typeof(FurnitureType)).Length];
+            _furnitures = new Image[System.Enum.GetValues(typeof(FurnitureType)).Length - 1];
+            FurnituresRectTransforms = new RectTransform[System.Enum.GetValues(typeof(FurnitureType)).Length - 1];
         }
     }
 
