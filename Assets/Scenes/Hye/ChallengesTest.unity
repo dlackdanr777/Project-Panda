@@ -3869,6 +3869,9 @@ MonoBehaviour:
   _rootUiView:
     Name: Main
     UIView: {fileID: 230464482}
+  _exitUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: Camera
     UIView: {fileID: 372516656}
@@ -3894,7 +3897,6 @@ MonoBehaviour:
     UIView: {fileID: 530097742284771519}
   - Name: Challenges
     UIView: {fileID: 1130589317}
-  _uiViews: []
 --- !u!1 &230464480
 GameObject:
   m_ObjectHideFlags: 0
@@ -32101,9 +32103,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 230217967}
     m_Modifications:
+    - target: {fileID: 588866376260119613, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 2775332019530277536, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
       propertyPath: m_Name
       value: UIChallenges
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775332019530277536, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3696590588877331214, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
       propertyPath: m_Pivot.x
@@ -32189,6 +32199,14 @@ PrefabInstance:
       propertyPath: _bambooFieldSystem
       value: 
       objectReference: {fileID: 1298101401}
+    - target: {fileID: 5897148126849723594, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8929259081979031780, guid: 233b7f86fad6ee24abddebba31864930, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -66,10 +66,11 @@ public class UIChallenges : UIView
                     _challengeClearImageDic[key].SetActive(true);
                     _challengesSlotImageDic[key].color = new Color(0.5f, 0.5f, 0.5f, 1);
 
-                    _challengesSlotImageDic[key].GetComponent<RectTransform>().SetAsLastSibling();
+                    _clearChallenges.Add(key);
                 }
             }
         }
+        CloseChallenges();
     }
 
     private void OnDestroy()
