@@ -145,6 +145,7 @@ public class UserInfo
                 MessageDataArray.Add(item);
             }
 
+            LoadUserChallengesData();
             LoadUserReceivedAlbum();
             Debug.Log("UserInfo Load성공");
         }
@@ -213,8 +214,9 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserMailData();
         SaveUserChallengesData();
+        SaveUserMailData();
+
         Param param = GetUserInfoParam();
 
         Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
@@ -991,6 +993,17 @@ public class UserInfo
 
     public void LoadUserChallengesData()
     {
+        DatabaseManager.Instance.Challenges.ChallengesNum = ChallengesNum;
+        DatabaseManager.Instance.Challenges.GatheringSuccessCount = GatheringSuccessCount;
+
+        DatabaseManager.Instance.Challenges.StackedBambooCount = ChallengesCount[0];
+        DatabaseManager.Instance.Challenges.PurchaseCount = ChallengesCount[1];
+        DatabaseManager.Instance.Challenges.SalesCount = ChallengesCount[2];
+        DatabaseManager.Instance.Challenges.FurnitureCount = ChallengesCount[3];
+        DatabaseManager.Instance.Challenges.CookingCount = ChallengesCount[4];
+        DatabaseManager.Instance.Challenges.TakePhotoCount = ChallengesCount[5];
+        DatabaseManager.Instance.Challenges.SharingPhotoCount = ChallengesCount[6];
+
         // 완료된 도전과제 불러오기
         for (int i = 0; i < ChallengeDoneId.Count; i++)
         {

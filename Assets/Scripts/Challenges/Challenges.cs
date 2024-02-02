@@ -47,18 +47,18 @@ public class Challenges
     }
 
     // 상점
-    public int PurchaseCount { get; private set; }
-    public int SalesCount { get; private set; }
+    public int PurchaseCount;
+    public int SalesCount;
 
     // 가구
-    public int FurnitureCount { get; private set; }
+    public int FurnitureCount;
 
     // 요리 제작 횟수
-    public int CookingCount { get; private set; }
+    public int CookingCount;
 
     // 사진
-    public int TakePhotoCount { get; private set; }
-    public int SharingPhotoCount { get; private set; }
+    public int TakePhotoCount;
+    public int SharingPhotoCount;
     #endregion
 
     public void Register()
@@ -407,7 +407,6 @@ public class Challenges
             (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
-        DatabaseManager.Instance.UserInfo.ChallengeDoneId.Remove(challengesId);
         DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);
     }
 }
