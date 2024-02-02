@@ -1,8 +1,13 @@
+using BackEnd.MultiCharacter;
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
 using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UserInfo;
 
 public class Player
 {
@@ -99,6 +104,7 @@ public class Player
             return false;
         }
     }
+
 
     public Inventory[] GetItemInventory(InventoryItemField field)
     {
@@ -201,5 +207,115 @@ public class Player
     }
     #endregion
 
+
+    #region SaveAndLoadBamboo
+    public void LoadBambooData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            Bamboo = int.Parse(json[0]["Bamboo"].ToString());
+            DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+            Debug.Log("Bamboo Load성공");
+        }
+    }
+
+
+    public void SaveBambooData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Bamboo";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveBambooData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertBambooData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertBambooData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertBambooData(string selectedProbabilityFileId)
+    {
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
+
+        Debug.LogFormat("재화 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
+    {
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
+
+        Debug.LogFormat("재화 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 재화 데이터를 반환하는 클래스 </summary>
+    public Param GetBambooParam()
+    {
+        Param param = new Param();
+
+        param.Add("Bamboo", Bamboo);
+        return param;
+    }
+
+    #endregion
 }
 

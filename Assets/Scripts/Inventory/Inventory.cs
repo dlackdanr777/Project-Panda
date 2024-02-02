@@ -4,6 +4,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+/// <summary>인벤토리 아이템 추가 함수의 타입</summary>
+public enum ItemAddEventType
+{
+    /// <summary>이벤트 없음</summary>
+    None,
+
+    /// <summary>아이템 획득 카운트 증가</summary>
+    AddChallengesCount
+}
+
 [Serializable]
 public class Inventory
 {
@@ -73,7 +83,7 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public void AddById(InventoryItemField field, string id, int count)
+    public void AddById(InventoryItemField field, string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
     {
         string startId = id.Substring(0, 3);
         switch (field)
@@ -100,7 +110,9 @@ public class Inventory
                         if (gatheringDatabase[i].IsReceived != true)
                         {
                             gatheringDatabase[i].IsReceived = true;
-                            DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
+
+                            if(type == ItemAddEventType.AddChallengesCount)
+                                DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
                         }
                     }
                 }

@@ -102,9 +102,9 @@ namespace Muks.BackEnd
         private void LoadNextScene()
         {
             //LoadingSceneManager.LoadScene("NewUserSceneMuksTest", LoadingType.FirstLoading);
-            LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
             DatabaseManager.Instance.ItemDatabase.LoadData();
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
+            BackendManager.Instance.GetMyData("Bamboo", 10, GameManager.Instance.Player.LoadBambooData);
             BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
             BackendManager.Instance.GetMyData("Sticker", 10, DatabaseManager.Instance.UserInfo.LoadStickerData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
@@ -117,6 +117,8 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.AlbumDatabase.LoadData();
 
             BackendManager.Instance.Login = true;
+
+            LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
         }
     }
 }

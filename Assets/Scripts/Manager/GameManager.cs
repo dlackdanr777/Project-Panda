@@ -2,6 +2,7 @@ using Muks.DataBind;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonHandler<GameManager>
 {
@@ -27,18 +28,21 @@ public class GameManager : SingletonHandler<GameManager>
         Player.Init();
     }
 
+    public void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.A))
+        { Player.GainBamboo(1); }
 
+    }
 
 
     public void OnApplicationQuit()
     {
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
+        Player.SaveBambooData(10);
         DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
         DatabaseManager.Instance.UserInfo.SaveStickerData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);
         DatabaseManager.Instance.StartPandaInfo.SavePandaInfoData(10);
     }
-
-
-
 }
