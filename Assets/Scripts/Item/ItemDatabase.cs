@@ -138,11 +138,12 @@ public class ItemDatabase
             string description = _dataFurniture[i]["설명"].ToString();
             string storyId = _dataFurniture[i]["스토리단계"].ToString();
             int price = (int)_dataFurniture[i]["가격"];
+            int layer = (int)_dataFurniture[i]["레이어"];
             FurnitureType type = FurnitureTypes[char.Parse(id.Substring(4, 1))];
             Sprite roomSprite = FurnitureItemSprite.ItemSprites[i].Image;
             Sprite sprite = FurnitureItemSprite.ItemSprites[i].Thumbnails;
 
-            Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", type, sprite, roomSprite);
+            Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", layer, type, sprite, roomSprite);
             FurnitureDic.Add(id, data);
        /*  FurnitureDic.Add(id, new Furniture(_dataFurniture[i]["ID"].ToString(),
                     _dataFurniture[i]["이름"].ToString(),
