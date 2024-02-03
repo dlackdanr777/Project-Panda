@@ -404,6 +404,60 @@ public class StarterPandaInfo
         FurnitureInventoryID.Add("RN13G");
         FurnitureInventoryID.Add("RN13H");
 
+        FurnitureInventoryID.Add("RN14A");
+        FurnitureInventoryID.Add("RN14B");
+        FurnitureInventoryID.Add("RN14C");
+        FurnitureInventoryID.Add("RN14D");
+        FurnitureInventoryID.Add("RN14E");
+        FurnitureInventoryID.Add("RN14F");
+        FurnitureInventoryID.Add("RN14G");
+        FurnitureInventoryID.Add("RN14H");
+
+        FurnitureInventoryID.Add("RN15A");
+        FurnitureInventoryID.Add("RN15B");
+        FurnitureInventoryID.Add("RN15C");
+        FurnitureInventoryID.Add("RN15D");
+        FurnitureInventoryID.Add("RN15E");
+        FurnitureInventoryID.Add("RN15F");
+        FurnitureInventoryID.Add("RN15G");
+        FurnitureInventoryID.Add("RN15H");
+
+        FurnitureInventoryID.Add("RN16A");
+        FurnitureInventoryID.Add("RN16B");
+        FurnitureInventoryID.Add("RN16C");
+        FurnitureInventoryID.Add("RN16D");
+        FurnitureInventoryID.Add("RN16E");
+        FurnitureInventoryID.Add("RN16F");
+        FurnitureInventoryID.Add("RN16G");
+        FurnitureInventoryID.Add("RN16H");
+
+        FurnitureInventoryID.Add("RN17A");
+        FurnitureInventoryID.Add("RN17B");
+        FurnitureInventoryID.Add("RN17C");
+        FurnitureInventoryID.Add("RN17D");
+        FurnitureInventoryID.Add("RN17E");
+        FurnitureInventoryID.Add("RN17F");
+        FurnitureInventoryID.Add("RN17G");
+        FurnitureInventoryID.Add("RN17H");
+
+        FurnitureInventoryID.Add("RN18A");
+        FurnitureInventoryID.Add("RN18B");
+        FurnitureInventoryID.Add("RN18C");
+        FurnitureInventoryID.Add("RN18D");
+        FurnitureInventoryID.Add("RN18E");
+        FurnitureInventoryID.Add("RN18F");
+        FurnitureInventoryID.Add("RN18G");
+        FurnitureInventoryID.Add("RN18H");
+
+        FurnitureInventoryID.Add("RN19A");
+        FurnitureInventoryID.Add("RN19B");
+        FurnitureInventoryID.Add("RN19C");
+        FurnitureInventoryID.Add("RN19D");
+        FurnitureInventoryID.Add("RN19E");
+        FurnitureInventoryID.Add("RN19F");
+        FurnitureInventoryID.Add("RN19G");
+        FurnitureInventoryID.Add("RN19H");
+
         if (DatabaseManager.Instance.GetFurnitureItem() != null)
         {
             foreach (string key in DatabaseManager.Instance.GetFurnitureItem().Keys)
