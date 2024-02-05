@@ -12,6 +12,7 @@ public class UISideDialogue : UIView
 
     [SerializeField] private Image _pandaImage;
     [SerializeField] private Sprite _starterImage;
+    [SerializeField] private Sprite[] _intimacyImage;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -19,7 +20,6 @@ public class UISideDialogue : UIView
     private DialogueState _state;
     private int _currentIndex;
 
-    private SideStoryController _currentStoryController;
     private SideStoryDialogue _dialogue;
 
     private bool _isStoryStart;
@@ -103,6 +103,12 @@ public class UISideDialogue : UIView
 
     private void StartStory(SideStoryDialogue storyDialogue)
     {
+        if (_isStoryStart)
+        {
+            Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
+            return;
+        }
+
         _dialogue = storyDialogue;
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
@@ -182,6 +188,9 @@ public class UISideDialogue : UIView
         else
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
+            
+            int intimacy = DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy;
+            DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
         }
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -217,15 +226,15 @@ public class UISideDialogue : UIView
     private void OnButtonClicked(string choice)
     {
         _leftButton.HideButton();
-        _rightButton.HideButton();
-
-        GoToBranch(choice);
-        _state = DialogueState.None;
-        _leftButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
-        _rightButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
-        _isSkipEnabled = true;
-        OnNextButtonClicked();
-
+        _rightButton.HideButton(() =>
+        {
+            GoToBranch(choice);
+            _state = DialogueState.None;
+            _leftButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
+            _rightButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
+            _isSkipEnabled = true;
+            OnNextButtonClicked();
+        });
     }
 
     private IEnumerator SkipDisable(float value)

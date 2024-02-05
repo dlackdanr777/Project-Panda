@@ -14,7 +14,6 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
-    private int _npcCode;
 
     private void Awake()
     {
@@ -30,7 +29,6 @@ public class SideStoryController : MonoBehaviour, IInteraction
     // Start is called before the first frame update
     void Start()
     {
-        _npcCode = int.Parse(NPCID.Substring(3));
         _storyCode = "SS" + NPCID.Substring(3);
         
         _storyDatabase = DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode];
@@ -64,7 +62,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
                 int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
 
                 if (priorCheck && //이전 스토리 성공했는지 비교
-                    DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
+                    DatabaseManager.Instance.GetNPC(NPCID).Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
                 {
                     _storyDatabase[_storyKey[i]].IsSuccess = true; 
 
@@ -72,7 +70,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
                 }
 
                 //성공한 스토리가 아니면
-                if (DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy < CheckNext(currentStory.NextStoryID)) //다음 스토리보다 친밀도 작은지 비교
+                if (DatabaseManager.Instance.GetNPC(NPCID).Intimacy < CheckNext(currentStory.NextStoryID)) //다음 스토리보다 친밀도 작은지 비교
                 {       
                     if (currentStory.EventType != EventType.None)// 이벤트 조건이 있으면
                     {
@@ -156,15 +154,15 @@ public class SideStoryController : MonoBehaviour, IInteraction
 
     private void AddReward(string id)
     {
-        NPC currentNPC = DatabaseManager.Instance.GetNPCList()[_npcCode - 1];
+        NPC currentNPC = DatabaseManager.Instance.GetNPC(NPCID);
         SideStoryDialogue currentStory = _storyDatabase[id];
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
 
-        DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy += currentStory.RewardIntimacy; //보상 친밀도
+        DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
 
         if (currentNPC.Intimacy > nextStoryInti)
         {
-            DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy = nextStoryInti;
+            DatabaseManager.Instance.GetNPC(NPCID).Intimacy = nextStoryInti;
         }
 
         //보상

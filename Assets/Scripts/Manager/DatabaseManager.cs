@@ -301,6 +301,22 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
+    /// 친밀도 증가 함수
+    /// </summary>
+    /// <param name="id">NPCID</param>
+    /// <param name="count">증가할 양</param>
+    public void AddIntimacy(string id, int count)
+    {
+        for(int i=0;i<_npcDatabase.NpcList.Count;i++)
+        {
+            if (_npcDatabase.NpcList[i].Id.Equals(id))
+            {
+                _npcDatabase.NpcList[i].Intimacy += count;
+            }
+        }
+    }
+
+    /// <summary>
     /// Furniture ItemList
     /// </summary>
     /// <returns></returns>
