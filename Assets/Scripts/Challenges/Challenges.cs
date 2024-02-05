@@ -122,9 +122,9 @@ public class Challenges
 
 
         // 메인스토리
-        for (int i = 0; i < StoryManager.Instance._storyCompleteList.Count - 1; i++)
+        for (int i = 0; i < StoryManager.Instance._storyCompletedList.Count - 1; i++)
         {
-            string id = StoryManager.Instance._storyCompleteList[i];
+            string id = StoryManager.Instance._storyCompletedList[i];
             if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4))
             {
                 challengesId = "RW" + id.Substring(0, 4);
@@ -162,9 +162,9 @@ public class Challenges
 
 
         // 도감 처음 해제
-        for (int i = 1; i < _challengesDatas[(int)EChallengesKategorie.book].Count; i++)
+        for (int i = 1; i < _unlockingBookCount.Length; i++)
         {
-            if(_challengesDatas[(int)EChallengesKategorie.book][i].Count > 0)
+            if (_unlockingBookCount[i] > 0)
             {
                 DatabaseManager.Instance.GetChallengesDic()["RWBG03"].IsDone = true;
                 break;
