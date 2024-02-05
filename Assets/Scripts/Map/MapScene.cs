@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BT;
-using Unity.VisualScripting;
 using Muks.DataBind;
 
 public class MapScene : MonoBehaviour
@@ -11,6 +10,7 @@ public class MapScene : MonoBehaviour
     void Start()
     {
         DataBind.SetTextValue("BambooCount", GameManager.Instance.Player.Bamboo.ToString());
+        DatabaseManager.Instance.Challenges.CheckIsDone();
         StarterPanda.Instance.SwitchingScene();
     }
 }

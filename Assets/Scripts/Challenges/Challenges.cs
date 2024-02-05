@@ -64,8 +64,6 @@ public class Challenges
     public void Register()
     {
         LoadData();
-        CheckIsDone();
-
     }
 
     public void LoadData()
@@ -112,7 +110,7 @@ public class Challenges
 
     /// <summary>
     /// IsDone이 제대로 저장되었는지 확인 </summary>
-    private void CheckIsDone()
+    public void CheckIsDone()
     {
         bool isDone = true;
 
