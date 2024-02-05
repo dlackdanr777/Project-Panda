@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class SideStoryController : MonoBehaviour, IInteraction
 {
+    public static event Action<SideStoryDialogue> OnStartInteractionHandler;
+
     [SerializeField] private string NPCID;
 
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
@@ -66,23 +68,19 @@ public class SideStoryController : MonoBehaviour, IInteraction
                         //조건 비교
                         if (!CheckCondition(currentStory.EventType, currentStory.EventTypeCondition, currentStory.EventTypeAmount))
                         {
-                            i--; //조건이 만족하지 못했으므로 전 대화 출력
+                            i--;
                             currentStory = _storyDatabase[_storyKey[i]];
                         }
                     }
 
                     string printResult = PrintContext(currentStory.DialogueData);
+                    //GetContext(currentStory);
                     if (printResult.Equals("DONE") || printResult.Equals("")) //대화 출력
                     {
-                        AddReward(i); //보상
-                        break;
+                        AddReward(i); //보상       
                     }
-                    else if (printResult.Equals("FAIL"))
-                    {
-                        break;
-                    }
+                    break;
                 }
-
             }
 
         }
@@ -198,6 +196,11 @@ public class SideStoryController : MonoBehaviour, IInteraction
         }
 
         return null;
+    }
+
+    private void GetContext(SideStoryDialogue data)
+    {
+        OnStartInteractionHandler?.Invoke(data);
     }
 
     private void AddReward(int index)
