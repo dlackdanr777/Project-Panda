@@ -42,10 +42,7 @@ public class SideStoryDialogueManager : MonoBehaviour
 
                 SSDic.Add(id, dictionary);
             }
-            catch (Exception e) //사이드스토리가 없는 NPC
-            {
-                Debug.Log(e.ToString());
-            }
+            catch { } //사이드스토리가 없는 NPC
         }
     }
 
@@ -61,8 +58,6 @@ public class SideStoryDialogueManager : MonoBehaviour
                 _goTo = j - 1;
                 break;
             }
-            Debug.Log(current  + _dataSideStory[i][j]["스토리ID"].ToString());
-            Debug.Log(j+_dataSideStory[i][j]["일반 대화"].ToString());
             dialogue.Add(new SideDialogueData(_dataSideStory[i][j]["talkPandaID"].ToString(),
             _dataSideStory[i][j]["일반 대화"].ToString(),
             _dataSideStory[i][j]["스토리 성공 실패 체크"].ToString(),

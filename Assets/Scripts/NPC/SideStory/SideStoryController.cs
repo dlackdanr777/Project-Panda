@@ -16,6 +16,17 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private string _storyCode;
     private int _npcCode;
 
+    private void Awake()
+    {
+        GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR01", 1);
+        UISideDialogue.OnAddRewardHandler += AddReward;    
+    }
+    private void OnDestroy()
+    {
+        UISideDialogue.OnAddRewardHandler -= AddReward;    
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,12 +84,8 @@ public class SideStoryController : MonoBehaviour, IInteraction
                         }
                     }
 
-                    string printResult = PrintContext(currentStory.DialogueData);
-                    //GetContext(currentStory);
-                    if (printResult.Equals("DONE") || printResult.Equals("")) //대화 출력
-                    {
-                        AddReward(i); //보상       
-                    }
+                    ShowContext(currentStory);
+
                     break;
                 }
             }
@@ -141,81 +148,43 @@ public class SideStoryController : MonoBehaviour, IInteraction
         }
     }
 
-    private string PrintContext(List<SideDialogueData> data)
+    private void ShowContext(SideStoryDialogue data)
     {
-
-        for (int i = 0; i < data.Count; i++) //대화 출력
-        {
-            string result = "";
-            Debug.Log(data[i].Contexts);
-
-            //선택지 텍스트
-            if (!data[i].ChoiceContextA.Equals("") && !data[i].ChoiceContextB.Equals(""))
-            {
-                Debug.Log(data[i].ChoiceContextA);
-                Debug.Log(data[i].ChoiceContextB);
-
-                if (Input.GetKeyDown(KeyCode.A)) //왼쪽 누르면
-                {
-                    for (int j = i + 1; j < data.Count; j++)
-                    {
-                        if (data[j].ChoiceID.Equals(data[i].ChoiceAID)) //대화지 ID와 선택지 ID가 같다면 그곳으로 이동
-                        {
-                            i = j;
-                            continue;
-                        }
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.S)) //오른쪽 누르면
-                {
-                    for (int j = i + 1; j < data.Count; j++)
-                    {
-                        if (data[j].ChoiceID.Equals(data[i].ChoiceBID)) //대화지 ID와 선택지 ID가 같다면 그곳으로 이동
-                        {
-                            i = j;
-                            continue;
-                        }
-                    }
-                }
-            }
-
-            //성공 여부 확인
-            if (data[i].IsComplete.Equals("FAIL"))
-            {
-                result = "FAIL";
-            }
-            else if (data[i].IsComplete.Equals("DONE"))
-            {
-                result = "DONE";
-            }
-
-            if (data[i].IsComplete.Equals("END"))
-            {
-                return result;
-            }
-        }
-
-        return null;
+        List<SideDialogueData> dialogueData = data.DialogueData;
+        OnStartInteractionHandler?.Invoke(data); //대화 출력
     }
 
-    private void GetContext(SideStoryDialogue data)
+    private void AddReward(string id)
     {
-        OnStartInteractionHandler?.Invoke(data);
-    }
+        NPC currentNPC = DatabaseManager.Instance.GetNPCList()[_npcCode - 1];
+        SideStoryDialogue currentStory = _storyDatabase[id];
+        int nextStoryInti = CheckNext(currentStory.NextStoryID);
 
-    private void AddReward(int index)
-    {
-        var npcList = DatabaseManager.Instance.GetNPCList();
-        var currentNPC = npcList[_npcCode - 1];
-        var nextStory = _storyDatabase[_storyKey[index + 1]];
+        DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy += currentStory.RewardIntimacy; //보상 친밀도
 
-        DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy += _storyDatabase[_storyKey[index]].RewardIntimacy; //보상 친밀도
-
-        if (currentNPC.Intimacy > nextStory.RequiredIntimacy)
+        if (currentNPC.Intimacy > nextStoryInti)
         {
-            DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy = nextStory.RequiredIntimacy;
+            DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy = nextStoryInti;
         }
 
-        Debug.Log(currentNPC.Name + " " + currentNPC.Intimacy);
+        //보상
+        RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
+    }
+
+    private bool RewardItem(EventType type, string condition, int count)
+    {
+        //조건 비교
+        switch (type)
+        {
+            case EventType.MONEY:
+                return GameManager.Instance.Player.GainBamboo(count);
+            case EventType.IVGI:
+                GameManager.Instance.Player.AddIVGI(condition, count);
+                return true;
+            case EventType.IVCK:
+                return true;
+            default:
+                return false;
+        }
     }
 }

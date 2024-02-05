@@ -1,5 +1,6 @@
 using Muks.DataBind;
 using Muks.Tween;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 
 public class UISideDialogue : UIView
 {
+    public static event Action<string> OnAddRewardHandler;
+
     [SerializeField] private Image _pandaImage;
     [SerializeField] private Sprite _starterImage;
     [SerializeField] private UIDialogueButton _leftButton;
@@ -23,6 +26,7 @@ public class UISideDialogue : UIView
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
+    private bool _isFail;
 
     public override void Init(UINavigation uiNav)
     {
@@ -102,6 +106,7 @@ public class UISideDialogue : UIView
         _dialogue = storyDialogue;
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
+        _isFail = false;
     }
 
 
@@ -133,6 +138,20 @@ public class UISideDialogue : UIView
                 StopCoroutine(_contextAnimeRoutine);
 
             _contextAnimeRoutine = StartCoroutine(ContextAnime(_dialogue.DialogueData[_currentIndex]));
+
+            if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("FAIL"))
+            {
+                _isFail = true;
+            }
+
+            if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("END"))
+            {
+                _currentIndex = _dialogue.DialogueData.Count;
+                if (!_isFail) //실패가 아닐 때만 보상
+                {
+                    OnAddRewardHandler?.Invoke(_dialogue.StoryID);
+                }
+            }
             _currentIndex++;
         }
 
@@ -185,8 +204,8 @@ public class UISideDialogue : UIView
         if (data.CanChoice)
         {
             _state = DialogueState.Choice;
-            _leftButton.ShowButton(data.ChoiceContextA, () => { _leftButton.Button.onClick.AddListener(OnButtonClicked); });
-            _rightButton.ShowButton(data.ChoiceContextB, () => { _rightButton.Button.onClick.AddListener(OnButtonClicked); });
+            _leftButton.ShowButton(data.ChoiceContextA, () => { _leftButton.Button.onClick.AddListener(()=>OnButtonClicked(data.ChoiceAID)); });
+            _rightButton.ShowButton(data.ChoiceContextB, () => { _rightButton.Button.onClick.AddListener(()=>OnButtonClicked(data.ChoiceBID)); });
         }
 
         else
@@ -195,17 +214,17 @@ public class UISideDialogue : UIView
         }
     }
 
-    private void OnButtonClicked()
+    private void OnButtonClicked(string choice)
     {
         _leftButton.HideButton();
-        _rightButton.HideButton(() =>
-        {
-            _state = DialogueState.None;
-            _leftButton.Button.onClick.RemoveListener(OnButtonClicked);
-            _rightButton.Button.onClick.RemoveListener(OnButtonClicked);
-            _isSkipEnabled = true;
-            OnNextButtonClicked();
-        });
+        _rightButton.HideButton();
+
+        GoToBranch(choice);
+        _state = DialogueState.None;
+        _leftButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
+        _rightButton.Button.onClick.RemoveListener(()=>OnButtonClicked(choice));
+        _isSkipEnabled = true;
+        OnNextButtonClicked();
 
     }
 
@@ -214,5 +233,16 @@ public class UISideDialogue : UIView
         _isSkipEnabled = false;
         yield return new WaitForSeconds(value);
         _isSkipEnabled = true;
+    }
+
+    private void GoToBranch(string branch)
+    {
+        for(int i = _currentIndex; i < _dialogue.DialogueData.Count; i++)
+        {
+            if (_dialogue.DialogueData[i].ChoiceID == branch)
+            {
+                _currentIndex = i;
+            }
+        }
     }
 }

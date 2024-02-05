@@ -205,6 +205,34 @@ public class Player
     {
         return CookItemInventory[0].FindItemById(id, count);
     }
+
+    public void AddIVGI(string id, int count)
+    {
+        int index = 0;
+        string code = id.Substring(0, 3);
+
+        switch (code)
+        {
+            case "IBG":
+                index = 0;
+                break;
+            case "IFI":
+                index = 1;
+                break;
+            case "IFR":
+                index = 2;
+                break;
+        }
+
+        if (count < 0)
+        {
+            GatheringItemInventory[index].RemoveById(id, -count);
+        }
+        else
+        {
+            GatheringItemInventory[index].AddById(InventoryItemField.GatheringItem, id, count);
+        }
+    }
     #endregion
 
 

@@ -234,7 +234,6 @@ public class Inventory
         }
         if(amount >= count)
         {
-            UnityEngine.Debug.Log("amount : " + amount + ", count : " + count);
             return true;
         }
         return false;
