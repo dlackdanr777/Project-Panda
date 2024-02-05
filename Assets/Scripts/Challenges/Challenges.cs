@@ -329,8 +329,10 @@ public class Challenges
 
     public void MainStoryDone(string id)
     {
+        Debug.Log(id);
         if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4)) // 메인 스토리 한 장이 끝나면
         {
+            Debug.Log("넘어옴");
             string storyChallengeId = "RW" + id.Substring(0, 4);
             SuccessChallenge(storyChallengeId); // 도전과제 달성
         }
