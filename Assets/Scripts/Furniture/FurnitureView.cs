@@ -22,8 +22,9 @@ public class FurnitureView : MonoBehaviour
     [SerializeField] private GameObject[] _rooms = new GameObject[System.Enum.GetValues(typeof(ERoom)).Length]; // 방 종류
     public RoomFurniture[] _roomFurnitures = new RoomFurniture[System.Enum.GetValues(typeof(ERoom)).Length]; // 실제 가구 배치
 
-    [SerializeField] private GameObject _leftDoor;
-    [SerializeField] private GameObject _rightDoor;
+    [SerializeField] private TweenMode _doorTweenMode;
+    [SerializeField] private Image _leftDoor;
+    [SerializeField] private Image _rightDoor;
     
     [SerializeField] private Button _exitButton;
     //[SerializeField] private Sprite _exitDoorOpenImage;
@@ -39,12 +40,19 @@ public class FurnitureView : MonoBehaviour
     [SerializeField] private Transform[] _spawnPoint; //spawn할 위치
     [SerializeField] private ScrollRect _scrollrect;
 
-
     [SerializeField] private GameObject _furnitureSlot;
+
+    [SerializeField] private GameObject _dontTouchArea; //애니메이션 중 버튼 클릭을 막기위한 Obj
 
     private List<Furniture>[] _lists = new List<Furniture>[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1]; //Field 개수만큼 리스트 존재(None 제외) //데이터를 저장할 공간
     private EFurnitureViewType _currentField;
     private int[] _maxCount = new int[System.Enum.GetValues(typeof(EFurnitureViewType)).Length - 1];
+
+    //문 애니메이션에 필요한 Pos값
+    private Vector3 _leftDoorTmpPos;
+    private Vector3 _leftDoorTargetPos => _leftDoorTmpPos + new Vector3(-1000, 0, 0);
+    private Vector3 _rightDoorTmpPos;
+    private Vector3 _rightDoorTargetPos => _rightDoorTmpPos + new Vector3(1000, 0, 0);
 
     private void Start()
     {
@@ -116,11 +124,15 @@ public class FurnitureView : MonoBehaviour
     private void Init()
     {
         StarterPanda.Instance.gameObject.SetActive(false);
-
+        _detailView.SetActive(false);
+        _dontTouchArea.SetActive(true);
         // 문 열기
-        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(-200, 0), 1.5f, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(820, 0), 1.5f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, 300), 1f, _doorTweenMode);
+
+        _leftDoorTmpPos = _leftDoor.rectTransform.anchoredPosition;
+        _rightDoorTmpPos = _rightDoor.rectTransform.anchoredPosition;
+
+        OpenDoor(1.5f);
 
         CreateSlots(); //slot 생성
         //BindRoomFurniture();
@@ -318,9 +330,11 @@ public class FurnitureView : MonoBehaviour
     /// 방 변경 시 호출 </summary>
     private void ChangeRoom(bool isLeft)
     {
-        Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(547, 0), 1.5f, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(80, 0), 1.5f, TweenMode.Constant, () =>
+        _dontTouchArea.SetActive(true);
+
+        CloseDoor(1.5f, () =>
         {
+
             _rooms[(int)_currnetRoom].gameObject.SetActive(false);
             int eroomLength = System.Enum.GetValues(typeof(ERoom)).Length;
             if (isLeft)
@@ -332,14 +346,15 @@ public class FurnitureView : MonoBehaviour
                 _currnetRoom = (ERoom)(((int)_currnetRoom + 1) % eroomLength);
             }
             _rooms[(int)_currnetRoom].gameObject.SetActive(true);
-            Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(547, 0), 0.5f, TweenMode.Constant);
-            Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(80, 0), 0.5f, TweenMode.Constant, () =>
+
+            CloseDoor(1f, () =>
             {
-                Tween.RectTransfromAnchoredPosition(_leftDoor, new Vector2(-200, 0), 1.5f, TweenMode.Quadratic);
-                Tween.RectTransfromAnchoredPosition(_rightDoor, new Vector2(820, 0), 1.5f, TweenMode.Quadratic);
-            });     
+                OpenDoor(1.5f);
+            });
+
         });
     }
+
 
     private void OnExitButtonClicked()
     {
@@ -352,6 +367,31 @@ public class FurnitureView : MonoBehaviour
         DataBind.SetSpriteValue("FurnitureDetailImage", _transparentSprite);
         _detailView.SetActive(false);
     }
+
+
+    public void CloseDoor(float duration, Action onCompleted = null)
+    {
+        _dontTouchArea.SetActive(true);
+        Tween.RectTransfromAnchoredPosition(_leftDoor.gameObject, _leftDoorTmpPos, duration, _doorTweenMode);
+        Tween.RectTransfromAnchoredPosition(_rightDoor.gameObject, _rightDoorTmpPos, duration, _doorTweenMode, () =>
+        {
+            _dontTouchArea.SetActive(false);
+            onCompleted?.Invoke();
+        });
+    }
+
+
+    public void OpenDoor(float duration, Action onCompleted = null)
+    {
+        _dontTouchArea.SetActive(true);
+        Tween.RectTransfromAnchoredPosition(_leftDoor.gameObject, _leftDoorTargetPos, duration, _doorTweenMode);
+        Tween.RectTransfromAnchoredPosition(_rightDoor.gameObject, _rightDoorTargetPos, duration, _doorTweenMode, () =>
+        {
+            _dontTouchArea.SetActive(false);
+            onCompleted?.Invoke();
+        });
+    }
+
 
     [System.Serializable]
     public class RoomFurniture
