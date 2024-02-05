@@ -88,7 +88,7 @@ public class UIDialogue : UIView
             _uiNav.ShowMainUI();
         });
 
-        if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
+        if (!StoryManager.Instance.CheckCompletedStoryById(_dialogue.StoryID))
         {
             foreach (StoryEventData data in _eventDatas)
             {
@@ -198,7 +198,7 @@ public class UIDialogue : UIView
 
     private void StartStory(PandaStoryController stroyController, StoryDialogue storyDialogue, StoryEventData[] eventDatas)
     {
-        if (_isStoryStart || StoryManager.Instance._storyCompleteList.Contains(storyDialogue.StoryID))
+        if (_isStoryStart || StoryManager.Instance.CheckCompletedStoryById(storyDialogue.StoryID))
         {
             Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
             return;

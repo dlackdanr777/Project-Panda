@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public List<string> _storyCompleteList { get; private set; }
+    public List<string> _storyCompletedList = new List<string>();
 
     private Dictionary<string, PandaStoryController> _pandaStoryControllerDic = new Dictionary<string, PandaStoryController>();
 
@@ -18,24 +18,44 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void Init()
     {
-        _storyCompleteList = new List<string>();
-        Debug.Log("스토리 매니저 실행");
-        UIDialogue.OnComplateHandler += AddComplateStory;
+        UIDialogue.OnComplateHandler += AddComplatedStory;
         PandaStoryController.OnStartHandler += SetStroyDic;
-        PandaStoryController.OnCheckActivateHandler += CheckStoryActivate;
+        PandaStoryController.OnCheckActivateHandler += CheckStoryActivated;
     }
 
 
-    private void AddComplateStory(string id)
+    public void SetStoryCompletedList(List<string> storyCompletedList)
     {
-        if (_storyCompleteList.Contains(id))
+        _storyCompletedList = storyCompletedList;
+    }
+
+
+    public List<string> GetStoryCompletedList()
+    {
+        return _storyCompletedList;
+    }
+
+
+    /// <summary> 스토리 완료 목록에 해당 stroyId가 존재하면 true, 아니면 false를 반환하는 함수 </summary>
+    public bool CheckCompletedStoryById(string storyId)
+    {
+        if(_storyCompletedList.Contains(storyId))
+            return true;
+
+        return false;
+    }
+
+
+    private void AddComplatedStory(string id)
+    {
+        if (_storyCompletedList.Contains(id))
         {
             Debug.Log("이미 있는 인덱스 입니다.");
             return;
         }
 
-        _storyCompleteList.Add(id);
-        CheckStoryActivates();
+        _storyCompletedList.Add(id);
+        CheckStoryActivateds();
 
         //메시지 전송
         Debug.Log("스토리 끝 메시지 전송, 일기장 추가 : " + id);
@@ -49,36 +69,33 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void SetStroyDic(string id, PandaStoryController pandaStoryController)
     {
-
         if (_pandaStoryControllerDic.ContainsKey(id))
         {
-            Debug.LogError("이미 딕셔너리에 존재합니다.");
+            Debug.Log("이미 딕셔너리에 존재합니다.");
             return;
         }
         _pandaStoryControllerDic.Add(id, pandaStoryController);
     }
 
 
-    private void CheckStoryActivates()
+    private void CheckStoryActivateds()
     {
         foreach(PandaStoryController panda in  _pandaStoryControllerDic.Values)
         {
             if (panda == null)
             {
-                Debug.Log(panda.name);
                 continue;
             }
 
-            CheckStoryActivate(panda);
+            CheckStoryActivated(panda);
         }
     }
 
 
-    private void CheckStoryActivate(PandaStoryController panda)
+    private void CheckStoryActivated(PandaStoryController panda)
     {
-        bool checkClear = !_storyCompleteList.Contains(panda.StoryDialogue.StoryID);
-        bool checkPriorStoryID = _storyCompleteList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == "MS99Z";
-
+        bool checkClear = !_storyCompletedList.Contains(panda.StoryDialogue.StoryID);
+        bool checkPriorStoryID = _storyCompletedList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == "MS99Z" || string.IsNullOrWhiteSpace(panda.StoryDialogue.PriorStoryID);
         if (checkClear && checkPriorStoryID)
         {
             panda.gameObject.SetActive(true);
