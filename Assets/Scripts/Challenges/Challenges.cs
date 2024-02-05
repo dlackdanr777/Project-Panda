@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public enum EUnlockingBook
 {
-    None,
+    None = -1,
     NPC,
     Bug,
     Fish,
@@ -32,7 +32,7 @@ public class Challenges
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
 
     // 도감 관련
-    private int[] _unlockingBookCount = new int[System.Enum.GetValues(typeof(EUnlockingBook)).Length];
+    private int[] _unlockingBookCount = new int[System.Enum.GetValues(typeof(EUnlockingBook)).Length - 1];
 
     // 대나무 누적 개수
     private int _stackedBambooCount;
@@ -63,44 +63,9 @@ public class Challenges
 
     public void Register()
     {
-        Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
+        LoadData();
+        CheckIsDone();
 
-        for (int i = 0; i < System.Enum.GetValues(typeof(EChallengesKategorie)).Length; i++)
-        {
-            _challengesDatas[i] = new List<ChallengesData>();
-        }
-
-        // 카테고리별로 도전 과제 분류
-        foreach (string key in challengesDic.Keys)
-        {
-            for (int i = 0; i < System.Enum.GetValues(typeof(EChallengesKategorie)).Length; i++)
-            {
-                if (challengesDic[key].Kategorie == (EChallengesKategorie)i)
-                {
-                    _challengesDatas[i].Add(challengesDic[key]);
-                    break;
-                }
-            }
-        }
-
-        // 저장된 정보 불러오기
-        ChallengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
-        GatheringSuccessCount = DatabaseManager.Instance.UserInfo.GatheringSuccessCount;
-        _stackedBambooCount = DatabaseManager.Instance.UserInfo.ChallengesCount[0];
-        PurchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
-        SalesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
-        FurnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
-        CookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
-        TakePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
-        SharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
-
-        // 도감 Count 초기화
-        _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
-
-        // 레시피 - 추가하기
     }
 
     public void LoadData()
@@ -144,6 +109,223 @@ public class Challenges
 
         // 레시피 - 추가하기
     }
+
+    /// <summary>
+    /// IsDone이 제대로 저장되었는지 확인 </summary>
+    private void CheckIsDone()
+    {
+        bool isDone = true;
+
+        int count = 0;
+        string challengesId = "";
+        int challengesNum = 0;
+
+
+        // 메인스토리
+        for (int i = 0; i < StoryManager.Instance._storyCompletedList.Count - 1; i++)
+        {
+            string id = StoryManager.Instance._storyCompletedList[i];
+            if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4))
+            {
+                challengesId = "RW" + id.Substring(0, 4);
+                DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+            }
+        }
+
+
+        // 채집
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.gathering].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.gathering][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.gathering][i].Id;
+            for (int j = 0; j < GatheringSuccessCount.Length; j++)
+            {
+                if (GatheringSuccessCount[j] < count)
+                {
+                    isDone = false;
+                    break;
+                }
+            }
+            if (!isDone)
+            {
+                break;
+            }
+            DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+            challengesNum++;
+        }
+        if(challengesNum > ChallengesNum[(int)EChallengesKategorie.gathering])
+        {
+            ChallengesNum[(int)EChallengesKategorie.gathering] = challengesNum;
+        }
+        isDone = true;
+        challengesNum = 0;
+
+
+        // 도감 처음 해제
+        for (int i = 0; i < _unlockingBookCount.Length; i++)
+        {
+            if (_unlockingBookCount[i] > 0)
+            {
+                DatabaseManager.Instance.GetChallengesDic()["RWBG03"].IsDone = true;
+                break;
+            }
+        }
+
+        // 도감 해제
+        string type = "";
+        for (int i = 1; i < _challengesDatas[(int)EChallengesKategorie.book].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.book][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.book][i].Id;
+            type = _challengesDatas[(int)EChallengesKategorie.book][i].Type;
+            if(type == "All")
+            {
+                for (int j = 0; j < _unlockingBookCount.Length; j++)
+                {
+                    if (_unlockingBookCount[j] < count)
+                    {
+                        isDone = false;
+                        break;
+                    }
+                }
+                if(isDone)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                    challengesNum++;
+                }
+            }
+            else
+            {
+                EUnlockingBook bookType = (EUnlockingBook)Enum.Parse(typeof(EUnlockingBook), type);
+                if (_unlockingBookCount[(int)bookType] >= count)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
+            }
+            
+        }
+        if(challengesNum > ChallengesNum[(int)EChallengesKategorie.book])
+        {
+            ChallengesNum[(int)EChallengesKategorie.book] = challengesNum;
+        }
+        challengesNum = 0;
+
+
+        // 대나무
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.bamboo].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Id;
+            if (_stackedBambooCount > count)
+            {
+                DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                challengesNum++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (challengesNum > ChallengesNum[(int)EChallengesKategorie.bamboo])
+        {
+            ChallengesNum[(int)EChallengesKategorie.bamboo] = challengesNum;
+        }
+        challengesNum = 0;
+
+
+        // 상점
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.item].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.item][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.item][i].Id;
+            type = _challengesDatas[(int)EChallengesKategorie.item][i].Type;
+
+            if (type == "Purchase")
+            {
+                if (PurchaseCount >= count)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
+            }
+            else if(type == "Sales")
+            {
+                if (SalesCount >= count)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
+            }
+        }
+
+
+        // 가구
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.furniture].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.furniture][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.furniture][i].Id;
+            if (FurnitureCount >= count)
+            {
+                DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                challengesNum++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (challengesNum > ChallengesNum[(int)EChallengesKategorie.furniture])
+        {
+            ChallengesNum[(int)EChallengesKategorie.furniture] = challengesNum;
+        }
+        challengesNum = 0;
+
+
+        // 요리
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.cook].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.cook][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.cook][i].Id;
+            if (CookingCount >= count)
+            {
+                DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                challengesNum++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (challengesNum > ChallengesNum[(int)EChallengesKategorie.cook])
+        {
+            ChallengesNum[(int)EChallengesKategorie.cook] = challengesNum;
+        }
+        challengesNum = 0;
+
+
+        // 사진
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.camera].Count; i++)
+        {
+            count = _challengesDatas[(int)EChallengesKategorie.camera][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.camera][i].Id;
+            type = _challengesDatas[(int)EChallengesKategorie.camera][i].Type;
+            if (type == "Take")
+            {
+                if (TakePhotoCount >= count)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
+            }
+            else if (type == "Sharing")
+            {
+                if (SharingPhotoCount >= count)
+                {
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
+            }
+        }
+
+    }
+
+
 
 
     public void MainStoryDone(string id)
@@ -237,7 +419,7 @@ public class Challenges
         int challengesNum = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == type || n.IsDone == false);
         int count = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Count;
         string challengesId = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Id;
-        if (_unlockingBookCount[(int)eUnlockingBook] > count)
+        if (_unlockingBookCount[(int)eUnlockingBook] >= count)
         {
             SuccessChallenge(challengesId);
         }
@@ -251,7 +433,7 @@ public class Challenges
         count = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Count;
         challengesId = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Id;
 
-        for (int i = 0; i< System.Enum.GetValues(typeof(EUnlockingBook)).Length; i++ )
+        for (int i = 0; i< _unlockingBookCount.Length; i++)
         {
             if (_unlockingBookCount[i] < count)
             {
@@ -269,7 +451,7 @@ public class Challenges
         int count = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Count;
         string challengesId = _challengesDatas[(int)EChallengesKategorie.bamboo][ChallengesNum[(int)EChallengesKategorie.bamboo]].Id;
 
-        if(_stackedBambooCount > count)
+        if(_stackedBambooCount >= count)
         {
             SuccessChallenge(challengesId);
             ChallengesNum[(int)EChallengesKategorie.bamboo]++;
@@ -290,7 +472,7 @@ public class Challenges
             string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Purchase" || n.IsDone == false).Id;
 
             // 달성했다면
-            if (PurchaseCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (PurchaseCount >= DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -302,7 +484,7 @@ public class Challenges
 
             string challengesId = _challengesDatas[(int)EChallengesKategorie.item].Find(n => n.Type == "Sales" || n.IsDone == false).Id;
 
-            if (SalesCount > DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
+            if (SalesCount >= DatabaseManager.Instance.GetChallengesDic()[challengesId].Count)
             {
                 SuccessChallenge(challengesId);
             }
@@ -320,7 +502,7 @@ public class Challenges
         if (DatabaseManager.Instance.StartPandaInfo.FurnitureInventoryID.Where(furnitureId => furnitureId.Substring(0,4) == id.Substring(0,4)).Count() == 8)
         {
             FurnitureCount++;
-            if (FurnitureCount > count)
+            if (FurnitureCount >= count)
             {
                 SuccessChallenge(challengesId);
                 ChallengesNum[(int)EChallengesKategorie.furniture]++;
