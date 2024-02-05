@@ -1688,7 +1688,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 225332993}
   m_HandleRect: {fileID: 225332992}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15477,9 +15477,10 @@ GameObject:
   - component: {fileID: 1609909546}
   - component: {fileID: 1609909545}
   - component: {fileID: 1609909544}
-  - component: {fileID: 1609909543}
+  - component: {fileID: 1609909547}
+  - component: {fileID: 1609909548}
   m_Layer: 5
-  m_Name: Costume Button
+  m_Name: Furniture Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15504,19 +15505,6 @@ RectTransform:
   m_AnchoredPosition: {x: -549, y: -189}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1609909543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1609909541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dataID: CostumeSceneButton
 --- !u!114 &1609909544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15599,6 +15587,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609909541}
   m_CullTransparentMesh: 1
+--- !u!114 &1609909547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609909541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96261e9b389f1b4d8ec614e94c40eec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1609909548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609909541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e980f0a5541d04d8db13a3230400f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataID: FurnitureButton
 --- !u!1 &1616664289
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,7 +50,6 @@ public class CostumeManager : SingletonHandler<CostumeManager>
 
         // 현재 가지고 있는 코스튬 불러오기
         DatabaseManager.Instance.StartPandaInfo.LoadMyCostume();
-        DataBind.SetButtonValue("CostumeSceneButton", () => LoadingSceneManager.LoadScene("CostumeTest"));
     }
 
 
