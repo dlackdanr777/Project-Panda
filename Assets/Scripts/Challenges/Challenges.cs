@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public enum EUnlockingBook
 {
-    None,
+    None = -1,
     NPC,
     Bug,
     Fish,
@@ -32,7 +32,7 @@ public class Challenges
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
 
     // 도감 관련
-    private int[] _unlockingBookCount = new int[System.Enum.GetValues(typeof(EUnlockingBook)).Length];
+    private int[] _unlockingBookCount = new int[System.Enum.GetValues(typeof(EUnlockingBook)).Length - 1];
 
     // 대나무 누적 개수
     private int _stackedBambooCount;
@@ -136,8 +136,8 @@ public class Challenges
         // 채집
         for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.gathering].Count; i++)
         {
-            count = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Count;
-            challengesId = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Id;
+            count = _challengesDatas[(int)EChallengesKategorie.gathering][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.gathering][i].Id;
             for (int j = 0; j < GatheringSuccessCount.Length; j++)
             {
                 if (GatheringSuccessCount[j] < count)
@@ -162,7 +162,7 @@ public class Challenges
 
 
         // 도감 처음 해제
-        for (int i = 1; i < _unlockingBookCount.Length; i++)
+        for (int i = 0; i < _unlockingBookCount.Length; i++)
         {
             if (_unlockingBookCount[i] > 0)
             {
@@ -180,7 +180,7 @@ public class Challenges
             type = _challengesDatas[(int)EChallengesKategorie.book][i].Type;
             if(type == "All")
             {
-                for (int j = 0; j < System.Enum.GetValues(typeof(EUnlockingBook)).Length; j++)
+                for (int j = 0; j < _unlockingBookCount.Length; j++)
                 {
                     if (_unlockingBookCount[j] < count)
                     {
@@ -197,7 +197,7 @@ public class Challenges
             else
             {
                 EUnlockingBook bookType = (EUnlockingBook)Enum.Parse(typeof(EUnlockingBook), type);
-                if (_unlockingBookCount[(int)bookType] > count)
+                if (_unlockingBookCount[(int)bookType] >= count)
                 {
                     DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
                 }
@@ -239,6 +239,7 @@ public class Challenges
             count = _challengesDatas[(int)EChallengesKategorie.item][i].Count;
             challengesId = _challengesDatas[(int)EChallengesKategorie.item][i].Id;
             type = _challengesDatas[(int)EChallengesKategorie.item][i].Type;
+
             if (type == "Purchase")
             {
                 if (PurchaseCount >= count)
@@ -301,11 +302,11 @@ public class Challenges
 
 
         // 사진
-        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.item].Count; i++)
+        for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.camera].Count; i++)
         {
-            count = _challengesDatas[(int)EChallengesKategorie.item][i].Count;
-            challengesId = _challengesDatas[(int)EChallengesKategorie.item][i].Id;
-            type = _challengesDatas[(int)EChallengesKategorie.item][i].Type;
+            count = _challengesDatas[(int)EChallengesKategorie.camera][i].Count;
+            challengesId = _challengesDatas[(int)EChallengesKategorie.camera][i].Id;
+            type = _challengesDatas[(int)EChallengesKategorie.camera][i].Type;
             if (type == "Take")
             {
                 if (TakePhotoCount >= count)
@@ -432,7 +433,7 @@ public class Challenges
         count = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Count;
         challengesId = _challengesDatas[(int)EChallengesKategorie.book][ChallengesNum[(int)EChallengesKategorie.book]].Id;
 
-        for (int i = 0; i< System.Enum.GetValues(typeof(EUnlockingBook)).Length; i++ )
+        for (int i = 0; i< _unlockingBookCount.Length; i++)
         {
             if (_unlockingBookCount[i] < count)
             {
