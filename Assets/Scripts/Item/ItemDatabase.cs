@@ -74,12 +74,17 @@ public class ItemDatabase
     //GatheringItem
     //Fish
     public List<GatheringItem> ItemFishList = new List<GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFishDic = new Dictionary<string, GatheringItem>();
     //Bug
     public List<GatheringItem> ItemBugList = new List<GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemBugDic = new Dictionary<string, GatheringItem>();
     //Fruit
     public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFruitDic = new Dictionary<string, GatheringItem>();
     //ToolItem
     public List<ToolItem> ItemToolList = new List<ToolItem>();
+
+
 
     //Image
     //GatheringItem
@@ -145,29 +150,37 @@ public class ItemDatabase
 
             Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", layer, type, sprite, roomSprite);
             FurnitureDic.Add(id, data);
-       /*  FurnitureDic.Add(id, new Furniture(_dataFurniture[i]["ID"].ToString(),
-                    _dataFurniture[i]["이름"].ToString(),
-                    _dataFurniture[i]["설명"].ToString(),
-                    _dataFurniture[i]["스토리단계"].ToString(),
-                    (int)_dataFurniture[i]["가격"],
-                    null,
-                    "MN04",  //_dataFurniture[i]["맵ID"].ToString(), // 나중에 쓸 수 있음 일단은 "MN04"로 통일
-                    FurnitureTypes[char.Parse(_dataFurniture[i]["ID"].ToString().Substring(4, 1))],
-
-                    FurnitureItemSprite.ItemSprites[i].Image));
-            //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
-        }
-
-                    FurnitureItemSprite.ItemSprites[i].Thumbnails,
-                    FurnitureItemSprite.ItemSprites[i].Image
-                    )); */
-            //FurnitureTypeList[i] = (FurnitureType)Enum.Parse(typeof(FurnitureType), _dataFurniture[i]["FurnitureType"].ToString());
         }
 
 
         DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();
         DatabaseManager.Instance.StartPandaInfo.LoadMyFurniture();
     }
+
+
+    public GatheringItem GetGatheringItemById(string id)
+    {
+        GatheringItem item;
+
+        if(ItemBugDic.TryGetValue(id, out item))
+        {
+            return item;
+        }
+        else if(ItemFishDic.TryGetValue(id, out item))
+        {
+            return item;
+        }
+        else if(ItemFruitDic.TryGetValue(id, out item))
+        {
+            return item;
+        }
+        else
+        {
+            Debug.LogErrorFormat("{0} ID를 가진 아이템이 존재하지 않습니다.", id);
+            return null;
+        }
+    }
+
 
     private Sprite GetItemSpriteById(string id, GatheringItemType type)
     {
@@ -197,6 +210,8 @@ public class ItemDatabase
         JsonData json = callback.FlattenRows();
 
         ItemBugList.Clear();
+        ItemBugDic.Clear();
+
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -207,8 +222,11 @@ public class ItemDatabase
             string season = json[i]["Season"].ToString();
             string rating = json[i]["Rating"].ToString();
             string mapID = json[i]["MapID"].ToString();
+            Sprite sprite = GetItemSpriteById(itemID, GatheringItemType.Bug);
 
-            ItemBugList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Bug), time, season));
+            GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
+            ItemBugList.Add(item);
+            ItemBugDic.Add(itemID, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -220,6 +238,8 @@ public class ItemDatabase
         JsonData json = callback.FlattenRows();
 
         ItemFishList.Clear();
+        ItemFishDic.Clear();
+
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -230,8 +250,11 @@ public class ItemDatabase
             string season = json[i]["Season"].ToString();
             string rating = json[i]["Rating"].ToString();
             string mapID = json[i]["MapID"].ToString();
+            Sprite sprite = GetItemSpriteById(itemID, GatheringItemType.Fish);
+            GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
 
-            ItemFishList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Fish), time, season));
+            ItemFishList.Add(item);
+            ItemFishDic.Add(itemID, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -243,6 +266,8 @@ public class ItemDatabase
         JsonData json = callback.FlattenRows();
 
         ItemFruitList.Clear();
+        ItemFruitDic.Clear();
+
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -253,8 +278,11 @@ public class ItemDatabase
             string season = json[i]["Season"].ToString();
             string rating = json[i]["Rating"].ToString();
             string mapID = json[i]["MapID"].ToString();
+            Sprite sprite = GetItemSpriteById(itemID, GatheringItemType.Fruit);
 
-            ItemFruitList.Add(new GatheringItem(itemID, name, description, price, rating, mapID, GetItemSpriteById(itemID, GatheringItemType.Fruit), time, season));
+            GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
+            ItemFruitList.Add(item);
+            ItemFruitDic.Add(itemID, item);
         }
         Debug.Log("과일 아이템 받아오기 성공!");
     }
@@ -294,7 +322,7 @@ public class ItemDatabase
 
         for (int i = 0; i < dataBug.Count; i++)
         {
-            ItemBugList.Add(new GatheringItem(
+            GatheringItem item = new GatheringItem(
                     dataBug[i]["ID"].ToString(),
                     dataBug[i]["이름"].ToString(),
                     dataBug[i]["설명"].ToString(),
@@ -304,7 +332,9 @@ public class ItemDatabase
                     GetItemSpriteById(dataBug[i]["ID"].ToString(), GatheringItemType.Bug),
                     dataBug[i]["시간"].ToString(),
                     dataBug[i]["계절"].ToString()
-                    ));
+                    );
+            ItemBugList.Add(item);
+            ItemBugDic.Add(dataBug[i]["ID"].ToString(), item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -317,7 +347,7 @@ public class ItemDatabase
 
         for (int i = 0; i < dataFish.Count; i++)
         {
-            ItemFishList.Add(new GatheringItem(
+            GatheringItem item = new GatheringItem(
                     dataFish[i]["ID"].ToString(),
                     dataFish[i]["이름"].ToString(),
                     dataFish[i]["설명"].ToString(),
@@ -327,7 +357,9 @@ public class ItemDatabase
                     GetItemSpriteById(dataFish[i]["ID"].ToString(), GatheringItemType.Fish),
                     dataFish[i]["시간"].ToString(),
                     dataFish[i]["계절"].ToString()
-                    ));
+                    );
+            ItemFishList.Add(item);
+            ItemFishDic.Add(dataFish[i]["ID"].ToString(), item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -340,7 +372,7 @@ public class ItemDatabase
 
         for (int i = 0; i < dataFruit.Count; i++)
         {
-            ItemFruitList.Add(new GatheringItem(
+            GatheringItem item = new GatheringItem(
                     dataFruit[i]["ID"].ToString(),
                     dataFruit[i]["이름"].ToString(),
                     dataFruit[i]["설명"].ToString(),
@@ -350,7 +382,9 @@ public class ItemDatabase
                     GetItemSpriteById(dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
                     dataFruit[i]["시간"].ToString(),
                     dataFruit[i]["계절"].ToString()
-                    ));
+                    );
+            ItemFruitList.Add(item);
+            ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
         }
 
         Debug.Log("과일 아이템 받아오기 성공!");
