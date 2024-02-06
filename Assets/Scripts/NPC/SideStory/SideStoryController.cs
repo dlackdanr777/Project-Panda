@@ -14,10 +14,10 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
+    private int _storyIndex;
 
     private void Awake()
     {
-        GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR01", 1);
         UISideDialogue.OnAddRewardHandler += AddReward;    
     }
     private void OnDestroy()
@@ -35,6 +35,15 @@ public class SideStoryController : MonoBehaviour, IInteraction
         {
             _storyKey.Add(key);
         }
+        for(int i=0;i<_storyKey.Count;i++)
+        {
+            if (_storyKey[i].Equals(DatabaseManager.Instance.GetNPC(NPCID).SSId)) //저장된 사이드스토리 아이디와 비교
+            {
+                _storyIndex = i;
+            }
+        }
+
+        DatabaseManager.Instance.GetNPC(NPCID).IsReceived = true; //NPC 만남
     }
 
     public void StartInteraction()
@@ -51,7 +60,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
 
     private void StartSideStory()
     {
-        for (int i = 0; i < _storyKey.Count; i++)
+        for (int i = _storyIndex+1; i < _storyKey.Count; i++)
         {
             SideStoryDialogue currentStory = _storyDatabase[_storyKey[i]];
             if (!currentStory.IsSuccess) //스토리를 완료하지 않았다면
@@ -63,7 +72,8 @@ public class SideStoryController : MonoBehaviour, IInteraction
                 if (priorCheck && //이전 스토리 성공했는지 비교
                     DatabaseManager.Instance.GetNPC(NPCID).Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
                 {
-                    _storyDatabase[_storyKey[i]].IsSuccess = true; 
+                    _storyDatabase[_storyKey[i]].IsSuccess = true;
+                    DatabaseManager.Instance.GetNPC(NPCID).SSId = _storyKey[i];
 
                     continue; //성공한 스토리면 다음 스토리로 이동
                 }

@@ -42,7 +42,7 @@ public class UserInfo
 
     //Item
     public List<string> GatheringItemReceived = new List<string>();
-    public List<string> NPCItemReceived = new List<string>();
+    public List<NPCData> NPCReceived = new List<NPCData>();
     public List<string> CookItemReceived = new List<string>();
     public List<string> ToolItemReceived = new List<string>();
     public List<string> AlbumReceived = new List<string>();
@@ -298,6 +298,11 @@ public class UserInfo
                 ToolInventoryDataArray.Add(item);
             }
 
+            for (int i = 0, count = json[0]["NPCReceived"].Count; i < count; i++)
+            {
+                NPCData item = JsonUtility.FromJson<NPCData>(json[0]["NPCReceived"][i].ToJson());
+                NPCReceived.Add(item);
+            }
 
             for (int i = 0, count = json[0]["GatheringItemReceived"].Count; i < count; i++)
             {
@@ -305,11 +310,11 @@ public class UserInfo
                 GatheringItemReceived.Add(item);
             }
 
-            for (int i = 0, count = json[0]["NPCItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["NPCItemReceived"][i].ToString();
-                NPCItemReceived.Add(item);
-            }
+            //for (int i = 0, count = json[0]["NPCReceived"].Count; i < count; i++)
+            //{
+            //    string item = json[0]["NPCeceived"][i].ToString();
+            //    NPCReceived.Add(item);
+            //}
 
             for (int i = 0, count = json[0]["CookItemReceived"].Count; i < count; i++)
             {
@@ -425,7 +430,7 @@ public class UserInfo
         param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
 
         param.Add("GatheringItemReceived", GatheringItemReceived);
-        param.Add("NPCItemReceived", NPCItemReceived);
+        param.Add("NPCItemReceived", NPCReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
         return param;
@@ -832,13 +837,15 @@ public class UserInfo
     public void LoadUserReceivedNPC()
     {
         //NPC
-        for (int i = 0; i < NPCItemReceived.Count; i++)
+        for (int i = 0; i < NPCReceived.Count; i++)
         {
             for (int j = 0; j < DatabaseManager.Instance.GetNPCList().Count; j++)
             {
-                if (NPCItemReceived[i].Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
+                if (NPCReceived[i].Id.Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
                 {
                     DatabaseManager.Instance.GetNPCList()[j].IsReceived = true;
+                    DatabaseManager.Instance.GetNPCList()[j].Intimacy = NPCReceived[i].Intimacy;
+                    DatabaseManager.Instance.GetNPCList()[j].SSId = NPCReceived[i].SSId;
                 }
             }
 
@@ -874,14 +881,14 @@ public class UserInfo
     private void SaveUserReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
-        NPCItemReceived = new List<string>();
+        NPCReceived = new List<NPCData>();
         for (int i = 0; i < npcDatabase.Length; i++)
         {
             for (int j = 0; j < npcDatabase[i].Count; j++)
             {
                 if (npcDatabase[i][j].IsReceived)
                 {
-                    NPCItemReceived.Add(npcDatabase[i][j].Id);
+                    NPCReceived.Add(new NPCData(npcDatabase[i][j].Id, npcDatabase[i][j].Intimacy, npcDatabase[i][j].SSId));
                 }
             }
         }

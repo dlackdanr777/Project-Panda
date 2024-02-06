@@ -3,6 +3,7 @@ using Muks.Tween;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class UISideDialogue : UIView
     [SerializeField] private Image _pandaImage;
     [SerializeField] private Sprite _starterImage;
     [SerializeField] private Sprite[] _intimacyImage;
+    [SerializeField] private GameObject _intimacyobj;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -28,6 +30,7 @@ public class UISideDialogue : UIView
     private Coroutine _skipDisableRoutine;
     private bool _isFail;
 
+    private string _currentNPC;
     private const int MinIntimacy = 0;
     private const int MaxIntimacy = 5;
 
@@ -113,6 +116,7 @@ public class UISideDialogue : UIView
         }
 
         _dialogue = storyDialogue;
+        _currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
         _isFail = false;
@@ -187,13 +191,19 @@ public class UISideDialogue : UIView
         if (data.TalkPandaID.Equals("POYA00"))
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", _starterImage);
+            _intimacyobj.SetActive(false);
         }
         else
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
-            
-            int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
-            DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
+            _intimacyobj.SetActive(false);
+
+            if (data.TalkPandaID.Equals(_currentNPC))
+            {
+                int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
+                DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
+                _intimacyobj.SetActive(true);
+            }
         }
 
         char[] tempChars = data.Contexts.ToCharArray();
