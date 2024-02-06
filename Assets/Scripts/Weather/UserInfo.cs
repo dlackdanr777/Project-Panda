@@ -65,6 +65,10 @@ public class UserInfo
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
     public int[] ChallengesCount = new int[7]; // 도전과제 성공 횟수
 
+
+    //Storys
+    private List<string> _storyCompletedList = new List<string>();
+
     //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
@@ -144,6 +148,14 @@ public class UserInfo
                 MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
                 MessageDataArray.Add(item);
             }
+
+
+            for(int i = 0, count = json[0]["StoryCompletedList"].Count; i < count; i++)
+            {
+                string item = json[0]["StoryCompletedList"][i].ToString();
+                _storyCompletedList.Add(item);
+            }
+            StoryManager.Instance.SetStoryCompletedList(_storyCompletedList);
 
             LoadUserChallengesData();
             LoadUserReceivedAlbum();
@@ -260,6 +272,9 @@ public class UserInfo
 
         param.Add("AlbumReceived", AlbumReceived);
         param.Add("MessageDataArray", MessageDataArray);
+
+        _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
+        param.Add("StoryCompletedList", _storyCompletedList);
 
         return param;
     }

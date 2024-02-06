@@ -7,6 +7,7 @@ using BT;
 
 public class SaveFurnitureView : MonoBehaviour
 {
+    [SerializeField] private FurnitureView _furnitureView;
     [SerializeField] private GameObject _saveFurniture;
     [SerializeField] private TextMeshProUGUI _saveText;
     [SerializeField] private Button _yesButton;
@@ -61,10 +62,15 @@ public class SaveFurnitureView : MonoBehaviour
 
     private void OnSaveYesButtonClicked()
     {
-        StarterPanda.Instance.gameObject.SetActive(true);
-        StarterPanda.Instance.IsSwitchingScene = true;
-        _furnitureViewModel.SaveFurniture();
-        SceneManager.LoadScene("FurnitureTestMainScene"); // 나중에 메인 씬으로 변경
+        gameObject.SetActive(false);
+        _furnitureView.CloseDoor(1.5f, () =>
+        {
+            StarterPanda.Instance.gameObject.SetActive(true);
+            StarterPanda.Instance.IsSwitchingScene = true;
+            _furnitureViewModel.SaveFurniture();
+            SceneManager.LoadScene("FurnitureTestMainScene"); // 나중에 메인 씬으로 변경
+        });
+
     }
     private void OnSaveNoButtonClicked()
     {

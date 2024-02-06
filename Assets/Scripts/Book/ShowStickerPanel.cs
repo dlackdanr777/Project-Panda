@@ -21,17 +21,17 @@ public class ShowStickerPanel : MonoBehaviour
     private void Anime1_Show()
     {
         _stickerPanel.SetActive(true);
-        _dontTouchArea.SetActive(true);
+/*        _dontTouchArea.SetActive(true);
         Tween.Stop(_stickerPanel);
         Tween.RectTransfromAnchoredPosition(_stickerPanel, new Vector2(0, -545), 1.2f, TweenMode.EaseInOutBack, () =>
         {
             _dontTouchArea.SetActive(false);
-        });
+        });*/
     }
 
     private void Hide()
     { 
-        _stickerPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1043);
+        //_stickerPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1043);
         _stickerPanel.SetActive(false);
     }
 }

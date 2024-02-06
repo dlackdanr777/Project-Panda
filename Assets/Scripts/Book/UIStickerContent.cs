@@ -53,15 +53,16 @@ public class UIStickerContent : MonoBehaviour
         }
     }
 
+
     private void CreateSlots()
     {
         for (int i = 0; i < _userSticker.MaxStickerCount; i++)
         {
             GameObject slot = Instantiate(_stickerContentPf, _spawnPoint);
             slot.GetComponent<SpawnSticker>().StickerZone = _stickerZone.transform;
-        }
-        
+        }  
     }
+
 
     private void UpdateSlots()
     {

@@ -48,7 +48,7 @@ public class Collection : MonoBehaviour
     private float _waitTime; // 채집 기다린 시간
     [SerializeField] private float _spawnTime = 30f; // 채집 가능한 시간 간격 - 10초마다 채집 가능
     private float _fadeTime = 1f; // 화면 어두운 시간
-    private float _collectionLatency = 4f; // 채집 완료 후 결과 출력 전까지 지연 시간(지연 시간 동안 애니메이션 재생)
+    private float _collectionLatency = 2f; // 채집 완료 후 결과 출력 전까지 지연 시간(지연 시간 동안 애니메이션 재생)
     private float _checkTime = -1;
     #endregion
 

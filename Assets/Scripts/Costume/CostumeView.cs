@@ -14,8 +14,11 @@ public class CostumeView : MonoBehaviour
     private CostumeViewModel _costumeViewModel;
     [SerializeField] private GameObject _slots;
     [SerializeField] private GameObject _pandaHead;
+
+    [SerializeField] private TweenMode _curtainTweenMode;
     [SerializeField] private GameObject _leftCurtain;
     [SerializeField] private GameObject _rightCurtain;
+
     [SerializeField] private Button _exitButton;
     [SerializeField] private GameObject _uiSave;
 
@@ -23,6 +26,9 @@ public class CostumeView : MonoBehaviour
     [SerializeField] private GameObject _headCostumeImages;
 
     [SerializeField] private GameObject _costumeImagePf;
+
+    [SerializeField] private GameObject _dontTouchArea;
+
     private GameObject[] _costumeImagePfs;
     private Button[] _costumeImageBtn;
 
@@ -43,9 +49,9 @@ public class CostumeView : MonoBehaviour
         StarterPanda.Instance.gameObject.SetActive(false);
 
         // 커튼 열기
-        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, -650), 1.5f, TweenMode.EaseInOutBack);
-        Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(390, 0), 1f, TweenMode.Quadratic);
-        Tween.RectTransfromAnchoredPosition(_rightCurtain, new Vector2(10, 0), 1f, TweenMode.Quadratic);
+        Tween.RectTransfromAnchoredPosition(gameObject, new Vector2(0, 350), 1f, _curtainTweenMode);
+        Tween.RectTransfromAnchoredPosition(_leftCurtain, new Vector2(-850, 0), 1f, _curtainTweenMode);
+        Tween.RectTransfromAnchoredPosition(_rightCurtain, new Vector2(1300, 0), 1f, _curtainTweenMode, () => _dontTouchArea.SetActive(false));
 
         _costumeImagePfs = new GameObject[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];
         _costumeImageBtn = new Button[DatabaseManager.Instance.StartPandaInfo.CostumeInventory.Count];
