@@ -15,6 +15,7 @@ public class UISideDialogue : UIView
     [SerializeField] private Sprite _starterImage;
     [SerializeField] private Sprite[] _intimacyImage;
     [SerializeField] private GameObject _intimacyobj;
+    [SerializeField] private GameObject _reward;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -29,6 +30,7 @@ public class UISideDialogue : UIView
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
     private bool _isFail;
+    private bool _isReward;
 
     private string _currentNPC;
     private const int MinIntimacy = 0;
@@ -41,6 +43,7 @@ public class UISideDialogue : UIView
         _tempPos = RectTransform.anchoredPosition;
 
         SideStoryController.OnStartInteractionHandler += StartStory;
+        SideStoryController.OnRewardHandler += SideStoryController_OnRewardHandler;
         DataBind.SetTextValue("SideDialogueName", " ");
         DataBind.SetTextValue("SideDialogueContexts", " ");
         DataBind.SetButtonValue("SideDialogueNextButton", OnNextButtonClicked);
@@ -52,6 +55,7 @@ public class UISideDialogue : UIView
     public void OnDestroy()
     {
         SideStoryController.OnStartInteractionHandler -= StartStory;
+        SideStoryController.OnRewardHandler -= SideStoryController_OnRewardHandler;
     }
 
     public override void Hide()
@@ -60,6 +64,7 @@ public class UISideDialogue : UIView
 
         _leftButton.Disabled();
         _rightButton.Disabled();
+        _reward.SetActive(false);
 
         _currentIndex = 0;
         _isSkipEnabled = false;
@@ -160,18 +165,26 @@ public class UISideDialogue : UIView
             if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("END"))
             {
                 _currentIndex = _dialogue.DialogueData.Count;
+
                 if (!_isFail) //실패가 아닐 때만 보상
                 {
-                    OnAddRewardHandler?.Invoke(_dialogue.StoryID);
+                    OnAddRewardHandler.Invoke(_dialogue.StoryID);
                 }
             }
             _currentIndex++;
         }
-
         else
         {
+            if (_isReward && _currentIndex > _dialogue.DialogueData.Count) //보상
+            {
+                StartCoroutine(RewardRoutine());
+            }
+            else
+            {
+                _uiNav.Pop();
+            }
             //OnComplateHandler?.Invoke(_dialogue.StoryID);
-            _uiNav.Pop();
+            
         }
 
     }
@@ -259,9 +272,9 @@ public class UISideDialogue : UIView
 
     private void GoToBranch(string branch)
     {
-        for(int i = _currentIndex; i < _dialogue.DialogueData.Count; i++)
+        for(int i = _currentIndex+1; i < _dialogue.DialogueData.Count; i++)
         {
-            if (_dialogue.DialogueData[i].ChoiceID == branch)
+            if (_dialogue.DialogueData[i].ChoiceID.Equals(branch))
             {
                 _currentIndex = i;
             }
@@ -282,5 +295,19 @@ public class UISideDialogue : UIView
         }
 
         return amount;
+    }
+
+    private IEnumerator RewardRoutine()
+    {
+        _reward.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        _reward.SetActive(false);
+        _uiNav.Pop();
+    }
+
+
+    private void SideStoryController_OnRewardHandler(bool isReward)
+    {
+        _isReward = isReward;
     }
 }
