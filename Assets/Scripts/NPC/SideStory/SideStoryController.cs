@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class SideStoryController : MonoBehaviour, IInteraction
 {
     public static event Action<SideStoryDialogue> OnStartInteractionHandler;
+    public static event Action<bool> OnRewardHandler;
 
     [SerializeField] private string NPCID;
 
@@ -15,6 +17,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
     private int _storyIndex;
+    private bool _isInitialized = false;
 
     private void Awake()
     {
@@ -25,29 +28,10 @@ public class SideStoryController : MonoBehaviour, IInteraction
         UISideDialogue.OnAddRewardHandler -= AddReward;    
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        _storyCode = "SS" + NPCID.Substring(3);
-        
-        _storyDatabase = DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode];
-        foreach (var key in _storyDatabase.Keys)
-        {
-            _storyKey.Add(key);
-        }
-        for(int i=0;i<_storyKey.Count;i++)
-        {
-            if (_storyKey[i].Equals(DatabaseManager.Instance.GetNPC(NPCID).SSId)) //저장된 사이드스토리 아이디와 비교
-            {
-                _storyIndex = i;
-            }
-        }
-
-        DatabaseManager.Instance.GetNPC(NPCID).IsReceived = true; //NPC 만남
-    }
-
     public void StartInteraction()
     {
+        Init();
+
         StartSideStory();
     }
 
@@ -58,6 +42,33 @@ public class SideStoryController : MonoBehaviour, IInteraction
     {
     }
 
+    private void Init()
+    {
+        _storyCode = "SS" + NPCID.Substring(3);
+        _storyDatabase = DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode];
+        _storyKey.Clear();
+        _storyIndex = -1;
+
+        foreach (var key in _storyDatabase.Keys)
+        {
+            _storyKey.Add(key);
+        }
+        for (int i = 0; i < _storyKey.Count; i++)
+        {
+            if (_storyKey[i].Equals(DatabaseManager.Instance.GetNPC(NPCID).SSId)) //저장된 사이드스토리 아이디와 비교
+            {
+                _storyIndex = i;
+                break;
+            }
+        }
+
+        if (!DatabaseManager.Instance.GetNPC(NPCID).IsReceived)
+        {
+            DatabaseManager.Instance.GetNPC(NPCID).IsReceived = true; //NPC 만남
+        }
+
+        _isInitialized = true;
+    }
     private void StartSideStory()
     {
         for (int i = _storyIndex+1; i < _storyKey.Count; i++)
@@ -163,8 +174,14 @@ public class SideStoryController : MonoBehaviour, IInteraction
 
     private void AddReward(string id)
     {
+        if (!_isInitialized)
+        {
+            return;
+        }
+
         NPC currentNPC = DatabaseManager.Instance.GetNPC(NPCID);
         SideStoryDialogue currentStory = _storyDatabase[id];
+        
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
 
         DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
@@ -175,7 +192,8 @@ public class SideStoryController : MonoBehaviour, IInteraction
         }
 
         //보상
-        RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
+        bool isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
+        OnRewardHandler?.Invoke(isReward);
     }
 
     private bool RewardItem(EventType type, string condition, int count)
@@ -184,8 +202,12 @@ public class SideStoryController : MonoBehaviour, IInteraction
         switch (type)
         {
             case EventType.MONEY:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetImageById("IFR09"));
+                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
                 return GameManager.Instance.Player.GainBamboo(count);
             case EventType.IVGI:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetImageById(condition));
+                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
                 GameManager.Instance.Player.AddIVGI(condition, count);
                 return true;
             case EventType.IVCK:

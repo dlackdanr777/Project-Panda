@@ -238,6 +238,35 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.ItemFruitList;
     }
 
+    public Sprite GetImageById(string id)
+    {
+        List<GatheringItem> list = new List<GatheringItem>();
+        string code = id.Substring(0, 3);
+
+        switch (code)
+        {
+            case "IBG":
+                list = _itemDatabase.ItemBugList;
+                break;
+            case "IFI":
+                list = _itemDatabase.ItemFishList;
+                break;
+            case "IFR":
+                list = _itemDatabase.ItemFruitList;
+                break;
+        }
+
+        for(int i=0;i< list.Count; i++)
+        {
+            if (list[i].Id.Equals(id))
+            {
+                return list[i].Image;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// ToolItem List
     /// </summary>
