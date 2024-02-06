@@ -23,7 +23,6 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private void OnDestroy()
     {
         UISideDialogue.OnAddRewardHandler -= AddReward;    
-        
     }
 
     // Start is called before the first frame update

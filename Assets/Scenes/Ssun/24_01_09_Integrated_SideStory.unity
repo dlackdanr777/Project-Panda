@@ -11999,6 +11999,7 @@ GameObject:
   - component: {fileID: 1272559845}
   - component: {fileID: 1272559847}
   - component: {fileID: 1272559846}
+  - component: {fileID: 1272559848}
   m_Layer: 5
   m_Name: Intimacy
   m_TagString: Untagged
@@ -12023,7 +12024,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1272559846
 MonoBehaviour:
@@ -12039,13 +12040,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -251814745523030754, guid: 8479c491857253240a8bc91ff7f969ff, type: 3}
+  m_Sprite: {fileID: 5254759668490092795, guid: c0d7cfc36f30b7b429ee9620001d4857, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -12063,6 +12064,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272559844}
   m_CullTransparentMesh: 1
+--- !u!114 &1272559848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272559844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23bc3893b716634db27fa256564fe02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 0
+  _dataID: SideDialogueIntimacyImage
 --- !u!1 &1272775781
 GameObject:
   m_ObjectHideFlags: 0
@@ -16356,11 +16371,12 @@ MonoBehaviour:
   _pandaImage: {fileID: 1596902167}
   _starterImage: {fileID: 21300000, guid: eba48ced9397a5a489736e8ee900f3c4, type: 3}
   _intimacyImage:
-  - {fileID: 2935283589788342719, guid: 371a06ab3ca7e004580337737e1b8560, type: 3}
-  - {fileID: 1589334748444650404, guid: 9f3de1da55073d645b4800107e5848c2, type: 3}
-  - {fileID: -6085338026671956064, guid: 3012aad30c3d87146ad0c2a0d8fed41a, type: 3}
-  - {fileID: -251814745523030754, guid: 8479c491857253240a8bc91ff7f969ff, type: 3}
-  - {fileID: 3163893967058093826, guid: bd587466aa874864c9d851dcf009bdb2, type: 3}
+  - {fileID: 5254759668490092795, guid: c0d7cfc36f30b7b429ee9620001d4857, type: 3}
+  - {fileID: 1260663600838620316, guid: 1a8cc498ba764b840baaa5a3cd3ddf15, type: 3}
+  - {fileID: -1101272680067196333, guid: 78ea36f976c1d2440ab769917d2fba11, type: 3}
+  - {fileID: -1430249654272421338, guid: f5aa542570aac3f4aa4305c461c6671c, type: 3}
+  - {fileID: -2204351145424249794, guid: 4fd5b03d282364d4185b9ff0f5b93bee, type: 3}
+  - {fileID: 850952896765098219, guid: e5324c23a2504c24596683cf30821f5d, type: 3}
   _leftButton: {fileID: 593502963}
   _rightButton: {fileID: 466415576}
 --- !u!1 &1725301609

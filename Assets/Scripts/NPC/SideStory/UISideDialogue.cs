@@ -28,6 +28,9 @@ public class UISideDialogue : UIView
     private Coroutine _skipDisableRoutine;
     private bool _isFail;
 
+    private const int MinIntimacy = 0;
+    private const int MaxIntimacy = 5;
+
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
@@ -189,7 +192,7 @@ public class UISideDialogue : UIView
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
             
-            int intimacy = DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy;
+            int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
             DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
         }
 
@@ -253,5 +256,21 @@ public class UISideDialogue : UIView
                 _currentIndex = i;
             }
         }
+    }
+
+    private int GetIntimacy(int amount)
+    {
+        amount /= 20;
+        
+        if(amount < MinIntimacy)
+        {
+            return MinIntimacy;
+        }
+        else if(amount >= MaxIntimacy)
+        {
+            return MaxIntimacy;
+        }
+
+        return amount;
     }
 }
