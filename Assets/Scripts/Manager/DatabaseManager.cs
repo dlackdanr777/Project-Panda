@@ -241,7 +241,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.ItemFruitList;
     }
 
-    public Sprite GetImageById(string id)
+    public Sprite GetGIImageById(string id)
     {
         List<GatheringItem> list = new List<GatheringItem>();
         string code = id.Substring(0, 3);
@@ -267,6 +267,19 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
             }
         }
 
+        return null;
+    }
+
+    public Sprite GetFUImageById(string id)
+    {
+        Dictionary<string,Furniture> furnitureDic = _itemDatabase.FurnitureDic;
+        foreach(string key in furnitureDic.Keys)
+        {
+            if (key.Equals(id))
+            {
+                return furnitureDic[key].RoomImage;
+            }
+        }
         return null;
     }
 

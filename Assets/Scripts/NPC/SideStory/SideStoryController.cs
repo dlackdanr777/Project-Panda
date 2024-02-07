@@ -163,6 +163,8 @@ public class SideStoryController : MonoBehaviour, IInteraction
                 return GameManager.Instance.Player.GetIVGI(condition, count);
             case EventType.IVCK:
                 return GameManager.Instance.Player.GetIVCK(condition, count);
+            case EventType.IVFU:
+                return GameManager.Instance.Player.GetIVFU(condition);
             default:
                 return false;
         }
@@ -204,15 +206,19 @@ public class SideStoryController : MonoBehaviour, IInteraction
         switch (type)
         {
             case EventType.MONEY:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetImageById("IFR09"));
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById("IFR09"));
                 DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
                 return GameManager.Instance.Player.GainBamboo(count);
             case EventType.IVGI:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetImageById(condition));
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById(condition));
                 DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
                 GameManager.Instance.Player.AddIVGI(condition, count);
                 return true;
             case EventType.IVCK:
+            case EventType.IVFU:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetFUImageById(condition));
+                DataBind.SetTextValue("SSRewardDetailCount", "");
+                DatabaseManager.Instance.StartPandaInfo.AddFurniture(condition);
                 return true;
             default:
                 return false;

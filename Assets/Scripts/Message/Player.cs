@@ -209,6 +209,19 @@ public class Player
         return CookItemInventory[0].FindItemById(id, count);
     }
 
+    public bool GetIVFU(string id)
+    {
+        List<Furniture> furnitureInventory = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory;
+        for(int i = 0; i < furnitureInventory.Count; i++)
+        {
+            if (furnitureInventory[i].Id.Equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void AddIVGI(string id, int count)
     {
         int index = 0;
