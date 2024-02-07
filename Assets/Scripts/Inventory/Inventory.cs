@@ -71,7 +71,6 @@ public class Inventory
             InventoryItem newItem = new InventoryItem(item.Id, item.Name, item.Description, addToInventory, item.Price, item.Rank, item.Map, item.Image);
             _items.Add(newItem);
             remainCount -= addToInventory;
-            UnityEngine.Debug.Log(remainCount);
         }
 
     }
@@ -232,6 +231,7 @@ public class Inventory
                 amount += _items[i].Count;
             }
         }
+        UnityEngine.Debug.Log("amount" + amount + "count" + count);
         if(amount >= count)
         {
             return true;

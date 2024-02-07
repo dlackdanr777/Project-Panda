@@ -42,7 +42,7 @@ public class SideStoryDialogueManager : MonoBehaviour
 
                 SSDic.Add(id, dictionary);
             }
-            catch { } //사이드스토리가 없는 NPC
+            catch {} //사이드스토리가 없는 NPC
         }
     }
 

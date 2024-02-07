@@ -125,6 +125,7 @@ public class UISideDialogue : UIView
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
         _isFail = false;
+        _isReward = false;
     }
 
 
