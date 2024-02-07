@@ -9,22 +9,30 @@ using Muks.Tween;
 
 public class UIWeather : UIView
 {
-    [SerializeField] private WeatherDatabase _weatherApp;
+    [Space]
+    [SerializeField] private GameObject _backgroundButton;
 
+    [Space]
     [SerializeField] private Transform _slotLayoutParent;
 
     [SerializeField] private GameObject _daySlotLayoutGroup;
 
+    [Space]
     [SerializeField] private UIWeatherSlot _todayUISlot;
+    [SerializeField] private Button _attendanceButton;
 
     [SerializeField] private UIWeatherSlot _slotPrefab;
 
+
+    private WeatherDatabase _watherDatabase => DatabaseManager.Instance.WeatherDatabase;
 
     private List<UIWeatherSlot> _slots = new List<UIWeatherSlot>();
 
     private Vector3 _tmpSize;
 
     private Vector3 _targetSize => new Vector3(0.7f, 0.7f, 0.7f);
+
+
 
     public event Action OnRewardedHandler;
 
@@ -45,18 +53,36 @@ public class UIWeather : UIView
         SlotInit();
 
         _tmpSize = gameObject.transform.localScale;
+
+        if (!_watherDatabase.CheckTodayAttendance())
+        {
+            Debug.Log("아직 출첵 안함");
+            _attendanceButton.onClick.AddListener(() =>
+            {
+                _watherDatabase.ChecktAttendance();
+                _attendanceButton.gameObject.SetActive(false);
+            });
+        }
+        else
+        {
+            _attendanceButton.gameObject.SetActive(false);
+        }
+
+        _backgroundButton.SetActive(false);
     }
 
     
     private void ShowAnime()
     {
-        gameObject.SetActive(true);
         VisibleState = VisibleState.Appearing;
+
+        gameObject.SetActive(true);
+        _backgroundButton.SetActive(true);
         gameObject.transform.localScale = _targetSize;
 
         Tween.TransformScale(gameObject, _tmpSize, 0.3f, TweenMode.EaseOutBack, () =>
         {
-            VisibleState = VisibleState.Appeared;
+                VisibleState = VisibleState.Appeared;
         });
 
     }
@@ -65,7 +91,8 @@ public class UIWeather : UIView
     private void HideAnime()
     {
         VisibleState = VisibleState.Disappearing;
-        Tween.TransformScale(gameObject, _targetSize * 0.5f, 0.5f, TweenMode.EaseInBack, () =>
+        _backgroundButton.SetActive(false);
+        Tween.TransformScale(gameObject, _targetSize * 0.5f, 0.4f, TweenMode.EaseInBack, () =>
         {
             VisibleState = VisibleState.Disappeared;
             gameObject.SetActive(false);
@@ -75,7 +102,7 @@ public class UIWeather : UIView
 
     private void SlotInit()
     {
-        List<WeatherRewardData> list = DatabaseManager.Instance.WeatherDatabase.GetWeatherRewardDataForDayCount();
+        List<WeatherRewardData> list = _watherDatabase.GetWeatherRewardDataForDayCount();
 
         for (int i = 0, count = list.Count; i < count; i++)
         {
@@ -96,6 +123,12 @@ public class UIWeather : UIView
             slot.UpdateUI(list[i]);
             _slots.Add(slot);
         }
+    }
+
+    public void CheckAttendance()
+    {
+        _watherDatabase.ChecktAttendance();
+        //Todo:애니메이션
     }
 
    /*public void InitSlot()

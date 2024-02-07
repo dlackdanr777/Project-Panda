@@ -6,6 +6,8 @@ using Muks.WeightedRandom;
 using BackEnd;
 using LitJson;
 using Muks.BackEnd;
+using static UserInfo;
+using Unity.VisualScripting;
 
 public enum Weather {Sunny, Cloudy, Rainy, Count }
 
@@ -16,7 +18,7 @@ public class WeatherDatabase
 
     //=======================날씨 데이터==========================
 
-    public Dictionary<int, WeatherRewardData> _weatherDataDic { get; private set; }
+    private Dictionary<int, WeatherRewardData> _weatherDataDic = new Dictionary<int, WeatherRewardData>();
 
     private bool _isCanReward; //보상획득 가능 유무
     public bool IsCanReward => _isCanReward;
@@ -26,89 +28,61 @@ public class WeatherDatabase
 
     public void Register()
     {
-        Init();
-        AttendanceCheck();
+
     }
 
 
-    private void Init()
+    /// <summary>출석 체크 함수</summary> 
+    public void ChecktAttendance()
     {
-        _weatherDataDic = new Dictionary<int, WeatherRewardData>();
-
-        //_weatherDatas.Add(_sunnyData, _ramdomWeathers[(int)_currentSeason].SunnyWeighted);
-        //_weatherDatas.Add(_cloudyData, _ramdomWeathers[(int)_currentSeason].CloudyWeighted);
-        //_weatherDatas.Add(_rainyData, _ramdomWeathers[(int)_currentSeason].RainyWeighted);
-
-        SetWeekWeather();
+        UserInfo.AttendanceDayCount++;
+        UserInfo.LastAttendanceDay = UserInfo.TODAY.ToString();
+        GiveReward(_weatherDataDic[UserInfo.AttendanceDayCount].Item);
+        Debug.Log(UserInfo.AttendanceDayCount);
     }
 
 
-    //일주일치 날씨를 설정하는 함수
-    private void SetWeekWeather()
+    /// <summary>오늘 출석 체크를 했나 확인 하는 함수</summary>
+    public bool CheckTodayAttendance()
     {
-        for (int i = 0; i < 7; i++)
+        DateTime nowDay = UserInfo.TODAY; //ToDo: 서버 시간으로 변경 예정
+        DateTime lastLoginDate = DateTime.Parse(UserInfo.LastAttendanceDay);
+
+        if (nowDay.Month != lastLoginDate.Month || nowDay.Day != lastLoginDate.Day)
         {
-            //_weekWeathers.Add(_weatherDatas.GetRamdomItemBySub());
+            Debug.Log("출석체크 아직 안함");
+            return false;
         }
-    }
-
-
-    //출석 체크
-    private void AttendanceCheck()
-    {
-        //만약 일주일치 출석체크를 완료했다면
-        if (WeeksCheck())
-        {
-            //설정한다.
-            SetWeekWeather();
-        }
-
-        //전날 접속했었다면 넘긴다.
-        if (!RewardedCheck())
-            return;
-    }
-
-
-    //현재 보상을 체크하는 함수
-    private bool RewardedCheck()
-    {
-        //만약 현재 날짜 전날에 접속했다면?
-        if (!UserInfo.IsTodayRewardReceipt)
-        {
-            //_uiWeather.OnRewardedHandler += GiveReward;
-            UserInfo.IsTodayRewardReceipt = true;
-            return true;
-        }
-
-        return false;
-    }
-
-
-    //일주일 단위를 체크하는 함수
-    private bool WeeksCheck()
-    {
-        if (UserInfo.DayCount % 7 == 1)
-        {
-            return true;
-        }
-        return false;
+        Debug.Log("출석체크 함");
+        return true;
     }
 
 
     //보상지급 함수
     private void GiveReward(Item item)
     {
+        InventoryItemField field = GameManager.Instance.Player.GetField(item.Id);
+        int itemType = GameManager.Instance.Player.GetItemType(item.Id);
+        GameManager.Instance.Player.GetItemInventory(field)[itemType].AddById(field, item.Id);
         Debug.Log("보상이 지급됬습니다.");
     }
+
 
     /// <summary>DayCount를 기준으로 DayCount+ 4일까지의 List를 반환하는 함수</summary>
     public List<WeatherRewardData> GetWeatherRewardDataForDayCount()
     {
-        int count = UserInfo.DayCount + 1;
-
+        int count = 0;
+        if(!CheckTodayAttendance())
+        {
+            count = UserInfo.AttendanceDayCount + 1;
+        }
+        else
+        {
+            count = UserInfo.AttendanceDayCount;
+        }
+        
         List<WeatherRewardData> list = new List<WeatherRewardData>();
-
-        for(int i = count; i < count + 4; i++)
+        for (int i = count; i < count + 4; i++)
         {
             list.Add(_weatherDataDic[i]);
         }
@@ -141,9 +115,10 @@ public class WeatherDatabase
             Sprite sprite = DatabaseManager.Instance.WeatherImage.GetWeatherImage(weather);
 
             _weatherDataDic.Add(day, new WeatherRewardData(day, weather, amount, item, sprite));
-
-            Debug.Log("날씨 정보 받아오기 성공");
         }
+
+
+        Debug.Log("날씨 정보 받아오기 성공");
     }
     #endregion
 

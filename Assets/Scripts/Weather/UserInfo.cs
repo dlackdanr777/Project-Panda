@@ -26,9 +26,15 @@ public class UserInfo
 
     public int DayCount; //몇일 접속했나?
 
-    public bool IsTodayRewardReceipt; //오늘 아이템을 수령했나?
-
     public bool IsExistingUser; //기존 유저인가?
+
+
+    //출석 체크
+    //==========================================================================================================
+    public int AttendanceDayCount; //출석일 카운트
+
+    public string LastAttendanceDay; //마지막 출석 체크 일자
+
 
     //Inventory
     public List<InventoryData> GatheringInventoryDataArray = new List<InventoryData>(); //저장할 인벤토리 데이터
@@ -111,7 +117,6 @@ public class UserInfo
             UserId = json[0]["UserId"].ToString();
             DayCount = int.Parse(json[0]["DayCount"].ToString());
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
-            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
             // 도전과제 관련
@@ -261,7 +266,6 @@ public class UserInfo
         param.Add("UserId", UserId);
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
-        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
         param.Add("IsExistingUser", IsExistingUser);
 
         param.Add("ChallengesNum", ChallengesNum);
@@ -275,6 +279,119 @@ public class UserInfo
 
         _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
         param.Add("StoryCompletedList", _storyCompletedList);
+
+        return param;
+    }
+
+    #endregion
+
+    #region SaveAndLoadAttendance
+    public void LoadAttendanceData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            AttendanceDayCount = 0;
+            LastAttendanceDay = TODAY.AddDays(-1).ToString();
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            AttendanceDayCount = int.Parse(json[0]["AttendanceDayCount"].ToString());
+            LastAttendanceDay = json[0]["LastAttendanceDay"].ToString();
+
+            Debug.Log("Attendance Load성공");
+        }
+    }
+
+
+    public void SaveAttendanceData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Attendance";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertAttendanceData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateAttendanceData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertAttendanceData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertAttendanceData(string selectedProbabilityFileId)
+    {
+        Param param = GetAttendanceParam();
+
+        Debug.LogFormat("{0} 삽입을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateAttendanceData(string selectedProbabilityFileId, string inDate)
+    {
+        Param param = GetAttendanceParam();
+
+        Debug.LogFormat("{0} 수정을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetAttendanceParam()
+    {
+        Param param = new Param();
+
+        param.Add("AttendanceDayCount", AttendanceDayCount);
+        param.Add("LastAttendanceDay", LastAttendanceDay);
 
         return param;
     }
@@ -577,7 +694,6 @@ public class UserInfo
     }
 
     #endregion
-
 
     #region SaveAndLoadNPC
 
