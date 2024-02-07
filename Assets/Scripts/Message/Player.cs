@@ -7,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UserInfo;
 
 public class Player
 {
@@ -77,6 +76,50 @@ public class Player
         GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR14", 1);
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+    }
+
+    public InventoryItemField GetField(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return InventoryItemField.GatheringItem;
+            case "IFI":
+                return InventoryItemField.GatheringItem;
+            case "IFR":
+                return InventoryItemField.GatheringItem;
+
+            case "ITG":
+                return InventoryItemField.Tool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return InventoryItemField.None;
+        }
+    }
+
+    public int GetItemType(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return (int)GatheringItemType.Bug;
+            case "IFI":
+                return (int)GatheringItemType.Fish;
+            case "IFR":
+                return (int)GatheringItemType.Fruit;
+
+            case "ITG":
+                return (int)ToolItemType.GatheringTool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return -1;
+        }
     }
 
     public bool SpendBamboo(int amount)
