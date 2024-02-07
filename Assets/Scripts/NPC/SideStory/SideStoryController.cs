@@ -52,6 +52,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
         foreach (var key in _storyDatabase.Keys)
         {
             _storyKey.Add(key);
+            Debug.Log(key);
         }
         for (int i = 0; i < _storyKey.Count; i++)
         {
@@ -106,6 +107,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
 
                     break;
                 }
+                //다음 스토리와 친밀도가 같으면 다음 스토리로 넘어감
             }
 
         }
@@ -183,7 +185,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
         SideStoryDialogue currentStory = _storyDatabase[id];
         
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
-
+        Debug.Log("친밀도 ㅣ " + currentStory.RewardIntimacy);
         DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
 
         if (currentNPC.Intimacy > nextStoryInti)
@@ -194,6 +196,7 @@ public class SideStoryController : MonoBehaviour, IInteraction
         //보상
         bool isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
         OnRewardHandler?.Invoke(isReward);
+        _isInitialized = false;
     }
 
     private bool RewardItem(EventType type, string condition, int count)
