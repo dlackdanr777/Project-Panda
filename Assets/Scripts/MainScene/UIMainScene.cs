@@ -17,7 +17,6 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("HideMailButton", OnHideMailButtonClicked);
         DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
 
-
         DataBind.SetButtonValue("ShowDiaryButton", OnShowDiaryButtonClicked);
         DataBind.SetButtonValue("HideDiaryButton", OnHideDiaryButtonClicked);
 

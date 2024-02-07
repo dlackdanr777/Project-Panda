@@ -53,31 +53,10 @@ public class RecipeData
         _successRangeLevel_A = successRangeLevel_A;
         _successRangeLevel_B = successRangeLevel_B;
 
-        //TODO: 차후 레시피 수정 예정
-        List<List<GatheringItem>> itemList = new List<List<GatheringItem>>
-        {
-            DatabaseManager.Instance.ItemDatabase.ItemFishList,
-            DatabaseManager.Instance.ItemDatabase.ItemBugList,
-            DatabaseManager.Instance.ItemDatabase.ItemFruitList
-        };
-        
-
-
-
-            for (int i = 0, listCount = itemList.Count; i < listCount; i++)
-        {
-            foreach (Item item in itemList[i])
-            {
-                if (item.Id != _successItemID)
-                    continue;
-
-                _item = item;
-                return;
-
-            }
-        }
+        _item = DatabaseManager.Instance.ItemDatabase.GetGatheringItemById(_successItemID);
     }
 }
+
 
 public class RecipeDatabase
 {

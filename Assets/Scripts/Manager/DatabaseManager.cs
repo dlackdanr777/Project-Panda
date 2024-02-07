@@ -19,22 +19,15 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private DialogueManager _dialogueDatabase;
     public DialogueManager DialogueDatabase => _dialogueDatabase;
  
-    private WeatherApp _weatherDatabase;
-    public WeatherApp WeatherDatabase => _weatherDatabase;
+    private WeatherDatabase _weatherDatabase;
+    public WeatherDatabase WeatherDatabase => _weatherDatabase;
 
     private RecipeDatabase _recipeDatabase;
     public RecipeDatabase RecipeDatabase => _recipeDatabase;
 
     private MBTIManager _mbtiDatabase;
 
-    [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
-
-    //Item
-    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
-    [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
-    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
-    [SerializeField] private ItemSpriteDatabase[] _npcImages;
 
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
@@ -42,19 +35,35 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
-    private HarvestItemManager _harvestItemDatabase;
-    [SerializeField] HarvestItemImage _harvestItemImage;
-
     private NPCDatabase _npcDatabase;
     public NPCDatabase NPCDatabase => _npcDatabase;
 
     private SideStoryDialogueManager _sideStoryDialogueDatabase;
     public SideStoryDialogueManager SideDialogueDatabase => _sideStoryDialogueDatabase;
 
-    //Message
-    [SerializeField] private ItemSpriteDatabase _mailPaper;
+    private ChallengesDatabase _challengesDatabase;
+    private Challenges _challenges;
+    public Challenges Challenges => _challenges;
+
     private MessageDatabase _messageDatabase;
     public MessageDatabase MessageDatabase => _messageDatabase;
+
+
+    //이미지들
+    //Panda
+    [SerializeField] private PandaImage _pandaImage;
+
+    //Item
+    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
+    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    [SerializeField] private ItemSpriteDatabase[] _npcImages;
+
+    private HarvestItemManager _harvestItemDatabase;
+    [SerializeField] HarvestItemImage _harvestItemImage;
+
+    //Message
+    [SerializeField] private ItemSpriteDatabase _mailPaper;
 
     //Album
     [SerializeField] private ItemSpriteDatabase _albumImages;
@@ -64,9 +73,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     //Sticker
     [SerializeField] private ItemSpriteDatabase _stickerImages;
 
-    private ChallengesDatabase _challengesDatabase;
-    private Challenges _challenges;
-    public Challenges Challenges => _challenges;
+    [Space]
+    //Weather Image
+    [SerializeField] private WeatherImage _weatherImages;
+    public WeatherImage WeatherImage => _weatherImages;
+
 
     public override void Awake()
     {
@@ -86,7 +97,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
-        //_weatherDatabase = new WeatherApp();
+        _weatherDatabase = new WeatherDatabase();
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
 
@@ -104,6 +115,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
+        _weatherDatabase.Register();
 
         //Image
         //GatheringItem 
@@ -148,15 +160,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _challengesDatabase.Register();
         _challenges.Register();
-    }
-
-    /// <summary>
-    /// weekWeather data
-    /// </summary>
-    /// <returns></returns>
-    public List<WeatherData> GetWeekWeatherData()
-    {
-        return _weatherDatabase.GetWeekWeathers();
     }
 
     /// <summary>
