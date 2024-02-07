@@ -42,7 +42,7 @@ public class UIWeather : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        SlotInit();
+        //SlotInit();
 
         _tmpSize = gameObject.transform.localScale;
     }

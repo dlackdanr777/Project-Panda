@@ -101,6 +101,8 @@ public class UISideDialogue : UIView
 
         DataBind.SetTextValue("SideDialogueName", " ");
         DataBind.SetTextValue("SideDialogueContexts", " ");
+        int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(_currentNPC).Intimacy);
+        DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
         _currentIndex = 0;
 

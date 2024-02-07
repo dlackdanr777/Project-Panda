@@ -183,9 +183,8 @@ public class SideStoryController : MonoBehaviour, IInteraction
 
         NPC currentNPC = DatabaseManager.Instance.GetNPC(NPCID);
         SideStoryDialogue currentStory = _storyDatabase[id];
-        
+
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
-        Debug.Log("친밀도 ㅣ " + currentStory.RewardIntimacy);
         DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
 
         if (currentNPC.Intimacy > nextStoryInti)
