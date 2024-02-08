@@ -226,14 +226,10 @@ public class UISideDialogue : UIView
         else
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
-            _intimacyobj.SetActive(false);
 
-            if (data.TalkPandaID.Equals(_currentNPC))
-            {
-                int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
-                DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
-                _intimacyobj.SetActive(true);
-            }
+            int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
+            DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
+            _intimacyobj.SetActive(true);
         }
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -326,7 +322,6 @@ public class UISideDialogue : UIView
         _moneyReward.SetActive(true);
         foreach(var item in _moneyReward.transform.GetChild(0).GetComponentsInChildren<Image>()) 
         {
-            Debug.Log(item);
             Tween.TransformMove(item.gameObject, _targetPos.position, 0.5f, TweenMode.Quadratic);
         }
         yield return new WaitForSeconds(2f);
