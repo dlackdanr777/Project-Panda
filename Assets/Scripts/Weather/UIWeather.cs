@@ -52,23 +52,23 @@ public class UIWeather : UIView
         base.Init(uiNav);
         SlotInit();
 
-        //_tmpSize = gameObject.transform.localScale;
+        _tmpSize = gameObject.transform.localScale;
 
-        //if (!_watherDatabase.CheckTodayAttendance())
-        //{
-        //    Debug.Log("아직 출첵 안함");
-        //    _attendanceButton.onClick.AddListener(() =>
-        //    {
-        //        _watherDatabase.ChecktAttendance();
-        //        _attendanceButton.gameObject.SetActive(false);
-        //    });
-        //}
-        //else
-        //{
-        //    _attendanceButton.gameObject.SetActive(false);
-        //}
+        if (!_watherDatabase.CheckTodayAttendance())
+        {
+            Debug.Log("아직 출첵 안함");
+            _attendanceButton.onClick.AddListener(() =>
+            {
+                _watherDatabase.ChecktAttendance();
+                _attendanceButton.gameObject.SetActive(false);
+            });
+        }
+        else
+        {
+            _attendanceButton.gameObject.SetActive(false);
+        }
 
-        //_backgroundButton.SetActive(false);
+        _backgroundButton.SetActive(false);
     }
 
     
