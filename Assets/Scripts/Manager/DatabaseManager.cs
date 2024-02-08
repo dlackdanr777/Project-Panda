@@ -58,7 +58,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
     [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
     [SerializeField] private ItemSpriteDatabase[] _npcImages;
-    [SerializeField] private ItemSpriteDatabase _npcIntimacyImages;
 
     private HarvestItemManager _harvestItemDatabase;
     [SerializeField] HarvestItemImage _harvestItemImage;
@@ -79,8 +78,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private WeatherImage _weatherImages;
     public WeatherImage WeatherImage => _weatherImages;
 
-
-    private MapDatabase _mapDatabase;
 
     public override void Awake()
     {
@@ -113,13 +110,11 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
         _challenges = new Challenges();
-        _mapDatabase = new MapDatabase();
 
         UserInfo.Register();
         StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
-        _weatherDatabase.Register();
 
         //Image
         //GatheringItem 
@@ -137,7 +132,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _itemDatabase.Register();
 
-        //_weatherDatabase.Register();
         _recipeDatabase.Register();
         _mbtiDatabase.Register();
 
@@ -147,6 +141,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
+        _weatherDatabase.Register();
 
         //Image
         for (int i = 0; i < _npcDatabase.NPCSpriteArray.Length; i++)
@@ -164,7 +159,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _challengesDatabase.Register();
         _challenges.Register();
-        _mapDatabase.Register();
     }
 
     /// <summary>
@@ -246,7 +240,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.ItemFruitList;
     }
 
-    public Item GetGIImageById(string id)
+    public Sprite GetGIImageById(string id)
     {
         List<GatheringItem> list = new List<GatheringItem>();
         string code = id.Substring(0, 3);
@@ -268,10 +262,23 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         {
             if (list[i].Id.Equals(id))
             {
-                return list[i];
+                return list[i].Image;
             }
         }
 
+        return null;
+    }
+
+    public Sprite GetFUImageById(string id)
+    {
+        Dictionary<string,Furniture> furnitureDic = _itemDatabase.FurnitureDic;
+        foreach(string key in furnitureDic.Keys)
+        {
+            if (key.Equals(id))
+            {
+                return furnitureDic[key].RoomImage;
+            }
+        }
         return null;
     }
 
@@ -323,43 +330,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
             }
         }
         return null;
-    }
-
-    public Sprite GetNPCIntimacyImageById(string id)
-    {
-        for (int i = 0; i < GetNPCList().Count; i++)
-        {
-            if (GetNPCList()[i].Id.Equals(id))
-            {
-                NPC currentNPC = GetNPCList()[i];
-                string intimacy = GetIntimacy(currentNPC.Intimacy, currentNPC.MinIntimacy, currentNPC.MaxIntimacy).ToString();
-
-                for(int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
-                {
-                    if (_npcIntimacyImages.ItemSprites[j].Id.Equals(intimacy))
-                    {
-                        return _npcIntimacyImages.ItemSprites[j].Image;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private int GetIntimacy(int amount, int minIntimacy, int maxIntimacy)
-    {
-        amount /= 20;
-
-        if (amount < minIntimacy)
-        {
-            return minIntimacy;
-        }
-        else if (amount >= maxIntimacy)
-        {
-            return maxIntimacy;
-        }
-
-        return amount;
     }
 
     public NPC GetNPC(string id)
@@ -456,10 +426,5 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public Dictionary<string, ChallengesData> GetChallengesDic()
     {
         return _challengesDatabase.GetChallengesDic();
-    }
-
-    public Dictionary<string, MapData> GetMapDic()
-    {
-        return _mapDatabase.GetMapDic();
     }
 }
