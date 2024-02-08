@@ -31,13 +31,6 @@ public class UIWeatherSlot : MonoBehaviour
             _amountText.text = string.Empty;
             _rewardImage.sprite = null;
         }
-
     }
 
-/*    //이미 출석되어있는 것을 출력하는 함수
-    public void AttendanceComplated(Sprite sprite)
-    {
-        _attendanceStamp.gameObject.SetActive(true);
-        _attendanceStamp.sprite = sprite;
-    }*/
 }

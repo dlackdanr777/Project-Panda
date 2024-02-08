@@ -93,6 +93,12 @@ namespace Muks.Tween
                 { TweenMode.Smoothstep, Smoothstep },
                 { TweenMode.Smootherstep, Smootherstep },
                 {TweenMode.Spike, Spike },
+                {TweenMode.EaseInQuint, EaseInQuint },
+                {TweenMode.EaseOutQuint, EaseOutQuint },
+                {TweenMode.EaseInOutQuint, EaseInOutQuint },
+                {TweenMode.EaseInExpo, EaseInExpo },
+                {TweenMode.EaseOutExpo, EaseOutExpo },
+                {TweenMode.EaseInOutExpo, EaseInOutExpo },
                 {TweenMode.EaseInElastic, EaseInElastic },
                 {TweenMode.EaseOutElastic, EaseOutElastic },
                 {TweenMode.EaseInOutElastic, EaseInOutElastic },
@@ -225,6 +231,62 @@ namespace Muks.Tween
                 return  Mathf.Pow(percent/ 0.5f, 3);
 
             return Mathf.Pow((1 - percent) / 0.5f, 3);
+        }
+
+
+        private float EaseInQuint(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return percent * percent * percent * percent * percent;
+        }
+
+
+        private float EaseOutQuint(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return 1 - Mathf.Pow((1 - percent), 5);
+        }
+
+
+        private float EaseInOutQuint(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return percent < 0.5f ? 16 * percent * percent * percent * percent * percent
+                : 1 - Mathf.Pow(-2 * percent + 2, 5) / 2;
+        }
+
+
+        private float EaseInExpo(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return percent == 0 ? 0 : Mathf.Pow(2, 10 * percent - 10);
+        }
+
+
+        private float EaseOutExpo(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            return percent == 1 ? 1 : 1 - Mathf.Pow(2, -10 * percent);
+        }
+
+
+        private float EaseInOutExpo(float elapsedDuration, float totalDuration)
+        {
+            float percent = elapsedDuration / totalDuration;
+
+            float returnValue = percent == 0
+                ? 0
+                : percent == 1
+                ? 1
+                : percent < 0.5f ? Mathf.Pow(2, 20 * percent - 10) / 2
+                : (2 - Mathf.Pow(2, -20 * percent + 10)) / 2;
+
+            return returnValue;
         }
 
 

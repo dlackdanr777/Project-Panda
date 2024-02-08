@@ -18,7 +18,34 @@ public class UserInfo
     //==========================================================================================================
 
     public string UserId;    //아이디
-    public DateTime TODAY => DateTime.Now;    //컴퓨터의 현재 날짜와 시간을 가져옴(추후 서버 시간으로 변경해야함)
+    public DateTime TODAY
+    {
+        get
+        {
+            if (Backend.IsLogin)
+            {
+                try
+                {
+                    BackendReturnObject servertime = Backend.Utils.GetServerTime();
+                    string time = servertime.GetReturnValuetoJSON()["utcTime"].ToString();
+                    DateTime parsedDate = DateTime.Parse(time);
+                    Debug.LogFormat("서버 시간은 {0} 입니다.", parsedDate);
+                    return parsedDate;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError(e);
+                    return DateTime.Now;
+                }
+
+            }
+            else
+            {
+                return DateTime.Now;
+            }
+        }
+    }
+  //컴퓨터의 현재 날짜와 시간을 가져옴(추후 서버 시간으로 변경해야함)
 
     public DateTime LastAccessDay => DateTime.Parse(_lastAccessDay); //마지막 접속일
 
@@ -98,6 +125,8 @@ public class UserInfo
 
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
+        AttendanceDayCount = 0;
+        LastAttendanceDay = TODAY.AddDays(-1).ToString();
     }
 
 
@@ -292,8 +321,6 @@ public class UserInfo
 
         if (json.Count <= 0)
         {
-            AttendanceDayCount = 0;
-            LastAttendanceDay = TODAY.AddDays(-1).ToString();
             Debug.LogWarning("데이터가 존재하지 않습니다.");
             return;
         }

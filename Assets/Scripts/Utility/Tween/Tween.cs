@@ -20,6 +20,24 @@ public enum TweenMode
     /// <summary>빠르게 위치로 갔다가 제자리로 돌아감</summary>
     Spike,
 
+    /// <summary>마지막쯤에 빠르게 이동</summary>
+    EaseInQuint,
+
+    /// <summary>초반에 빠르게 이동</summary>
+    EaseOutQuint,
+
+    /// <summary>중간에 빠르게 이동</summary>
+    EaseInOutQuint,
+
+    /// <summary>마지막쯤에 매우 빠르게 이동</summary>
+    EaseInExpo,
+
+    /// <summary>초반에 매우 빠르게 이동</summary>
+    EaseOutExpo,
+
+    /// <summary>중간에 매우 빠르게 이동</summary>
+    EaseInOutExpo,
+
     /// <summary>마지막에 두번 튕기고 위치로 이동</summary>
     EaseInElastic,
 
@@ -241,6 +259,35 @@ namespace Muks.Tween
 
             return objToAnchoredPosition;
         }
+
+
+        /// <summary>LayoutGroup 컴포넌트의 spacing 수치를 조절하는 함수</summary>
+        public static TweenData LayoutGroupSpacing(GameObject targetObject, float targetValue, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
+        {
+            TweenLayoutGroupSpacing ObjToLayoutGroup = !targetObject.GetComponent<TweenLayoutGroupSpacing>()
+                ? targetObject.AddComponent<TweenLayoutGroupSpacing>()
+                : targetObject.GetComponent<TweenLayoutGroupSpacing>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetValue;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
+
+            ObjToLayoutGroup.IsLoop = false;
+            ObjToLayoutGroup.AddDataSequence(tempData);
+
+            if (!ObjToLayoutGroup.enabled)
+            {
+                ObjToLayoutGroup.ElapsedDuration = 0;
+                ObjToLayoutGroup.TotalDuration = 0;
+                ObjToLayoutGroup.enabled = true;
+            }
+
+            return ObjToLayoutGroup;
+        }
+
 
 
         /// <summary>목표 값으로 지속 시간동안 텍스트 컬러 값을 변경하는 함수</summary>

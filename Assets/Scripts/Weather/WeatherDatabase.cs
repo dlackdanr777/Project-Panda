@@ -8,6 +8,7 @@ using LitJson;
 using Muks.BackEnd;
 using static UserInfo;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public enum Weather {Sunny, Cloudy, Rainy, Count }
 
@@ -28,7 +29,7 @@ public class WeatherDatabase
 
     public void Register()
     {
-
+        WeatherParseByLocal();
     }
 
 
@@ -72,6 +73,7 @@ public class WeatherDatabase
     public List<WeatherRewardData> GetWeatherRewardDataForDayCount()
     {
         int count = 0;
+
         if(!CheckTodayAttendance())
         {
             count = UserInfo.AttendanceDayCount + 1;
@@ -119,6 +121,16 @@ public class WeatherDatabase
 
 
         Debug.Log("날씨 정보 받아오기 성공");
+    }
+
+
+    private void WeatherParseByLocal()
+    {
+        if(_weatherDataDic.Count <= 0)
+        {
+            Parser parser = new Parser();
+            _weatherDataDic = parser.WeatherParse("Weather");
+        }
     }
     #endregion
 
