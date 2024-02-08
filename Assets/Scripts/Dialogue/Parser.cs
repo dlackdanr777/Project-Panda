@@ -153,6 +153,32 @@ public class Parser
     }
 
 
+    public Dictionary<int, WeatherRewardData> WeatherParse(string CSVFileName)
+    {
+        Dictionary<int, WeatherRewardData> dic = new Dictionary<int, WeatherRewardData>();
+
+        TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
+        string[] data = csvData.text.Split(new char[] { '\n' });
+
+        for (int i = 1; i < data.Length - 1; i++)
+        {
+            string[] row = data[i].Split(new char[] { ',' });
+
+            int day = int.Parse(row[0]);
+            string weather = row[1];
+            string itemId = row[2];
+            int amount = int.Parse(row[3]);
+            Item item = DatabaseManager.Instance.ItemDatabase.GetGatheringItemById(itemId);
+            Sprite sprite = DatabaseManager.Instance.WeatherImage.GetWeatherImage(weather);
+
+            WeatherRewardData weatherData = new WeatherRewardData(day, weather, amount, item, sprite);
+
+            dic.Add(day, weatherData);
+        }
+        return dic;
+    }
+
+
     /*public RecipeData[] RecipeDataParse(string CSVFileName)
     {
         List<RecipeData> recipeDataList = new List<RecipeData>(); //리스트 생성

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class FollowButton : MonoBehaviour
 {
-    [SerializeField] private Image _image;
+    public Image _image;
 
     private Vector3 _targetPos;
 

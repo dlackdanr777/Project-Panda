@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class UISideDialogue : UIView
 {
@@ -15,7 +16,9 @@ public class UISideDialogue : UIView
     [SerializeField] private Sprite _starterImage;
     [SerializeField] private Sprite[] _intimacyImage;
     [SerializeField] private GameObject _intimacyobj;
-    [SerializeField] private GameObject _reward;
+    [SerializeField] private GameObject _itemReward;
+    [SerializeField] private GameObject _moneyReward;
+    [SerializeField] private Transform _targetPos;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -29,8 +32,10 @@ public class UISideDialogue : UIView
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
+    private Coroutine _itemRewardRoutine;
+    private Coroutine _moneyRewardRoutine;
     private bool _isFail;
-    private bool _isReward;
+    private string _isReward;
 
     private string _currentNPC;
     private const int MinIntimacy = 0;
@@ -43,7 +48,6 @@ public class UISideDialogue : UIView
         _tempPos = RectTransform.anchoredPosition;
 
         SideStoryController.OnStartInteractionHandler += StartStory;
-        SideStoryController.OnRewardHandler += SideStoryController_OnRewardHandler;
         DataBind.SetTextValue("SideDialogueName", " ");
         DataBind.SetTextValue("SideDialogueContexts", " ");
         DataBind.SetButtonValue("SideDialogueNextButton", OnNextButtonClicked);
@@ -55,7 +59,6 @@ public class UISideDialogue : UIView
     public void OnDestroy()
     {
         SideStoryController.OnStartInteractionHandler -= StartStory;
-        SideStoryController.OnRewardHandler -= SideStoryController_OnRewardHandler;
     }
 
     public override void Hide()
@@ -64,7 +67,7 @@ public class UISideDialogue : UIView
 
         _leftButton.Disabled();
         _rightButton.Disabled();
-        _reward.SetActive(false);
+        _itemReward.SetActive(false);
 
         _currentIndex = 0;
         _isSkipEnabled = false;
@@ -74,6 +77,13 @@ public class UISideDialogue : UIView
 
         if (_skipDisableRoutine != null)
             StopCoroutine(_skipDisableRoutine);
+
+        if (_itemRewardRoutine != null)
+            StopCoroutine(_itemRewardRoutine);
+
+        if (_moneyRewardRoutine != null)
+            StopCoroutine(_moneyRewardRoutine);
+
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () =>
         {
@@ -127,7 +137,7 @@ public class UISideDialogue : UIView
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
         _isFail = false;
-        _isReward = false;
+        _isReward = null;
     }
 
 
@@ -160,12 +170,20 @@ public class UISideDialogue : UIView
 
             _contextAnimeRoutine = StartCoroutine(ContextAnime(_dialogue.DialogueData[_currentIndex]));
 
+
+            
             if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("FAIL"))
             {
                 _isFail = true;
             }
 
-            if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("END"))
+            else if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("REWARD") && _dialogue.RewardCount > 0)
+            {
+                _isReward = _dialogue.RewardType.ToString();
+
+                RewardItemContent(_dialogue.RewardType, _dialogue.RewardID, _dialogue.RewardCount);
+            }
+            else if (_dialogue.DialogueData[_currentIndex].IsComplete.Equals("END"))
             {
                 _currentIndex = _dialogue.DialogueData.Count;
 
@@ -178,16 +196,7 @@ public class UISideDialogue : UIView
         }
         else
         {
-            if (_isReward && _currentIndex > _dialogue.DialogueData.Count) //º¸»ó
-            {
-                StartCoroutine(RewardRoutine());
-            }
-            else
-            {
-                _uiNav.Pop();
-            }
-            //OnComplateHandler?.Invoke(_dialogue.StoryID);
-            
+            _uiNav.Pop();
         }
 
     }
@@ -209,17 +218,18 @@ public class UISideDialogue : UIView
             DataBind.SetSpriteValue("SideDialoguePandaImage", _starterImage);
             _intimacyobj.SetActive(false);
         }
+        else if (data.TalkPandaID.Equals("SYSTEM"))
+        {
+            _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
+            _intimacyobj.SetActive(false);
+        }
         else
         {
             DataBind.SetSpriteValue("SideDialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
-            _intimacyobj.SetActive(false);
 
-            if (data.TalkPandaID.Equals(_currentNPC))
-            {
-                int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
-                DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
-                _intimacyobj.SetActive(true);
-            }
+            int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(data.TalkPandaID).Intimacy);
+            DataBind.SetSpriteValue("SideDialogueIntimacyImage", _intimacyImage[intimacy]);
+            _intimacyobj.SetActive(true);
         }
 
         char[] tempChars = data.Contexts.ToCharArray();
@@ -300,17 +310,63 @@ public class UISideDialogue : UIView
         return amount;
     }
 
-    private IEnumerator RewardRoutine()
+    private IEnumerator ItemRewardRoutine()
     {
-        _reward.SetActive(true);
-        yield return new WaitForSeconds(3f);
-        _reward.SetActive(false);
-        _uiNav.Pop();
+        _itemReward.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        _itemReward.SetActive(false);
+    }
+
+    private IEnumerator MoneyRewardRoutine()
+    {
+        _moneyReward.SetActive(true);
+        foreach(var item in _moneyReward.transform.GetChild(0).GetComponentsInChildren<Image>()) 
+        {
+            Tween.TransformMove(item.gameObject, _targetPos.position, 0.5f, TweenMode.Quadratic);
+        }
+        yield return new WaitForSeconds(2f);
+        _moneyReward.SetActive(false);
     }
 
 
-    private void SideStoryController_OnRewardHandler(bool isReward)
+    private void RewardItemContent(EventType type, string condition, int count)
     {
-        _isReward = isReward;
+        //Á¶°Ç ºñ±³
+        switch (type)
+        {
+            case EventType.MONEY:
+                if (_moneyRewardRoutine != null)
+                {
+                    StopCoroutine(_moneyRewardRoutine);
+                }
+                _moneyRewardRoutine = StartCoroutine(MoneyRewardRoutine());
+                break;
+            case EventType.IVGI:
+                ShowItemReward(DatabaseManager.Instance.GetGIImageById(condition).Image,
+                    DatabaseManager.Instance.GetGIImageById(condition).Name,
+                    count.ToString() + " È¹µæ!");
+                break;
+            case EventType.IVCK:
+                break;
+            case EventType.IVFU:
+                ShowItemReward
+                    (DatabaseManager.Instance.GetFurnitureItem()[condition].RoomImage,
+                    DatabaseManager.Instance.GetFurnitureItem()[condition].Name,
+                    "È¹µæ!");
+                break;
+        }
+    }
+
+    private void ShowItemReward(Sprite image, string name, string count)
+    {
+        DataBind.SetSpriteValue("SSRewardDetailImage", image);
+        DataBind.SetTextValue("SSRewardDetailName", name);
+        DataBind.SetTextValue("SSRewardDetailCount", count);
+
+        if (_itemRewardRoutine != null)
+        {
+            StopCoroutine(_itemRewardRoutine);
+        }
+        _itemRewardRoutine = StartCoroutine(ItemRewardRoutine());
     }
 }

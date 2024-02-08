@@ -73,7 +73,7 @@ public class Player
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
         GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR01", 1);
-        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR14", 1);
+        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR06", 1);
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
@@ -138,7 +138,7 @@ public class Player
 
     public bool GainBamboo(int amount)
     {
-        if(Bamboo < MaxBamboo)
+        if(Bamboo + amount <= MaxBamboo)
         {
             Bamboo += amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
