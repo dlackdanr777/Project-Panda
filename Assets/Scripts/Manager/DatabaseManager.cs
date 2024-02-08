@@ -80,6 +80,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public WeatherImage WeatherImage => _weatherImages;
 
 
+    private MapDatabase _mapDatabase;
+
     public override void Awake()
     {
         var obj = FindObjectsOfType<DatabaseManager>();
@@ -111,6 +113,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
         _challenges = new Challenges();
+        _mapDatabase = new MapDatabase();
 
         UserInfo.Register();
         StartPandaInfo.Register();
@@ -161,6 +164,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _challengesDatabase.Register();
         _challenges.Register();
+        _mapDatabase.Register();
     }
 
     /// <summary>
@@ -452,5 +456,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public Dictionary<string, ChallengesData> GetChallengesDic()
     {
         return _challengesDatabase.GetChallengesDic();
+    }
+
+    public Dictionary<string, MapData> GetMapDic()
+    {
+        return _mapDatabase.GetMapDic();
     }
 }
