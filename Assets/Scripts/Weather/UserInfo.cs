@@ -26,9 +26,15 @@ public class UserInfo
 
     public int DayCount; //몇일 접속했나?
 
-    public bool IsTodayRewardReceipt; //오늘 아이템을 수령했나?
-
     public bool IsExistingUser; //기존 유저인가?
+
+
+    //출석 체크
+    //==========================================================================================================
+    public int AttendanceDayCount; //출석일 카운트
+
+    public string LastAttendanceDay; //마지막 출석 체크 일자
+
 
     //Inventory
     public List<InventoryData> GatheringInventoryDataArray = new List<InventoryData>(); //저장할 인벤토리 데이터
@@ -42,7 +48,7 @@ public class UserInfo
 
     //Item
     public List<string> GatheringItemReceived = new List<string>();
-    public List<string> NPCItemReceived = new List<string>();
+    public List<NPCData> NPCReceived = new List<NPCData>();
     public List<string> CookItemReceived = new List<string>();
     public List<string> ToolItemReceived = new List<string>();
     public List<string> AlbumReceived = new List<string>();
@@ -111,7 +117,6 @@ public class UserInfo
             UserId = json[0]["UserId"].ToString();
             DayCount = int.Parse(json[0]["DayCount"].ToString());
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
-            IsTodayRewardReceipt = (bool)json[0]["IsTodayRewardReceipt"];
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
             // 도전과제 관련
@@ -158,7 +163,7 @@ public class UserInfo
             StoryManager.Instance.SetStoryCompletedList(_storyCompletedList);
 
             LoadUserChallengesData();
-            LoadUserReceivedAlbum();
+            LoadAlbumReceived();
             Debug.Log("UserInfo Load성공");
         }
     }
@@ -261,7 +266,6 @@ public class UserInfo
         param.Add("UserId", UserId);
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
-        param.Add("IsTodayRewardReceipt", IsTodayRewardReceipt);
         param.Add("IsExistingUser", IsExistingUser);
 
         param.Add("ChallengesNum", ChallengesNum);
@@ -275,6 +279,119 @@ public class UserInfo
 
         _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
         param.Add("StoryCompletedList", _storyCompletedList);
+
+        return param;
+    }
+
+    #endregion
+
+    #region SaveAndLoadAttendance
+    public void LoadAttendanceData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            AttendanceDayCount = 0;
+            LastAttendanceDay = TODAY.AddDays(-1).ToString();
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            AttendanceDayCount = int.Parse(json[0]["AttendanceDayCount"].ToString());
+            LastAttendanceDay = json[0]["LastAttendanceDay"].ToString();
+
+            Debug.Log("Attendance Load성공");
+        }
+    }
+
+
+    public void SaveAttendanceData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Attendance";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertAttendanceData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateAttendanceData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertAttendanceData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertAttendanceData(string selectedProbabilityFileId)
+    {
+        Param param = GetAttendanceParam();
+
+        Debug.LogFormat("{0} 삽입을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateAttendanceData(string selectedProbabilityFileId, string inDate)
+    {
+        Param param = GetAttendanceParam();
+
+        Debug.LogFormat("{0} 수정을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetAttendanceParam()
+    {
+        Param param = new Param();
+
+        param.Add("AttendanceDayCount", AttendanceDayCount);
+        param.Add("LastAttendanceDay", LastAttendanceDay);
 
         return param;
     }
@@ -313,17 +430,10 @@ public class UserInfo
                 ToolInventoryDataArray.Add(item);
             }
 
-
             for (int i = 0, count = json[0]["GatheringItemReceived"].Count; i < count; i++)
             {
                 string item = json[0]["GatheringItemReceived"][i].ToString();
                 GatheringItemReceived.Add(item);
-            }
-
-            for (int i = 0, count = json[0]["NPCItemReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["NPCItemReceived"][i].ToString();
-                NPCItemReceived.Add(item);
             }
 
             for (int i = 0, count = json[0]["CookItemReceived"].Count; i < count; i++)
@@ -339,7 +449,6 @@ public class UserInfo
             }
 
             LoadUserInventory();
-            LoadUserReceivedNPC();
             Debug.Log("Inventory Load성공");
         }
     }
@@ -408,7 +517,6 @@ public class UserInfo
     {
         SaveUserInventory();
         SaveUserReceivedItem();
-        SaveUserReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
@@ -422,7 +530,6 @@ public class UserInfo
     {
         SaveUserInventory();
         SaveUserReceivedItem();
-        SaveUserReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -440,7 +547,6 @@ public class UserInfo
         param.Add("ToolInventoryDataArray", ToolInventoryDataArray);
 
         param.Add("GatheringItemReceived", GatheringItemReceived);
-        param.Add("NPCItemReceived", NPCItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
         return param;
@@ -476,7 +582,7 @@ public class UserInfo
                 StickerDataArray.Add(item.GetStickerData());
             }
 
-            LoadUserReceivedSticker();
+            LoadStickerReceived();
             LoadUserStickerData();
             Debug.Log("Sticker Load성공");
         }
@@ -584,6 +690,123 @@ public class UserInfo
         Param param = new Param();
         param.Add("StickerReceived", StickerReceived);
         param.Add("StickerDataArray", _saveStickerDataList);
+        return param;
+    }
+
+    #endregion
+
+    #region SaveAndLoadNPC
+
+    public void LoadNPCData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            NPCReceived.Clear();
+            for (int i = 0, count = json[0]["NPCReceived"].Count; i < count; i++)
+            {
+                NPCData item = JsonUtility.FromJson<NPCData>(json[0]["NPCReceived"][i].ToJson());
+                NPCReceived.Add(item);
+            }
+            LoadNPCReceived();
+            Debug.Log("NPC Load성공");
+        }
+    }
+
+
+    public void SaveNPCData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "NPC";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveInventoryData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertNPCData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateNPCData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertNPCData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    /// <summary> 서버 스티커 데이터 삽입 함수 </summary>
+    public void InsertNPCData(string selectedProbabilityFileId)
+    {
+        SaveNPCReceived();
+        Param param = GetNPCParam();
+
+        Debug.LogFormat("스티커 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 서버 스티커 데이터 수정 함수 </summary>
+    public void UpdateNPCData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveNPCReceived();
+        Param param = GetNPCParam();
+
+        Debug.LogFormat("스티커 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 스티커 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetNPCParam()
+    {
+        Param param = new Param();
+        param.Add("NPCReceived", NPCReceived);
         return param;
     }
 
@@ -844,23 +1067,25 @@ public class UserInfo
     #endregion
 
     #region NPC, Album, Sticker Received
-    public void LoadUserReceivedNPC()
+    public void LoadNPCReceived()
     {
         //NPC
-        for (int i = 0; i < NPCItemReceived.Count; i++)
+        for (int i = 0; i < NPCReceived.Count; i++)
         {
             for (int j = 0; j < DatabaseManager.Instance.GetNPCList().Count; j++)
             {
-                if (NPCItemReceived[i].Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
+                if (NPCReceived[i].Id.Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
                 {
                     DatabaseManager.Instance.GetNPCList()[j].IsReceived = true;
+                    DatabaseManager.Instance.GetNPCList()[j].Intimacy = NPCReceived[i].Intimacy;
+                    DatabaseManager.Instance.GetNPCList()[j].SSId = NPCReceived[i].SSId;
                 }
             }
 
         }
     }
 
-    public void LoadUserReceivedAlbum()
+    public void LoadAlbumReceived()
     {
         // Album
         for (int i = 0; i < AlbumReceived.Count; i++)
@@ -876,7 +1101,8 @@ public class UserInfo
         }
     }
 
-    public void LoadUserReceivedSticker()
+
+    public void LoadStickerReceived()
     {
         // Sticker
         for (int i = 0; i < StickerReceived.Count; i++)
@@ -886,21 +1112,36 @@ public class UserInfo
         }
     }
 
-    private void SaveUserReceived()
+
+    private void SaveNPCReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
-        NPCItemReceived = new List<string>();
+        NPCReceived.Clear();
         for (int i = 0; i < npcDatabase.Length; i++)
         {
             for (int j = 0; j < npcDatabase[i].Count; j++)
             {
                 if (npcDatabase[i][j].IsReceived)
                 {
-                    NPCItemReceived.Add(npcDatabase[i][j].Id);
+                    NPCReceived.Add(new NPCData(npcDatabase[i][j].Id, npcDatabase[i][j].Intimacy, npcDatabase[i][j].SSId));
                 }
             }
         }
+    }
 
+
+    private void SaveStickerReceived()
+    {
+        StickerReceived = new List<string>();
+        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
+        {
+            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
+        }
+    }
+
+
+    private void SaveAlbumReceived()
+    {
         List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
         AlbumReceived = new List<string>();
         for (int i = 0; i < albumDatabase.Count; i++)
@@ -909,13 +1150,7 @@ public class UserInfo
             {
                 AlbumReceived.Add(albumDatabase[i].Id);
             }
-        }
-
-        StickerReceived = new List<string>();
-        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
-        {
-            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
-        }
+        }   
     }
     #endregion
 

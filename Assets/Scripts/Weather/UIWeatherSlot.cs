@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
+using TMPro;
 
 public class UIWeatherSlot : MonoBehaviour
 {
-    [SerializeField] private Text _amountText;
+    [SerializeField] private TextMeshProUGUI _amountText;
 
     [SerializeField] private Image _rewardImage;
 
-    [SerializeField] private Image _attendanceStamp;
-    public Image AttendanceStamp => _attendanceStamp;
+    [SerializeField] private Image _weatherImage;
 
-    private WeatherData _weatherData;
+    private WeatherRewardData _weatherData;
 
-    public void UpdateUI(WeatherData weatherData, int day)
+    public void UpdateUI(WeatherRewardData weatherData)
     {
         _weatherData = weatherData;
         if (_weatherData != null)
         {
             _amountText.text = _weatherData.Amount.ToString();
-            _rewardImage.sprite = _weatherData.RewardSprite;
+            _rewardImage.sprite = _weatherData.Item.Image;
+            _weatherImage.sprite = _weatherData.Sprite;
             _rewardImage.preserveAspect = true;
         }
 

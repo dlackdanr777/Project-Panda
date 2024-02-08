@@ -61,6 +61,7 @@ public class SideDialogueData
     public string ChoiceAID { get; private set; }
     public string ChoiceContextB { get; private set; }
     public string ChoiceBID { get; private set; }
+    public bool CanChoice { get; private set; }
 
     public SideDialogueData(string talkPandaID, string contexts, string isComplete, string choiceID, string choiceContextA, string choiceAID, string choiceContextB, string choiceBID)
     {
@@ -72,5 +73,9 @@ public class SideDialogueData
         ChoiceAID = choiceAID;
         ChoiceContextB = choiceContextB;
         ChoiceBID = choiceBID;
+        if (!ChoiceContextA.Equals("") && !ChoiceContextB.Equals(""))
+        {
+            CanChoice = true;
+        }
     }
 }

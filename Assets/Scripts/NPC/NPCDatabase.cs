@@ -68,7 +68,7 @@ public class NPCDatabase
                 GetItemSpriteById(json[i]["NpcID"].ToString(), NPCType.Panda)));
         }
 
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedNPC();
+        DatabaseManager.Instance.UserInfo.LoadNPCReceived();
         Debug.Log("NPC 받아오기 성공!");
     }
 
@@ -91,7 +91,7 @@ public class NPCDatabase
                 GetItemSpriteById(_dataNPC[i]["ID"].ToString(), NPCType.Panda)));
         }
 
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedNPC();
+        DatabaseManager.Instance.UserInfo.LoadNPCReceived();
         Debug.Log("NPC 받아오기 성공!");
     }
 

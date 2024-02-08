@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,32 +8,30 @@ using UnityEngine;
 
 public class SideStoryController : MonoBehaviour, IInteraction
 {
+    public static event Action<SideStoryDialogue> OnStartInteractionHandler;
+    public static event Action<bool> OnRewardHandler;
+
     [SerializeField] private string NPCID;
 
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
-    private int _npcCode;
+    private int _storyIndex;
+    private bool _isInitialized = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        _npcCode = int.Parse(NPCID.Substring(3));
-        _storyCode = "SS" + NPCID.Substring(3);
-        foreach (var key in DatabaseManager.Instance.SideDialogueDatabase.SSDic.Keys)
-        {
-            Debug.Log(key);
-        }
-        _storyDatabase = DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode];
-
-        foreach (var key in DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode].Keys)
-        {
-            _storyKey.Add(key);
-        }
+        UISideDialogue.OnAddRewardHandler += AddReward;    
+    }
+    private void OnDestroy()
+    {
+        UISideDialogue.OnAddRewardHandler -= AddReward;    
     }
 
     public void StartInteraction()
     {
+        Init();
+
         StartSideStory();
     }
 
@@ -43,55 +42,84 @@ public class SideStoryController : MonoBehaviour, IInteraction
     {
     }
 
-    private void StartSideStory()
+    private void Init()
     {
+        _storyCode = "SS" + NPCID.Substring(3);
+        _storyDatabase = DatabaseManager.Instance.SideDialogueDatabase.SSDic[_storyCode];
+        _storyKey.Clear();
+        _storyIndex = -1;
+
+        foreach (var key in _storyDatabase.Keys)
+        {
+            _storyKey.Add(key);
+            Debug.Log(key);
+        }
         for (int i = 0; i < _storyKey.Count; i++)
         {
-            if (!_storyDatabase[_storyKey[i]].IsSuccess) //스토리를 완료하지 않았다면
+            if (_storyKey[i].Equals(DatabaseManager.Instance.GetNPC(NPCID).SSId)) //저장된 사이드스토리 아이디와 비교
+            {
+                _storyIndex = i;
+                break;
+            }
+        }
+
+        if (!DatabaseManager.Instance.GetNPC(NPCID).IsReceived)
+        {
+            DatabaseManager.Instance.GetNPC(NPCID).IsReceived = true; //NPC 만남
+        }
+
+        _isInitialized = true;
+    }
+    private void StartSideStory()
+    {
+        for (int i = _storyIndex+1; i < _storyKey.Count; i++)
+        {
+            SideStoryDialogue currentStory = _storyDatabase[_storyKey[i]];
+            if (!currentStory.IsSuccess) //스토리를 완료하지 않았다면
             {
                 //이전 스토리 다음 스토리 비교
-                bool priorCheck = CheckPrior(i, _storyDatabase[_storyKey[i]].PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
-                int? nextCheck = CheckNext(i, _storyDatabase[_storyKey[i]].NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
+                bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
+                int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
 
                 if (priorCheck && //이전 스토리 성공했는지 비교
-                    DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
+                    DatabaseManager.Instance.GetNPC(NPCID).Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
                 {
                     _storyDatabase[_storyKey[i]].IsSuccess = true;
+                    DatabaseManager.Instance.GetNPC(NPCID).SSId = _storyKey[i];
 
                     continue; //성공한 스토리면 다음 스토리로 이동
                 }
 
                 //성공한 스토리가 아니면
-                if (DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy >= _storyDatabase[_storyKey[i]].RequiredIntimacy) //친밀도 비교
-                {
-                    if (_storyDatabase[_storyKey[i]].EventType != EventType.None)// 이벤트 조건이 있으면
+                if (DatabaseManager.Instance.GetNPC(NPCID).Intimacy < CheckNext(currentStory.NextStoryID)) //다음 스토리보다 친밀도 작은지 비교
+                {       
+                    if (currentStory.EventType != EventType.None)// 이벤트 조건이 있으면
                     {
                         //조건 비교
-                        if (!CheckCondition(_storyDatabase[_storyKey[i]].EventType, _storyDatabase[_storyKey[i]].EventTypeCondition, _storyDatabase[_storyKey[i]].EventTypeAmount))
+                        if (!CheckCondition(currentStory.EventType, currentStory.EventTypeCondition, currentStory.EventTypeAmount))
                         {
-                            i--; //조건이 만족하지 못했으므로 전 대화 출력
+                            i--;
+                            currentStory = _storyDatabase[_storyKey[i]];
                         }
                     }
 
-                    if(PrintContext(_storyDatabase[_storyKey[i]].DialogueData)) //대화 출력
-                    {
-                        AddReward(i); //보상
-                    }
+                    ShowContext(currentStory);
+
                     break;
                 }
-
+                //다음 스토리와 친밀도가 같으면 다음 스토리로 넘어감
             }
 
         }
     }
 
-    private bool CheckPrior(int index, string priorStory)
+    private bool CheckPrior(string priorStory)
     {
         if (priorStory != null)
         {
             if (_storyDatabase.ContainsKey(priorStory)) //해당 데이터베이스에 있는 id인지 확인 -> 없으면 처음 => 무조건 통과
             {
-                return _storyDatabase[_storyDatabase[_storyKey[index]].PriorStoryID].IsSuccess;
+                return _storyDatabase[priorStory].IsSuccess;
             }
         }
         else
@@ -102,13 +130,13 @@ public class SideStoryController : MonoBehaviour, IInteraction
         return true;
     }
 
-    private int? CheckNext(int index, string nextStory)
+    private int CheckNext(string nextStory)
     {
         if (nextStory != null)
         { 
             if (_storyDatabase.ContainsKey(nextStory)) //해당 데이터베이스에 있는 id인지 확인 -> 없으면 마지막 => 넘어가지 못하도록 MaxValue
             {
-                return _storyDatabase[_storyDatabase[_storyKey[index]].NextStoryID].RequiredIntimacy;
+                return _storyDatabase[nextStory].RequiredIntimacy;
             }
         }
         else
@@ -121,99 +149,79 @@ public class SideStoryController : MonoBehaviour, IInteraction
     private bool CheckCondition(EventType type, string condition, int count)
     {
         //조건 비교
-        bool result = false;
         switch (type)
         {
             case EventType.GISP:
-                result = GameManager.Instance.Player.GetGISP(condition, count); //스페셜이 갯수만큼 있는지 확인
-                break;
+                return GameManager.Instance.Player.GetGISP(condition, count);
             case EventType.INM:
-                result = GameManager.Instance.Player.GetINM(condition);
-                break;
+                return GameManager.Instance.Player.GetINM(condition);
             case EventType.MONEY:
-                result = GameManager.Instance.Player.GetMONEY(count);
-                break;
-            case EventType.NPCTK: //어떤 아이템이나 그런 것이 필요 그냥 대화만 비교하기엔 어려움이 있음
-                break;
-            case EventType.REIT: //얼마만큼 비교할지 필요 => 현재 대화하는 npc보다 친밀도가 높아야함
-                if (DatabaseManager.Instance.GetNPC(condition).Intimacy >= count)
-                {
-                    result = true;
-                }
-                break;
+                return GameManager.Instance.Player.GetMONEY(count);
+            case EventType.REIT:
+                return DatabaseManager.Instance.GetNPC(condition).Intimacy >= count;
             case EventType.IVGI:
-                result = GameManager.Instance.Player.GetIVGI(condition, count);
-                break;
+                return GameManager.Instance.Player.GetIVGI(condition, count);
             case EventType.IVCK:
-                result = GameManager.Instance.Player.GetIVCK(condition, count);
-                break;
+                return GameManager.Instance.Player.GetIVCK(condition, count);
             case EventType.IVFU:
-                break;
-
-        }
-
-        return result;
-    }
-
-    private bool PrintContext(List<SideDialogueData> data)
-    {
-
-        for (int i = 0; i < data.Count; i++) //대화 출력
-        {
-            Debug.Log(data[i].Contexts);
-            
-            //성공 여부 확인
-            if (data[i].IsComplete.Equals("FAIL"))
-            {
+                return GameManager.Instance.Player.GetIVFU(condition);
+            default:
                 return false;
-            }
-            else if (data[i].IsComplete.Equals("Done"))
-            {
-                return true;
-            }
-
-            //선택지 텍스트
-            if (!data[i].ChoiceContextA.Equals("") && !data[i].ChoiceContextB.Equals(""))
-            {
-                Debug.Log(data[i].ChoiceContextA);
-                Debug.Log(data[i].ChoiceContextB);
-
-                if (Input.GetKeyDown(KeyCode.A)) //왼쪽 누르면
-                {
-                    for(int j = i+1; j < data.Count; j++)
-                    {
-                        if(data[j].ChoiceID.Equals(data[i].ChoiceAID)) //대화지 ID와 선택지 ID가 같다면 그곳으로 이동
-                        {
-                            i = j;
-                            continue;
-                        }
-                    }
-                }
-                else if(Input.GetKeyDown(KeyCode.S)) //오른쪽 누르면
-                {
-                    for (int j = i + 1; j < data.Count; j++)
-                    {
-                        if (data[j].ChoiceID.Equals(data[i].ChoiceBID)) //대화지 ID와 선택지 ID가 같다면 그곳으로 이동
-                        {
-                            i = j;
-                            continue;
-                        }
-                    }
-                }
-            }
-
         }
-        return true;
     }
 
-    private void AddReward(int index)
+    private void ShowContext(SideStoryDialogue data)
     {
-        DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy += _storyDatabase[_storyKey[index]].RewardIntimacy; //보상 친밀도
-        if(DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy > _storyDatabase[_storyKey[index + 1]].RequiredIntimacy)
-        {
-            DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy = _storyDatabase[_storyKey[index + 1]].RequiredIntimacy;
-        }
-        Debug.Log(DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Name + " " + DatabaseManager.Instance.GetNPCList()[_npcCode - 1].Intimacy);
+        List<SideDialogueData> dialogueData = data.DialogueData;
+        OnStartInteractionHandler?.Invoke(data); //대화 출력
+    }
 
+    private void AddReward(string id)
+    {
+        if (!_isInitialized)
+        {
+            return;
+        }
+
+        NPC currentNPC = DatabaseManager.Instance.GetNPC(NPCID);
+        SideStoryDialogue currentStory = _storyDatabase[id];
+
+        int nextStoryInti = CheckNext(currentStory.NextStoryID);
+        DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
+
+        if (currentNPC.Intimacy > nextStoryInti)
+        {
+            DatabaseManager.Instance.GetNPC(NPCID).Intimacy = nextStoryInti;
+        }
+
+        //보상
+        bool isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
+        OnRewardHandler?.Invoke(isReward);
+        _isInitialized = false;
+    }
+
+    private bool RewardItem(EventType type, string condition, int count)
+    {
+        //조건 비교
+        switch (type)
+        {
+            case EventType.MONEY:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById("IFR09"));
+                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
+                return GameManager.Instance.Player.GainBamboo(count);
+            case EventType.IVGI:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById(condition));
+                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
+                GameManager.Instance.Player.AddIVGI(condition, count);
+                return true;
+            case EventType.IVCK:
+            case EventType.IVFU:
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetFUImageById(condition));
+                DataBind.SetTextValue("SSRewardDetailCount", "");
+                DatabaseManager.Instance.StartPandaInfo.AddFurniture(condition);
+                return true;
+            default:
+                return false;
+        }
     }
 }

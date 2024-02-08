@@ -49,7 +49,7 @@ public class AlbumDatabase : MonoBehaviour
                 _dataAlbum[i]["스토리 단계"].ToString(),
                 GetItemSpriteById(_dataAlbum[i]["ID"].ToString())));
         }
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedAlbum();
+        DatabaseManager.Instance.UserInfo.LoadAlbumReceived();
     }
 
 

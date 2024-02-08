@@ -71,7 +71,6 @@ public class Inventory
             InventoryItem newItem = new InventoryItem(item.Id, item.Name, item.Description, addToInventory, item.Price, item.Rank, item.Map, item.Image);
             _items.Add(newItem);
             remainCount -= addToInventory;
-            UnityEngine.Debug.Log(remainCount);
         }
 
     }
@@ -221,7 +220,7 @@ public class Inventory
     /// 아이디로 아이템 찾기
     /// </summary>
     /// <param name="id"></param>
-    /// <returns>해당 아이템이 count만큼 있으면 true, 없으면 false</returns>
+    /// <returns>해당 아이템이 count이상 있으면 true, 없으면 false</returns>
     public bool FindItemById(string id, int count)
     {
         int amount = 0;
@@ -232,9 +231,10 @@ public class Inventory
                 amount += _items[i].Count;
             }
         }
-        if(count >= amount)
+        UnityEngine.Debug.Log("amount" + amount + "count" + count);
+        if(amount >= count)
         {
-
+            return true;
         }
         return false;
     }

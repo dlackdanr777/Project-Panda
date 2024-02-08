@@ -7,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UserInfo;
 
 public class Player
 {
@@ -73,7 +72,54 @@ public class Player
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
+        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR01", 1);
+        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR14", 1);
+
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+    }
+
+    public InventoryItemField GetField(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return InventoryItemField.GatheringItem;
+            case "IFI":
+                return InventoryItemField.GatheringItem;
+            case "IFR":
+                return InventoryItemField.GatheringItem;
+
+            case "ITG":
+                return InventoryItemField.Tool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return InventoryItemField.None;
+        }
+    }
+
+    public int GetItemType(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return (int)GatheringItemType.Bug;
+            case "IFI":
+                return (int)GatheringItemType.Fish;
+            case "IFR":
+                return (int)GatheringItemType.Fruit;
+
+            case "ITG":
+                return (int)ToolItemType.GatheringTool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return -1;
+        }
     }
 
     public bool SpendBamboo(int amount)
@@ -204,6 +250,47 @@ public class Player
     public bool GetIVCK(string id, int count)
     {
         return CookItemInventory[0].FindItemById(id, count);
+    }
+
+    public bool GetIVFU(string id)
+    {
+        List<Furniture> furnitureInventory = DatabaseManager.Instance.StartPandaInfo.FurnitureInventory;
+        for(int i = 0; i < furnitureInventory.Count; i++)
+        {
+            if (furnitureInventory[i].Id.Equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void AddIVGI(string id, int count)
+    {
+        int index = 0;
+        string code = id.Substring(0, 3);
+
+        switch (code)
+        {
+            case "IBG":
+                index = 0;
+                break;
+            case "IFI":
+                index = 1;
+                break;
+            case "IFR":
+                index = 2;
+                break;
+        }
+
+        if (count < 0)
+        {
+            GatheringItemInventory[index].RemoveById(id, -count);
+        }
+        else
+        {
+            GatheringItemInventory[index].AddById(InventoryItemField.GatheringItem, id, count);
+        }
     }
     #endregion
 

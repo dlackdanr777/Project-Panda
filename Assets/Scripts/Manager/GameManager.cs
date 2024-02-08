@@ -39,6 +39,8 @@ public class GameManager : SingletonHandler<GameManager>
     public void OnApplicationQuit()
     {
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
+        DatabaseManager.Instance.UserInfo.SaveAttendanceData(10);
+        DatabaseManager.Instance.UserInfo.SaveNPCData(10);
         Player.SaveBambooData(10);
         DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
         DatabaseManager.Instance.UserInfo.SaveStickerData(10);

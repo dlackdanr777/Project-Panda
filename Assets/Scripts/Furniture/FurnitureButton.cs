@@ -15,7 +15,15 @@ public class FurnitureButton : MonoBehaviour
     {
         //if (StarterPanda.Instance.SetFalseUI())
         //{
+        if(ChangeSceneManager.Instance != null)
+        {
+            LoadingSceneManager.LoadScene("FurnitureTest");
+        }
+        else
+        {
             SceneManager.LoadScene("FurnitureTest");
+        }
+
         //}
     }
 }
