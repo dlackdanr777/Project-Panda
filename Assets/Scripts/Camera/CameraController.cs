@@ -16,7 +16,11 @@ public class CameraController : MonoBehaviour
     public float MinZoomSize => _minZoomSize;
 
     [SerializeField] private Vector2 _mapSize;
-    public Vector2 MapSize => _mapSize;
+    public Vector2 MapSize
+    {
+        get { return _mapSize; }
+        set { _mapSize = value; }
+    }
 
     [SerializeField] private Vector2 _mapCenter;
     public Vector2 MapCenter

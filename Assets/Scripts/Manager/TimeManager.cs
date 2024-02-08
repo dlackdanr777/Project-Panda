@@ -98,7 +98,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 
         foreach(string key in _mapDic.Keys)
         {
-            if(key != "MN07" && key != "MN08")
+            if(key != "MN04" && key != "MN07" && key != "MN08")
             _mapDic[key].BackGroundRenderer.sprite = mapBackGround;
         }
     }
