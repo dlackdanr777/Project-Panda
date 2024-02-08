@@ -71,7 +71,8 @@ public class MapButton : MonoBehaviour
         {
             TimeManager.Instance.CheckTime();
             _cameraController.MapCenter = _targetTransform[_currentMap].position;
-            Camera.main.transform.position = targetPos;
+            //Camera.main.transform.position = targetPos;
+            Camera.main.transform.position = targetPos + new Vector3(_cameraController.MapSize.x, 0, 0);
             Tween.IamgeAlpha(_fadeInOut.gameObject, 0, _fadeTime, TweenMode.Quadratic, () =>
             {
                 _fadeInOut.gameObject.SetActive(false);

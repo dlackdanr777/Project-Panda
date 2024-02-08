@@ -85,7 +85,7 @@ public class TimeManager : SingletonHandler<TimeManager>
             case < 5: // ¹ã
                 mapBackGround = mapBackGrounds[2];
                 break;
-            case < 6: // ³·
+            case < 18: // ³·
                 mapBackGround = mapBackGrounds[0];
                 break;
             case < 19: // ³ëÀ»
