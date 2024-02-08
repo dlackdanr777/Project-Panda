@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class UISideDialogue : UIView
 {
@@ -15,7 +16,9 @@ public class UISideDialogue : UIView
     [SerializeField] private Sprite _starterImage;
     [SerializeField] private Sprite[] _intimacyImage;
     [SerializeField] private GameObject _intimacyobj;
-    [SerializeField] private GameObject _reward;
+    [SerializeField] private GameObject _itemReward;
+    [SerializeField] private GameObject _moneyReward;
+    [SerializeField] private Transform _targetPos;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -29,8 +32,10 @@ public class UISideDialogue : UIView
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
+    private Coroutine _itemRewardRoutine;
+    private Coroutine _moneyRewardRoutine;
     private bool _isFail;
-    private bool _isReward;
+    private string _isReward;
 
     private string _currentNPC;
     private const int MinIntimacy = 0;
@@ -64,7 +69,7 @@ public class UISideDialogue : UIView
 
         _leftButton.Disabled();
         _rightButton.Disabled();
-        _reward.SetActive(false);
+        _itemReward.SetActive(false);
 
         _currentIndex = 0;
         _isSkipEnabled = false;
@@ -74,6 +79,13 @@ public class UISideDialogue : UIView
 
         if (_skipDisableRoutine != null)
             StopCoroutine(_skipDisableRoutine);
+
+        if (_itemRewardRoutine != null)
+            StopCoroutine(_itemRewardRoutine);
+
+        if (_moneyRewardRoutine != null)
+            StopCoroutine(_moneyRewardRoutine);
+
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () =>
         {
@@ -127,7 +139,7 @@ public class UISideDialogue : UIView
         _uiNav.Push("SideDialogue");
         _isStoryStart = true;
         _isFail = false;
-        _isReward = false;
+        _isReward = null;
     }
 
 
@@ -178,9 +190,24 @@ public class UISideDialogue : UIView
         }
         else
         {
-            if (_isReward && _currentIndex > _dialogue.DialogueData.Count) //보상
+            if (_isReward != null && _currentIndex > _dialogue.DialogueData.Count) //보상
             {
-                StartCoroutine(RewardRoutine());
+                if (_isReward.Equals("ItemReward"))
+                {
+                    if(_itemRewardRoutine != null)
+                    {
+                        StopCoroutine(_itemRewardRoutine);
+                    }
+                    _itemRewardRoutine = StartCoroutine(ItemRewardRoutine());
+                }
+                else if (_isReward.Equals("MoneyReward"))
+                {
+                    if (_moneyRewardRoutine != null)
+                    {
+                        StopCoroutine(_moneyRewardRoutine);
+                    }
+                    _moneyRewardRoutine = StartCoroutine(MoneyRewardRoutine());
+                }
             }
             else
             {
@@ -300,16 +327,28 @@ public class UISideDialogue : UIView
         return amount;
     }
 
-    private IEnumerator RewardRoutine()
+    private IEnumerator ItemRewardRoutine()
     {
-        _reward.SetActive(true);
+        _itemReward.SetActive(true);
         yield return new WaitForSeconds(3f);
-        _reward.SetActive(false);
+        _itemReward.SetActive(false);
+        _uiNav.Pop();
+    }
+    private IEnumerator MoneyRewardRoutine()
+    {
+        _moneyReward.SetActive(true);
+        foreach(var item in _moneyReward.transform.GetChild(0).GetComponentsInChildren<Image>()) 
+        {
+            Debug.Log(item);
+            Tween.TransformMove(item.gameObject, _targetPos.position, 0.5f, TweenMode.Quadratic);
+        }
+        yield return new WaitForSeconds(3f);
+        _moneyReward.SetActive(false);
         _uiNav.Pop();
     }
 
 
-    private void SideStoryController_OnRewardHandler(bool isReward)
+    private void SideStoryController_OnRewardHandler(string isReward)
     {
         _isReward = isReward;
     }

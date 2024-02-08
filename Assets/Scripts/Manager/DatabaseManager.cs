@@ -58,6 +58,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
     [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
     [SerializeField] private ItemSpriteDatabase[] _npcImages;
+    [SerializeField] private ItemSpriteDatabase _npcIntimacyImages;
 
     private HarvestItemManager _harvestItemDatabase;
     [SerializeField] HarvestItemImage _harvestItemImage;
@@ -241,7 +242,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.ItemFruitList;
     }
 
-    public Sprite GetGIImageById(string id)
+    public Item GetGIImageById(string id)
     {
         List<GatheringItem> list = new List<GatheringItem>();
         string code = id.Substring(0, 3);
@@ -263,23 +264,10 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         {
             if (list[i].Id.Equals(id))
             {
-                return list[i].Image;
+                return list[i];
             }
         }
 
-        return null;
-    }
-
-    public Sprite GetFUImageById(string id)
-    {
-        Dictionary<string,Furniture> furnitureDic = _itemDatabase.FurnitureDic;
-        foreach(string key in furnitureDic.Keys)
-        {
-            if (key.Equals(id))
-            {
-                return furnitureDic[key].RoomImage;
-            }
-        }
         return null;
     }
 
@@ -331,6 +319,43 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
             }
         }
         return null;
+    }
+
+    public Sprite GetNPCIntimacyImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                NPC currentNPC = GetNPCList()[i];
+                string intimacy = GetIntimacy(currentNPC.Intimacy, currentNPC.MinIntimacy, currentNPC.MaxIntimacy).ToString();
+
+                for(int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
+                {
+                    if (_npcIntimacyImages.ItemSprites[j].Id.Equals(intimacy))
+                    {
+                        return _npcIntimacyImages.ItemSprites[j].Image;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private int GetIntimacy(int amount, int minIntimacy, int maxIntimacy)
+    {
+        amount /= 20;
+
+        if (amount < minIntimacy)
+        {
+            return minIntimacy;
+        }
+        else if (amount >= maxIntimacy)
+        {
+            return maxIntimacy;
+        }
+
+        return amount;
     }
 
     public NPC GetNPC(string id)

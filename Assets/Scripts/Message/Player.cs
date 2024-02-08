@@ -138,7 +138,7 @@ public class Player
 
     public bool GainBamboo(int amount)
     {
-        if(Bamboo < MaxBamboo)
+        if(Bamboo + amount <= MaxBamboo)
         {
             Bamboo += amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());

@@ -6,18 +6,23 @@ using System.Reflection;
 using Unity.Collections;
 using UnityEngine;
 
-public class SideStoryController : MonoBehaviour, IInteraction
+public class SideStoryController : MonoBehaviour
 {
     public static event Action<SideStoryDialogue> OnStartInteractionHandler;
-    public static event Action<bool> OnRewardHandler;
+    public static event Action<string> OnRewardHandler;
 
     [SerializeField] private string NPCID;
+    [SerializeField] private FollowButton _followButtonPrefab;
+    [SerializeField] private Vector3 _buttonPos;
+    public FollowButton FollowButton => _followButton;
+    private FollowButton _followButton;
 
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
     private int _storyIndex;
     private bool _isInitialized = false;
+
 
     private void Awake()
     {
@@ -28,18 +33,19 @@ public class SideStoryController : MonoBehaviour, IInteraction
         UISideDialogue.OnAddRewardHandler -= AddReward;    
     }
 
-    public void StartInteraction()
+    private void Start()
     {
+        Vector3 targetPos = transform.position + _buttonPos;
+        Transform parent = GameObject.Find("Follow Button Parent").transform;
+        _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
+        _followButton.Init(gameObject, targetPos, new Vector2(120, 120), DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
+        _followButton.gameObject.SetActive(gameObject.activeSelf);
+    }
+
+    public void OnClickStartButton()
+    {   
         Init();
-
         StartSideStory();
-    }
-
-    public void UpdateInteraction()
-    {
-    }
-    public void ExitInteraction()
-    {
     }
 
     private void Init()
@@ -52,7 +58,6 @@ public class SideStoryController : MonoBehaviour, IInteraction
         foreach (var key in _storyDatabase.Keys)
         {
             _storyKey.Add(key);
-            Debug.Log(key);
         }
         for (int i = 0; i < _storyKey.Count; i++)
         {
@@ -193,35 +198,40 @@ public class SideStoryController : MonoBehaviour, IInteraction
         {
             DatabaseManager.Instance.GetNPC(NPCID).Intimacy = nextStoryInti;
         }
+        _followButton._image.sprite = DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID);
 
         //º¸»ó
-        bool isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
+        string isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
         OnRewardHandler?.Invoke(isReward);
         _isInitialized = false;
     }
 
-    private bool RewardItem(EventType type, string condition, int count)
+    private string RewardItem(EventType type, string condition, int count)
     {
         //Á¶°Ç ºñ±³
         switch (type)
         {
             case EventType.MONEY:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById("IFR09"));
-                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
-                return GameManager.Instance.Player.GainBamboo(count);
+                if (GameManager.Instance.Player.GainBamboo(count))
+                {
+                    return "MoneyReward";
+                }
+                return null;
             case EventType.IVGI:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById(condition));
-                DataBind.SetTextValue("SSRewardDetailCount", count.ToString());
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById(condition).Image);
+                DataBind.SetTextValue("SSRewardDetailName", DatabaseManager.Instance.GetGIImageById(condition).Name);
+                DataBind.SetTextValue("SSRewardDetailCount", count.ToString() + " È¹µæ!");
                 GameManager.Instance.Player.AddIVGI(condition, count);
-                return true;
+                return "ItemReward";
             case EventType.IVCK:
             case EventType.IVFU:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetFUImageById(condition));
-                DataBind.SetTextValue("SSRewardDetailCount", "");
+                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetFurnitureItem()[condition].RoomImage);
+                DataBind.SetTextValue("SSRewardDetailName", DatabaseManager.Instance.GetFurnitureItem()[condition].Name);
+                DataBind.SetTextValue("SSRewardDetailCount", "È¹µæ!");
                 DatabaseManager.Instance.StartPandaInfo.AddFurniture(condition);
-                return true;
+                return "ItemReward";
             default:
-                return false;
+                return null;
         }
     }
 }
