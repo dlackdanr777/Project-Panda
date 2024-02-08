@@ -9,7 +9,6 @@ using UnityEngine;
 public class SideStoryController : MonoBehaviour
 {
     public static event Action<SideStoryDialogue> OnStartInteractionHandler;
-    public static event Action<string> OnRewardHandler;
 
     [SerializeField] private string NPCID;
     [SerializeField] private FollowButton _followButtonPrefab;
@@ -201,37 +200,26 @@ public class SideStoryController : MonoBehaviour
         _followButton._image.sprite = DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID);
 
         //º¸»ó
-        string isReward = RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
-        OnRewardHandler?.Invoke(isReward);
+        RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
         _isInitialized = false;
     }
 
-    private string RewardItem(EventType type, string condition, int count)
+    private bool RewardItem(EventType type, string condition, int count)
     {
         //Á¶°Ç ºñ±³
         switch (type)
         {
             case EventType.MONEY:
-                if (GameManager.Instance.Player.GainBamboo(count))
-                {
-                    return "MoneyReward";
-                }
-                return null;
+                return GameManager.Instance.Player.GainBamboo(count);
             case EventType.IVGI:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetGIImageById(condition).Image);
-                DataBind.SetTextValue("SSRewardDetailName", DatabaseManager.Instance.GetGIImageById(condition).Name);
-                DataBind.SetTextValue("SSRewardDetailCount", count.ToString() + " È¹µæ!");
                 GameManager.Instance.Player.AddIVGI(condition, count);
-                return "ItemReward";
+                return true;
             case EventType.IVCK:
             case EventType.IVFU:
-                DataBind.SetSpriteValue("SSRewardDetailImage", DatabaseManager.Instance.GetFurnitureItem()[condition].RoomImage);
-                DataBind.SetTextValue("SSRewardDetailName", DatabaseManager.Instance.GetFurnitureItem()[condition].Name);
-                DataBind.SetTextValue("SSRewardDetailCount", "È¹µæ!");
                 DatabaseManager.Instance.StartPandaInfo.AddFurniture(condition);
-                return "ItemReward";
+                return true;
             default:
-                return null;
+                return false;
         }
     }
 }

@@ -231,7 +231,7 @@ public class Inventory
                 amount += _items[i].Count;
             }
         }
-        UnityEngine.Debug.Log("amount" + amount + "count" + count);
+
         if(amount >= count)
         {
             return true;
