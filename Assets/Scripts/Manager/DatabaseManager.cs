@@ -119,7 +119,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         StartPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
-        _weatherDatabase.Register();
 
         //Image
         //GatheringItem 

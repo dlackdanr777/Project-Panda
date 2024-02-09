@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : MonoBehaviour
 {
@@ -29,6 +30,12 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _tempCameraPos;
 
+    private Vector3 _tmpMovePos;
+
+    private Vector3 _updateIntervalPos;
+
+    private float _touchTime;
+
     private float _height;
 
     private float _width;
@@ -38,7 +45,8 @@ public class CameraController : MonoBehaviour
     private IInteraction _tempInteaction;
 
     private bool _isBegan = false;
-    
+
+    private Coroutine SmoothMoveToPositionRoutine;
 
 
     private void Update()
@@ -127,24 +135,55 @@ public class CameraController : MonoBehaviour
     private void TouchMovement()
     {
         if (GameManager.Instance.FriezeCameraMove)
+        {
+
+            if (SmoothMoveToPositionRoutine != null)
+            {
+                StopCoroutine(SmoothMoveToPositionRoutine);
+                SmoothMoveToPositionRoutine = null;
+            }
+
             return;
+        }
+
 
         if (Input.touchCount != 1)
             return;
 
         Touch touch = Input.GetTouch(0);
 
+
         if (touch.phase == TouchPhase.Began)
         {
             _tempTouchPos = touch.position;
             _tempCameraPos = _camera.transform.position;
+            _updateIntervalPos = touch.position;
+            _tmpMovePos = Vector3.zero;
+            _touchTime = 0;
         }
 
-        if(touch.phase == TouchPhase.Moved)
+        else if(touch.phase == TouchPhase.Moved)
         {
             Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
             transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+
+            _touchTime += Time.deltaTime;
+
+            if (0.2f < _touchTime)
+            {
+                _updateIntervalPos = (Vector3)touch.position;
+                _touchTime = 0;
+            }
+
+            _tmpMovePos = _updateIntervalPos - (Vector3)touch.position;
         }
+
+        else if(touch.phase == TouchPhase.Ended)
+        {
+            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize);
+            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
+        }
+
     }
 
 
@@ -181,24 +220,81 @@ public class CameraController : MonoBehaviour
     private void MouseMovement()
     {
         if (GameManager.Instance.FriezeCameraMove)
+        {
+            _isBegan = false;
+
+            if (SmoothMoveToPositionRoutine != null)
+            {
+                StopCoroutine(SmoothMoveToPositionRoutine);
+                SmoothMoveToPositionRoutine = null;
+            }
+                
             return;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
             _isBegan = true;
             _tempTouchPos = Input.mousePosition;
             _tempCameraPos = _camera.transform.position;
+            _touchTime = 0;
+            _updateIntervalPos = Input.mousePosition;
+            _tmpMovePos = Vector3.zero;
+
+            if (SmoothMoveToPositionRoutine != null)
+            {
+                StopCoroutine(SmoothMoveToPositionRoutine);
+                SmoothMoveToPositionRoutine = null;
+            }            
         }
+
         else if (Input.GetMouseButtonUp(0))
         {
             _isBegan = false;
+            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize);
+            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
+
         }
 
         if (!_isBegan)
             return;
 
-        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition );
+        else
+        {
+            _touchTime += Time.deltaTime;
+        }
+
+
+        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition);
+
+        if(0.2f < _touchTime)
+        {
+            _updateIntervalPos = Input.mousePosition;
+            _touchTime = 0;
+        }
+
+        _tmpMovePos = _updateIntervalPos - Input.mousePosition;
         transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+    }
+
+
+    private IEnumerator SmoothMoveToPosition(Vector3 pos, Vector3 targetPos)
+    {
+        float duration = 0;
+        float totalDuration = 1;
+
+        while (duration < totalDuration)
+        {
+            duration += 0.01f * totalDuration;
+
+            float percent = duration / totalDuration;
+            percent = 1 - Mathf.Pow((1 - percent), 5);
+
+            Vector3 lerpPos = Vector3.Lerp(pos, targetPos, percent);
+            transform.position = LimitPos(lerpPos);
+
+            yield return YieldCache.WaitForSeconds(0.01f);
+        }
     }
 
 
