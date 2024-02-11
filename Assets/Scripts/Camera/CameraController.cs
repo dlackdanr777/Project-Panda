@@ -146,7 +146,6 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-
         if (Input.touchCount != 1)
             return;
 
@@ -160,6 +159,12 @@ public class CameraController : MonoBehaviour
             _updateIntervalPos = touch.position;
             _tmpMovePos = Vector3.zero;
             _touchTime = 0;
+
+            if (SmoothMoveToPositionRoutine != null)
+            {
+                StopCoroutine(SmoothMoveToPositionRoutine);
+                SmoothMoveToPositionRoutine = null;
+            }
         }
 
         else if(touch.phase == TouchPhase.Moved)
@@ -169,7 +174,7 @@ public class CameraController : MonoBehaviour
 
             _touchTime += Time.deltaTime;
 
-            if (0.2f < _touchTime)
+            if (0.1f < _touchTime)
             {
                 _updateIntervalPos = (Vector3)touch.position;
                 _touchTime = 0;
@@ -180,7 +185,7 @@ public class CameraController : MonoBehaviour
 
         else if(touch.phase == TouchPhase.Ended)
         {
-            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize);
+            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize * 1.7f);
             SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
         }
 
@@ -221,8 +226,6 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.FriezeCameraMove)
         {
-            _isBegan = false;
-
             if (SmoothMoveToPositionRoutine != null)
             {
                 StopCoroutine(SmoothMoveToPositionRoutine);
@@ -234,7 +237,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            _isBegan = true;
             _tempTouchPos = Input.mousePosition;
             _tempCameraPos = _camera.transform.position;
             _touchTime = 0;
@@ -248,26 +250,22 @@ public class CameraController : MonoBehaviour
             }            
         }
 
-        else if (Input.GetMouseButtonUp(0))
-        {
-            _isBegan = false;
-            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize);
-            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
-
-        }
-
-        if (!_isBegan)
-            return;
-
-        else
+        else if (Input.GetMouseButton(0))
         {
             _touchTime += Time.deltaTime;
+        }
+
+        else if (Input.GetMouseButtonUp(0))
+        {
+            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize * 1.5f);
+            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
+
         }
 
 
         Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition);
 
-        if(0.2f < _touchTime)
+        if(0.15f < _touchTime)
         {
             _updateIntervalPos = Input.mousePosition;
             _touchTime = 0;
