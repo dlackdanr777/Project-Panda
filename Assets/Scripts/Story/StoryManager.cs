@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class StoryManager : SingletonHandler<StoryManager>
 {
-    public List<string> _storyCompletedList = new List<string>();
+    private List<string> _storyCompletedList = new List<string>();
+    public List<string> StoryCompletedList => _storyCompletedList;
 
     private Dictionary<string, PandaStoryController> _pandaStoryControllerDic = new Dictionary<string, PandaStoryController>();
 

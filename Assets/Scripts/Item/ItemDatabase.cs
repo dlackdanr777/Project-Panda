@@ -93,15 +93,22 @@ public class ItemDatabase
     //ToolItem
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
-    //FurnitureItem
-    public FurnitureSpriteDatabase FurnitureItemSprite;
-
-    private Sprite Test;
 
     public void Register()
     {
         //Image
         //GatheringItem
+        DatabaseManager database = DatabaseManager.Instance;
+        for (int i = 0; i < GatheringItemSpriteArray.Length; i++)
+        {
+            GatheringItemSpriteArray[i] = database.GatheringItemImages[i];
+        }
+        //ToolItem
+        for (int i = 0; i < ToolItemSpriteArray.Length; i++)
+        {
+            ToolItemSpriteArray[i] = database.ToolItemImages[i];
+        }
+
         for (int i = 0; i < _gatheingItemSpriteDic.Length; i++)
         {
             _gatheingItemSpriteDic[i] = new Dictionary<string, Sprite>();
@@ -145,8 +152,8 @@ public class ItemDatabase
             int price = (int)_dataFurniture[i]["가격"];
             int layer = (int)_dataFurniture[i]["레이어"];
             FurnitureType type = FurnitureTypes[char.Parse(id.Substring(4, 1))];
-            Sprite roomSprite = FurnitureItemSprite.ItemSprites[i].Image;
-            Sprite sprite = FurnitureItemSprite.ItemSprites[i].Thumbnails;
+            Sprite roomSprite = DatabaseManager.Instance.FurnitureItemImages.ItemSprites[i].Image;
+            Sprite sprite = DatabaseManager.Instance.FurnitureItemImages.ItemSprites[i].Thumbnails;
 
             Furniture data = new Furniture(id, name, description, storyId, price, null, "MN04", layer, type, sprite, roomSprite);
             FurnitureDic.Add(id, data);

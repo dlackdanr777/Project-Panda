@@ -14,9 +14,9 @@ public class HarvestItemManager
         // 수확아이템 이미지 저장
         foreach(string id in _harvestItemDic.Keys)
         {
-            _harvestItemDic[id].Image[0] = HarvestItemImage.GrowthStageImages[0].ZeroStepImage;
-            _harvestItemDic[id].Image[1] = HarvestItemImage.GrowthStageImages[0].OneStepImage;
-            _harvestItemDic[id].Image[2] = HarvestItemImage.GrowthStageImages[0].TwoStepImage;
+            _harvestItemDic[id].Image[0] = DatabaseManager.Instance.HarvestItemImage.GrowthStageImages[0].ZeroStepImage;
+            _harvestItemDic[id].Image[1] = DatabaseManager.Instance.HarvestItemImage.GrowthStageImages[0].OneStepImage;
+            _harvestItemDic[id].Image[2] = DatabaseManager.Instance.HarvestItemImage.GrowthStageImages[0].TwoStepImage;
         }
     }
 

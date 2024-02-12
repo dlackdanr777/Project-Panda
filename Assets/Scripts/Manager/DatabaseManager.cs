@@ -48,29 +48,54 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private MessageDatabase _messageDatabase;
     public MessageDatabase MessageDatabase => _messageDatabase;
 
+    private HarvestItemManager _harvestItemDatabase;
+    public HarvestItemManager HarvestItemDatabase => _harvestItemDatabase;
+
 
     //이미지들
     //Panda
+    [Space]
     [SerializeField] private PandaImage _pandaImage;
+    public PandaImage PandaImage => _pandaImage;
 
+    [Space]
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    public ItemSpriteDatabase[] GatheringItemImages => _gatheringItemImages;
+
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
-    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    public ItemSpriteDatabase[] ToolItemImages => _toolItemImages;
+
+    [SerializeField] private HarvestItemImage _harvestItemImage;
+    public HarvestItemImage HarvestItemImage => _harvestItemImage;
+
+
+    [Space]
+    //NPC
     [SerializeField] private ItemSpriteDatabase[] _npcImages;
+    public ItemSpriteDatabase[] NpcImages => _npcImages;
+
     [SerializeField] private ItemSpriteDatabase _npcIntimacyImages;
 
-    private HarvestItemManager _harvestItemDatabase;
-    [SerializeField] HarvestItemImage _harvestItemImage;
+    [Space]
+    //Furniture
+    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    public FurnitureSpriteDatabase FurnitureItemImages => _furnitureItemImages;
 
+    [Space]
     //Message
     [SerializeField] private ItemSpriteDatabase _mailPaper;
+    public ItemSpriteDatabase MailPaper => _mailPaper;
 
+    [Space]
     //Album
     [SerializeField] private ItemSpriteDatabase _albumImages;
+    public ItemSpriteDatabase AlbumImages => _albumImages;
+
     private AlbumDatabase _albumDatabase;
     public AlbumDatabase AlbumDatabase => _albumDatabase;
 
+    [Space]
     //Sticker
     [SerializeField] private ItemSpriteDatabase _stickerImages;
 
@@ -84,16 +109,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     public override void Awake()
     {
-        var obj = FindObjectsOfType<DatabaseManager>();
-        if(obj.Length == 1)
-        {
-            base.Awake();
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
 
         _userInfo = new UserInfo();
         _startPandaInfo = new StarterPandaInfo();
@@ -103,7 +119,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _weatherDatabase = new WeatherDatabase();
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
-
         _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
@@ -115,52 +130,21 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _challenges = new Challenges();
         _mapDatabase = new MapDatabase();
 
-        UserInfo.Register();
-        StartPandaInfo.Register();
+        _itemDatabase.Register();
+        _userInfo.Register();
+        _startPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
-
-        //Image
-        //GatheringItem 
-        for(int i = 0; i < _itemDatabase.GatheringItemSpriteArray.Length; i++)
-        {
-            _itemDatabase.GatheringItemSpriteArray[i] = _gatheringItemImages[i];
-        }
-        //ToolItem
-        for (int i = 0; i < _itemDatabase.ToolItemSpriteArray.Length; i++)
-        {
-            _itemDatabase.ToolItemSpriteArray[i] = _toolItemImages[i];
-        }
-
-        _itemDatabase.FurnitureItemSprite = _furnitureItemImages;
-
-        _itemDatabase.Register();
-
-        //_weatherDatabase.Register();
+        _pandaDatabase.Register();
         _recipeDatabase.Register();
         _mbtiDatabase.Register();
-
-        _pandaDatabase.PandaImage = _pandaImage;
-        _pandaDatabase.Register();
         _furniturePosDatabase.Register();
-
-        _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
-
-        //Image
-        for (int i = 0; i < _npcDatabase.NPCSpriteArray.Length; i++)
-        {
-            _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
-        }
-
+        _weatherDatabase.Register();
         _npcDatabase.Register();
         _sideStoryDialogueDatabase.Register();
-        _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
-
-        _albumDatabase.AlbumSpriteArray = _albumImages;
         _albumDatabase.Register();
-
         _challengesDatabase.Register();
         _challenges.Register();
         _mapDatabase.Register();

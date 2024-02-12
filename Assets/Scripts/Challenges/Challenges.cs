@@ -120,9 +120,9 @@ public class Challenges
 
 
         // 메인스토리
-        for (int i = 0; i < StoryManager.Instance._storyCompletedList.Count - 1; i++)
+        for (int i = 0; i < StoryManager.Instance.StoryCompletedList.Count - 1; i++)
         {
-            string id = StoryManager.Instance._storyCompletedList[i];
+            string id = StoryManager.Instance.StoryCompletedList[i];
             if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4))
             {
                 challengesId = "RW" + id.Substring(0, 4);

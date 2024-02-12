@@ -13,19 +13,28 @@ public class DropdownMenu : MonoBehaviour
 
     [SerializeField] private HorizontalOrVerticalLayoutGroup _layoutGroup;
 
-    [SerializeField] private DropdownMenuButton[] _buttons;
+    [SerializeField] private DropdownMenuButtons _menuButtons;
 
     [SerializeField] private Button _showButton;
 
     [Space]
-    [SerializeField] private float _startDuration;
+    [SerializeField] private float _showStartDuration;
 
-    [SerializeField] private TweenMode _startTweenMode;
+    [SerializeField] private TweenMode _showStartTweenMode;
+
+    [SerializeField] private float _showEndDuration;
+
+    [SerializeField] private TweenMode _showEndTweenMode;
+
 
     [Space]
-    [SerializeField] private float _endDuration;
+    [SerializeField] private float _hideStartDuration;
 
-    [SerializeField] private TweenMode _endTweenMode;
+    [SerializeField] private TweenMode _hideStartTweenMode;
+
+    [SerializeField] private float _hideEndDuration;
+
+    [SerializeField] private TweenMode _hideEndTweenMode;
 
     private Vector3 _underTmpPos;
     private Vector3 _centerTmpPos;
@@ -45,6 +54,7 @@ public class DropdownMenu : MonoBehaviour
 
     private void Start()
     {
+        _menuButtons.Init();
         _underTmpPos = _underMenu.rectTransform.anchoredPosition;
         _centerTmpPos = _centerMenu.rectTransform.anchoredPosition;
         _centerTmpSizeDelta = _centerMenu.rectTransform.sizeDelta;
@@ -52,19 +62,8 @@ public class DropdownMenu : MonoBehaviour
         _layoutGroupTmpPos = _layoutGroup.GetComponent<RectTransform>().anchoredPosition;
         _showButton.gameObject.SetActive(true);
         _showButton.onClick.AddListener(ShowAnime);
-        DataBind.SetButtonValue("HideDropdownMenu", () =>
-        {
-            _buttons[0].HideAnime(HideAnime);
-            for(int i = 1; i <  _buttons.Length; i++)
-            {
-                _buttons[i].HideAnime();
-            }
-        });
 
-        for (int i = 0; i < _buttons.Length; i++)
-        {
-            _buttons[i].Init();
-        }
+        DataBind.SetButtonValue("HideDropdownMenu", () => _menuButtons.HideAnime(HideAnime));
     }
 
 
@@ -81,23 +80,19 @@ public class DropdownMenu : MonoBehaviour
         _layoutGroup.spacing = _layoutGroupTmpSpacing;
         _layoutGroup.GetComponent<RectTransform>().anchoredPosition = _layoutGroupTmpPos;
 
-        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underStartTargetPos, _startDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerStartTargetPos, _startDuration, _startTweenMode);
-        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerStartTargetHeight), _startDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underEndTargetPos, _endDuration, _endTweenMode);
-        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerEndTargetPos, _endDuration, _endTweenMode);
-        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerEndTargetHeight), _endDuration, _endTweenMode);
+        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underStartTargetPos, _showStartDuration, _showStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerStartTargetPos, _showStartDuration, _showStartTweenMode);
+        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerStartTargetHeight), _showStartDuration, _showStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underEndTargetPos, _showEndDuration, _showEndTweenMode);
+        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerEndTargetPos, _showEndDuration, _showEndTweenMode);
+        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerEndTargetHeight), _showEndDuration, _showEndTweenMode);
 
-        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerStartTargetPos, _startDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerEndTargetPos, _endDuration, _endTweenMode);
-        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupStartTargetSpacing, _startDuration, _startTweenMode);
-        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupEndTargetSpacing, _endDuration, _endTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerStartTargetPos, _showStartDuration, _showStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerEndTargetPos, _showEndDuration, _showEndTweenMode);
+        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupStartTargetSpacing, _showStartDuration, _showStartTweenMode);
+        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupEndTargetSpacing, _showEndDuration, _showEndTweenMode, () =>
         {
-            for (int i = 0; i < _buttons.Length; i++)
-            {
-                _buttons[i].ShowAnime();
-            }
-
+            _menuButtons.ShowAnime();
         });
     }
 
@@ -114,17 +109,17 @@ public class DropdownMenu : MonoBehaviour
         _layoutGroup.spacing = _layoutGroupEndTargetSpacing;
         _layoutGroup.GetComponent<RectTransform>().anchoredPosition = _centerEndTargetPos;
 
-        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerStartTargetPos, _endDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerTmpPos, _startDuration, _endTweenMode);
-        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupStartTargetSpacing, _endDuration, _startTweenMode);
-        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupTmpSpacing, _startDuration * 0.35f, TweenMode.EaseOutExpo);
+        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerStartTargetPos, _hideStartDuration, _hideStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_layoutGroup.gameObject, _centerTmpPos, _hideEndDuration, _hideEndTweenMode);
+        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupStartTargetSpacing, _hideStartDuration, _hideStartTweenMode);
+        Tween.LayoutGroupSpacing(_layoutGroup.gameObject, _layoutGroupTmpSpacing, _hideEndDuration, _hideEndTweenMode);
 
-        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underStartTargetPos, _endDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerStartTargetPos, _endDuration, _startTweenMode);
-        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerStartTargetHeight), _endDuration, _startTweenMode);
-        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underTmpPos, _startDuration, _endTweenMode);
-        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerTmpPos, _startDuration, _endTweenMode);
-        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, _centerTmpSizeDelta, _startDuration, _endTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underStartTargetPos, _hideStartDuration, _hideStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerStartTargetPos, _hideStartDuration, _hideStartTweenMode);
+        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, new Vector2(_centerTmpSizeDelta.x, _centerStartTargetHeight), _hideStartDuration, _hideStartTweenMode);
+        Tween.RectTransfromAnchoredPosition(_underMenu.gameObject, _underTmpPos, _hideEndDuration, _hideEndTweenMode);
+        Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerTmpPos, _hideEndDuration, _hideEndTweenMode);
+        Tween.RectTransfromSizeDelta(_centerMenu.gameObject, _centerTmpSizeDelta, _hideEndDuration, _hideEndTweenMode, () =>
         {
             _showButton.gameObject.SetActive(true);
         });

@@ -12,16 +12,17 @@ public class AlbumDatabase : MonoBehaviour
     public List<Album> AlbumList = new List<Album>();
 
     //MailPaper
-    public ItemSpriteDatabase AlbumSpriteArray;
     public Dictionary<string, Sprite> _albumSpriteDic;
 
     public void Register()
     {
         //편지지 Image
         _albumSpriteDic = new Dictionary<string, Sprite>();
-        for (int i = 0; i < AlbumSpriteArray.ItemSprites.Length; i++)
+
+        ItemSpriteDatabase albumSprites = DatabaseManager.Instance.AlbumImages;
+        for (int i = 0; i < albumSprites.ItemSprites.Length; i++)
         {
-            _albumSpriteDic.Add(AlbumSpriteArray.ItemSprites[i].Id, AlbumSpriteArray.ItemSprites[i].Image);
+            _albumSpriteDic.Add(albumSprites.ItemSprites[i].Id, albumSprites.ItemSprites[i].Image);
         }
 
         //임시로 리소스 폴더에 있는걸 쓰는중

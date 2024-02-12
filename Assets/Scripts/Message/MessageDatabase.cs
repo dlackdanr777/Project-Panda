@@ -18,16 +18,18 @@ public class MessageDatabase
     private List<Dictionary<string, object>> _dataMail;
 
     //MailPaper
-    public ItemSpriteDatabase MailPaperSpriteArray;
     public Dictionary<string, Sprite> _mailPaperSpriteDic;
 
     public void Register()
     {
         //ÆíÁöÁö Image
         _mailPaperSpriteDic = new Dictionary<string, Sprite>();
-        for(int i=0; i < MailPaperSpriteArray.ItemSprites.Length; i++)
+
+        ItemSpriteDatabase mailPaper = DatabaseManager.Instance.MailPaper;
+
+        for (int i=0; i < mailPaper.ItemSprites.Length; i++)
         {
-            _mailPaperSpriteDic.Add(MailPaperSpriteArray.ItemSprites[i].Id, MailPaperSpriteArray.ItemSprites[i].Image);
+            _mailPaperSpriteDic.Add(mailPaper.ItemSprites[i].Id, mailPaper.ItemSprites[i].Image);
         }
 
         //Mail
