@@ -7,8 +7,6 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
 
-    [SerializeField] private Rigidbody _rigidbody;
-
     [Space]
     [Tooltip("카메라 확대/축소 속도")]
     [SerializeField] private float _zoomSpeed;
@@ -30,8 +28,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector2 _mapCenter;
 
     [Space]
-    [Tooltip("카메라 가속도 배율")]
-    [SerializeField] private float _accelerationMul;
+    [Tooltip("카메라 가속 배율")]
+    [SerializeField] private float _accelerationRate;
+
+    [Tooltip("카메라 감속 배율")]
+    [SerializeField] private float _decelerationRate;
 
     public Vector2 MapCenter
     {
@@ -48,6 +49,8 @@ public class CameraController : MonoBehaviour
     private Vector3 lastdistancemoved;
 
     private Vector3 last;
+
+    private Vector3 _velocity;
 
     private float _height;
 
@@ -74,7 +77,7 @@ public class CameraController : MonoBehaviour
         
 #endif
 
-
+        RunningAcceleration();
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
     }
@@ -82,11 +85,7 @@ public class CameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // velocity값이 0이 아닐때 지정된 카메라 위치에서 벗어나지 않게 하도록 함 
-        if (_rigidbody.velocity.sqrMagnitude != 0)
-        {
-            transform.position = LimitPos(transform.position);
-        }
+
     }
 
 
@@ -292,9 +291,10 @@ public class CameraController : MonoBehaviour
     /// <summary>현재 위치와 이전 위치를 비교하여 가속도 값을 저장하는 함수</summary>
     private void CheckAcceleration()
     {
-        distancemoved = transform.position - last;
+        distancemoved = transform.position - last; //이전 프레임과 현재 프레임의 위치 차이를 계산해 삽입
         lastdistancemoved = distancemoved;
         last = transform.position;
+        _velocity = Vector3.zero;
     }
 
 
@@ -304,16 +304,36 @@ public class CameraController : MonoBehaviour
         distancemoved = Vector3.zero;
         lastdistancemoved = Vector3.zero;
         last = Vector3.zero;
-        _rigidbody.velocity = Vector3.zero;
+        _velocity = Vector3.zero;
     }
 
 
     /// <summary>가속도를 받아 RigidBody에 설정하는 함수</summary>
     private void SetAcceleration(Vector3 acceleration)
     {
-        _rigidbody.velocity = acceleration * _accelerationMul;
+        _velocity = (acceleration / Time.deltaTime) * _accelerationRate;
     }
 
+
+    /// <summary>_velocity값이 0이 아닐 경우 가속도를 주는 함수</summary>
+    private void RunningAcceleration()
+    {
+        //속도가 0일 경우 리턴
+        if (_velocity.sqrMagnitude == 0)
+            return;
+
+        //감속 속도를 현재 속도 * Time * 감속 비율 로 구한다.
+        Vector3 _deceleration = _velocity * (Time.deltaTime * _decelerationRate);
+        _velocity -= _deceleration;
+
+        //현재 속도가 일정 수치 이하로 내려가면 0으로 지정한다.
+        if (_velocity.sqrMagnitude < 1f && _velocity.sqrMagnitude > -1f)
+        {
+            _velocity = Vector3.zero;
+        }
+
+        transform.position = LimitPos(transform.position + _deceleration);
+    }
 
 
     private void OnDrawGizmos()
@@ -321,6 +341,4 @@ public class CameraController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(_mapCenter, _mapSize * 2);
     }
-
-
 }
