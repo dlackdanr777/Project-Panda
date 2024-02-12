@@ -327,7 +327,7 @@ public class CameraController : MonoBehaviour
         _velocity -= _deceleration;
 
         //현재 속도가 일정 수치 이하로 내려가면 0으로 지정한다.
-        if (_velocity.sqrMagnitude < 1f && _velocity.sqrMagnitude > -1f)
+        if (_velocity.sqrMagnitude < 0.5f && _velocity.sqrMagnitude > -0.5f)
         {
             _velocity = Vector3.zero;
         }
