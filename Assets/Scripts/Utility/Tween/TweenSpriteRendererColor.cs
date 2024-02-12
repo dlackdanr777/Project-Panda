@@ -42,7 +42,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            SpriteRenderer.color = TargetColor;
+            if (TweenMode != TweenMode.Spike)
+                SpriteRenderer.color = TargetColor;
         }
     }
 }

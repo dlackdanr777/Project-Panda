@@ -33,7 +33,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            transform.localScale = TargetScale;
+            if (TweenMode != TweenMode.Spike)
+                transform.localScale = TargetScale;
         }
     }
 }

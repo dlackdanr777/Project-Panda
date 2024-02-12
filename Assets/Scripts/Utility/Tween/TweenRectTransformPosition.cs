@@ -46,7 +46,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            _rectTransform.anchoredPosition = TargetAnchoredPosition;
+            if (TweenMode != TweenMode.Spike)
+                _rectTransform.anchoredPosition = TargetAnchoredPosition;
         }
     }
 }

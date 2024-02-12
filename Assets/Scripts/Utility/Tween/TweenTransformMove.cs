@@ -29,7 +29,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            transform.position = TargetPosition;
+            if (TweenMode != TweenMode.Spike)
+                transform.position = TargetPosition;
         }
     }
 }

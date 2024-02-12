@@ -49,8 +49,11 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TargetSizeDelta.x);
-            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TargetSizeDelta.y);
+            if (TweenMode != TweenMode.Spike)
+            {
+                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TargetSizeDelta.x);
+                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, TargetSizeDelta.y);
+            }  
         }
     }
 }

@@ -43,7 +43,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            Image.color = TargetColor;
+            if(TweenMode != TweenMode.Spike)
+                Image.color = TargetColor;
         }
     }
 }

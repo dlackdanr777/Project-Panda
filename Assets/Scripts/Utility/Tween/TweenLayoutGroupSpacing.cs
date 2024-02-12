@@ -38,7 +38,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            _layoutGroup.spacing = TargetValue;
+            if (TweenMode != TweenMode.Spike)
+                _layoutGroup.spacing = TargetValue;
         }
     }
 }

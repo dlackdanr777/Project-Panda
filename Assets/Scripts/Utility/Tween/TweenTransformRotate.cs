@@ -34,7 +34,8 @@ namespace Muks.Tween
 
         protected override void TweenCompleted()
         {
-            transform.eulerAngles = TargetEulerAngles;
+            if (TweenMode != TweenMode.Spike)
+                transform.eulerAngles = TargetEulerAngles;
         }
     }
 }
