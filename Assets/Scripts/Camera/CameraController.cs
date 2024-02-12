@@ -40,15 +40,13 @@ public class CameraController : MonoBehaviour
         set { _mapCenter = value; }
     }
 
-    private Vector3 _tempTouchPos;
+    private Vector3 _tmpTouchPos;
 
-    private Vector3 _tempCameraPos;
+    private Vector3 _tmpCameraPos;
 
-    private Vector3 distancemoved;
+    private Vector3 _distancemoved;
 
-    private Vector3 lastdistancemoved;
-
-    private Vector3 last;
+    private Vector3 _lastPos;
 
     private Vector3 _velocity;
 
@@ -168,16 +166,16 @@ public class CameraController : MonoBehaviour
         {
             //화면 터치시 카메라, 클릭 위치 값을 저장해둔다.
             //화면을 꾹 누르고 있을 때 위치를 이동시키기 위함
-            _tempTouchPos = touch.position;
-            _tempCameraPos = _camera.transform.position;
+            _tmpTouchPos = touch.position;
+            _tmpCameraPos = _camera.transform.position;
 
             ResetAcceleration();
         }
 
         else if(touch.phase == TouchPhase.Moved)
         {
-            Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
-            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+            Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - (Vector3)touch.position);
+            _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
 
             CheckAcceleration();
         }
@@ -185,7 +183,7 @@ public class CameraController : MonoBehaviour
         else if(touch.phase == TouchPhase.Ended)
         {
             //터치를 뗀 경우 가속도를 적용한다.
-            SetAcceleration(distancemoved);
+            SetAcceleration(_distancemoved);
         }
 
     }
@@ -217,7 +215,7 @@ public class CameraController : MonoBehaviour
         _camera.orthographicSize += deltaMagnitudeDiff * 0.1f * _zoomSpeed * Time.deltaTime;
         _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
 
-        transform.position = LimitPos(transform.position);
+        _camera.transform.position = LimitPos(transform.position);
     }
 
 
@@ -234,16 +232,16 @@ public class CameraController : MonoBehaviour
         {
             //좌클릭시 카메라, 클릭 위치 값을 저장해둔다.
             //좌클릭을 꾹 누르고 있을 때 위치를 이동시키기 위함
-            _tempTouchPos = Input.mousePosition;
-            _tempCameraPos = _camera.transform.position;
+            _tmpTouchPos = Input.mousePosition;
+            _tmpCameraPos = _camera.transform.position;
 
             ResetAcceleration();
         }
 
         else if (Input.GetMouseButton(0))
         {
-            Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition);
-            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+            Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - Input.mousePosition);
+            _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
 
             CheckAcceleration();
         }
@@ -251,7 +249,7 @@ public class CameraController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             //마우스 좌클릭 버튼을 뗀 경우 가속도를 적용한다.
-            SetAcceleration(distancemoved);
+            SetAcceleration(_distancemoved);
         }
     }
 
@@ -267,7 +265,7 @@ public class CameraController : MonoBehaviour
         {
             _camera.orthographicSize += -scrollWheel * 100 * Time.deltaTime * _zoomSpeed;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _minZoomSize, _maxZoomSize);
-            transform.position = LimitPos(transform.position);
+            _camera.transform.position = LimitPos(transform.position);
         }     
     }
 
@@ -291,9 +289,8 @@ public class CameraController : MonoBehaviour
     /// <summary>현재 위치와 이전 위치를 비교하여 가속도 값을 저장하는 함수</summary>
     private void CheckAcceleration()
     {
-        distancemoved = transform.position - last; //이전 프레임과 현재 프레임의 위치 차이를 계산해 삽입
-        lastdistancemoved = distancemoved;
-        last = transform.position;
+        _distancemoved = transform.position - _lastPos; //이전 프레임과 현재 프레임의 위치 차이를 계산해 삽입
+        _lastPos = transform.position;
         _velocity = Vector3.zero;
     }
 
@@ -301,14 +298,13 @@ public class CameraController : MonoBehaviour
     /// <summary>가속도 관련 변수를 초기화 하는 함수</summary>
     private void ResetAcceleration()
     {
-        distancemoved = Vector3.zero;
-        lastdistancemoved = Vector3.zero;
-        last = Vector3.zero;
+        _distancemoved = Vector3.zero;
+        _lastPos = Vector3.zero;
         _velocity = Vector3.zero;
     }
 
 
-    /// <summary>가속도를 받아 RigidBody에 설정하는 함수</summary>
+    /// <summary>가속도를 설정하는 함수</summary>
     private void SetAcceleration(Vector3 acceleration)
     {
         _velocity = (acceleration / Time.deltaTime) * _accelerationRate;
@@ -332,7 +328,7 @@ public class CameraController : MonoBehaviour
             _velocity = Vector3.zero;
         }
 
-        transform.position = LimitPos(transform.position + _deceleration);
+        _camera.transform.position = LimitPos(transform.position + _deceleration);
     }
 
 

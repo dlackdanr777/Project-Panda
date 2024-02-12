@@ -13,6 +13,7 @@ public struct ViewDicStruct
     public UIView UIView;
 }
 
+
 public class UINavigation : MonoBehaviour
 {
 
@@ -25,22 +26,20 @@ public class UINavigation : MonoBehaviour
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-
-
     private List<UIView> _uiViews = new List<UIView>();
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
-
+    private int _hideMainUICount = 0;
 
     public int Count => _uiViews.Count;
-
 
 
     private void Start()
     {
         Init();
     }
+
 
     private void Update()
     {
@@ -60,6 +59,7 @@ public class UINavigation : MonoBehaviour
 
         }
     }
+
 
     private void Init()
     {
@@ -82,6 +82,7 @@ public class UINavigation : MonoBehaviour
         }
     }
 
+
     public bool Check(string viewName)
     {
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
@@ -90,13 +91,10 @@ public class UINavigation : MonoBehaviour
                 return true;
         }
         return false;
-
     }
 
 
-    /// <summary>
-    /// 이름을 받아 현재 이름의 view를 열어주는 함수
-    /// </summary>
+    /// <summary>이름을 받아 현재 이름의 view를 열어주는 함수</summary>
     public void Push(string viewName)
     {
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
@@ -132,9 +130,7 @@ public class UINavigation : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 현재 ui 전에 열렸던 ui를 불러오는 함수
-    /// </summary>
+    /// <summary>현재 ui 전에 열렸던 ui를 불러오는 함수</summary> 
     public void Pop()
     {
 
@@ -150,7 +146,6 @@ public class UINavigation : MonoBehaviour
         if (_uiViews.Count <= 0)
             return;
 
-        //_currentView.Hide();
         UIView selectView = _uiViews.Last();
         selectView.Hide();
         _uiViews.RemoveAt(Count - 1);
@@ -162,9 +157,7 @@ public class UINavigation : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// viewName을 확인해 해당 UI 를 감추는 함수
-    /// </summary>
+    /// <summary> viewName을 확인해 해당 UI 를 감추는 함수</summary>
     public void Pop(string viewName)
     {
 
@@ -194,12 +187,9 @@ public class UINavigation : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 맨 처음 열렸던 ui로 이동하는 함수
-    /// </summary>
+    /// <summary>맨 처음 열렸던 ui로 이동하는 함수</summary>
     public void Clear()
     {
-
         foreach (UIView view in _viewDic.Values)
         {
             if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
@@ -241,7 +231,6 @@ public class UINavigation : MonoBehaviour
         }
     }
 
-    int _hideMainUICount = 0;
 
     public void HideMainUI()
     {
