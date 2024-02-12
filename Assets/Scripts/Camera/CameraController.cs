@@ -7,19 +7,32 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
 
+    [SerializeField] private Rigidbody _rigidbody;
+
+    [Space]
+    [Tooltip("카메라 확대/축소 속도")]
     [SerializeField] private float _zoomSpeed;
     public float ZoomSpeed => _zoomSpeed;
 
+    [Tooltip("카메라 확대 최대 크기")]
     [SerializeField] private float _maxZoomSize;
     public float MaxZoomSize => _maxZoomSize;
 
+    [Tooltip("카메라 축소 최소 크기")]
     [SerializeField] private float _minZoomSize;
     public float MinZoomSize => _minZoomSize;
 
+    [Tooltip("카메라 이동 범위")]
     [SerializeField] private Vector2 _mapSize;
     public Vector2 MapSize => _mapSize;
 
+    [Tooltip("카메라 이동 범위 센터")]
     [SerializeField] private Vector2 _mapCenter;
+
+    [Space]
+    [Tooltip("카메라 가속도 배율")]
+    [SerializeField] private float _accelerationMul;
+
     public Vector2 MapCenter
     {
         get { return _mapCenter; }
@@ -30,11 +43,11 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _tempCameraPos;
 
-    private Vector3 _tmpMovePos;
+    private Vector3 distancemoved;
 
-    private Vector3 _updateIntervalPos;
+    private Vector3 lastdistancemoved;
 
-    private float _touchTime;
+    private Vector3 last;
 
     private float _height;
 
@@ -43,10 +56,6 @@ public class CameraController : MonoBehaviour
     private IInteraction _currentInteraction;
 
     private IInteraction _tempInteaction;
-
-    private bool _isBegan = false;
-
-    private Coroutine SmoothMoveToPositionRoutine;
 
 
     private void Update()
@@ -69,6 +78,17 @@ public class CameraController : MonoBehaviour
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
     }
+
+
+    private void FixedUpdate()
+    {
+        // velocity값이 0이 아닐때 지정된 카메라 위치에서 벗어나지 않게 하도록 함 
+        if (_rigidbody.velocity.sqrMagnitude != 0)
+        {
+            transform.position = LimitPos(transform.position);
+        }
+    }
+
 
     private void Start()
     {
@@ -136,13 +156,7 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.FriezeCameraMove)
         {
-
-            if (SmoothMoveToPositionRoutine != null)
-            {
-                StopCoroutine(SmoothMoveToPositionRoutine);
-                SmoothMoveToPositionRoutine = null;
-            }
-
+            ResetAcceleration();
             return;
         }
 
@@ -151,20 +165,14 @@ public class CameraController : MonoBehaviour
 
         Touch touch = Input.GetTouch(0);
 
-
         if (touch.phase == TouchPhase.Began)
         {
+            //화면 터치시 카메라, 클릭 위치 값을 저장해둔다.
+            //화면을 꾹 누르고 있을 때 위치를 이동시키기 위함
             _tempTouchPos = touch.position;
             _tempCameraPos = _camera.transform.position;
-            _updateIntervalPos = touch.position;
-            _tmpMovePos = Vector3.zero;
-            _touchTime = 0;
 
-            if (SmoothMoveToPositionRoutine != null)
-            {
-                StopCoroutine(SmoothMoveToPositionRoutine);
-                SmoothMoveToPositionRoutine = null;
-            }
+            ResetAcceleration();
         }
 
         else if(touch.phase == TouchPhase.Moved)
@@ -172,21 +180,13 @@ public class CameraController : MonoBehaviour
             Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - (Vector3)touch.position);
             transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
 
-            _touchTime += Time.deltaTime;
-
-            if (0.1f < _touchTime)
-            {
-                _updateIntervalPos = (Vector3)touch.position;
-                _touchTime = 0;
-            }
-
-            _tmpMovePos = _updateIntervalPos - (Vector3)touch.position;
+            CheckAcceleration();
         }
 
         else if(touch.phase == TouchPhase.Ended)
         {
-            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize * 1.7f);
-            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
+            //터치를 뗀 경우 가속도를 적용한다.
+            SetAcceleration(distancemoved);
         }
 
     }
@@ -222,76 +222,37 @@ public class CameraController : MonoBehaviour
     }
 
 
+    /// <summary>마우스로 카메라를 이동시키는 함수</summary>
     private void MouseMovement()
     {
         if (GameManager.Instance.FriezeCameraMove)
         {
-            if (SmoothMoveToPositionRoutine != null)
-            {
-                StopCoroutine(SmoothMoveToPositionRoutine);
-                SmoothMoveToPositionRoutine = null;
-            }
-                
+            ResetAcceleration();
             return;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+            //좌클릭시 카메라, 클릭 위치 값을 저장해둔다.
+            //좌클릭을 꾹 누르고 있을 때 위치를 이동시키기 위함
             _tempTouchPos = Input.mousePosition;
             _tempCameraPos = _camera.transform.position;
-            _touchTime = 0;
-            _updateIntervalPos = Input.mousePosition;
-            _tmpMovePos = Vector3.zero;
 
-            if (SmoothMoveToPositionRoutine != null)
-            {
-                StopCoroutine(SmoothMoveToPositionRoutine);
-                SmoothMoveToPositionRoutine = null;
-            }            
+            ResetAcceleration();
         }
 
         else if (Input.GetMouseButton(0))
         {
-            _touchTime += Time.deltaTime;
+            Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition);
+            transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
+
+            CheckAcceleration();
         }
 
         else if (Input.GetMouseButtonUp(0))
         {
-            Vector3 targetPos = transform.position + (Camera.main.ScreenToViewportPoint(_tmpMovePos) * _camera.orthographicSize * 1.5f);
-            SmoothMoveToPositionRoutine = StartCoroutine(SmoothMoveToPosition(transform.position, targetPos));
-
-        }
-
-
-        Vector3 position = Camera.main.ScreenToViewportPoint(_tempTouchPos - Input.mousePosition);
-
-        if(0.15f < _touchTime)
-        {
-            _updateIntervalPos = Input.mousePosition;
-            _touchTime = 0;
-        }
-
-        _tmpMovePos = _updateIntervalPos - Input.mousePosition;
-        transform.position = LimitPos(_tempCameraPos + position * _camera.orthographicSize);
-    }
-
-
-    private IEnumerator SmoothMoveToPosition(Vector3 pos, Vector3 targetPos)
-    {
-        float duration = 0;
-        float totalDuration = 1;
-
-        while (duration < totalDuration)
-        {
-            duration += 0.01f * totalDuration;
-
-            float percent = duration / totalDuration;
-            percent = 1 - Mathf.Pow((1 - percent), 5);
-
-            Vector3 lerpPos = Vector3.Lerp(pos, targetPos, percent);
-            transform.position = LimitPos(lerpPos);
-
-            yield return YieldCache.WaitForSeconds(0.01f);
+            //마우스 좌클릭 버튼을 뗀 경우 가속도를 적용한다.
+            SetAcceleration(distancemoved);
         }
     }
 
@@ -303,7 +264,6 @@ public class CameraController : MonoBehaviour
 
         float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
 
-
         if (scrollWheel != 0)
         {
             _camera.orthographicSize += -scrollWheel * 100 * Time.deltaTime * _zoomSpeed;
@@ -313,6 +273,7 @@ public class CameraController : MonoBehaviour
     }
 
 
+    /// <summary>위치 값을 받아 해당 위치 값이 설정된 범위 밖이면 제한을 걸어 반환하는 함수</summary>
     private Vector3 LimitPos(Vector3 pos)
     {
         _height = _camera.orthographicSize;
@@ -326,6 +287,33 @@ public class CameraController : MonoBehaviour
 
         return new Vector3(clampX, clampY, -10f);
     }
+
+
+    /// <summary>현재 위치와 이전 위치를 비교하여 가속도 값을 저장하는 함수</summary>
+    private void CheckAcceleration()
+    {
+        distancemoved = transform.position - last;
+        lastdistancemoved = distancemoved;
+        last = transform.position;
+    }
+
+
+    /// <summary>가속도 관련 변수를 초기화 하는 함수</summary>
+    private void ResetAcceleration()
+    {
+        distancemoved = Vector3.zero;
+        lastdistancemoved = Vector3.zero;
+        last = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
+    }
+
+
+    /// <summary>가속도를 받아 RigidBody에 설정하는 함수</summary>
+    private void SetAcceleration(Vector3 acceleration)
+    {
+        _rigidbody.velocity = acceleration * _accelerationMul;
+    }
+
 
 
     private void OnDrawGizmos()
