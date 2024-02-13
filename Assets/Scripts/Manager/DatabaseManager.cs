@@ -18,7 +18,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private DialogueManager _dialogueDatabase;
     public DialogueManager DialogueDatabase => _dialogueDatabase;
- 
+
     private WeatherDatabase _weatherDatabase;
     public WeatherDatabase WeatherDatabase => _weatherDatabase;
 
@@ -31,7 +31,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
-    
+
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
@@ -104,9 +104,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private WeatherImage _weatherImages;
     public WeatherImage WeatherImage => _weatherImages;
 
-
-    private MapDatabase _mapDatabase;
-
     public override void Awake()
     {
         base.Awake();
@@ -128,7 +125,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
         _challenges = new Challenges();
-        _mapDatabase = new MapDatabase();
 
         _itemDatabase.Register();
         _userInfo.Register();
@@ -147,7 +143,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _albumDatabase.Register();
         _challengesDatabase.Register();
         _challenges.Register();
-        _mapDatabase.Register();
     }
 
     /// <summary>
@@ -247,7 +242,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
                 break;
         }
 
-        for(int i=0;i< list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             if (list[i].Id.Equals(id))
             {
@@ -281,7 +276,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <returns></returns>
     public string GetNPCNameById(string id)
     {
-        for(int i = 0; i < GetNPCList().Count; i++)
+        for (int i = 0; i < GetNPCList().Count; i++)
         {
             if (GetNPCList()[i].Id.Equals(id))
             {
@@ -317,7 +312,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
                 NPC currentNPC = GetNPCList()[i];
                 string intimacy = GetIntimacy(currentNPC.Intimacy, currentNPC.MinIntimacy, currentNPC.MaxIntimacy).ToString();
 
-                for(int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
+                for (int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
                 {
                     if (_npcIntimacyImages.ItemSprites[j].Id.Equals(intimacy))
                     {
@@ -347,7 +342,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     public NPC GetNPC(string id)
     {
-        for(int i=0;i<GetNPCList().Count; i++)
+        for (int i = 0; i < GetNPCList().Count; i++)
         {
             if (GetNPCList()[i].Id.Equals(id))
             {
@@ -364,7 +359,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <param name="count">증가할 양</param>
     public void AddIntimacy(string id, int count)
     {
-        for(int i=0;i<_npcDatabase.NpcList.Count;i++)
+        for (int i = 0; i < _npcDatabase.NpcList.Count; i++)
         {
             if (_npcDatabase.NpcList[i].Id.Equals(id))
             {
@@ -410,7 +405,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     public void SetReceiveAlbumById(string id)
     {
-        for(int i=0;i< GetAlbumList().Count; i++)
+        for (int i = 0; i < GetAlbumList().Count; i++)
         {
             if (GetAlbumList()[i].StoryStep.Equals(id))
             {
@@ -439,10 +434,5 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public Dictionary<string, ChallengesData> GetChallengesDic()
     {
         return _challengesDatabase.GetChallengesDic();
-    }
-
-    public Dictionary<string, MapData> GetMapDic()
-    {
-        return _mapDatabase.GetMapDic();
     }
 }
