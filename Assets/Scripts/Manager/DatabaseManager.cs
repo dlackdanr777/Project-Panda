@@ -18,7 +18,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private DialogueManager _dialogueDatabase;
     public DialogueManager DialogueDatabase => _dialogueDatabase;
- 
+
     private WeatherDatabase _weatherDatabase;
     public WeatherDatabase WeatherDatabase => _weatherDatabase;
 
@@ -31,7 +31,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
-    
+
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
@@ -48,28 +48,54 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private MessageDatabase _messageDatabase;
     public MessageDatabase MessageDatabase => _messageDatabase;
 
+    private HarvestItemManager _harvestItemDatabase;
+    public HarvestItemManager HarvestItemDatabase => _harvestItemDatabase;
+
 
     //이미지들
     //Panda
+    [Space]
     [SerializeField] private PandaImage _pandaImage;
+    public PandaImage PandaImage => _pandaImage;
 
+    [Space]
     //Item
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    public ItemSpriteDatabase[] GatheringItemImages => _gatheringItemImages;
+
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
-    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    public ItemSpriteDatabase[] ToolItemImages => _toolItemImages;
+
+    [SerializeField] private HarvestItemImage _harvestItemImage;
+    public HarvestItemImage HarvestItemImage => _harvestItemImage;
+
+
+    [Space]
+    //NPC
     [SerializeField] private ItemSpriteDatabase[] _npcImages;
+    public ItemSpriteDatabase[] NpcImages => _npcImages;
 
-    private HarvestItemManager _harvestItemDatabase;
-    [SerializeField] HarvestItemImage _harvestItemImage;
+    [SerializeField] private ItemSpriteDatabase _npcIntimacyImages;
 
+    [Space]
+    //Furniture
+    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    public FurnitureSpriteDatabase FurnitureItemImages => _furnitureItemImages;
+
+    [Space]
     //Message
     [SerializeField] private ItemSpriteDatabase _mailPaper;
+    public ItemSpriteDatabase MailPaper => _mailPaper;
 
+    [Space]
     //Album
     [SerializeField] private ItemSpriteDatabase _albumImages;
+    public ItemSpriteDatabase AlbumImages => _albumImages;
+
     private AlbumDatabase _albumDatabase;
     public AlbumDatabase AlbumDatabase => _albumDatabase;
 
+    [Space]
     //Sticker
     [SerializeField] private ItemSpriteDatabase _stickerImages;
 
@@ -78,19 +104,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private WeatherImage _weatherImages;
     public WeatherImage WeatherImage => _weatherImages;
 
-
     public override void Awake()
     {
-        var obj = FindObjectsOfType<DatabaseManager>();
-        if(obj.Length == 1)
-        {
-            base.Awake();
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
 
         _userInfo = new UserInfo();
         _startPandaInfo = new StarterPandaInfo();
@@ -100,7 +116,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _weatherDatabase = new WeatherDatabase();
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
-
         _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
@@ -111,52 +126,21 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _challengesDatabase = new ChallengesDatabase();
         _challenges = new Challenges();
 
-        UserInfo.Register();
-        StartPandaInfo.Register();
+        _itemDatabase.Register();
+        _userInfo.Register();
+        _startPandaInfo.Register();
         _dialogueDatabase.Register();
         _photoDatabase.Register();
-
-        //Image
-        //GatheringItem 
-        for(int i = 0; i < _itemDatabase.GatheringItemSpriteArray.Length; i++)
-        {
-            _itemDatabase.GatheringItemSpriteArray[i] = _gatheringItemImages[i];
-        }
-        //ToolItem
-        for (int i = 0; i < _itemDatabase.ToolItemSpriteArray.Length; i++)
-        {
-            _itemDatabase.ToolItemSpriteArray[i] = _toolItemImages[i];
-        }
-
-        _itemDatabase.FurnitureItemSprite = _furnitureItemImages;
-
-        _itemDatabase.Register();
-
+        _pandaDatabase.Register();
         _recipeDatabase.Register();
         _mbtiDatabase.Register();
-
-        _pandaDatabase.PandaImage = _pandaImage;
-        _pandaDatabase.Register();
         _furniturePosDatabase.Register();
-
-        _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
         _weatherDatabase.Register();
-
-        //Image
-        for (int i = 0; i < _npcDatabase.NPCSpriteArray.Length; i++)
-        {
-            _npcDatabase.NPCSpriteArray[i] = _npcImages[i];
-        }
-
         _npcDatabase.Register();
         _sideStoryDialogueDatabase.Register();
-        _messageDatabase.MailPaperSpriteArray = _mailPaper;
         _messageDatabase.Register();
-
-        _albumDatabase.AlbumSpriteArray = _albumImages;
         _albumDatabase.Register();
-
         _challengesDatabase.Register();
         _challenges.Register();
     }
@@ -240,7 +224,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.ItemFruitList;
     }
 
-    public Sprite GetGIImageById(string id)
+    public Item GetGIImageById(string id)
     {
         List<GatheringItem> list = new List<GatheringItem>();
         string code = id.Substring(0, 3);
@@ -258,27 +242,14 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
                 break;
         }
 
-        for(int i=0;i< list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             if (list[i].Id.Equals(id))
             {
-                return list[i].Image;
+                return list[i];
             }
         }
 
-        return null;
-    }
-
-    public Sprite GetFUImageById(string id)
-    {
-        Dictionary<string,Furniture> furnitureDic = _itemDatabase.FurnitureDic;
-        foreach(string key in furnitureDic.Keys)
-        {
-            if (key.Equals(id))
-            {
-                return furnitureDic[key].RoomImage;
-            }
-        }
         return null;
     }
 
@@ -305,7 +276,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <returns></returns>
     public string GetNPCNameById(string id)
     {
-        for(int i = 0; i < GetNPCList().Count; i++)
+        for (int i = 0; i < GetNPCList().Count; i++)
         {
             if (GetNPCList()[i].Id.Equals(id))
             {
@@ -332,9 +303,46 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return null;
     }
 
+    public Sprite GetNPCIntimacyImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                NPC currentNPC = GetNPCList()[i];
+                string intimacy = GetIntimacy(currentNPC.Intimacy, currentNPC.MinIntimacy, currentNPC.MaxIntimacy).ToString();
+
+                for (int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
+                {
+                    if (_npcIntimacyImages.ItemSprites[j].Id.Equals(intimacy))
+                    {
+                        return _npcIntimacyImages.ItemSprites[j].Image;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private int GetIntimacy(int amount, int minIntimacy, int maxIntimacy)
+    {
+        amount /= 20;
+
+        if (amount < minIntimacy)
+        {
+            return minIntimacy;
+        }
+        else if (amount >= maxIntimacy)
+        {
+            return maxIntimacy;
+        }
+
+        return amount;
+    }
+
     public NPC GetNPC(string id)
     {
-        for(int i=0;i<GetNPCList().Count; i++)
+        for (int i = 0; i < GetNPCList().Count; i++)
         {
             if (GetNPCList()[i].Id.Equals(id))
             {
@@ -351,7 +359,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// <param name="count">증가할 양</param>
     public void AddIntimacy(string id, int count)
     {
-        for(int i=0;i<_npcDatabase.NpcList.Count;i++)
+        for (int i = 0; i < _npcDatabase.NpcList.Count; i++)
         {
             if (_npcDatabase.NpcList[i].Id.Equals(id))
             {
@@ -397,7 +405,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     public void SetReceiveAlbumById(string id)
     {
-        for(int i=0;i< GetAlbumList().Count; i++)
+        for (int i = 0; i < GetAlbumList().Count; i++)
         {
             if (GetAlbumList()[i].StoryStep.Equals(id))
             {

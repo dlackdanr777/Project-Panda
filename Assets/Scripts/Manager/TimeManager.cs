@@ -31,7 +31,7 @@ public class TimeManager : SingletonHandler<TimeManager>
             return;
         }
 
-        _mapDic = DatabaseManager.Instance.GetMapDic();
+        _mapDic = MapDatabase.Instance.GetMapDic();
         CheckTime();
     }
 
