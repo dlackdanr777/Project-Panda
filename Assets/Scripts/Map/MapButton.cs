@@ -9,7 +9,6 @@ public class MapButton : MonoBehaviour
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
 
-    [SerializeField] private GameObject _fadeInOut;
     [SerializeField] private Transform[] _targetTransform;// = new Transform[DatabaseManager.Instance.GetMapDic().Count];
     private float _fadeTime = 1f;
     private int _currentMap;
@@ -111,12 +110,12 @@ public class MapButton : MonoBehaviour
 
     private void MoveField(bool isLeft)
     {
-        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z); 
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
 
-        _fadeInOut.gameObject.SetActive(true);
-        Tween.IamgeAlpha(_fadeInOut.gameObject, 1, _fadeTime, TweenMode.Constant, () =>
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
         {
-            TimeManager.Instance.CheckTime();
+            TimeManager.Instance.CheckMap();
+
             _cameraController.MapCenter = _targetTransform[_currentMap].position;
             //Camera.main.transform.position = targetPos;
 
@@ -133,10 +132,7 @@ public class MapButton : MonoBehaviour
                 Camera.main.transform.position = targetPos + new Vector3(-lx, 0, 0);
             }
 
-            Tween.IamgeAlpha(_fadeInOut.gameObject, 0, _fadeTime, TweenMode.Quadratic, () =>
-            {
-                _fadeInOut.gameObject.SetActive(false);
-            });
+            FadeInOutManager.Instance.FadeOut(_fadeTime);
         });
     }
 

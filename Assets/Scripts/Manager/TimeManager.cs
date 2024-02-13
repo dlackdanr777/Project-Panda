@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TimeManager : SingletonHandler<TimeManager>
 {
-    public DateTime TODAY => DateTime.Now;
+    public DateTime TODAY => DatabaseManager.Instance.UserInfo.TODAY;
     public int GameHour;
     public string GameHourId;
     public string GameWeatherId;
@@ -13,43 +14,67 @@ public class TimeManager : SingletonHandler<TimeManager>
     private float _oneHour = 10 * 60; // 게임에서의 한 시간은 10분
     private float _checkHour = 0; // 게임에서 한 시간이 지났는지 확인
 
-    private Dictionary<string, MapData> _mapDic;
+    private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
     private Sprite mapBackGround;
     public Sprite[] mapBackGrounds;
 
-    public override void Awake()
-    {
-        var obj = FindObjectsOfType<TimeManager>();
-        if (obj.Length == 1)
-        {
-            base.Awake();
-        }
-        else
-        {
-            Destroy(gameObject);
-            TimeManager.Instance.CheckTime();
-            return;
-        }
-
-        _mapDic = MapDatabase.Instance.GetMapDic();
-        CheckTime();
-    }
+    private MapDatabase _mapDatabase;
 
     //void Update()
     //{
-        //_checkHour += Time.deltaTime;
-        //if(_checkHour > _oneHour)
-        //{
-        //    _checkHour = 0;
-        //    CheckTime();
-        //}
+    //_checkHour += Time.deltaTime;
+    //if(_checkHour > _oneHour)
+    //{
+    //    _checkHour = 0;
+    //    CheckTime();
     //}
+    //}
+
+
+    public override void Awake()
+    {
+        base.Awake();
+        _mapDatabase = new MapDatabase();
+        SceneManager.sceneLoaded += LoadedSceneEvent;
+    }
+
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= LoadedSceneEvent;
+    }
+
+
+    public void LoadedSceneEvent(Scene scene, LoadSceneMode mode)
+    {
+        CheckMap();
+    }
+
+
+    /// <summary>시간과 맵을 확인해 변경하는 함수</summary> 
+    public void CheckMap()
+    {
+        _mapDatabase.CheckMap();
+        CheckTime();
+        if (_mapDatabase.IsMapExists)
+        {
+            ChangedBackGround();
+            Debug.Log("맵이 존재합니다.");
+        }
+
+        else
+        {
+            Debug.LogError("맵이 존재하지 않는 씬 입니다.");
+        }
+    }
+
 
     public void CheckTime()
     {
-        GameHour = ((TODAY.Hour % 4) * 60 + TODAY.Minute) / 10;
+        DateTime now = TODAY;
+        GameHour = ((now.Hour % 4) * 60 + now.Minute) / 10;
 
-        if(GameHourId != "GTS" + (21 + GameHour)) // 게임 시간이 변경되었다면 계절 변경
+        if (GameHourId != "GTS" + (21 + GameHour)) // 게임 시간이 변경되었다면 계절 변경
         {
             switch (TODAY.Day)
             {
@@ -66,12 +91,11 @@ public class TimeManager : SingletonHandler<TimeManager>
                     GameWeatherId = "WWT";
                     break;
             }
-
-            ChangedBackGround();
         }
 
         GameHourId = "GTS" + (21 + GameHour);
         Debug.Log("게임 시간 변경 GameHour: " + GameHour + "GameWeatherId: " + GameWeatherId);
+
     }
 
     /// <summary>

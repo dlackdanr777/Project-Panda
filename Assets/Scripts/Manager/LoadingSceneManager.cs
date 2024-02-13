@@ -27,8 +27,7 @@ public class LoadingSceneManager : MonoBehaviour
     {
         _nextScene = sceneName;
         _loadingType = type;
-        ChangeSceneManager.Instance.ChangeScene(() => SceneManager.LoadScene("LoadingScene"));
-
+        FadeInOutManager.Instance.FadeIn( onComplete: () => SceneManager.LoadScene("LoadingScene") );
     }
 
 
@@ -55,11 +54,11 @@ public class LoadingSceneManager : MonoBehaviour
                     switch (_loadingType)
                     {
                         case LoadingType.FirstLoading:
-                            ChangeSceneManager.Instance.FirstLoading();
+                            FadeInOutManager.Instance.FirstFadeInOut();
                             break;
 
                         case LoadingType.SceneChange:
-                            ChangeSceneManager.Instance.ResetFadeImage();
+                            FadeInOutManager.Instance.FadeOut();
                             break;
                     }
                     

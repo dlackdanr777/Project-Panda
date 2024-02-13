@@ -16,18 +16,31 @@ public class MapData
     }
 }
 
-public class MapDatabase: SingletonHandler<MapDatabase>
+public class MapDatabase
 {
     private Dictionary<string, MapData> _mapDic = new Dictionary<string, MapData>();
-    private List<Dictionary<string, object>> _dataMap;
+    private static List<Dictionary<string, object>> _dataMap = new List<Dictionary<string, object>>();
 
-    public override void Awake()
-    {
-        base.Awake();
-    }
-    public void Start()
+    private bool _isMapExists;
+    public bool IsMapExists => _isMapExists;
+
+
+    public MapDatabase()
     {
         _dataMap = CSVReader.Read("Map");
+    }
+
+
+    public void CheckMap()
+    {
+        _mapDic.Clear();
+
+        if (_dataMap.Count == 0)
+        {
+            _isMapExists = false;
+            Debug.LogError("맵 데이터가 존재하지 않습니다.");
+            return;
+        }
 
         for (int i = 0; i < _dataMap.Count; i++)
         {
@@ -36,6 +49,13 @@ public class MapDatabase: SingletonHandler<MapDatabase>
             SpriteRenderer backGroundRenderer = null;
             if (id != "MN07" && id != "MN08")
             {
+                if (GameObject.Find(id + "BackGround") == null)
+                {
+
+                    _isMapExists = false;
+                    return;
+                }
+                Debug.Log(id);
                 backGroundRenderer = GameObject.Find(id + "BackGround").GetComponent<SpriteRenderer>();
             }
 
@@ -43,7 +63,10 @@ public class MapDatabase: SingletonHandler<MapDatabase>
             MapData data = new MapData(id, name, backGroundRenderer);
             _mapDic.Add(id, data);
         }
+
+        _isMapExists = true;
     }
+
 
     public Dictionary<string, MapData> GetMapDic()
     {

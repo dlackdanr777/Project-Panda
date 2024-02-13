@@ -15,7 +15,7 @@ public class FurnitureButton : MonoBehaviour
     {
         //if (StarterPanda.Instance.SetFalseUI())
         //{
-        if(ChangeSceneManager.Instance != null)
+        if(FadeInOutManager.Instance != null)
         {
             LoadingSceneManager.LoadScene("FurnitureTest");
         }
