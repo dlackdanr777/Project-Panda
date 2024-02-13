@@ -22,7 +22,11 @@ public class CameraController : MonoBehaviour
 
     [Tooltip("카메라 이동 범위")]
     [SerializeField] private Vector2 _mapSize;
-    public Vector2 MapSize => _mapSize;
+    public Vector2 MapSize
+    {
+        get { return _mapSize; }
+        set { _mapSize = value; }
+    }
 
     [Tooltip("카메라 이동 범위 센터")]
     [SerializeField] private Vector2 _mapCenter;

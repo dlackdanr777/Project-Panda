@@ -16,12 +16,16 @@ public class MapData
     }
 }
 
-public class MapDatabase
+public class MapDatabase: SingletonHandler<MapDatabase>
 {
     private Dictionary<string, MapData> _mapDic = new Dictionary<string, MapData>();
     private List<Dictionary<string, object>> _dataMap;
 
-    public void Register()
+    public override void Awake()
+    {
+        base.Awake();
+    }
+    public void Start()
     {
         _dataMap = CSVReader.Read("Map");
 
