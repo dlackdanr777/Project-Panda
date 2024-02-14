@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum ETime
+{
+    Day,
+    Evening,
+    Night
+}
+
 public class TimeManager : SingletonHandler<TimeManager>
 {
     public DateTime TODAY => DatabaseManager.Instance.UserInfo.TODAY;
@@ -15,6 +22,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     private float _checkHour = 0; // 게임에서 한 시간이 지났는지 확인
 
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
+    private ETime eTime;
     private Sprite mapBackGround;
     public Sprite[] mapBackGrounds;
 
@@ -108,22 +116,45 @@ public class TimeManager : SingletonHandler<TimeManager>
         {
             case < 5: // 밤
                 mapBackGround = mapBackGrounds[2];
+                eTime = ETime.Night;
                 break;
-            case < 18: // 낮
+            case < 17: // 낮
                 mapBackGround = mapBackGrounds[0];
+                eTime = ETime.Day;
                 break;
-            case < 19: // 노을
+            case < 21: // 저녁
                 mapBackGround = mapBackGrounds[1];
+                eTime = ETime.Evening;
                 break;
             default: // 밤
                 mapBackGround = mapBackGrounds[2];
+                eTime = ETime.Night;
                 break;
         }
 
         foreach(string key in _mapDic.Keys)
         {
-            if(key != "MN04" && key != "MN07" && key != "MN08")
-            _mapDic[key].BackGroundRenderer.sprite = mapBackGround;
+            if(key != "MN07" && key != "MN08") // 나중에 삭제
+            {
+                _mapDic[key].BackGroundRenderer.sprite = mapBackGround;
+
+                if (_mapDic[key].BackGround[(int)eTime] != null)
+                {
+                    // 이번 시간 배경 켜기
+                    _mapDic[key].BackGround[(int)eTime].SetActive(true);
+
+                    // 전 시간 배경 끄기
+                    if ((int)eTime == 0)
+                    {
+                        _mapDic[key].BackGround[System.Enum.GetValues(typeof(ETime)).Length].SetActive(false);
+                    }
+                    else
+                    {
+                        _mapDic[key].BackGround[(int)(eTime - 1)].SetActive(false);
+                    }
+                }  
+            }
+
         }
     }
 }

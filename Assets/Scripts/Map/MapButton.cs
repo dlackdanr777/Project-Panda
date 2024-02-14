@@ -13,7 +13,7 @@ public class MapButton : MonoBehaviour
     private float _fadeTime = 1f;
     private int _currentMap;
     //private Vector2 _forestMapSize; // 맵마다 크기가 다르다면 설정
-    //private Vector2 _mapSize;
+    private Vector2 _mapSize;
     private Camera _camera;
     private float _height;
     private float _width;
@@ -22,7 +22,7 @@ public class MapButton : MonoBehaviour
     private void Awake()
     {
         //_forestMapSize = new Vector2(30, _cameraController.MapSize.y);
-        //_mapSize = _cameraController.MapSize;
+        _mapSize = _cameraController.MapSize;
         _camera = _cameraController.GetComponent<Camera>();
 
         _height = _camera.orthographicSize;
@@ -34,6 +34,7 @@ public class MapButton : MonoBehaviour
         DataBind.SetButtonValue("ForestButton", MoveForest);
         DataBind.SetButtonValue("VillageButton", MoveVillage);
         DataBind.SetButtonValue("MarketButton", MoveMarket);
+        DataBind.SetButtonValue("MermaidForestButton", MoveMermaidForest);
     }
 
     /// <summary>
@@ -56,7 +57,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 0;
-        //_cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
@@ -65,7 +66,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 1;
-        //_cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
@@ -75,7 +76,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 2;
-        //_cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
@@ -84,7 +85,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 3;
-        //_cameraController.MapSize = _forestMapSize;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
@@ -93,7 +94,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 4;
-        //_cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
@@ -102,7 +103,17 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 5;
-        //_cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
+
+        MoveField(_isLeft);
+    }
+
+    private void MoveMermaidForest()
+    {
+        CheckDirection();
+
+        _currentMap = 6;
+        _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }

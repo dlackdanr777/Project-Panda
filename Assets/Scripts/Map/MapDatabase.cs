@@ -7,12 +7,14 @@ public class MapData
     public string Id;
     public string Name;
     public SpriteRenderer BackGroundRenderer;
+    public GameObject[] BackGround;
 
-    public MapData(string id, string name, SpriteRenderer backGroundRenderer)
+    public MapData(string id, string name, SpriteRenderer backGroundRenderer, GameObject[] backGround)
     {
         Id = id;
         Name = name;
         BackGroundRenderer = backGroundRenderer;
+        BackGround = backGround;
     }
 }
 
@@ -47,20 +49,24 @@ public class MapDatabase
             string id = _dataMap[i]["ID"].ToString();
             string name = _dataMap[i]["이름"].ToString();
             SpriteRenderer backGroundRenderer = null;
-            if (id != "MN07" && id != "MN08")
+            GameObject[] backGround = new GameObject[System.Enum.GetValues(typeof(ETime)).Length];
+
+            if (GameObject.Find(id + "BackGround") == null)
             {
-                if (GameObject.Find(id + "BackGround") == null)
-                {
 
-                    _isMapExists = false;
-                    return;
-                }
-                Debug.Log(id);
-                backGroundRenderer = GameObject.Find(id + "BackGround").GetComponent<SpriteRenderer>();
+                _isMapExists = false;
+                return;
             }
+            Debug.Log(id);
+            backGroundRenderer = GameObject.Find(id + "BackGround")?.GetComponent<SpriteRenderer>(); // 정리 후 지우기
+
+            // 나중에 for문으로 수정
+            backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<GameObject>();
+            backGround[(int)ETime.Evening] = GameObject.Find(id + "EveningBackGround")?.GetComponent<GameObject>();
+            backGround[(int)ETime.Night] = GameObject.Find(id + "NightBackGround")?.GetComponent<GameObject>();
 
 
-            MapData data = new MapData(id, name, backGroundRenderer);
+            MapData data = new MapData(id, name, backGroundRenderer, backGround);
             _mapDic.Add(id, data);
         }
 
