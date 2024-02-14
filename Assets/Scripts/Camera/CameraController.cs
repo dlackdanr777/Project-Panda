@@ -62,6 +62,8 @@ public class CameraController : MonoBehaviour
 
     private IInteraction _tempInteaction;
 
+    private bool _touchEnabled; 
+
 
     private void Update()
     {
@@ -82,12 +84,6 @@ public class CameraController : MonoBehaviour
         RunningAcceleration();
         TouchInteraction();
         _currentInteraction?.UpdateInteraction();
-    }
-
-
-    private void FixedUpdate()
-    {
-
     }
 
 
@@ -157,6 +153,7 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.FriezeCameraMove)
         {
+            _touchEnabled = false;
             ResetAcceleration();
             return;
         }
@@ -172,20 +169,23 @@ public class CameraController : MonoBehaviour
             //화면을 꾹 누르고 있을 때 위치를 이동시키기 위함
             _tmpTouchPos = touch.position;
             _tmpCameraPos = _camera.transform.position;
+            _touchEnabled = true;
 
             ResetAcceleration();
         }
 
-        else if(touch.phase == TouchPhase.Moved)
+        else if (touch.phase == TouchPhase.Moved && _touchEnabled)
         {
+
             Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - (Vector3)touch.position);
             _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
 
             CheckAcceleration();
         }
 
-        else if(touch.phase == TouchPhase.Ended)
+        else if (touch.phase == TouchPhase.Ended)
         {
+            _touchEnabled = false;
             //터치를 뗀 경우 가속도를 적용한다.
             SetAcceleration(_distancemoved);
         }
@@ -228,6 +228,7 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.FriezeCameraMove)
         {
+            _touchEnabled = false;
             ResetAcceleration();
             return;
         }
@@ -238,11 +239,12 @@ public class CameraController : MonoBehaviour
             //좌클릭을 꾹 누르고 있을 때 위치를 이동시키기 위함
             _tmpTouchPos = Input.mousePosition;
             _tmpCameraPos = _camera.transform.position;
+            _touchEnabled = true;
 
             ResetAcceleration();
         }
 
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && _touchEnabled)
         {
             Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - Input.mousePosition);
             _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
@@ -252,6 +254,7 @@ public class CameraController : MonoBehaviour
 
         else if (Input.GetMouseButtonUp(0))
         {
+            _touchEnabled = false;
             //마우스 좌클릭 버튼을 뗀 경우 가속도를 적용한다.
             SetAcceleration(_distancemoved);
         }

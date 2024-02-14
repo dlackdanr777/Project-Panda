@@ -18,6 +18,7 @@ public class UISideDialogue : UIView
     [SerializeField] private Transform _targetPos;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
+    [SerializeField] private Button _nextButton;
 
     private Vector2 _tempPos;
     private DialogueState _state;
@@ -47,7 +48,9 @@ public class UISideDialogue : UIView
         SideStoryController.OnStartInteractionHandler += StartStory;
         DataBind.SetTextValue("SideDialogueName", " ");
         DataBind.SetTextValue("SideDialogueContexts", " ");
-        DataBind.SetButtonValue("SideDialogueNextButton", OnNextButtonClicked);
+
+        _nextButton.onClick.AddListener(OnNextButtonClicked);
+        //DataBind.SetButtonValue("SideDialogueNextButton", OnNextButtonClicked);
 
         _leftButton.Init();
         _rightButton.Init();

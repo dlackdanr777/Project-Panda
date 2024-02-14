@@ -10,34 +10,34 @@ public class FollowButton : MonoBehaviour
 {
     public Image _image;
 
-    private Vector3 _targetPos;
+    private Vector3 _correctionPos;
 
     private Button _button;
 
-    private GameObject _targetGameObject;
+    private Transform _targetTransform;
 
 
-    public void Init(GameObject target, Vector3 targetPos, Vector2 size, Sprite sprite,  UnityAction onClicked)
+    public void Init(GameObject target, Vector3 correctionPos, Vector2 size, Sprite sprite,  UnityAction onClicked)
     {
         _button = GetComponent<Button>();
         _button.GetComponent<RectTransform>().sizeDelta = size;
 
         _image.sprite = sprite;
         _button.onClick.AddListener(onClicked);
-        _targetPos = targetPos;
-        _targetGameObject = target;
+        _correctionPos = correctionPos;
+        _targetTransform = target.transform;
     }
 
     private void Update()
     {
-        if (!_targetGameObject.activeSelf)
+        if (!_targetTransform.gameObject.activeSelf)
         {
             gameObject.SetActive(false);
         }
 
-        if (_targetPos != null || _targetPos != Vector3.zero)
+        if (_correctionPos != null || _correctionPos != Vector3.zero)
         {
-            transform.position = Camera.main.WorldToScreenPoint(_targetPos);
+            transform.position = Camera.main.WorldToScreenPoint(_correctionPos + _targetTransform.transform.position);
         }
     }
 

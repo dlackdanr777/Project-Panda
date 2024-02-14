@@ -51,7 +51,7 @@ public class UIWeather : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        SlotInit();
+        /*SlotInit();
         _attendanceCheckIamge.gameObject.SetActive(false);
         _backgroundButton.SetActive(false);
         _tmpSize = gameObject.transform.localScale;
@@ -70,7 +70,7 @@ public class UIWeather : UIView
         {
             _attendanceCheckIamge.gameObject.SetActive(true);
             _attendanceButton.gameObject.SetActive(false);
-        }
+        }*/
     }
 
     

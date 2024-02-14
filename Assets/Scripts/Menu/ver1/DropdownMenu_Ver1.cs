@@ -1,11 +1,11 @@
 using Muks.DataBind;
 using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DropdownMenu : MonoBehaviour
+
+/// <summary>늘어나는 애니메이션 버전의 드롭다운 메뉴</summary>
+public class DropdownMenu_Ver1 : MonoBehaviour
 {
     [SerializeField] private Image _centerMenu;
 
@@ -13,9 +13,7 @@ public class DropdownMenu : MonoBehaviour
 
     [SerializeField] private HorizontalOrVerticalLayoutGroup _layoutGroup;
 
-    [SerializeField] private DropdownMenuButtons _menuButtons;
-
-    [SerializeField] private Button _showButton;
+    [SerializeField] private DropdownMenuButtonGroup_Ver1 _menuButtons;
 
     [Space]
     [SerializeField] private float _showStartDuration;
@@ -60,16 +58,18 @@ public class DropdownMenu : MonoBehaviour
         _centerTmpSizeDelta = _centerMenu.rectTransform.sizeDelta;
         _layoutGroupTmpSpacing = _layoutGroup.spacing;
         _layoutGroupTmpPos = _layoutGroup.GetComponent<RectTransform>().anchoredPosition;
-        _showButton.gameObject.SetActive(true);
-        _showButton.onClick.AddListener(ShowAnime);
+        _menuButtons.HideButtons();
 
+        DataBind.SetButtonValue("ShowDropdownMenu", () => ShowAnime());
         DataBind.SetButtonValue("HideDropdownMenu", () => _menuButtons.HideAnime(HideAnime));
     }
 
 
     private void ShowAnime()
     {
-        _showButton.gameObject.SetActive(false);
+        _menuButtons.HideShowButton();
+        _menuButtons.ShowButtons();
+
         Tween.Stop(_underMenu.gameObject);
         Tween.Stop(_centerMenu.gameObject);
         Tween.Stop(_layoutGroup.gameObject);
@@ -121,7 +121,8 @@ public class DropdownMenu : MonoBehaviour
         Tween.RectTransfromAnchoredPosition(_centerMenu.gameObject, _centerTmpPos, _hideEndDuration, _hideEndTweenMode);
         Tween.RectTransfromSizeDelta(_centerMenu.gameObject, _centerTmpSizeDelta, _hideEndDuration, _hideEndTweenMode, () =>
         {
-            _showButton.gameObject.SetActive(true);
+            _menuButtons.HideButtons();
+            _menuButtons.ShowShowButton();
         });
     }
 

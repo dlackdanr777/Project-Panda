@@ -20,10 +20,9 @@ public abstract class InteractionStoryEvent : StoryEvent
 
     protected virtual void Start()
     {
-        Vector3 targetPos = transform.position + _buttonPos;
         Transform parent = GameObject.Find("Story Event Follow Button Parent").transform;
         _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
-        _followButton.Init(gameObject, targetPos, new Vector2(120, 120), _buttonImage, OnFollowButtonClicked);
+        _followButton.Init(gameObject, _buttonPos, new Vector2(120, 120), _buttonImage, OnFollowButtonClicked);
         HideFollowButton();
     }
 

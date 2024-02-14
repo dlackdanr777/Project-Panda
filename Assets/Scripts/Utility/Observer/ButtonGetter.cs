@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,6 +25,11 @@ namespace Muks.DataBind
             }
         }
 
+        private void Start()
+        {
+            Invoke("Enabled", 0.02f);
+        }
+
 
         private void OnEnable()
         {
@@ -31,43 +37,29 @@ namespace Muks.DataBind
         }
 
 
-        private void OnDisable()
+/*        private void UpdateButton(UnityAction action)
         {
-            Invoke("Disabled", 0.02f);
-        }
+            if (IsListenerRegistered(_action))
+                RemoveListener(_action);
 
+            if (IsListenerRegistered(action))
+                RemoveListener(action);
 
-        private void UpdateButton(UnityAction action)
-        {
             _action = action;
 
-            if (IsListenerRegistered(_action))
-                _button.onClick?.RemoveListener(_action);
-
-            _button.onClick.AddListener(_action);
-        }
+            UnityEventTools.AddPersistentListener(_button.onClick, _action);
+        }*/
 
 
         private void Enabled()
         {
             _data = DataBind.GetButtonValue(_dataID);
-            _data.CallBack += UpdateButton;
-            _button.onClick?.AddListener(_data.Item);
-        }
 
-
-        private void Disabled()
-        {
-            _data.CallBack -= UpdateButton;
-        }
-
-
-        private void OnDestroy()
-        {
-            if (_data == null)
+            if (IsListenerRegistered(_data.Item))
                 return;
 
-            _data.CallBack -= UpdateButton;
+            _action = _data.Item;
+            UnityEventTools.AddPersistentListener(_button.onClick, _action);
         }
 
 
@@ -85,5 +77,20 @@ namespace Muks.DataBind
             }
             return false;
         }
+
+
+        private void RemoveListener(UnityAction method)
+        {
+            var listeners = _button.onClick.GetPersistentEventCount();
+
+            for (int i = 0; i < listeners; i++)
+            {
+                if (_button.onClick.GetPersistentMethodName(i) == method.Method.Name)
+                {
+                    UnityEventTools.RemovePersistentListener(_button.onClick, i);
+                }
+            }
+        }
+
     }
 }

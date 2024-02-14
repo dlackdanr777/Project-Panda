@@ -34,10 +34,9 @@ public class SideStoryController : MonoBehaviour
 
     private void Start()
     {
-        Vector3 targetPos = transform.position + _buttonPos;
         Transform parent = GameObject.Find("Follow Button Parent").transform;
         _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
-        _followButton.Init(gameObject, targetPos, new Vector2(120, 120), DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
+        _followButton.Init(gameObject, _buttonPos, new Vector2(120, 120), DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
         _followButton.gameObject.SetActive(gameObject.activeSelf);
     }
 

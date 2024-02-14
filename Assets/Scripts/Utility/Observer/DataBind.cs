@@ -30,7 +30,6 @@ namespace Muks.DataBind
                 textData = new BindData<string>();
                 _dataBindingText.Add(dataID, textData);
             }
-
             textData.Item = data;
         }
 
@@ -65,6 +64,7 @@ namespace Muks.DataBind
                 buttonData = new BindData<UnityAction>();
                 _dataBindingUnityAction.Add(dataID, buttonData);
             }
+
             buttonData.Item = action;
         }
 
