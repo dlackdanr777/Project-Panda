@@ -53,7 +53,7 @@ public class MapDatabase
 
             if (GameObject.Find(id + "BackGround") == null)
             {
-
+                Debug.Log("id" + id);
                 _isMapExists = false;
                 return;
             }
