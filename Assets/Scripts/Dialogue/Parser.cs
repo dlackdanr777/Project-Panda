@@ -153,9 +153,9 @@ public class Parser
     }
 
 
-    public Dictionary<int, WeatherRewardData> WeatherParse(string CSVFileName)
+    public Dictionary<int, AttendanceRewardData> WeatherParse(string CSVFileName)
     {
-        Dictionary<int, WeatherRewardData> dic = new Dictionary<int, WeatherRewardData>();
+        Dictionary<int, AttendanceRewardData> dic = new Dictionary<int, AttendanceRewardData>();
 
         TextAsset csvData = Resources.Load<TextAsset>(CSVFileName);
         string[] data = csvData.text.Split(new char[] { '\n' });
@@ -171,7 +171,7 @@ public class Parser
             Item item = DatabaseManager.Instance.ItemDatabase.GetGatheringItemById(itemId);
             Sprite sprite = DatabaseManager.Instance.WeatherImage.GetWeatherImage(weather);
 
-            WeatherRewardData weatherData = new WeatherRewardData(day, weather, amount, item, sprite);
+            AttendanceRewardData weatherData = new AttendanceRewardData(day, weather, amount, item, sprite);
 
             dic.Add(day, weatherData);
         }
