@@ -11,11 +11,9 @@ public class SideStoryController : MonoBehaviour
     public static event Action<SideStoryDialogue> OnStartInteractionHandler;
 
     [SerializeField] private string NPCID;
-    [SerializeField] private FollowButton _followButtonPrefab;
-    [SerializeField] private Vector3 _buttonPos;
-    public FollowButton FollowButton => _followButton;
-    private FollowButton _followButton;
+    [SerializeField] private SpriteRenderer _npcRenderer;
 
+    private NPCButton _npcButton;
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private string _storyCode;
@@ -34,17 +32,21 @@ public class SideStoryController : MonoBehaviour
 
     private void Start()
     {
-        Transform parent = GameObject.Find("Follow Button Parent").transform;
-        _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
-        _followButton.Init(gameObject, _buttonPos, new Vector2(120, 120), DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
-        _followButton.gameObject.SetActive(gameObject.activeSelf);
+        Transform parent = GameObject.Find("NPC Button Parent").transform;
+        NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
+        Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
+        _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
+        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
+        _npcButton.gameObject.SetActive(gameObject.activeSelf);
     }
+
 
     public void OnClickStartButton()
     {   
         Init();
         StartSideStory();
     }
+
 
     private void Init()
     {
@@ -73,6 +75,7 @@ public class SideStoryController : MonoBehaviour
 
         _isInitialized = true;
     }
+
     private void StartSideStory()
     {
         for (int i = _storyIndex+1; i < _storyKey.Count; i++)
@@ -116,6 +119,7 @@ public class SideStoryController : MonoBehaviour
         }
     }
 
+
     private bool CheckPrior(string priorStory)
     {
         if (priorStory != null)
@@ -133,6 +137,7 @@ public class SideStoryController : MonoBehaviour
         return true;
     }
 
+
     private int CheckNext(string nextStory)
     {
         if (nextStory != null)
@@ -148,6 +153,7 @@ public class SideStoryController : MonoBehaviour
         }
         return int.MaxValue;
     }
+
 
     private bool CheckCondition(EventType type, string condition, int count)
     {
@@ -173,11 +179,13 @@ public class SideStoryController : MonoBehaviour
         }
     }
 
+
     private void ShowContext(SideStoryDialogue data)
     {
         List<SideDialogueData> dialogueData = data.DialogueData;
         OnStartInteractionHandler?.Invoke(data); //대화 출력
     }
+
 
     private void AddReward(string id)
     {
@@ -196,12 +204,12 @@ public class SideStoryController : MonoBehaviour
         {
             DatabaseManager.Instance.GetNPC(NPCID).Intimacy = nextStoryInti;
         }
-        _followButton._image.sprite = DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID);
 
         //보상
         RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
         _isInitialized = false;
     }
+
 
     private bool RewardItem(EventType type, string condition, int count)
     {
