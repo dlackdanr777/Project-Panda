@@ -6,14 +6,12 @@ public class MapData
 {
     public string Id;
     public string Name;
-    public SpriteRenderer BackGroundRenderer;
     public GameObject[] BackGround;
 
-    public MapData(string id, string name, SpriteRenderer backGroundRenderer, GameObject[] backGround)
+    public MapData(string id, string name, GameObject[] backGround)
     {
         Id = id;
         Name = name;
-        BackGroundRenderer = backGroundRenderer;
         BackGround = backGround;
     }
 }
@@ -48,25 +46,31 @@ public class MapDatabase
         {
             string id = _dataMap[i]["ID"].ToString();
             string name = _dataMap[i]["이름"].ToString();
-            SpriteRenderer backGroundRenderer = null;
             GameObject[] backGround = new GameObject[System.Enum.GetValues(typeof(ETime)).Length];
+
 
             if (GameObject.Find(id + "BackGround") == null)
             {
-                Debug.Log("id" + id);
                 _isMapExists = false;
                 return;
             }
             Debug.Log(id);
-            backGroundRenderer = GameObject.Find(id + "BackGround")?.GetComponent<SpriteRenderer>(); // 정리 후 지우기
 
             // 나중에 for문으로 수정
-            backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<GameObject>();
-            backGround[(int)ETime.Evening] = GameObject.Find(id + "EveningBackGround")?.GetComponent<GameObject>();
-            backGround[(int)ETime.Night] = GameObject.Find(id + "NightBackGround")?.GetComponent<GameObject>();
+            backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<Transform>().gameObject;
+            backGround[(int)ETime.Evening] = GameObject.Find(id + "EveningBackGround")?.GetComponent<Transform>().gameObject;
+            backGround[(int)ETime.Night] = GameObject.Find(id + "NightBackGround")?.GetComponent<Transform>().gameObject;
+
+            for(int j = 0; j <backGround.Length; j++)
+            {
+                if (backGround[j] != null)
+                {
+                    backGround[j].SetActive(false);
+                }
+            }
 
 
-            MapData data = new MapData(id, name, backGroundRenderer, backGround);
+            MapData data = new MapData(id, name, backGround);
             _mapDic.Add(id, data);
         }
 

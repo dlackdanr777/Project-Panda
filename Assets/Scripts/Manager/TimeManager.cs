@@ -114,7 +114,7 @@ public class TimeManager : SingletonHandler<TimeManager>
         // 시간 변경될 시 맵 배경 변경
         switch (GameHour)
         {
-            case < 5: // 밤
+            case < 16: // 밤
                 mapBackGround = mapBackGrounds[2];
                 eTime = ETime.Night;
                 break;
@@ -134,27 +134,19 @@ public class TimeManager : SingletonHandler<TimeManager>
 
         foreach(string key in _mapDic.Keys)
         {
-            if(key != "MN07" && key != "MN08") // 나중에 삭제
+            //_mapDic[key].BackGroundRenderer.sprite = mapBackGround;
+            Debug.Log(key+"_mapDic[key].BackGround[(int)eTime]: " + _mapDic[key].BackGround[(int)eTime]);
+            if (_mapDic[key].BackGround[(int)eTime] != null)
             {
-                _mapDic[key].BackGroundRenderer.sprite = mapBackGround;
-
-                if (_mapDic[key].BackGround[(int)eTime] != null)
+                // 모든 시간 배경 끄기
+                for(int i = 0; i < _mapDic[key].BackGround.Length; i++)
                 {
-                    // 이번 시간 배경 켜기
-                    _mapDic[key].BackGround[(int)eTime].SetActive(true);
+                    _mapDic[key].BackGround[i]?.SetActive(false);
+                }
 
-                    // 전 시간 배경 끄기
-                    if ((int)eTime == 0)
-                    {
-                        _mapDic[key].BackGround[System.Enum.GetValues(typeof(ETime)).Length].SetActive(false);
-                    }
-                    else
-                    {
-                        _mapDic[key].BackGround[(int)(eTime - 1)].SetActive(false);
-                    }
-                }  
+                // 이번 시간 배경 켜기
+                _mapDic[key].BackGround[(int)eTime].SetActive(true);
             }
-
         }
     }
 }

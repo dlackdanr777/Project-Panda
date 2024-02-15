@@ -34,7 +34,10 @@ public class MapButton : MonoBehaviour
         DataBind.SetButtonValue("ForestButton", MoveForest);
         DataBind.SetButtonValue("VillageButton", MoveVillage);
         DataBind.SetButtonValue("MarketButton", MoveMarket);
+        DataBind.SetButtonValue("CatWorldButton", MoveCatWorld);
         DataBind.SetButtonValue("MermaidForestButton", MoveMermaidForest);
+        DataBind.SetButtonValue("OtherWorldlyForestButton", MoveOtherWorldlyForest);
+        DataBind.SetButtonValue("OtherWorldlyForestEntranceButton", MoveOtherWorldlyForestEntrance);
     }
 
     /// <summary>
@@ -108,11 +111,41 @@ public class MapButton : MonoBehaviour
         MoveField(_isLeft);
     }
 
-    private void MoveMermaidForest()
+    private void MoveCatWorld()
     {
         CheckDirection();
 
         _currentMap = 6;
+        _cameraController.MapSize = _mapSize;
+
+        MoveField(_isLeft);
+    }
+
+    private void MoveMermaidForest()
+    {
+        CheckDirection();
+
+        _currentMap = 7;
+        _cameraController.MapSize = _mapSize;
+
+        MoveField(_isLeft);
+    }
+
+    private void MoveOtherWorldlyForest()
+    {
+        CheckDirection();
+
+        _currentMap = 8;
+        _cameraController.MapSize = _mapSize;
+
+        MoveField(_isLeft);
+    }
+
+    private void MoveOtherWorldlyForestEntrance()
+    {
+        CheckDirection();
+
+        _currentMap = 9;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
