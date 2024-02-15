@@ -25,14 +25,13 @@ public class PandaStoryController : MonoBehaviour
 
     [SerializeField] private StoryEventData[] _storyEvents;
 
-    [SerializeField] private FollowButton _followButtonPrefab;
-    private FollowButton _followButton;
-    public FollowButton FollowButton => _followButton;
-
     [SerializeField] private Sprite _buttonImage;
 
     [Tooltip("버튼이 현재 클래스 오브젝트에서 얼마만큼 떨어져있어야 하는지")]
     [SerializeField] private Vector3 _buttonPos;
+
+    private FollowButton _followButton;
+    public FollowButton FollowButton => _followButton;
 
     public StoryDialogue StoryDialogue { get; private set; }
 
@@ -48,10 +47,11 @@ public class PandaStoryController : MonoBehaviour
         StoryDialogue = DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(_storyID);
         OnStartHandler?.Invoke(_storyID, this);
 
-        Vector3 targetPos = transform.position + _buttonPos;
         Transform parent = GameObject.Find("Follow Button Parent").transform;
-        _followButton = Instantiate(_followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
-        _followButton.Init(gameObject, targetPos, new Vector2(120, 120), _buttonImage, () => OnStartInteractionHandler?.Invoke(this, StoryDialogue, _storyEvents));
+        FollowButton followButtonPrefab = Resources.Load<FollowButton>("Button/Follow Button");
+
+        _followButton = Instantiate(followButtonPrefab, transform.position + Vector3.up, Quaternion.identity, parent);
+        _followButton.Init(transform, _buttonPos, new Vector2(120, 120), _buttonImage, () => OnStartInteractionHandler?.Invoke(this, StoryDialogue, _storyEvents));
         _followButton.gameObject.SetActive(gameObject.activeSelf);
 
         OnCheckActivateHandler?.Invoke(this);

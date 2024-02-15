@@ -19,8 +19,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private DialogueManager _dialogueDatabase;
     public DialogueManager DialogueDatabase => _dialogueDatabase;
 
-    private WeatherDatabase _weatherDatabase;
-    public WeatherDatabase WeatherDatabase => _weatherDatabase;
+    private AttendanceDatabase _weatherDatabase;
+    public AttendanceDatabase AttendanceDatabase => _weatherDatabase;
 
     private RecipeDatabase _recipeDatabase;
     public RecipeDatabase RecipeDatabase => _recipeDatabase;
@@ -113,7 +113,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
-        _weatherDatabase = new WeatherDatabase();
+        _weatherDatabase = new AttendanceDatabase();
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
         _pandaDatabase = new PandaManager();
