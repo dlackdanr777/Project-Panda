@@ -18,7 +18,7 @@ public class UIAttendance : UIView
     [SerializeField] private UIAttendanceSlot _slotPrefab;
 
     [Space]
-    [SerializeField] private Button _attendanceButton;
+    [SerializeField] private UIAttendanceButton _attendanceButton;
 
     [SerializeField] private Image _attendanceCheckIamge;
 
@@ -67,12 +67,12 @@ public class UIAttendance : UIView
         if (!_attendanceDatabase.CheckTodayAttendance())
         {
             Debug.Log("아직 출첵 안함");
-            _attendanceButton.onClick.AddListener(OnAttendanceButtonClicked);
+            _attendanceButton.EnableButtonClick(OnAttendanceButtonClicked);
         }
         else
         {
             _attendanceCheckIamge.gameObject.SetActive(true);
-            _attendanceButton.gameObject.SetActive(false);
+            _attendanceButton.DisableButtonClick();
         }
     }
 
@@ -114,7 +114,6 @@ public class UIAttendance : UIView
             UIAttendanceSlot slot = Instantiate(_slotPrefab);
             slot.transform.parent = _slotLayoutParent;
 
-            Debug.Log(i + ", " + slot);
             //현재 보상UI의 경우 맨 앞에 나와야 하기 때문에 i == 0일 경우 설정합니다.
             if (i == 0)
             {
@@ -141,9 +140,7 @@ public class UIAttendance : UIView
         Tween.TransformMove(_attendanceCheckIamge.gameObject, _todayUISlot.transform.position, 0.3f, TweenMode.EaseInQuint);*/
 
         _attendanceCheckIamge.transform.localScale = new Vector3(2f, 2f, 2f);
-        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.4f, TweenMode.EaseInQuint, () => _dontTouchArea.SetActive(false));
-
-        _attendanceButton.onClick.RemoveListener(OnAttendanceButtonClicked);
+        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.3f, TweenMode.EaseInQuint, () => _dontTouchArea.SetActive(false));
     }
 
 }
