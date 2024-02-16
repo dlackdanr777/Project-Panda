@@ -37,23 +37,15 @@ namespace Muks.DataBind
         }
 
 
-/*        private void UpdateButton(UnityAction action)
-        {
-            if (IsListenerRegistered(_action))
-                RemoveListener(_action);
-
-            if (IsListenerRegistered(action))
-                RemoveListener(action);
-
-            _action = action;
-
-            UnityEventTools.AddPersistentListener(_button.onClick, _action);
-        }*/
-
-
         private void Enabled()
         {
             _data = DataBind.GetButtonValue(_dataID);
+
+            if(_data.Item == null)
+            {
+                Debug.LogError("넘겨받은 데이터가 존재하지 않습니다.");
+                return;
+            }
 
             if (IsListenerRegistered(_data.Item))
                 return;

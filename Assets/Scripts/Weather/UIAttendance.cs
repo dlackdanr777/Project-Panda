@@ -132,15 +132,15 @@ public class UIAttendance : UIView
     private void OnAttendanceButtonClicked()
     {
         _attendanceButton.gameObject.SetActive(true);
-        _attendanceDatabase.ChecktAttendance();
         _attendanceCheckIamge.gameObject.SetActive(true);
         _dontTouchArea.SetActive(true);
 
-/*        _attendanceCheckIamge.transform.position = _todayUISlot.transform.position + new Vector3(10, 10, 0);
-        Tween.TransformMove(_attendanceCheckIamge.gameObject, _todayUISlot.transform.position, 0.3f, TweenMode.EaseInQuint);*/
+        _attendanceCheckIamge.transform.position = _todayUISlot.transform.position;
 
         _attendanceCheckIamge.transform.localScale = new Vector3(2f, 2f, 2f);
-        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.3f, TweenMode.EaseInQuint, () => _dontTouchArea.SetActive(false));
+        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.35f, TweenMode.EaseInQuint, () => _dontTouchArea.SetActive(false));
+
+        _attendanceDatabase.ChecktAttendance();
     }
 
 }
