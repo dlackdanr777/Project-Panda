@@ -196,69 +196,19 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _pandaDatabase.SetStarterMBTI(mbti);
     }
 
-    //Gathering Item
-    /// <summary>
-    /// GatheringItem BugList
-    /// </summary>
-    /// <returns></returns>
-    public List<GatheringItem> GetBugItemList()
-    {
-        return _itemDatabase.ItemBugList;
-    }
-
-    /// <summary>
-    /// GatheringItem FishList
-    /// </summary>
-    /// <returns></returns>
-    public List<GatheringItem> GetFishItemList()
-    {
-        return _itemDatabase.ItemFishList;
-    }
-
-    /// <summary>
-    /// GatheringItem FruitList
-    /// </summary>
-    /// <returns></returns>
-    public List<GatheringItem> GetFruitItemList()
-    {
-        return _itemDatabase.ItemFruitList;
-    }
 
     public Item GetGIImageById(string id)
     {
-        List<GatheringItem> list = new List<GatheringItem>();
+        Dictionary<string, Item> allItemDic = _itemDatabase.AllItemDic;
         string code = id.Substring(0, 3);
 
-        switch (code)
+        if(allItemDic.TryGetValue(id, out Item item))
         {
-            case "IBG":
-                list = _itemDatabase.ItemBugList;
-                break;
-            case "IFI":
-                list = _itemDatabase.ItemFishList;
-                break;
-            case "IFR":
-                list = _itemDatabase.ItemFruitList;
-                break;
+            return item;
         }
 
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i].Id.Equals(id))
-            {
-                return list[i];
-            }
-        }
-
+        Debug.Log("아이템이 존재하지 않습니다");
         return null;
-    }
-
-    /// <summary>
-    /// ToolItem List
-    /// </summary>
-    public List<ToolItem> GetGatheringToolItemList()
-    {
-        return _itemDatabase.ItemToolList;
     }
 
     /// <summary>

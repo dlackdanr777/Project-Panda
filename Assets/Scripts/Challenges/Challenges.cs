@@ -101,9 +101,9 @@ public class Challenges
 
         // 도감 Count 초기화
         _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.ItemDatabase.ItemBugList.Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.ItemDatabase.ItemFishList.Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.ItemDatabase.ItemFruitList.Where(n => n.IsReceived == true).Count();
 
         // 레시피 - 추가하기
     }

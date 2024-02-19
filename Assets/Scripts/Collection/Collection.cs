@@ -341,13 +341,13 @@ public class Collection : MonoBehaviour
             switch (_gatheringType)
             {
                 case GatheringItemType.Bug:
-                    getItemList = DatabaseManager.Instance.GetBugItemList();
+                    getItemList = DatabaseManager.Instance.ItemDatabase.ItemBugList;
                     break;
                 case GatheringItemType.Fish:
-                    getItemList = DatabaseManager.Instance.GetFishItemList();
+                    getItemList = DatabaseManager.Instance.ItemDatabase.ItemFishList;
                     break;
                 case GatheringItemType.Fruit:
-                    getItemList = DatabaseManager.Instance.GetFruitItemList();
+                    getItemList = DatabaseManager.Instance.ItemDatabase.ItemFruitList;
                     break;
             }
 

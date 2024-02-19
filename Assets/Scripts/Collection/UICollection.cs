@@ -114,11 +114,11 @@ public class UICollection : MonoBehaviour
         GatheringItem gatheringItem = null;
 
         if(gatheringItemType == GatheringItemType.Bug)
-            gatheringItem = DatabaseManager.Instance.GetBugItemList().Find(item => item.Id.Equals(id));
+            gatheringItem = DatabaseManager.Instance.ItemDatabase.ItemBugList.Find(item => item.Id.Equals(id));
         else if (gatheringItemType == GatheringItemType.Fish)
-            gatheringItem = DatabaseManager.Instance.GetFishItemList().Find(item => item.Id.Equals(id));
+            gatheringItem = DatabaseManager.Instance.ItemDatabase.ItemFishList.Find(item => item.Id.Equals(id));
         else if (gatheringItemType == GatheringItemType.Fruit)
-            gatheringItem = DatabaseManager.Instance.GetFruitItemList().Find(item => item.Id.Equals(id));
+            gatheringItem = DatabaseManager.Instance.ItemDatabase.ItemFruitList.Find(item => item.Id.Equals(id));
 
         SetSuccessFrame(gatheringItem.Season);
 
