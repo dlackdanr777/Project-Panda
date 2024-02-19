@@ -912,7 +912,7 @@ public class UserInfo
     #endregion
 
     #region Item
-
+    //TODO: 차후 추가
 
     #endregion
 

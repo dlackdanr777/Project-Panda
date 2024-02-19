@@ -40,7 +40,7 @@ namespace Cooking
         }
 
 
-        public void DisablerightButton()
+        public void DisableRightButton()
         {
             _rightButton.gameObject.SetActive(false);
         }

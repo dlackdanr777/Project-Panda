@@ -73,20 +73,31 @@ public class ItemDatabase
 
     //GatheringItem
     //Fish
-    public List<GatheringItem> ItemFishList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemFishDic = new Dictionary<string, GatheringItem>();
+    private List<GatheringItem> _itemFishList = new List<GatheringItem>();
+    public List<GatheringItem> ItemFishList => _itemFishList;
+    private Dictionary<string, GatheringItem> _itemFishDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFishDic => _itemFishDic;
     //Bug
-    public List<GatheringItem> ItemBugList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemBugDic = new Dictionary<string, GatheringItem>();
+    private List<GatheringItem> _itemBugList = new List<GatheringItem>();
+    public List<GatheringItem> ItemBugList => _itemBugList;
+    private Dictionary<string, GatheringItem> _itemBugDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemBugDic => _itemBugDic;
+
     //Fruit
-    public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemFruitDic = new Dictionary<string, GatheringItem>();
+    private List<GatheringItem> _itemFruitList = new List<GatheringItem>();
+    public List<GatheringItem> ItemFruitList => _itemFruitList;
+    private Dictionary<string, GatheringItem> _itemFruitDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFruitDic => _itemFruitDic;
+
     //ToolItem
-    public List<ToolItem> ItemToolList = new List<ToolItem>();
-    public Dictionary<string, ToolItem> ItemToolDic = new Dictionary<string, ToolItem>();
+    private List<ToolItem> _itemToolList = new List<ToolItem>();
+    public List<ToolItem> ItemToolList => _itemToolList;
+    private Dictionary<string, ToolItem> _itemToolDic = new Dictionary<string, ToolItem>();
+    public Dictionary<string, ToolItem> ItemToolDic => _itemToolDic;
 
-    public Dictionary<string, Item> AllItemDic = new Dictionary<string, Item>();
 
+    private Dictionary<string, Item> _allItemDic = new Dictionary<string, Item>();
+    public Dictionary<string, Item> AllItemDic => _allItemDic;
 
 
     //Image
@@ -372,6 +383,7 @@ public class ItemDatabase
                     dataFish[i]["시간"].ToString(),
                     dataFish[i]["계절"].ToString()
                     );
+
             ItemFishList.Add(item);
             ItemFishDic.Add(item.Id, item);
             AllItemDic.Add(item.Id, item);
@@ -425,6 +437,7 @@ public class ItemDatabase
                     (int)dataTool[i]["채집 확률"],
                     (int)dataTool[i]["스토리 단계"]
                     );
+
             ItemToolList.Add(item);
             ItemToolDic.Add(item.Id, item);
             AllItemDic.Add(item.Id, item);
