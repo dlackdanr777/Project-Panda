@@ -114,6 +114,44 @@ namespace Muks.BackEnd
         }
 
 
+        /// <summary>게스트 로그인을 진행하는 함수 </summary>
+        public void GuestLogin(int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
+        {
+            Debug.Log("로그인을 요청합니다.");
+
+            if (maxRepeatCount <= 0)
+            {
+                Debug.LogError("로그인 실패");
+                return;
+            }
+
+            BackendReturnObject bro = Backend.BMember.GuestLogin("게스트 로그인");
+
+            switch (ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    Debug.LogError("로그인 실패");
+                    break;
+
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
+
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    GuestLogin(maxRepeatCount - 1, onCompleted);
+                    break;
+
+                case BackendState.Success:
+                    Debug.Log("로그인 성공");
+                    onCompleted?.Invoke(bro);
+                    break;
+            }
+        }
+
+
+
+
         /// <summary> id, pw, 서버 연결 실패시 반복횟수, 완료 시 실행할 함수를 받아 회원가입을 진행하는 함수 </summary>
         public void CustomSignup(string id, string pw, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
@@ -364,6 +402,10 @@ namespace Muks.BackEnd
                         Debug.LogError("토큰을 발급 받지 못했습니다.");
                         return BackendState.Failure;
                     }
+                }
+                else
+                {
+                    Debug.LogError(bro.GetErrorCode());
                 }
 
                 return BackendState.Retry;

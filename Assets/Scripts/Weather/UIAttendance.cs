@@ -113,7 +113,7 @@ public class UIAttendance : UIView
         {
             UIAttendanceSlot slot = Instantiate(_slotPrefab);
             slot.transform.parent = _slotLayoutParent;
-
+            slot.transform.localScale = new Vector3(1, 1, 1);
             //현재 보상UI의 경우 맨 앞에 나와야 하기 때문에 i == 0일 경우 설정합니다.
             if (i == 0)
             {
