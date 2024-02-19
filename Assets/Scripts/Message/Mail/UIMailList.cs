@@ -132,22 +132,7 @@ public class UIMailList : MonoBehaviour
     private void AddGift(int index)
     {
         string giftId = _mailList.GetMessageList()[index].Gift.Id;
-        giftId = giftId.Substring(0, 3);
-        switch (giftId)
-        {
-            case "IBG":
-                GameManager.Instance.Player.GatheringItemInventory[0].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
-                break;
-            case "IFI":
-                GameManager.Instance.Player.GatheringItemInventory[1].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
-                break;
-            case "IFR":
-                GameManager.Instance.Player.GatheringItemInventory[2].AddById(InventoryItemField.GatheringItem, _mailList.GetMessageList()[index].Gift.Id);
-                break;
-            case "ITG":
-                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool, _mailList.GetMessageList()[index].Gift.Id);
-                break;
-        }
+        GameManager.Instance.Player.AddItemById(_mailList.GetMessageList()[index].Gift.Id);
         _mailList.GetMessageList()[index].IsReceived = true;
     }
 

@@ -4,6 +4,7 @@ using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 //아이템 종류
 public enum InventoryItemField
@@ -83,6 +84,9 @@ public class ItemDatabase
     public Dictionary<string, GatheringItem> ItemFruitDic = new Dictionary<string, GatheringItem>();
     //ToolItem
     public List<ToolItem> ItemToolList = new List<ToolItem>();
+
+
+    public Dictionary<string, Item> AllItemDic = new Dictionary<string, Item>();
 
 
 
@@ -218,6 +222,7 @@ public class ItemDatabase
 
         ItemBugList.Clear();
         ItemBugDic.Clear();
+        AllItemDic.Clear();
 
         for (int i = 0, count = json.Count; i < count; i++)
         {
@@ -234,6 +239,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemBugList.Add(item);
             ItemBugDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -262,6 +268,7 @@ public class ItemDatabase
 
             ItemFishList.Add(item);
             ItemFishDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -290,6 +297,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemFruitList.Add(item);
             ItemFruitDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("과일 아이템 받아오기 성공!");
     }
@@ -311,9 +319,11 @@ public class ItemDatabase
             int storyStep = int.Parse(json[i]["StoryStep"].ToString());
             string mapID = json[i]["MapID"].ToString();
 
-            ItemToolList.Add(new ToolItem(
-                  itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
-                  ,gatheringPercentage, storyStep));
+            ToolItem item = new ToolItem(itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
+                  , gatheringPercentage, storyStep);
+
+            ItemToolList.Add(item);
+            AllItemDic.Add(itemID, item);
         }
     }
 
@@ -342,6 +352,7 @@ public class ItemDatabase
                     );
             ItemBugList.Add(item);
             ItemBugDic.Add(dataBug[i]["ID"].ToString(), item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -367,6 +378,7 @@ public class ItemDatabase
                     );
             ItemFishList.Add(item);
             ItemFishDic.Add(dataFish[i]["ID"].ToString(), item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -392,6 +404,7 @@ public class ItemDatabase
                     );
             ItemFruitList.Add(item);
             ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
+            AllItemDic.Add(item.Id, item);
         }
 
         Debug.Log("과일 아이템 받아오기 성공!");
@@ -405,7 +418,7 @@ public class ItemDatabase
 
         for (int i = 0; i < dataTool.Count; i++)
         {
-            ItemToolList.Add(new ToolItem(
+            ToolItem item = new ToolItem(
                     dataTool[i]["ID"].ToString(),
                     dataTool[i]["이름"].ToString(),
                     dataTool[i]["설명"].ToString(),
@@ -414,7 +427,10 @@ public class ItemDatabase
                     GetItemSpriteById(dataTool[i]["ID"].ToString(), ToolItemType.GatheringTool),
                     (int)dataTool[i]["채집 확률"],
                     (int)dataTool[i]["스토리 단계"]
-                    ));
+                    );
+
+            ItemToolList.Add(item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("장비 아이템 받아오기 성공!");
     }

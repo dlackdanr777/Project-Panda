@@ -585,8 +585,7 @@ public class Challenges
 
 
         // æ∆¿Ã≈€ »πµÊ - µµ±∏
-        GameManager.Instance.Player.ToolItemInventory[0].AddById
-            (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
+        GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
         DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);

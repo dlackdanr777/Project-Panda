@@ -854,59 +854,13 @@ public class UserInfo
 
     public void LoadUserInventory()
     {
-        //GatheringItem
-        List<Item> GatheringItems = new List<Item>();
-        GatheringItems.AddRange(DatabaseManager.Instance.GetBugItemList());
-        GatheringItems.AddRange(DatabaseManager.Instance.GetFishItemList());
-        GatheringItems.AddRange(DatabaseManager.Instance.GetFruitItemList());
-
-        for (int i=0; i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
+        for (int i = 0; i < GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
-            for (int j = 0; j < GatheringItems.Count; j++) //데이터베이스
-            {
-                int fieldIndex = -1;
-                if (GatheringInventoryDataArray[i].Id.Equals(GatheringItems[j].Id))
-                {
-                    if (GatheringInventoryDataArray[i].Id.StartsWith("IBG"))
-                    {
-                        fieldIndex = 0;
-                    }
-                    else if (GatheringInventoryDataArray[i].Id.StartsWith("IFI"))
-                    {
-                        fieldIndex = 1;
-                    }
-                    else if (GatheringInventoryDataArray[i].Id.StartsWith("IFR"))
-                    {
-                        fieldIndex = 2;
-                    }
-                    InventoryItemField field = InventoryItemField.GatheringItem;
-                    string id = GatheringInventoryDataArray[i].Id;
-                    int amount = GatheringInventoryDataArray[i].Count;
-                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(field, id, amount, ItemAddEventType.None);
-                }
-            }
-        }
-
-        //ToolItem
-        List<Item> ToolItems = new List<Item>();
-        ToolItems.AddRange(DatabaseManager.Instance.GetGatheringToolItemList());
-
-        for(int i = 0; i < ToolInventoryDataArray.Count; i++)
-        {
-            for(int j=0;j<ToolItems.Count; j++)
-            {
-                int fieldIndex = -1;
-                if (ToolInventoryDataArray[i].Id.Equals(ToolItems[j].Id))
-                {
-                    if (ToolInventoryDataArray[i].Id.StartsWith("ITG"))
-                    {
-                        fieldIndex = 0;
-                    }
-                    GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, ToolInventoryDataArray[i].Id);
-                }
-            }
+            InventoryData data = GatheringInventoryDataArray[i];
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
         }
     }
+
 
     private void SaveUserInventory()
     {

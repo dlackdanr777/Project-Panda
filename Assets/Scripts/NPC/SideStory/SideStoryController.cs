@@ -219,7 +219,7 @@ public class SideStoryController : MonoBehaviour
             case EventType.MONEY:
                 return GameManager.Instance.Player.GainBamboo(count);
             case EventType.IVGI:
-                GameManager.Instance.Player.AddIVGI(condition, count);
+                GameManager.Instance.Player.AddItemById(condition, count);
                 return true;
             case EventType.IVCK:
             case EventType.IVFU:

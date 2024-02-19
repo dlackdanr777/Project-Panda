@@ -41,8 +41,7 @@ public class ShopButton : MonoBehaviour
         {
             if (GameManager.Instance.Player.SpendBamboo(int.Parse(_price.text)))
             {
-                GameManager.Instance.Player.ToolItemInventory[0].AddById(InventoryItemField.Tool,
-                    DataBind.GetTextValue("ShopBuyItemDetailID").Item, int.Parse(_count.text)); //아이템에 따라 달라짐(현재는 도구)
+                GameManager.Instance.Player.AddItemById(DataBind.GetTextValue("ShopBuyItemDetailID").Item, int.Parse(_count.text));
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
                 ShopItemHandler?.Invoke(); //SoldOut
@@ -96,12 +95,12 @@ public class ShopButton : MonoBehaviour
         switch (code)
         {
             case "IBG": 
-                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Bug].RemoveById(id, count);
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Bug].RemoveItemById(id, count);
             case "IFI":
-                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fish].RemoveById(id, count);
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fish].RemoveItemById(id, count);
             case "IFR":
                 Debug.Log(GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].GetInventoryList().Count);
-                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].RemoveById(id, count);
+                return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].RemoveItemById(id, count);
                 //요리 추가해야함
 
         }

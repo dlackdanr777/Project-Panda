@@ -192,7 +192,7 @@ public class CookingSystem : MonoBehaviour
                 if (item1.Id == items[i].Id)
                 {
                     isRemovedItem1 = true;
-                    inventory.Remove(item1);
+                    inventory.RemoveItem(item1);
                 }
 
             }
@@ -202,7 +202,7 @@ public class CookingSystem : MonoBehaviour
                 if (item2.Id == items[i].Id)
                 {
                     isRemovedItem2 = true;
-                    inventory.Remove(item2);
+                    inventory.RemoveItem(item2);
                 }
             }
 

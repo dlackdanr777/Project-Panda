@@ -72,55 +72,9 @@ public class Player
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
-        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR01", 1);
-        GatheringItemInventory[(int)GatheringItemType.Fruit].AddById(InventoryItemField.GatheringItem, "IFR06", 1);
-
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
 
-    public InventoryItemField GetField(string id)
-    {
-        string startId = id.Substring(0, 3);
-
-        switch (startId)
-        {
-            case "IBG":
-                return InventoryItemField.GatheringItem;
-            case "IFI":
-                return InventoryItemField.GatheringItem;
-            case "IFR":
-                return InventoryItemField.GatheringItem;
-
-            case "ITG":
-                return InventoryItemField.Tool;
-
-            default:
-                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
-                return InventoryItemField.None;
-        }
-    }
-
-    public int GetItemType(string id)
-    {
-        string startId = id.Substring(0, 3);
-
-        switch (startId)
-        {
-            case "IBG":
-                return (int)GatheringItemType.Bug;
-            case "IFI":
-                return (int)GatheringItemType.Fish;
-            case "IFR":
-                return (int)GatheringItemType.Fruit;
-
-            case "ITG":
-                return (int)ToolItemType.GatheringTool;
-
-            default:
-                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
-                return -1;
-        }
-    }
 
     public bool SpendBamboo(int amount)
     {
@@ -152,6 +106,30 @@ public class Player
     }
 
 
+    public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
+    {
+        InventoryItemField field = GetField(id);
+        Debug.Log(field);
+        switch (field)
+        {
+            case InventoryItemField.GatheringItem:
+                GatheringItemInventory[GetItemType(id)].AddById(id, count, type);
+                return true;
+
+            case InventoryItemField.Cook:
+                CookItemInventory[GetItemType(id)].AddById(id, count, type);
+                return true;
+
+            case InventoryItemField.Tool:
+                ToolItemInventory[GetItemType(id)].AddById(id, count, type);
+                return true;
+        }
+
+        Debug.LogErrorFormat("{0} id를 가진 아이템이 존재하지 않습니다.");
+        return false;
+    }
+
+
     public Inventory[] GetItemInventory(InventoryItemField field)
     {
         Inventory[] inventoryArray = null;
@@ -169,6 +147,51 @@ public class Player
         }
 
         return inventoryArray;
+    }
+
+    public int GetItemType(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return (int)GatheringItemType.Bug;
+            case "IFI":
+                return (int)GatheringItemType.Fish;
+            case "IFR":
+                return (int)GatheringItemType.Fruit;
+
+            case "ITG":
+                return (int)ToolItemType.GatheringTool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return -1;
+        }
+    }
+
+
+    public InventoryItemField GetField(string id)
+    {
+        string startId = id.Substring(0, 3);
+
+        switch (startId)
+        {
+            case "IBG":
+                return InventoryItemField.GatheringItem;
+            case "IFI":
+                return InventoryItemField.GatheringItem;
+            case "IFR":
+                return InventoryItemField.GatheringItem;
+
+            case "ITG":
+                return InventoryItemField.Tool;
+
+            default:
+                Debug.LogErrorFormat("{0}에 해당하는 아이템이 존재하지 않습니다.", startId);
+                return InventoryItemField.None;
+        }
     }
 
     #region sidestory
@@ -265,7 +288,7 @@ public class Player
         return false;
     }
 
-    public void AddIVGI(string id, int count)
+   /* public void AddIVGI(string id, int count)
     {
         int index = 0;
         string code = id.Substring(0, 3);
@@ -291,7 +314,7 @@ public class Player
         {
             GatheringItemInventory[index].AddById(InventoryItemField.GatheringItem, id, count);
         }
-    }
+    }*/
     #endregion
 
 
