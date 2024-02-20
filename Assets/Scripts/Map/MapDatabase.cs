@@ -54,7 +54,6 @@ public class MapDatabase
                 _isMapExists = false;
                 return;
             }
-            Debug.Log(id);
 
             // 나중에 for문으로 수정
             backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<Transform>().gameObject;

@@ -85,12 +85,20 @@ public class MapButton : MonoBehaviour
     }
     private void MoveForest()
     {
-        CheckDirection();
+        if(_currentMap == 8)
+        {
+            _currentMap = 3;
+            MoveOtherWorld();
+        }
+        else
+        {
+            CheckDirection();
 
-        _currentMap = 3;
-        _cameraController.MapSize = _mapSize;
+            _currentMap = 3;
+            _cameraController.MapSize = _mapSize;
 
-        MoveField(_isLeft);
+            MoveField(_isLeft);
+        }
     }
     private void MoveVillage()
     {
@@ -133,12 +141,20 @@ public class MapButton : MonoBehaviour
 
     private void MoveOtherWorldlyForest()
     {
-        CheckDirection();
+        if(_currentMap == 3)
+        {
+            _currentMap = 8;
+            MoveOtherWorld();
+        }
+        else
+        {
+            CheckDirection();
 
-        _currentMap = 8;
-        _cameraController.MapSize = _mapSize;
+            _currentMap = 8;
+            _cameraController.MapSize = _mapSize;
 
-        MoveField(_isLeft);
+            MoveField(_isLeft);
+        }
     }
 
     private void MoveOtherWorldlyForestEntrance()
@@ -175,6 +191,24 @@ public class MapButton : MonoBehaviour
             {
                 Camera.main.transform.position = targetPos + new Vector3(-lx, 0, 0);
             }
+
+            FadeInOutManager.Instance.FadeOut(_fadeTime);
+        });
+    }
+
+    private void MoveOtherWorld()
+    {
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
+        {
+            TimeManager.Instance.CheckMap();
+
+            // 자동차로 이동 시 같은 위치로 카메라 이동
+            float lx = _cameraController.MapCenter.x - Camera.main.transform.position.x;
+
+            _cameraController.MapCenter = _targetTransform[_currentMap].position;
+
+            Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         });

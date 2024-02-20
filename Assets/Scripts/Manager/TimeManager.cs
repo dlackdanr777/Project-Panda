@@ -114,7 +114,7 @@ public class TimeManager : SingletonHandler<TimeManager>
         // ½Ã°£ º¯°æµÉ ½Ã ¸Ê ¹è°æ º¯°æ
         switch (GameHour)
         {
-            case < 16: // ¹ã
+            case < 7: // ¹ã
                 mapBackGround = mapBackGrounds[2];
                 eTime = ETime.Night;
                 break;
@@ -135,7 +135,6 @@ public class TimeManager : SingletonHandler<TimeManager>
         foreach(string key in _mapDic.Keys)
         {
             //_mapDic[key].BackGroundRenderer.sprite = mapBackGround;
-            Debug.Log(key+"_mapDic[key].BackGround[(int)eTime]: " + _mapDic[key].BackGround[(int)eTime]);
             if (_mapDic[key].BackGround[(int)eTime] != null)
             {
                 // ¸ðµç ½Ã°£ ¹è°æ ²ô±â
