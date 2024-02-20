@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -13,38 +14,31 @@ namespace Cooking
 
         [SerializeField] private Button _slotButton;
 
-        private UISelect _uiSelect;
+        [SerializeField] private Image _selectImage;
 
         private InventoryItem _currentItem;
         public InventoryItem CurrentItem => _currentItem;
 
-        public void Init(UISelect uiSelect)
+        public void Init(int index, UnityAction<int> onButtonClicked = null)
         {
-            _uiSelect = uiSelect;
-            _slotButton.onClick.AddListener(OnSlotButtonClicked);
+            _slotButton.onClick.AddListener(() => onButtonClicked(index));
             _itemImage.gameObject.SetActive(false);
+            _selectImage.gameObject.SetActive(false);
+            DisableSelectSlot();
+
         }
 
 
-        private void OnSlotButtonClicked()
+        public void EnableSelectSlot()
         {
-            _currentItem = null;
-            _itemImage.gameObject.SetActive(false);
+            _selectImage.gameObject.SetActive(true);
         }
 
 
-        public void CheckCurrentItem()
+        public void DisableSelectSlot()
         {
-            if (_currentItem == null)
-                return;
-
-            if (_currentItem.Count <= 0)
-            {
-                _currentItem = null;
-                _itemImage.gameObject.SetActive(false);
-            }
+            _selectImage.gameObject.SetActive(false);
         }
-
 
         public void SetActiveSlot(bool value)
         {
@@ -62,7 +56,7 @@ namespace Cooking
         public void ChoiceItem(InventoryItem item)
         {
             _currentItem = item;
-            if (_currentItem == null)
+            if (_currentItem == null || _currentItem.Count <= 0)
             {
                 _itemImage.gameObject.SetActive(false);
                 return;
@@ -71,8 +65,21 @@ namespace Cooking
             _itemImage.gameObject.SetActive(true);
             _currentItem = item;
             _itemImage.sprite = item.Image;
+
+            CheckCurrentItem();
         }
 
+        private void CheckCurrentItem()
+        {
+            if (_currentItem == null)
+                return;
+
+            if (_currentItem.Count <= 0)
+            {
+                _currentItem = null;
+                _itemImage.gameObject.SetActive(false);
+            }
+        }
     }
 }
 

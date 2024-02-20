@@ -251,6 +251,19 @@ public class Inventory
         return false;
     }
 
+
+    /// <summary>
+    /// 인덱스로 아이템 찾기
+    /// </summary>
+    public InventoryItem FindItemByIndex(int Index)
+    {
+        if (ItemsCount <= Index)
+            return null;
+
+        return _items[Index];
+    }
+
+
     /// <summary>
     /// 스페셜 아이템이 있는지 확인
     /// </summary>

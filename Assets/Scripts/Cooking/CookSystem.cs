@@ -72,9 +72,11 @@ namespace Cooking
         [SerializeField] private Sprite _cookwarePotImage;
 
 
-        private Inventory[] _inventory => GameManager.Instance.Player.GatheringItemInventory;
+        public Inventory[] Inventory => GameManager.Instance.Player.GatheringItemInventory;
 
         private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
+
+        private RecipeData _currentRecipeData;
 
         private Cookware _currentCookware;
 

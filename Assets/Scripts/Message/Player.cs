@@ -72,6 +72,8 @@ public class Player
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
+        AddItemById("IBG01");
+
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
 
