@@ -11,17 +11,16 @@ public class CityHall : MonoBehaviour
     [SerializeField] private GameObject _cityHallOffice;
 
     [Header("Button")]
-    [SerializeField] private GameObject _wishTreeButtonR;
     [SerializeField] private GameObject _enterCityHallButton;
     [SerializeField] private GameObject _exitCityHallButton;
     [SerializeField] private GameObject _enterCityHallOfficeButton;
     [SerializeField] private GameObject _exitCityHallOfficeButton;
 
     [Header("Sky")]
-    [SerializeField] private GameObject _day;
-    [SerializeField] private GameObject _night;
-    [SerializeField] private GameObject _dayOffice;
-    [SerializeField] private GameObject _nightOffice;
+    [Tooltip("0:Day 1:Evening 2:Night")]
+    [SerializeField] private GameObject[] _skyCityHall;
+
+    [SerializeField] private GameObject[] _skyOffice;
 
     private Vector2 _mapSize;
     private Vector2 _cityHallMapSize;
@@ -29,11 +28,19 @@ public class CityHall : MonoBehaviour
 
     private float _fadeTime = 1f;
 
+    private int _dayEndTime;
+    private int _eveningEndTime;
+    private int _nightEndTime;
+
     void Start()
     {
         _mapSize = new Vector2(59.5f, _cameraController.MapSize.y);
         _cityHallMapSize = new Vector2(28.5f, _cameraController.MapSize.y);
         _cityHallOfficeMapSize = new Vector2(45, _cameraController.MapSize.y);
+
+        _dayEndTime = TimeManager.Instance.DayEndTime;
+        _eveningEndTime = TimeManager.Instance.EveningEndTime;
+        _nightEndTime = TimeManager.Instance.NightEndTime;
 
         DataBind.SetButtonValue("EnterCityHallButton", () => {
 
@@ -75,21 +82,25 @@ public class CityHall : MonoBehaviour
 
         _backGround.SetActive(false);
         _market.SetActive(false);
-        _wishTreeButtonR.SetActive(false);
         _enterCityHallButton.SetActive(false);
         _exitCityHallButton.SetActive(true);
         _enterCityHallOfficeButton.SetActive(true);
         _cityHall.SetActive(true);
 
-        if(TimeManager.Instance.GameHour > 7 && TimeManager.Instance.GameHour < 17)
+        if(TimeManager.Instance.GameHour >= _nightEndTime && TimeManager.Instance.GameHour < _dayEndTime)
         {
-            _day.SetActive(true);
-            _night.SetActive(false);
+            _skyCityHall[(int)ETime.Day].SetActive(true);
+            _skyCityHall[(int)ETime.Night].SetActive(false);
+        }
+        else if(TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        {
+            _skyCityHall[(int)ETime.Evening].SetActive(true);
+            _skyCityHall[(int)ETime.Day].SetActive(false);
         }
         else
         {
-            _day.SetActive(false);
-            _night.SetActive(true);
+            _skyCityHall[(int)ETime.Night].SetActive(true);
+            _skyCityHall[(int)ETime.Evening].SetActive(false);
         }
     }
 
@@ -100,7 +111,6 @@ public class CityHall : MonoBehaviour
 
         _backGround.SetActive(true);
         _market.SetActive(true);
-        _wishTreeButtonR.SetActive(true);
         _enterCityHallButton.SetActive(true);
         _exitCityHallButton.SetActive(false);
         _enterCityHallOfficeButton.SetActive(false);
@@ -120,15 +130,20 @@ public class CityHall : MonoBehaviour
         _exitCityHallOfficeButton.SetActive(true);
         _cityHallOffice.SetActive(true);
 
-        if (TimeManager.Instance.GameHour > 7 && TimeManager.Instance.GameHour < 18)
+        if (TimeManager.Instance.GameHour >= _nightEndTime && TimeManager.Instance.GameHour < _dayEndTime)
         {
-            _dayOffice.SetActive(true);
-            _nightOffice.SetActive(false);
+            _skyOffice[(int)ETime.Day].SetActive(true);
+            _skyOffice[(int)ETime.Night].SetActive(false);
+        }
+        else if (TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        {
+            _skyOffice[(int)ETime.Evening].SetActive(true);
+            _skyOffice[(int)ETime.Day].SetActive(false);
         }
         else
         {
-            _dayOffice.SetActive(false);
-            _nightOffice.SetActive(true);
+            _skyOffice[(int)ETime.Night].SetActive(true);
+            _skyOffice[(int)ETime.Evening].SetActive(false);
         }
     }
 

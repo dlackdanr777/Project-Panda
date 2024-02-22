@@ -11,7 +11,7 @@ public class Collection : MonoBehaviour
     public Action<string> OnSuccessFrame;
     public Action<GatheringItemType> OnCollectionFail;
     public Action OnExitCollection; // 채집 화면 종료
-    public Action<float, GatheringItemType> OnCollectionButtonClicked;
+    public Action<float, GatheringItemType, string> OnCollectionButtonClicked;
 
     private bool _isClickStarButton;
     private bool _isCollection = false; // 채집 중인가?
@@ -36,7 +36,7 @@ public class Collection : MonoBehaviour
     private Vector3 _targetPos; // 카메라 위치
 
     [Tooltip("채집과 판다 사이의 세부 위치 조정")]
-    [SerializeField] private Vector3 _pandaPosition = new Vector3(-0.83f, -3.72f, 0); // 채집과 판다 위치 차이
+    [SerializeField] private Transform _pandaTransform; // 채집과 판다 위치 차이
     private Vector3 _lastPandaPosition; // 판다의 마지막 위치
 
     [Tooltip("채집 위치 지정")]
@@ -122,7 +122,7 @@ public class Collection : MonoBehaviour
                 starButton = "FruitStarButton";
                 break;
         }
-        DataBind.SetButtonValue(starButton, ClickStarButton);
+        DataBind.SetButtonValue(_map + starButton, ClickStarButton);
 
     }
     //private void OnDestroy()
@@ -165,7 +165,7 @@ public class Collection : MonoBehaviour
         }
         else if(Input.GetMouseButtonDown(0) && _isExit)
         {
-            OnCollectionButtonClicked?.Invoke(_fadeTime, GatheringItemType.None);
+            OnCollectionButtonClicked?.Invoke(_fadeTime, GatheringItemType.None, _map);
 
             _isExit = false;
 
@@ -177,12 +177,13 @@ public class Collection : MonoBehaviour
 
     public void ClickStarButton()
     {
+        Debug.Log("_map_" + _map);
         if (_isClickStarButton)
         {
             return;
         }
         _isClickStarButton = true;
-        OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType); // 화면 FadeOut
+        OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType, _map); // 화면 FadeOut
         ClickCollectionButton();
 
         //// 채집 가능 아이콘 생성
@@ -207,19 +208,23 @@ public class Collection : MonoBehaviour
         _pandaSpriteRenderer = starterPanda.GetComponent<SpriteRenderer>();
 
         _pandaImage = _pandaSpriteRenderer.sprite;
-        if(_pandaCollectionAnim == null)
+        Debug.Log("_pandaCollectionAnim 확인 _map_" + _map);
+
+        if (_pandaCollectionAnim == null)
         {
             _pandaCollectionAnim = starterPanda.GetComponent<Animator>();
+            Debug.Log("_pandaCollectionAnim" + _pandaCollectionAnim);
         }
 
         // 캐릭터가 채집 포인트로 이동
         _lastPandaPosition = starterPanda.gameObject.transform.position;
-        starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaPosition;
+        //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
+        starterPanda.gameObject.transform.position = new Vector3(_currentCollectionPosition.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
 
         _pandaSpriteRenderer.sprite = _pandaCollectionSprite;
 
         // 카메라 중심이 캐릭터로 고정되도록 이동
-        _targetPos = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y, Camera.main.transform.position.z);
+        _targetPos = new Vector3(starterPanda.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
 
         _isCollection = true;
@@ -256,6 +261,7 @@ public class Collection : MonoBehaviour
     /// 채집 완료 후 결과 나오기 전 지연 시간동안 실행 </summary>
     public void CollectionLatency()
     {
+        Debug.Log("_map" + _map);
         _pandaCollectionAnim.SetBool("IsCollectionLatency", true); // 채집 결과 나오기 전 애니메이션
         _checkTime = 0;
     }
@@ -319,7 +325,7 @@ public class Collection : MonoBehaviour
 
         DataBind.GetAction("ShowMainUIButton")?.Invoke();
         CameraSet(false);
-        _targetPos = new Vector3(_lastPandaPosition.x, _lastPandaPosition.y, Camera.main.transform.position.z);
+        _targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
         Camera.main.gameObject.transform.position = _targetPos;
         _isClickStarButton = false;
     }

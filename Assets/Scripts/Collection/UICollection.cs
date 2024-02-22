@@ -28,21 +28,29 @@ public class UICollection : MonoBehaviour
 
     #region Collection
     //[SerializeField] private CollectionButton _collectionButton;
-    [SerializeField] private Collection[] _collection = new Collection[3];
+    private Dictionary<string, Collection> _collectionDic = new Dictionary<string, Collection>();
+    [SerializeField] private Collection[] _collection;
+    [SerializeField] private string[] _dictionaryId;
     #endregion
 
     private GatheringItemType _gathringItemType;
+    private string _map;
 
     void Start()
     {
         //_collectionButton.OnCollectionButtonClicked += FadeInOut;
-        
-        for(int i = 0; i < _collection.Length; i++)
+
+        for(int i = 0; i< _collection.Length; i++)
         {
-            _collection[i].OnCollectionButtonClicked += FadeInOut;
-            _collection[i].OnCollectionSuccess += SetSuccess;
-            _collection[i].OnCollectionFail += SetFail;
-            _collection[i].OnExitCollection += ExitUICollection;
+            _collectionDic.Add(_dictionaryId[i], _collection[i]);
+        }
+        
+        foreach(string key in _collectionDic.Keys)
+        {
+            _collectionDic[key].OnCollectionButtonClicked += FadeInOut;
+            _collectionDic[key].OnCollectionSuccess += SetSuccess;
+            _collectionDic[key].OnCollectionFail += SetFail;
+            _collectionDic[key].OnExitCollection += ExitUICollection;
         }
 
         DataBind.SetButtonValue("CheckResultButton", OnCheckResultButton);
@@ -52,18 +60,20 @@ public class UICollection : MonoBehaviour
     {
         //_collectionButton.OnCollectionButtonClicked -= FadeInOut;
 
-        for (int i = 0; i < _collection.Length; i++)
+        foreach (string key in _collectionDic.Keys)
         {
-            _collection[i].OnCollectionButtonClicked -= FadeInOut;
-            _collection[i].OnCollectionSuccess -= SetSuccess;
-            _collection[i].OnCollectionFail -= SetFail;
-            _collection[i].OnExitCollection -= ExitUICollection;
+            _collectionDic[key].OnCollectionButtonClicked -= FadeInOut;
+            _collectionDic[key].OnCollectionSuccess -= SetSuccess;
+            _collectionDic[key].OnCollectionFail -= SetFail;
+            _collectionDic[key].OnExitCollection -= ExitUICollection;
         }
     }
 
-    private void FadeInOut(float fadeTime, GatheringItemType gatheringItemType)
+    private void FadeInOut(float fadeTime, GatheringItemType gatheringItemType, string map)
     {
         _gathringItemType = gatheringItemType;
+        _map = map;
+
         if(gatheringItemType != GatheringItemType.None)
         {
             _checkResultButton.GetComponent<RectTransform>().anchoredPosition = _checkResultButtonPosition[(int)gatheringItemType].anchoredPosition;
@@ -83,7 +93,7 @@ public class UICollection : MonoBehaviour
     {
         // 느낌표 터치하면 채집 성공 실패 여부 알려줌
         // 느낌표 터치하면 대기 애니메이션 재생 후 종료되면 성공 실패 여부 알려주는 것으로 수정
-        _collection[(int)_gathringItemType].CollectionLatency();
+        _collectionDic[_map + _gathringItemType.ToString()].CollectionLatency();
         //_collection.IsSuccess();
         _checkResultButton.gameObject.SetActive(false);
     }

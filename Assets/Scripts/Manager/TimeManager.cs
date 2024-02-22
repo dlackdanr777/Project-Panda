@@ -18,8 +18,12 @@ public class TimeManager : SingletonHandler<TimeManager>
     public string GameHourId;
     public string GameWeatherId;
 
-    private float _oneHour = 10 * 60; // 게임에서의 한 시간은 10분
-    private float _checkHour = 0; // 게임에서 한 시간이 지났는지 확인
+    public int DayEndTime = 17; // 낮 종료 시간
+    public int EveningEndTime = 21; // 저녁 종료 시간
+    public int NightEndTime = 7; // 밤 종료 시간
+
+    //private float _oneHour = 10 * 60; // 게임에서의 한 시간은 10분
+    //private float _checkHour = 0; // 게임에서 한 시간이 지났는지 확인
 
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
     private ETime eTime;
@@ -27,17 +31,6 @@ public class TimeManager : SingletonHandler<TimeManager>
     public Sprite[] mapBackGrounds;
 
     private MapDatabase _mapDatabase;
-
-    //void Update()
-    //{
-    //_checkHour += Time.deltaTime;
-    //if(_checkHour > _oneHour)
-    //{
-    //    _checkHour = 0;
-    //    CheckTime();
-    //}
-    //}
-
 
     public override void Awake()
     {
