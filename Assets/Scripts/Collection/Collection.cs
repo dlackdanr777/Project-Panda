@@ -177,7 +177,6 @@ public class Collection : MonoBehaviour
 
     public void ClickStarButton()
     {
-        Debug.Log("_map_" + _map);
         if (_isClickStarButton)
         {
             return;
@@ -208,7 +207,6 @@ public class Collection : MonoBehaviour
         _pandaSpriteRenderer = starterPanda.GetComponent<SpriteRenderer>();
 
         _pandaImage = _pandaSpriteRenderer.sprite;
-        Debug.Log("_pandaCollectionAnim 확인 _map_" + _map);
 
         if (_pandaCollectionAnim == null)
         {
@@ -219,7 +217,14 @@ public class Collection : MonoBehaviour
         // 캐릭터가 채집 포인트로 이동
         _lastPandaPosition = starterPanda.gameObject.transform.position;
         //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
-        starterPanda.gameObject.transform.position = new Vector3(_currentCollectionPosition.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
+        if(_gatheringType == GatheringItemType.Fish)
+        {
+            starterPanda.gameObject.transform.position = new Vector3(_pandaTransform.position.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
+        }
+        else 
+        {
+            starterPanda.gameObject.transform.position = new Vector3(_currentCollectionPosition.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
+        }
 
         _pandaSpriteRenderer.sprite = _pandaCollectionSprite;
 
@@ -249,6 +254,10 @@ public class Collection : MonoBehaviour
     /// 채집 시작할 때 실행 </summary>
     private void StartCollection()
     {
+        StarterPanda starterPanda = StarterPanda.Instance;
+        // 말풍선 위치 고정
+        gameObject.transform.position = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y + 3, gameObject.transform.position.z);
+
         // 채집 애니메이션 판다와 말풍선 실행
         _pandaCollectionAnim.enabled = true;
         _pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
