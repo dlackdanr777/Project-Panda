@@ -28,7 +28,7 @@ namespace Cooking
 
 
     [Serializable]
-    public class CookingUserData
+    public class CookUserData
     {
         [SerializeField] private int _maxFireValue;
         public int MaxFireValue => _maxFireValue;
@@ -63,8 +63,8 @@ namespace Cooking
 
         [Space]
         [Header("CookData")]
-        [SerializeField] private CookingUserData _userData;
-        public CookingUserData UserData => _userData;
+        [SerializeField] private CookUserData _userData;
+        public CookUserData UserData => _userData;
 
         [Space]
         [Header("Status")]

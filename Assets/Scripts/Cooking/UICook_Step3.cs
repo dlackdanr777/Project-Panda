@@ -24,7 +24,7 @@ namespace Cooking
 
         [SerializeField] private UIAddValueButton _smallAddButton;
 
-        private CookingUserData _userData => _cookSystem.UserData;
+        private CookUserData _userData => _cookSystem.UserData;
         private Cookware _currentCookware => _cookSystem.GetCookware();
 
         public override void Init(UICook uiCook)
