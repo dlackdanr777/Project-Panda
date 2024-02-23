@@ -127,6 +127,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 
         foreach(string key in _mapDic.Keys)
         {
+
             //_mapDic[key].BackGroundRenderer.sprite = mapBackGround;
             if (_mapDic[key].BackGround[(int)eTime] != null)
             {
