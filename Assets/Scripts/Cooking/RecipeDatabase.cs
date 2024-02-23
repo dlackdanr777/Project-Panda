@@ -40,11 +40,15 @@ public class RecipeData
     public float SuccessRangeLevel_B => _successRangeLevel_B;
 
 
+    private string _tool;
+    public string Tool => _tool;
+
+
     private Item _item;
     public Item Item => _item;
 
     public RecipeData(List<KeyValuePair<string, int>> materialItemList, string successItemID,
-         float successLocation, float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B)
+         float successLocation, float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B, string tool)
     {
         _materialItemList = materialItemList;
         _successItemID = successItemID;
@@ -52,8 +56,9 @@ public class RecipeData
         _successRangeLevel_S = successRangeLevel_S;
         _successRangeLevel_A = successRangeLevel_A;
         _successRangeLevel_B = successRangeLevel_B;
+        _tool = tool;
 
-        _item = DatabaseManager.Instance.ItemDatabase.GetGatheringItemById(_successItemID);
+        _item = DatabaseManager.Instance.ItemDatabase.GetFoodItemById(_successItemID);
     }
 }
 
@@ -62,8 +67,8 @@ public class RecipeDatabase
 {
     private List<RecipeData> _recipeDataList = new List<RecipeData>();
 
-    private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic = new Dictionary<Tuple<string, string>, RecipeData>();
-    public Dictionary<Tuple<string, string>, RecipeData> RecipeDataDic => _recipeDataDic;
+    private Dictionary<Tuple<string, string, string>, RecipeData> _recipeDataDic = new Dictionary<Tuple<string, string, string>, RecipeData>();
+    public Dictionary<Tuple<string, string, string>, RecipeData> RecipeDataDic => _recipeDataDic;
 
     private Parser _parser = new Parser();
 
@@ -127,13 +132,14 @@ public class RecipeDatabase
             float successRangeLevel_S = float.Parse(json[i]["RangeS"].ToString());
             float successRangeLevel_A = float.Parse(json[i]["RangeA"].ToString());
             float successRangeLevel_B = float.Parse(json[i]["RangeB"].ToString());
+            string tool = json[i]["Tool"].ToString();
 
             RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
-                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B); //레시피 클래스 생성
+                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, tool); //레시피 클래스 생성
 
             recipeDataList.Add(recipeData);
 
-            Tuple<string, string> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key);
+            Tuple<string, string, string> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key, tool);
             _recipeDataDic.Add(tuple, recipeData);
         }
 
@@ -155,13 +161,13 @@ public class RecipeDatabase
         if(0 < _recipeDataList.Count)
             return;
 
-        RecipeData[] recipeDatas = _parser.RecipeDataParse("Recipes");
+        RecipeData[] recipeDatas = _parser.RecipeDataParse("Recipe");
 
         for (int i = 0, count = recipeDatas.Length; i < count; i++)
         {
             _recipeDataList.Add(recipeDatas[i]);
 
-            Tuple<string, string> tuple = Tuple.Create(recipeDatas[i].MaterialItemList[0].Key, recipeDatas[i].MaterialItemList[1].Key);
+            Tuple<string, string, string> tuple = Tuple.Create(recipeDatas[i].MaterialItemList[0].Key, recipeDatas[i].MaterialItemList[1].Key, recipeDatas[i].Tool);
             _recipeDataDic.Add(tuple, recipeDatas[i]);
         }
     }

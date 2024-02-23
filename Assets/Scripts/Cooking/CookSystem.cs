@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -35,14 +36,6 @@ namespace Cooking
         [Space]
         [Header("CookData")]
         [SerializeField] private CookUserData _userData;
-        public CookUserData UserData => _userData;
-
-        [Space]
-        [Header("Status")]
-
-        [Space]
-
-
 
 
         [Space]
@@ -56,7 +49,7 @@ namespace Cooking
 
         public Inventory[] Inventory => GameManager.Instance.Player.GatheringItemInventory;
 
-        private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
+        private Dictionary<Tuple<string, string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
 
         private RecipeData _currentRecipeData;
 
@@ -71,9 +64,14 @@ namespace Cooking
         public int CurrentStamina => _currentStamina;
 
 
+        public event Action<float, float> OnFireValueChanged;
+
+        public event Action<float, float> OnStaminaValueChanged;
+
+
         private void Start()
         {
-            //Init();
+            Init();
             _uiCook.Init(this);
         }
 
@@ -110,12 +108,26 @@ namespace Cooking
                 return null;
             }
 
+            string cookwareToStr = string.Empty;
+
+            switch (_currentCookware)
+            {
+                case Cookware.Oven:
+                    cookwareToStr = "oven";
+                    break;
+                case Cookware.Pan:
+                    cookwareToStr = "pan";
+                    break;
+                case Cookware.Pot:
+                    cookwareToStr = "pot";
+                    break;
+            }
+
             string item1ID = item1 != null ? item1.Id : "";
             string item2ID = item2 != null ? item2.Id : "";
 
-            Tuple<string, string> tuple1 = Tuple.Create(item1ID, item2ID);
-            Tuple<string, string> tuple2 = Tuple.Create(item2ID, item1ID);
-
+            Tuple<string, string, string> tuple1 = Tuple.Create(item1ID, item2ID, cookwareToStr);
+            Tuple<string, string, string> tuple2 = Tuple.Create(item2ID, item1ID, cookwareToStr);
 
             if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))
             {
@@ -277,6 +289,7 @@ namespace Cooking
             }
 
             _currentStamina -= value;
+            OnStaminaValueChanged?.Invoke(_userData.MaxStamina, _currentStamina);
         }
 
 
@@ -304,6 +317,8 @@ namespace Cooking
 
             _currentFireValue += value;
             _currentFireValue = Mathf.Clamp(_currentFireValue, 0, _userData.MaxFireValue);
+
+            OnFireValueChanged?.Invoke(_userData.MaxFireValue, _currentFireValue);
 
         }
     }

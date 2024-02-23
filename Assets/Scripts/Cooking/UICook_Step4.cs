@@ -9,6 +9,8 @@ namespace Cooking
 
         [SerializeField] private Button _endButton;
 
+        [SerializeField] private UICookBar _staminaBar;
+
         [Space]
         [Header("AddButtons")]
         [Tooltip("(Enum)CookValue와 연동되어있으므로 CookValue의 값과 동일하게 넣어주셔야 합니다.")]
@@ -19,7 +21,9 @@ namespace Cooking
         {
             base.Init(uiCook);
 
-            //_endButton.onClick.AddListener(CookEnd);
+            _endButton.onClick.AddListener(CookEnd);
+
+            _cookSystem.OnStaminaValueChanged += _staminaBar.UpdateGauge;
         }
 
 
@@ -29,6 +33,7 @@ namespace Cooking
 
             _cookSystem.ResetStatus();
             CheckAddValueButtons();
+            _staminaBar.ResetBar(1);
             _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookStart();
         }
 
@@ -57,7 +62,7 @@ namespace Cooking
         private void AddValueButtonClicked(CookValue cookValue)
         {
             bool check = _cookSystem.CheckAddFireValueEnabled() && _cookSystem.CheckDecreaseStaminaEnabled(cookValue);
-            Debug.Log(check);
+
             _addButtons[(int)cookValue].CheckUsabled(check, () =>
             {
                 _cookSystem.DecreaseStamina(cookValue);

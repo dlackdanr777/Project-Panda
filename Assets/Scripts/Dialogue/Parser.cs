@@ -100,11 +100,12 @@ public class Parser
 
         string[] data = csvData.text.Split(new char[] { '\n' }); //줄마다 나눈다
 
-        for (int i = 1; i < data.Length; i++)
+        for (int i = 1; i < data.Length - 1; i++)
         {
             string[] row = data[i].Split(new char[] { ',' }); //콤마단위로 나눈다.
 
             List<KeyValuePair<string, int>> itemList = new List<KeyValuePair<string, int>>();
+
 
             if (!string.IsNullOrWhiteSpace(row[0]))
             {
@@ -142,9 +143,10 @@ public class Parser
             float successRangeLevel_S = float.Parse(row[6]);
             float successRangeLevel_A = float.Parse(row[7]);
             float successRangeLevel_B = float.Parse(row[8]);
+            string tool = row[9];
 
             RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
-                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B); //레시피 클래스 생성
+                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, tool); //레시피 클래스 생성
 
             recipeDataList.Add(recipeData);
         }

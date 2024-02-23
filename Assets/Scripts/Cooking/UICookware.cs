@@ -9,15 +9,22 @@ namespace Cooking
     {
         [SerializeField] private Animator[] _cookAnimators;
 
-        [SerializeField] private Animator[] _cookwareAnimators;
+        [SerializeField] private CookwareAnimatorData[] _cookwareAnimators;
 
 
         public void CookSet()
         {
+            for (int i = 0, count = _cookAnimators.Length; i < count; i++)
+            {
+                _cookAnimators[i].Play("Current", -1, 0);
+            }
+
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
-                _cookwareAnimators[i].gameObject.SetActive(true);
-                _cookwareAnimators[i].Play("Current", -1, 0);
+                bool setActive = _cookwareAnimators[i].StartSetActive;
+                _cookwareAnimators[i].gameObject.SetActive(setActive);
+                _cookwareAnimators[i].Animator.Play("Current", -1, 0);
+
             }
         }
 
@@ -27,12 +34,12 @@ namespace Cooking
             for (int i = 0, count = _cookAnimators.Length; i < count; i++)
             {
                 _cookAnimators[i].SetTrigger("Cooking");
-                _cookwareAnimators[i].SetTrigger("Cooking");
+                _cookwareAnimators[i].Animator.SetTrigger("Cooking");
             }
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
-                _cookwareAnimators[i].SetTrigger("Cooking");
+                _cookwareAnimators[i].Animator.SetTrigger("Cooking");
             }
         }
 
@@ -41,7 +48,7 @@ namespace Cooking
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
                 _cookwareAnimators[i].gameObject.SetActive(true);
-                _cookwareAnimators[i].Play("Current", -1, 0);
+                _cookwareAnimators[i].Animator.Play("Current", -1, 0);
             }
         }
 
@@ -55,7 +62,9 @@ namespace Cooking
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
-                _cookwareAnimators[i].Play("Current", -1, 0);
+                bool setActive = _cookwareAnimators[i].StartSetActive;
+                _cookwareAnimators[i].gameObject.SetActive(setActive);
+                _cookwareAnimators[i].Animator.Play("Current", -1, 0);
             }
         }
     }
