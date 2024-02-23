@@ -13,7 +13,6 @@ public class UIAddValueButton : MonoBehaviour
 
     public void Start()
     {
-        _button.onClick.AddListener(NotUsabledAnimation); 
     }
 
 
