@@ -107,15 +107,15 @@ public class TimeManager : SingletonHandler<TimeManager>
         // ½Ã°£ º¯°æµÉ ½Ã ¸Ê ¹è°æ º¯°æ
         switch (GameHour)
         {
-            case < 7: // ¹ã
+            case int hour when hour < NightEndTime: // ¹ã
                 mapBackGround = mapBackGrounds[2];
                 eTime = ETime.Night;
                 break;
-            case < 17: // ³·
+            case int hour when hour < DayEndTime: // ³·
                 mapBackGround = mapBackGrounds[0];
                 eTime = ETime.Day;
                 break;
-            case < 21: // Àú³á
+            case int hour when hour < EveningEndTime: // Àú³á
                 mapBackGround = mapBackGrounds[1];
                 eTime = ETime.Evening;
                 break;
