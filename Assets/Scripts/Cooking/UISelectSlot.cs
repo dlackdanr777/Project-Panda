@@ -37,6 +37,12 @@ namespace Cooking
         }
 
 
+        public void DisableLeftButton()
+        {
+            _leftButton.gameObject.SetActive(false);
+        }
+
+
         public void EnableRightButton()
         {
             _rightButton.gameObject.SetActive(true);
@@ -44,18 +50,6 @@ namespace Cooking
 
 
         public void DisableRightButton()
-        {
-            _rightButton.gameObject.SetActive(false);
-        }
-
-
-        public void DisableLeftButton()
-        {
-            _leftButton.gameObject.SetActive(false);
-        }
-
-
-        public void rightButtonDisabled()
         {
             _rightButton.gameObject.SetActive(false);
         }

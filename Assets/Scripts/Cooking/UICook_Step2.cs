@@ -31,6 +31,7 @@ namespace Cooking
             {
                 UIMaterialItemSlot slot = Instantiate(_slotPrefab);
                 slot.transform.parent = _slotParent;
+                slot.transform.localScale = Vector3.one;
 
                 int index = i;
                 slot.Init(index, OnMaterialButtonClicked);
@@ -47,7 +48,7 @@ namespace Cooking
         {
             gameObject.SetActive(true);
 
-            for(int i = 0, count = _slotMaxCount; i < count; i++)
+            for (int i = 0, count = _slotMaxCount; i < count; i++)
             {
                 _materialItemSlots[i].ChoiceItem(null);
 
@@ -58,6 +59,7 @@ namespace Cooking
                     _materialItemSlots[i].SetActiveSlot(false);
             }
 
+            _uiCook.CookStepSlot.DisableRightButton();
             OnMaterialButtonClicked(0);
         }
 
@@ -70,18 +72,7 @@ namespace Cooking
 
         public override bool CheckNextStep()
         {
-            return CheckMaterialItemSlot();
-        }
-
-
-        public bool CheckMaterialItemSlot()
-        {
-            if(_materialItemSlots[0].CurrentItem != null || _materialItemSlots[1].CurrentItem != null)
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
 
@@ -90,9 +81,12 @@ namespace Cooking
 
             //만약 같은 슬롯을 한번더 클릭했다면
             if (index == _selectMaterialSlotIndex)
+            {
                 _materialItemSlots[_selectMaterialSlotIndex].ChoiceItem(null);
+                CheckMaterialItemSlot();
+            }
 
-            for(int i = 0, count = _slotMaxCount; i < count; i++)
+            for (int i = 0, count = _slotMaxCount; i < count; i++)
             {
                 _materialItemSlots[i].DisableSelectSlot();
             }
@@ -105,6 +99,7 @@ namespace Cooking
         public void ChoiceItem(InventoryItem item)
         {
             _materialItemSlots[_selectMaterialSlotIndex].ChoiceItem(item);
+            CheckMaterialItemSlot();
 
             if (item == null)
                 return;
@@ -117,8 +112,21 @@ namespace Cooking
             {
                 _materialItemSlots[i].DisableSelectSlot();
             }
-
+ 
             _materialItemSlots[_selectMaterialSlotIndex].EnableSelectSlot();
+        }
+
+
+        private void CheckMaterialItemSlot()
+        {
+            if (_materialItemSlots[0].CurrentItem != null || _materialItemSlots[1].CurrentItem != null)
+            {
+                _uiCook.CookStepSlot.EnableRightButton();
+            }
+            else
+            {
+                _uiCook.CookStepSlot.DisableRightButton();
+            }
         }
     }
 }

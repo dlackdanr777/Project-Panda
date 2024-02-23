@@ -30,6 +30,9 @@ namespace Cooking
     [Serializable]
     public class CookingUserData
     {
+        [SerializeField] private int _maxFireValue;
+        public int MaxFireValue => _maxFireValue;
+
         [SerializeField] private int _maxStamina;
         public int MaxStamina => _maxStamina;
 
@@ -59,12 +62,20 @@ namespace Cooking
         [SerializeField] private UICook _uiCook;
 
         [Space]
-
+        [Header("CookData")]
         [SerializeField] private CookingUserData _userData;
         public CookingUserData UserData => _userData;
 
         [Space]
+        [Header("Status")]
 
+        [Space]
+
+
+
+
+        [Space]
+        [Header("Images")]
         [SerializeField] private Sprite _cookwareOvenImage;
 
         [SerializeField] private Sprite _cookwarePanImage;
@@ -81,6 +92,12 @@ namespace Cooking
         private Cookware _currentCookware;
 
         private CookStep _currentCookStep;
+
+        [SerializeField] private float _currentFireValue;
+        public float CurrentFireValue => _currentFireValue;
+
+        [SerializeField] private int _currentStamina;
+        public int CurrentStamina => _currentStamina;
 
 
         private void Start()
@@ -201,6 +218,12 @@ namespace Cooking
         }
 
 
+        public Cookware GetCookware()
+        {
+            return _currentCookware;
+        }
+
+
         public Sprite GetCookwareImage(Cookware cookware)
         {
             switch (cookware)
@@ -221,6 +244,48 @@ namespace Cooking
         {
             return (int)_currentCookware + 1;
         }
+
+
+        public void ResetStatus()
+        {
+            _currentFireValue = 0;
+            _currentStamina = _userData.MaxStamina;
+        }
+
+
+        public bool CheckDecreaseStaminaEnabled(int value)
+        {
+            if (_currentStamina < value)
+                return false;
+
+            return true;
+        }
+
+
+        public bool CheckAddFireValueEnabled()
+        {
+            if (_userData.MaxFireValue <= _currentFireValue)
+                return false;
+
+            return true;
+        }
+
+
+        public void DecreaseStamina(int value)
+        {
+            _currentStamina -= value;
+            Debug.Log("Stamina: " + _currentStamina);
+        }
+
+
+        public void AddFireValue(int value)
+        {
+            _currentFireValue += value;
+            _currentFireValue = Mathf.Clamp(_currentFireValue, 0, _userData.MaxFireValue);
+
+            Debug.Log("Fire: " +  _currentFireValue);
+        }
+
     }
 }
 

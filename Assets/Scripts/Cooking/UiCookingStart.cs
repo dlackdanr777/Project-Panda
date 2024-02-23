@@ -193,7 +193,6 @@ public class UiCookingStart : MonoBehaviour
         MoreAddValueButtonClicked();
         AddValueButtonClicked();
         SmallAddValueButtonClicked();
-
     }
 
     private void MoreAddValueButtonClicked()
