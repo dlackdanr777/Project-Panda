@@ -121,7 +121,7 @@ public class UiCookingStart : MonoBehaviour
         string grade = _uiCooking.CookingSystem.CheckItemGrade(_currentRecipeData, totalFireValue);
         Debug.Log(grade + " È¹µæ");
 
-        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(InventoryItemField.GatheringItem, _currentRecipeData.Item);
+        GameManager.Instance.Player.AddItemById(_currentRecipeData.Item.Id);
         //TODO : ¿©±â¼­ ¿À·ù Â÷ÈÄ ¼öÁ¤
 
         GameObject animeObj = grade == "F" ? Instantiate(_failedAnimePrefab) : Instantiate(_complatedAnimePrefab);
@@ -154,7 +154,7 @@ public class UiCookingStart : MonoBehaviour
         string grade = "F";
         Debug.Log(grade + " È¹µæ");
 
-        GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem)[(int)_cookingSystem.InventoryType].AddItem(InventoryItemField.GatheringItem, _currentRecipeData.Item);
+        GameManager.Instance.Player.AddItemById(_currentRecipeData.Item.Id);
         //TODO : ¿©±â¼­ ¿À·ù
 
         GameObject animeObj = Instantiate(_failedAnimePrefab);
@@ -193,7 +193,6 @@ public class UiCookingStart : MonoBehaviour
         MoreAddValueButtonClicked();
         AddValueButtonClicked();
         SmallAddValueButtonClicked();
-
     }
 
     private void MoreAddValueButtonClicked()

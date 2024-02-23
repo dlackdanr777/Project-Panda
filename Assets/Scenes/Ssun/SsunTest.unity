@@ -4749,6 +4749,7 @@ MonoBehaviour:
   _prefab: {fileID: 997990210351032849, guid: 31d72a463d1ec52439f074e2d0cb5309, type: 3}
   _closeDetailViewButton: {fileID: 1036822407}
   _firstToggleIndex: 0
+  _scrollrect: {fileID: 0}
   _field: {fileID: 661408792}
   _detailView: {fileID: 967325686}
   _spawnPoint:
@@ -5056,7 +5057,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5802,6 +5803,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c772a902d5c1a54da9f357c9f237906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pandaImage: {fileID: 0}
+  _gatheringItemImages: []
+  _toolItemImages: []
+  _harvestItemImage: {fileID: 0}
+  _npcImages: []
+  _npcIntimacyImages: {fileID: 0}
+  _furnitureItemImages: {fileID: 0}
+  _mailPaper: {fileID: 0}
+  _albumImages: {fileID: 0}
+  _stickerImages: {fileID: 0}
+  _weatherImages: {fileID: 0}
 --- !u!1 &853138277
 GameObject:
   m_ObjectHideFlags: 0
@@ -8697,6 +8709,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rootUiView:
+    Name: 
+    UIView: {fileID: 0}
+  _exitUiView:
     Name: 
     UIView: {fileID: 0}
   _uiViewList:
@@ -13575,8 +13590,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStart: 0
-  Player: {fileID: 864224204}
-  MessageDatabase: {fileID: 11400000, guid: 35bf09bada7d9b441a64c2776095ccbd, type: 2}
   FriezeCameraMove: 0
   FriezeCameraZoom: 0
   FirezeInteraction: 0
@@ -13847,7 +13860,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

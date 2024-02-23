@@ -15,6 +15,7 @@ public class UIInventory : UIView
 
     private Vector2 _tempPos;
 
+
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
@@ -33,6 +34,7 @@ public class UIInventory : UIView
         Anime1_Show();
     }
 
+
     /// <summary>위에서 아래로 올라오는 방식</summary>
     private void Anime1_Show()
     {
@@ -48,9 +50,9 @@ public class UIInventory : UIView
                 _dontTouchArea.SetActive(false);
                 VisibleState = VisibleState.Appeared;
             });
-        });
-        
+        });   
     }
+
 
     /// <summary>중앙에서 나타나서 뽀용하고 뛰는 방식</summary>
     private void Anime2_Show()
@@ -82,8 +84,6 @@ public class UIInventory : UIView
                     _dontTouchArea.SetActive(false);
                     gameObject.SetActive(false);
                 });
-
-
             });
         });
     }

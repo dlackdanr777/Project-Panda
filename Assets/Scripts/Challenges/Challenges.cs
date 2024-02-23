@@ -101,9 +101,9 @@ public class Challenges
 
         // 도감 Count 초기화
         _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.GetBugItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.GetFishItemList().Where(n => n.IsReceived == true).Count();
-        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.GetFruitItemList().Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.ItemDatabase.ItemBugList.Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fish] = DatabaseManager.Instance.ItemDatabase.ItemFishList.Where(n => n.IsReceived == true).Count();
+        _unlockingBookCount[(int)EUnlockingBook.Fruit] = DatabaseManager.Instance.ItemDatabase.ItemFruitList.Where(n => n.IsReceived == true).Count();
 
         // 레시피 - 추가하기
     }
@@ -585,8 +585,7 @@ public class Challenges
 
 
         // 아이템 획득 - 도구
-        GameManager.Instance.Player.ToolItemInventory[0].AddById
-            (InventoryItemField.Tool, DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
+        GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
         DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);

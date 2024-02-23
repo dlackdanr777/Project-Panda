@@ -73,17 +73,31 @@ public class ItemDatabase
 
     //GatheringItem
     //Fish
-    public List<GatheringItem> ItemFishList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemFishDic = new Dictionary<string, GatheringItem>();
+    private List<GatheringItem> _itemFishList = new List<GatheringItem>();
+    public List<GatheringItem> ItemFishList => _itemFishList;
+    private Dictionary<string, GatheringItem> _itemFishDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFishDic => _itemFishDic;
     //Bug
-    public List<GatheringItem> ItemBugList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemBugDic = new Dictionary<string, GatheringItem>();
-    //Fruit
-    public List<GatheringItem> ItemFruitList = new List<GatheringItem>();
-    public Dictionary<string, GatheringItem> ItemFruitDic = new Dictionary<string, GatheringItem>();
-    //ToolItem
-    public List<ToolItem> ItemToolList = new List<ToolItem>();
+    private List<GatheringItem> _itemBugList = new List<GatheringItem>();
+    public List<GatheringItem> ItemBugList => _itemBugList;
+    private Dictionary<string, GatheringItem> _itemBugDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemBugDic => _itemBugDic;
 
+    //Fruit
+    private List<GatheringItem> _itemFruitList = new List<GatheringItem>();
+    public List<GatheringItem> ItemFruitList => _itemFruitList;
+    private Dictionary<string, GatheringItem> _itemFruitDic = new Dictionary<string, GatheringItem>();
+    public Dictionary<string, GatheringItem> ItemFruitDic => _itemFruitDic;
+
+    //ToolItem
+    private List<ToolItem> _itemToolList = new List<ToolItem>();
+    public List<ToolItem> ItemToolList => _itemToolList;
+    private Dictionary<string, ToolItem> _itemToolDic = new Dictionary<string, ToolItem>();
+    public Dictionary<string, ToolItem> ItemToolDic => _itemToolDic;
+
+
+    private Dictionary<string, Item> _allItemDic = new Dictionary<string, Item>();
+    public Dictionary<string, Item> AllItemDic => _allItemDic;
 
 
     //Image
@@ -159,8 +173,6 @@ public class ItemDatabase
             FurnitureDic.Add(id, data);
         }
 
-
-        DatabaseManager.Instance.UserInfo.LoadUserReceivedItem();
         DatabaseManager.Instance.StartPandaInfo.LoadMyFurniture();
     }
 
@@ -218,6 +230,7 @@ public class ItemDatabase
 
         ItemBugList.Clear();
         ItemBugDic.Clear();
+        AllItemDic.Clear();
 
         for (int i = 0, count = json.Count; i < count; i++)
         {
@@ -234,6 +247,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemBugList.Add(item);
             ItemBugDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -243,7 +257,6 @@ public class ItemDatabase
     public void FishItemParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
-
         ItemFishList.Clear();
         ItemFishDic.Clear();
 
@@ -259,9 +272,9 @@ public class ItemDatabase
             string mapID = json[i]["MapID"].ToString();
             Sprite sprite = GetItemSpriteById(itemID, GatheringItemType.Fish);
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
-
             ItemFishList.Add(item);
             ItemFishDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -290,6 +303,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemFruitList.Add(item);
             ItemFruitDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
         Debug.Log("과일 아이템 받아오기 성공!");
     }
@@ -299,8 +313,8 @@ public class ItemDatabase
     public void ToolItemParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
-
         ItemToolList.Clear();
+        ItemToolDic.Clear();
         for (int i = 0; i < json.Count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -311,9 +325,11 @@ public class ItemDatabase
             int storyStep = int.Parse(json[i]["StoryStep"].ToString());
             string mapID = json[i]["MapID"].ToString();
 
-            ItemToolList.Add(new ToolItem(
-                  itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
-                  ,gatheringPercentage, storyStep));
+            ToolItem item = new ToolItem(itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
+                  , gatheringPercentage, storyStep);
+            ItemToolList.Add(item);
+            ItemToolDic.Add(itemID, item);
+            AllItemDic.Add(itemID, item);
         }
     }
 
@@ -340,8 +356,10 @@ public class ItemDatabase
                     dataBug[i]["시간"].ToString(),
                     dataBug[i]["계절"].ToString()
                     );
+
             ItemBugList.Add(item);
             ItemBugDic.Add(dataBug[i]["ID"].ToString(), item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
     }
@@ -365,8 +383,10 @@ public class ItemDatabase
                     dataFish[i]["시간"].ToString(),
                     dataFish[i]["계절"].ToString()
                     );
+
             ItemFishList.Add(item);
-            ItemFishDic.Add(dataFish[i]["ID"].ToString(), item);
+            ItemFishDic.Add(item.Id, item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
     }
@@ -390,8 +410,10 @@ public class ItemDatabase
                     dataFruit[i]["시간"].ToString(),
                     dataFruit[i]["계절"].ToString()
                     );
+
             ItemFruitList.Add(item);
             ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
+            AllItemDic.Add(item.Id, item);
         }
 
         Debug.Log("과일 아이템 받아오기 성공!");
@@ -405,7 +427,7 @@ public class ItemDatabase
 
         for (int i = 0; i < dataTool.Count; i++)
         {
-            ItemToolList.Add(new ToolItem(
+            ToolItem item = new ToolItem(
                     dataTool[i]["ID"].ToString(),
                     dataTool[i]["이름"].ToString(),
                     dataTool[i]["설명"].ToString(),
@@ -414,7 +436,11 @@ public class ItemDatabase
                     GetItemSpriteById(dataTool[i]["ID"].ToString(), ToolItemType.GatheringTool),
                     (int)dataTool[i]["채집 확률"],
                     (int)dataTool[i]["스토리 단계"]
-                    ));
+                    );
+
+            ItemToolList.Add(item);
+            ItemToolDic.Add(item.Id, item);
+            AllItemDic.Add(item.Id, item);
         }
         Debug.Log("장비 아이템 받아오기 성공!");
     }

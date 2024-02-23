@@ -16,50 +16,63 @@ namespace Cooking
     }
 
 
-    [Serializable]
-    public class CookingUserData
+    /// <summary> 조리 단계 </summary>
+    public enum CookStep
     {
-        [SerializeField] private int _maxStamina;
-        public int MaxStamina => _maxStamina;
-
-        [Space]
-        [SerializeField] private int[] _moreAddValue;
-        [SerializeField] private int _moreAddValueStamina;
-
-        [Space]
-        [SerializeField] private int[] _addValue;
-        [SerializeField] private int _addValueStamina;
-
-        [Space]
-        [SerializeField] private int[] _smallAddValue;
-        [SerializeField] private int _smallAddValueStamina;
-
-        public int[] MoreAddValue => _moreAddValue;
-        public int MoreAddValueStamina => _moreAddValueStamina;
-        public int[] AddValue => _addValue;
-        public int AddValueStamina => _addValueStamina;
-        public int[] SmallAddValue => _smallAddValue;
-        public int SmallAddValueStamina => _smallAddValueStamina;
+        SelectCookware,
+        SelectGathering,
+        Start,
+        Length
     }
 
 
     public class CookSystem : MonoBehaviour
     {
-        [SerializeField] private UICooking _uiCooking;
+        [SerializeField] private UICook _uiCook;
 
-        [SerializeField] private CookingUserData _userData;
-        public CookingUserData UserData => _userData;
+        [Space]
+        [Header("CookData")]
+        [SerializeField] private CookUserData _userData;
+        public CookUserData UserData => _userData;
 
-        private Inventory[] _inventory => GameManager.Instance.Player.GatheringItemInventory;
+        [Space]
+        [Header("Status")]
+
+        [Space]
+
+
+
+
+        [Space]
+        [Header("Images")]
+        [SerializeField] private Sprite _cookwareOvenImage;
+
+        [SerializeField] private Sprite _cookwarePanImage;
+
+        [SerializeField] private Sprite _cookwarePotImage;
+
+
+        public Inventory[] Inventory => GameManager.Instance.Player.GatheringItemInventory;
 
         private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
 
+        private RecipeData _currentRecipeData;
+
         private Cookware _currentCookware;
+
+        private CookStep _currentCookStep;
+
+        [SerializeField] private float _currentFireValue;
+        public float CurrentFireValue => _currentFireValue;
+
+        [SerializeField] private int _currentStamina;
+        public int CurrentStamina => _currentStamina;
 
 
         private void Start()
         {
-            Init();
+            //Init();
+            _uiCook.Init(this);
         }
 
 
@@ -112,103 +125,8 @@ namespace Cooking
         }
 
 
-        public bool IsEnabledCooking(InventoryItem item1, InventoryItem item2)
-        {
-            RecipeData recipe = GetkRecipeByItems(item1, item2);
-
-            if (recipe == null)
-                return false;
-
-            bool isRemovedItem1 = item1 == null ? true : false;
-            bool isRemovedItem2 = item2 == null ? true : false;
-/*
-            Inventory inventory = _inventory[(int)_inventoryType];
-
-            List<InventoryItem> items = inventory.GetInventoryList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (!isRemovedItem1)
-                {
-                    if (item1.Id == items[i].Id)
-                    {
-                        isRemovedItem1 = true;
-                        inventory.Remove(item1);
-                    }
-
-                }
-
-                if (!isRemovedItem2)
-                {
-                    if (item2.Id == items[i].Id)
-                    {
-                        isRemovedItem2 = true;
-                        inventory.Remove(item2);
-                    }
-                }
-
-                if (isRemovedItem1 && isRemovedItem2)
-                {
-                    Debug.Log("두개다 삭제");
-                    _uiCooking.UpdateUI();
-                    return true;
-                }
-            }*/
-
-            return false;
-        }
-
-
-        /*    public bool IsEnabledCooking(RecipeData data)
-            {
-                List<KeyValuePair<string, int>> tmpMaterialItemList = data.MaterialItemList.ToList();
-
-                foreach (Inventory inventory in _inventory)
-                {
-                    List<InventoryItem> items = inventory.GetInventoryList();
-
-                    for (int itemIndex = items.Count - 1; itemIndex >= 0; itemIndex--)
-                    {
-                        InventoryItem item = items[itemIndex];
-
-                        for (int i = tmpMaterialItemList.Count - 1; i >= 0; i--)
-                        {
-                            var materialItem = tmpMaterialItemList[i];
-                            if (item.Id == materialItem.Key)
-                            {
-                                if (item.Count >= materialItem.Value)
-                                {
-                                    for (int j = 0; j < materialItem.Value; j++)
-                                    {
-                                        Debug.Log("삭제 실행");
-                                        inventory.Remove(item);
-                                    }
-                                    // 제외시킬 아이템은 해당 리스트에서 제거
-                                    tmpMaterialItemList.RemoveAt(i);
-                                }
-                                else
-                                {
-                                    Debug.Log("재료가 부족합니다.");
-                                }
-                            }
-                        }
-
-                        if (tmpMaterialItemList.Count == 0)
-                        {
-                            _uiCooking.UpdateUI();
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }*/
-
-
-
         public string CheckItemGrade(RecipeData data, float fireValue)
         {
-
             bool checkLevel_S = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_S) <= fireValue &&
                 data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_S) >= fireValue;
 
@@ -240,7 +158,12 @@ namespace Cooking
         public int ChangeCookware(int value)
         {
             int tmpInt = (int)_currentCookware + value;
-            tmpInt = Mathf.Clamp(tmpInt, 0, (int)Cookware.Length - 1);
+            int cookwareLength = (int)Cookware.Length;
+            tmpInt = tmpInt < 0
+                ? tmpInt + cookwareLength
+                : tmpInt % cookwareLength;
+
+            tmpInt = Mathf.Clamp(tmpInt, 0, cookwareLength - 1);
 
             _currentCookware = (Cookware)tmpInt;
 
@@ -248,10 +171,90 @@ namespace Cooking
         }
 
 
+        public int ChangeCookStep(int value)
+        {
+            int tmpInt = (int)_currentCookStep + value;
+            int cookStepLength = (int)CookStep.Length;
+            tmpInt = tmpInt < 0
+                ? tmpInt + cookStepLength
+                : tmpInt % cookStepLength;
+
+            tmpInt = Mathf.Clamp(tmpInt, 0, cookStepLength - 1);
+
+            _currentCookStep = (CookStep)tmpInt;
+
+            return tmpInt;
+        }
+
+
+        public Cookware GetCookware()
+        {
+            return _currentCookware;
+        }
+
+
+        public Sprite GetCookwareImage(Cookware cookware)
+        {
+            switch (cookware)
+            {
+                case Cookware.Oven:
+                    return _cookwareOvenImage;
+                case Cookware.Pan:
+                    return _cookwarePanImage;
+                case Cookware.Pot:
+                    return _cookwarePotImage;
+                default:
+                    return null;
+            }
+        }
+
+
         public int GetCookwareSlotNum()
         {
             return (int)_currentCookware + 1;
         }
+
+
+        public void ResetStatus()
+        {
+            _currentFireValue = 0;
+            _currentStamina = _userData.MaxStamina;
+        }
+
+
+        public bool CheckDecreaseStaminaEnabled(int value)
+        {
+            if (_currentStamina < value)
+                return false;
+
+            return true;
+        }
+
+
+        public bool CheckAddFireValueEnabled()
+        {
+            if (_userData.MaxFireValue <= _currentFireValue)
+                return false;
+
+            return true;
+        }
+
+
+        public void DecreaseStamina(int value)
+        {
+            _currentStamina -= value;
+            Debug.Log("Stamina: " + _currentStamina);
+        }
+
+
+        public void AddFireValue(int value)
+        {
+            _currentFireValue += value;
+            _currentFireValue = Mathf.Clamp(_currentFireValue, 0, _userData.MaxFireValue);
+
+            Debug.Log("Fire: " +  _currentFireValue);
+        }
+
     }
 }
 

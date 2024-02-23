@@ -27,7 +27,7 @@ public class UIShopContent : MonoBehaviour
 
     void Start()
     {
-        _shopItem = DatabaseManager.Instance.GetGatheringToolItemList();
+        _shopItem = DatabaseManager.Instance.ItemDatabase.ItemToolList;
         _closeButton.onClick.AddListener(OnClickCloseButton);
 
         CreateSlots();

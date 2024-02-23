@@ -17,8 +17,11 @@ namespace Cooking
 
         public void Init(UnityAction leftButtonClicked, UnityAction rightButtonClicked)
         {
-            _leftButton.onClick.AddListener(leftButtonClicked);
-            _rightButton.onClick.AddListener(rightButtonClicked);
+            if(leftButtonClicked != null)
+                _leftButton.onClick.AddListener(leftButtonClicked);
+
+            if(rightButtonClicked != null)
+                _rightButton.onClick.AddListener(rightButtonClicked);
         }
 
 
@@ -34,25 +37,19 @@ namespace Cooking
         }
 
 
-        public void EnableRightButton()
-        {
-            _rightButton.gameObject.SetActive(true);
-        }
-
-
-        public void DisablerightButton()
-        {
-            _rightButton.gameObject.SetActive(false);
-        }
-
-
         public void DisableLeftButton()
         {
             _leftButton.gameObject.SetActive(false);
         }
 
 
-        public void rightButtonDisabled()
+        public void EnableRightButton()
+        {
+            _rightButton.gameObject.SetActive(true);
+        }
+
+
+        public void DisableRightButton()
         {
             _rightButton.gameObject.SetActive(false);
         }

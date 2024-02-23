@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICookingSlot : MonoBehaviour//IBeginDragHandler, IDragHandler, IEndDragHandler
+/// <summary>요리 재료 아이템 슬롯</summary>
+public class UICookingSlot : MonoBehaviour
 {
-    
     [SerializeField] private Image _itemImage;
 
     [SerializeField] private Button _button;
@@ -17,11 +14,14 @@ public class UICookingSlot : MonoBehaviour//IBeginDragHandler, IDragHandler, IEn
     private UICooking _uiCooking;
 
     private InventoryItem _item;
+
+
     public void Init(UICooking uiCooking)
     {
         _uiCooking = uiCooking;
         _button.onClick.AddListener(OnButtonClicked);
     }
+
 
     public void UpdateUI(InventoryItem item)
     {
@@ -42,32 +42,9 @@ public class UICookingSlot : MonoBehaviour//IBeginDragHandler, IDragHandler, IEn
         _amountText.text = item.Count.ToString();
     }
 
+
     public void OnButtonClicked()
     {
         _uiCooking.ChoiceItem(_item);
     }
-
-  /*  public void OnBeginDrag(PointerEventData eventData) //마우스 드래그가 시작 됬을 때 실행되는 함수
-    {
-        if (_item == null)
-            return;
-
-        _uiCooking.UICookingDragSlot.StartDrag(_item);
-        _uiCooking.UICookingDragSlot.transform.position = eventData.position;
-
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-
-        if (_item == null)
-            return;
-
-        _uiCooking.UICookingDragSlot.transform.position = eventData.position;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        _uiCooking.UICookingDragSlot.EndDrag();
-    }*/
 }

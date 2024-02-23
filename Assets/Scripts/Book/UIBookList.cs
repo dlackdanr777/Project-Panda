@@ -42,15 +42,15 @@ public class UIBookList : MonoBehaviour
                 case InventoryItemField.GatheringItem:
                     if (_typeField == 0)
                     {
-                        _gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
+                        _gatheringDatabase = DatabaseManager.Instance.ItemDatabase.ItemBugList;
                     }
                     else if (_typeField == 1)
                     {
-                        _gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
+                        _gatheringDatabase = DatabaseManager.Instance.ItemDatabase.ItemFishList;
                     }
                     else if (_typeField == 2)
                     {
-                        _gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
+                        _gatheringDatabase = DatabaseManager.Instance.ItemDatabase.ItemFishList;
                     }
                     else
                     {
@@ -63,7 +63,7 @@ public class UIBookList : MonoBehaviour
                 case InventoryItemField.Tool:
                     if (_typeField == 0)
                     {
-                        _toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
+                        _toolDatabase = DatabaseManager.Instance.ItemDatabase.ItemToolList;
                     }
                     else
                     {

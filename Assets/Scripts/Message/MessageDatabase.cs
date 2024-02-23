@@ -73,13 +73,13 @@ public class MessageDatabase
         switch (startId)
         {
             case "IBG":
-                return DatabaseManager.Instance.GetBugItemList()[GetIndexById(DatabaseManager.Instance.GetBugItemList(), id)];
+                return DatabaseManager.Instance.ItemDatabase.ItemBugList[GetIndexById(DatabaseManager.Instance.ItemDatabase.ItemBugList, id)];
             case "IFI":
-                return DatabaseManager.Instance.GetFishItemList()[GetIndexById(DatabaseManager.Instance.GetFishItemList(), id)];
+                return DatabaseManager.Instance.ItemDatabase.ItemFishList[GetIndexById(DatabaseManager.Instance.ItemDatabase.ItemFishList, id)];
             case "IFR":
-                return DatabaseManager.Instance.GetFruitItemList()[GetIndexById(DatabaseManager.Instance.GetFruitItemList(), id)];
+                return DatabaseManager.Instance.ItemDatabase.ItemFruitList[GetIndexById(DatabaseManager.Instance.ItemDatabase.ItemFruitList, id)];
             case "ITG":
-                return DatabaseManager.Instance.GetGatheringToolItemList()[GetIndexById(DatabaseManager.Instance.GetGatheringToolItemList(), id)];
+                return DatabaseManager.Instance.ItemDatabase.ItemToolList[GetIndexById(DatabaseManager.Instance.ItemDatabase.ItemToolList, id)];
             default:
                 return null;
         }
