@@ -50,7 +50,7 @@ public class CookingSystem : MonoBehaviour
 
     private Inventory[] _inventory => GameManager.Instance.Player.GatheringItemInventory;
 
-    private Dictionary<Tuple<string, string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
+    private Dictionary<Tuple<string, string, int>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
 
     private Cookware _currentCookware;
 
@@ -157,8 +157,8 @@ public class CookingSystem : MonoBehaviour
         string item1ID = item1 != null ? item1.Id : "";
         string item2ID = item2 != null ? item2.Id : "";
 
-        Tuple<string, string, string> tuple1 = Tuple.Create(item1ID, item2ID, "pan");
-        Tuple<string, string, string> tuple2 = Tuple.Create(item2ID, item1ID, "pan");
+        Tuple<string, string, int> tuple1 = Tuple.Create(item1ID, item2ID, 1);
+        Tuple<string, string, int> tuple2 = Tuple.Create(item2ID, item1ID, 1);
 
 
         if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))

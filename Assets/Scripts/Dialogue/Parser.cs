@@ -143,7 +143,24 @@ public class Parser
             float successRangeLevel_S = float.Parse(row[6]);
             float successRangeLevel_A = float.Parse(row[7]);
             float successRangeLevel_B = float.Parse(row[8]);
-            string tool = row[9];
+
+
+            string toolToStr = row[9].Trim();
+            int tool = -1; //(enum)Cookware에 연동
+            switch (toolToStr)
+            {
+                case "oven":
+                    tool = 0;
+                    break;
+
+                case "pan":
+                    tool = 1;
+                    break;
+
+                case "pot":
+                    tool = 2;
+                    break;
+            }
 
             RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
                 successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, tool); //레시피 클래스 생성

@@ -18,6 +18,7 @@ public enum InventoryItemField
 public enum CookItemType
 {
     None = -1,
+    CookFood,
 }
 
 public enum ToolItemType
