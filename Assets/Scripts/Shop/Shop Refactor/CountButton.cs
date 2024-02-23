@@ -70,11 +70,11 @@ public class CountButton : MonoBehaviour
 
     private string GetToolItemIdByTName(string id)
     {
-        for (int i = 0; i < DatabaseManager.Instance.GetGatheringToolItemList().Count; i++) //shop database에서 아이디 찾기
+        for (int i = 0; i < DatabaseManager.Instance.ItemDatabase.ItemToolList.Count; i++) //shop database에서 아이디 찾기
         {
-            if (DatabaseManager.Instance.GetGatheringToolItemList()[i].Id.Equals(id))
+            if (DatabaseManager.Instance.ItemDatabase.ItemToolList[i].Id.Equals(id))
             {
-                return DatabaseManager.Instance.GetGatheringToolItemList()[i].Id;
+                return DatabaseManager.Instance.ItemDatabase.ItemToolList[i].Id;
             }
         }
         return null;

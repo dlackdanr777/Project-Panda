@@ -1685,6 +1685,8 @@ MonoBehaviour:
     _storyEvent: {fileID: 1745919014}
   - _insertIndex: 2
     _storyEvent: {fileID: 1236256405}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &167621112
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1705,7 +1707,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2202,9 +2204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019723712f805434486d7a43bdf213de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiHouse: {fileID: 477016629}
-  _uiNav: {fileID: 230217969}
-  _outsideWood: {fileID: 1539795175}
+  _uiWishTree: {fileID: 0}
 --- !u!1001 &223119016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2500,10 +2500,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStart: 0
-  Player: {fileID: 1704462194}
-  MessageDatabase: {fileID: 11400000, guid: 35bf09bada7d9b441a64c2776095ccbd, type: 2}
-  StoryManager: {fileID: 0}
-  DialogueManager: {fileID: 0}
   FriezeCameraMove: 0
   FriezeCameraZoom: 0
   FirezeInteraction: 0
@@ -2596,6 +2592,9 @@ MonoBehaviour:
   _rootUiView:
     Name: Main
     UIView: {fileID: 230464482}
+  _exitUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: Camera
     UIView: {fileID: 372516656}
@@ -2730,6 +2729,7 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _image: {fileID: 1812068354}
+  _background: {fileID: 0}
 --- !u!1 &237318307
 GameObject:
   m_ObjectHideFlags: 0
@@ -3867,7 +3867,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4360,7 +4360,7 @@ MonoBehaviour:
   VisibleState: 0
   _cameraApp: {fileID: 407932140}
   _screenshotCamera: {fileID: 1020582983}
-  _angleImage: {fileID: 1022287133}
+  _angleImage: {fileID: 0}
 --- !u!1 &377118073
 GameObject:
   m_ObjectHideFlags: 0
@@ -5603,6 +5603,7 @@ MonoBehaviour:
   _prefab: {fileID: 997990210351032849, guid: 31d72a463d1ec52439f074e2d0cb5309, type: 3}
   _closeDetailViewButton: {fileID: 212569351}
   _firstToggleIndex: 0
+  _scrollrect: {fileID: 0}
   _field: {fileID: 1236412312}
   _detailView: {fileID: 1195789484}
   _spawnPoint:
@@ -5713,6 +5714,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _dontTouchArea: {fileID: 0}
+  _cameraMovePos: {x: 0, y: 0, z: 0}
+  _inSideWood: {fileID: 0}
+  _outSideWood: {fileID: 0}
 --- !u!1001 &480288114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6005,7 +6010,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6226,7 +6231,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6369,6 +6374,8 @@ MonoBehaviour:
   _minZoomSize: 10
   _mapSize: {x: 29.5, y: 15}
   _mapCenter: {x: -0.65, y: -4.12}
+  _accelerationRate: 0
+  _decelerationRate: 0
 --- !u!1 &502941446
 GameObject:
   m_ObjectHideFlags: 0
@@ -7090,6 +7097,8 @@ MonoBehaviour:
     _storyEvent: {fileID: 1755516706}
   - _insertIndex: 11
     _storyEvent: {fileID: 1356819158}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &623568667
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7110,7 +7119,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7583,7 +7592,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8230,7 +8239,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8995,7 +9004,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9040,6 +9049,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _shopYoungerBrother: {fileID: 321928744}
 --- !u!1 &772918201
 GameObject:
@@ -9790,6 +9801,8 @@ MonoBehaviour:
     _storyEvent: {fileID: 1101473084}
   - _insertIndex: 8
     _storyEvent: {fileID: 2137582905}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &826382604
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9810,7 +9823,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10139,7 +10152,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10375,7 +10388,6 @@ MonoBehaviour:
   _itemScoopPopup: {fileID: 1287142444}
   _itemScoopButton: {fileID: 1252461007}
   _itemNoScoopButton: {fileID: 1795281948}
-  _wood: {fileID: 0}
   CurrentItemIndex: 0
 --- !u!114 &885569395
 MonoBehaviour:
@@ -11232,7 +11244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraApp: {fileID: 407932140}
   _cameraController: {fileID: 496799725}
-  _areaImage: {fileID: 1392318033}
+  _shootingImage: {fileID: 0}
   _renderTexture: {fileID: 8400000, guid: ad0e15efc92ae7742a2ad0379f79ef5e, type: 2}
   _isMagnetEnable: 1
   _boxSize: {x: 2, y: 2, z: 2}
@@ -12050,7 +12062,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12402,7 +12414,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12825,8 +12837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
-  _mapButton: {fileID: 0}
-  _mapImage: {fileID: 0}
+  _forestButton: {fileID: 0}
 --- !u!1 &1107093748
 GameObject:
   m_ObjectHideFlags: 0
@@ -13095,7 +13106,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13542,6 +13553,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &1138344844
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13562,7 +13575,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14104,6 +14117,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _book: {fileID: 0}
+  _coverAnimator: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
+  _animeDuration: 0
+  _tweenMode: 0
 --- !u!114 &1168918197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15188,6 +15206,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _moveUI: {fileID: 0}
+  _showButton: {fileID: 0}
+  _hideButton: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
+  _duration: 0
 --- !u!114 &1235428686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15285,7 +15308,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15330,7 +15353,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
-  _spriteRenderer: {fileID: 1236256404}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _changedObj:
   - {fileID: 1718538854}
   - {fileID: 994645427}
@@ -17134,7 +17158,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17179,6 +17203,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _uiNav: {fileID: 230217969}
 --- !u!1 &1359643627
 GameObject:
@@ -18646,7 +18672,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19180,7 +19206,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20372,10 +20398,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mbti: ENFP
   IsCameraRequest: 0
-  _uiPandaParent: {fileID: 855275532}
   _uiPandaPrefab: {fileID: 2461772435273675221, guid: eba94e92e16cf624d93eabba6191f7a7, type: 3}
   _intimacy: 0
   _happiness: 0
+  IsSwitchingScene: 0
 --- !u!61 &1622439612
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20441,7 +20467,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20542,7 +20568,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21107,7 +21133,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21918,7 +21944,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22191,7 +22217,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22459,7 +22485,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22598,7 +22624,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
-  _uiNav: {fileID: 230217969}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &1755516707
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22619,7 +22646,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22780,6 +22807,7 @@ MonoBehaviour:
   _prefab: {fileID: 2363590290482915646, guid: c7b3b5cbd42fc794f846fc53b28a2347, type: 3}
   _closeDetailViewButton: {fileID: 253466816}
   _firstToggleIndex: 0
+  _scrollrect: {fileID: 0}
   _field: {fileID: 320443242}
   _detailView: {fileID: 1650154291}
   _spawnPoint:
@@ -24644,6 +24672,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
   _spriteRenderer: {fileID: 1907541458}
   _uiShop: {fileID: 96456835}
 --- !u!61 &1907541457
@@ -24711,7 +24741,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -25316,6 +25346,8 @@ MonoBehaviour:
     _storyEvent: {fileID: 1907541456}
   - _insertIndex: 13
     _storyEvent: {fileID: 679184934}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &1938007124
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -25336,7 +25368,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -26085,9 +26117,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
-  _weatherApp: {fileID: 759642864}
-  _slotLayoutGroup: {fileID: 506585780}
-  _daySlotLayoutGroup: {fileID: 1477008123}
+  _backgroundButton: {fileID: 0}
+  _slotLayoutParent: {fileID: 0}
+  _slotPrefab: {fileID: 0}
+  _attendanceButton: {fileID: 0}
+  _attendanceCheckIamge: {fileID: 0}
+  _todayBackroundImage: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
 --- !u!1 &1996114775
 GameObject:
   m_ObjectHideFlags: 0
@@ -26609,7 +26645,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -26693,7 +26729,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -26842,6 +26878,8 @@ MonoBehaviour:
     _storyEvent: {fileID: 1468581461}
   - _insertIndex: 19
     _storyEvent: {fileID: 237941618}
+  _buttonImage: {fileID: 0}
+  _buttonPos: {x: 0, y: 0, z: 0}
 --- !u!212 &2070279040
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -26862,7 +26900,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27235,7 +27273,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27280,6 +27318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
+  _starter: {fileID: 0}
 --- !u!1 &2126469515
 GameObject:
   m_ObjectHideFlags: 0

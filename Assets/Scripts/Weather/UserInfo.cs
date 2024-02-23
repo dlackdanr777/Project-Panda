@@ -113,6 +113,7 @@ public class UserInfo
     //쿼터니언 값을 서버에 올릴 수 없으므로 중간에 관리해 줄 Class List
     private List<SaveStickerData> _saveStickerDataList = new List<SaveStickerData>();
 
+    private Dictionary<string, Item> _allItemDic => DatabaseManager.Instance.ItemDatabase.AllItemDic;
 
     public void Register()
     {
@@ -543,7 +544,6 @@ public class UserInfo
     public void InsertInventoryData(string selectedProbabilityFileId)
     {
         SaveUserInventory();
-        SaveUserReceivedItem();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
@@ -556,7 +556,6 @@ public class UserInfo
     public void UpdateInventoryData(string selectedProbabilityFileId, string inDate)
     {
         SaveUserInventory();
-        SaveUserReceivedItem();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -854,59 +853,13 @@ public class UserInfo
 
     public void LoadUserInventory()
     {
-        //GatheringItem
-        List<Item> GatheringItems = new List<Item>();
-        GatheringItems.AddRange(DatabaseManager.Instance.GetBugItemList());
-        GatheringItems.AddRange(DatabaseManager.Instance.GetFishItemList());
-        GatheringItems.AddRange(DatabaseManager.Instance.GetFruitItemList());
-
-        for (int i=0; i< GatheringInventoryDataArray.Count; i++) //저장된 데이터
+        for (int i = 0; i < GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
-            for (int j = 0; j < GatheringItems.Count; j++) //데이터베이스
-            {
-                int fieldIndex = -1;
-                if (GatheringInventoryDataArray[i].Id.Equals(GatheringItems[j].Id))
-                {
-                    if (GatheringInventoryDataArray[i].Id.StartsWith("IBG"))
-                    {
-                        fieldIndex = 0;
-                    }
-                    else if (GatheringInventoryDataArray[i].Id.StartsWith("IFI"))
-                    {
-                        fieldIndex = 1;
-                    }
-                    else if (GatheringInventoryDataArray[i].Id.StartsWith("IFR"))
-                    {
-                        fieldIndex = 2;
-                    }
-                    InventoryItemField field = InventoryItemField.GatheringItem;
-                    string id = GatheringInventoryDataArray[i].Id;
-                    int amount = GatheringInventoryDataArray[i].Count;
-                    GameManager.Instance.Player.GatheringItemInventory[fieldIndex].AddById(field, id, amount, ItemAddEventType.None);
-                }
-            }
-        }
-
-        //ToolItem
-        List<Item> ToolItems = new List<Item>();
-        ToolItems.AddRange(DatabaseManager.Instance.GetGatheringToolItemList());
-
-        for(int i = 0; i < ToolInventoryDataArray.Count; i++)
-        {
-            for(int j=0;j<ToolItems.Count; j++)
-            {
-                int fieldIndex = -1;
-                if (ToolInventoryDataArray[i].Id.Equals(ToolItems[j].Id))
-                {
-                    if (ToolInventoryDataArray[i].Id.StartsWith("ITG"))
-                    {
-                        fieldIndex = 0;
-                    }
-                    GameManager.Instance.Player.ToolItemInventory[fieldIndex].AddById(InventoryItemField.Tool, ToolInventoryDataArray[i].Id);
-                }
-            }
+            InventoryData data = GatheringInventoryDataArray[i];
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
         }
     }
+
 
     private void SaveUserInventory()
     {
@@ -959,88 +912,8 @@ public class UserInfo
     #endregion
 
     #region Item
-    public void LoadUserReceivedItem()
-    {
-        //GatheringItem
-        for (int i = 0; i < GatheringItemReceived.Count; i++)
-        {
-            if (GatheringItemReceived[i].StartsWith("IBG"))
-            {
-                for (int j = 0; j < DatabaseManager.Instance.GetBugItemList().Count; j++)
-                {
-                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetBugItemList()[j].Id))
-                    {
-                        DatabaseManager.Instance.GetBugItemList()[j].IsReceived = true;
-                    }
-                }
-            }
-            else if (GatheringItemReceived[i].StartsWith("IFI"))
-            {
-                for (int j = 0; j < DatabaseManager.Instance.GetFishItemList().Count; j++)
-                {
-                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetFishItemList()[j].Id))
-                    {
-                        DatabaseManager.Instance.GetFishItemList()[j].IsReceived = true;
-                    }
-                }
-            }
-            else if (GatheringItemReceived[i].StartsWith("IFR"))
-            {
-                for (int j = 0; j < DatabaseManager.Instance.GetFruitItemList().Count; j++)
-                {
-                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetFruitItemList()[j].Id))
-                    {
-                        DatabaseManager.Instance.GetFruitItemList()[j].IsReceived = true;
-                    }
-                }
-            }
-        }
+    //TODO: 차후 추가
 
-        //ToolItem
-        for (int i = 0; i < ToolItemReceived.Count; i++)
-        {
-            if (ToolItemReceived[i].StartsWith("ITG"))
-            {
-                for (int j = 0; j < DatabaseManager.Instance.GetGatheringToolItemList().Count; j++)
-                {
-                    if (GatheringItemReceived[i].Equals(DatabaseManager.Instance.GetGatheringToolItemList()[j].Id))
-                    {
-                        DatabaseManager.Instance.GetGatheringToolItemList()[j].IsReceived = true;
-                    }
-                }
-            }
-        }
-    }
-
-    
-    private void SaveUserReceivedItem() 
-    {
-        List<GatheringItem>[] gatheringItemDatabase = { DatabaseManager.Instance.GetBugItemList(), DatabaseManager.Instance.GetFishItemList(), DatabaseManager.Instance.GetFruitItemList() };
-        GatheringItemReceived = new List<string>();
-        for (int i = 0; i < gatheringItemDatabase.Length; i++)
-        {
-            for(int j = 0; j < gatheringItemDatabase[i].Count; j++)
-            {
-                if (gatheringItemDatabase[i][j].IsReceived)
-                {
-                    GatheringItemReceived.Add(gatheringItemDatabase[i][j].Id);
-                }
-            }
-        }
-
-        List<ToolItem>[] toolItemDatabase = { DatabaseManager.Instance.GetGatheringToolItemList() };
-        ToolItemReceived = new List<string>();
-        for (int i = 0; i < toolItemDatabase.Length; i++)
-        {
-            for (int j = 0; j < toolItemDatabase[i].Count; j++)
-            {
-                if (toolItemDatabase[i][j].IsReceived)
-                {
-                    ToolItemReceived.Add(toolItemDatabase[i][j].Id);
-                }
-            }
-        }
-    }
     #endregion
 
     #region Mail
@@ -1195,62 +1068,42 @@ public class UserInfo
     private Sprite GetStickerImage(string id)
     {
         string code = id.Substring(0, 3);
-        Sprite image = null;
+        Sprite image = FindItemSpriteById(id);
         switch (code)
         {
-            case "IBG":
-                image = FindSpriteById(id, DatabaseManager.Instance.GetBugItemList());
-                break;
-            case "IFI":
-                image = FindSpriteById(id, DatabaseManager.Instance.GetFishItemList());
-                break;
-            case "IFR":
-                image = FindSpriteById(id, DatabaseManager.Instance.GetFruitItemList());
-                break;
-            case "ITG":
-                image = FindSpriteById(id, DatabaseManager.Instance.GetGatheringToolItemList());
-                break;
             case "NPC":
-                image = FindSpriteById(id, DatabaseManager.Instance.GetNPCList());
+                image = FindNPCSpriteById(id);
+                break;
+
+            default:
+                image = FindItemSpriteById(id);
                 break;
         }
 
         return image;
     }
 
-    private Sprite FindSpriteById(string id, List<GatheringItem> database)
+    private Sprite FindItemSpriteById(string id)
     {
-        for(int i=0;i<database.Count; i++)
+        if(_allItemDic.TryGetValue(id, out Item item))
         {
-            if (database[i].Id.Equals(id))
-            {
-                return database[i].Image;
-            }
+            return item.Image;
         }
+        Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
         return null;
     }
-    private Sprite FindSpriteById(string id, List<ToolItem> database)
+
+    private Sprite FindNPCSpriteById(string id)
     {
-        for (int i = 0; i < database.Count; i++)
+        Dictionary<string, NPC> npcDic = DatabaseManager.Instance.NPCDatabase.NpcDic;
+        if (npcDic.TryGetValue(id, out NPC npc))
         {
-            if (database[i].Id.Equals(id))
-            {
-                return database[i].Image;
-            }
+            return npc.Image;
         }
+        Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
         return null;
     }
-    private Sprite FindSpriteById(string id, List<NPC> database)
-    {
-        for (int i = 0; i < database.Count; i++)
-        {
-            if (database[i].Id.Equals(id))
-            {
-                return database[i].Image;
-            }
-        }
-        return null;
-    }
+
     #endregion
 
     #region Challenges

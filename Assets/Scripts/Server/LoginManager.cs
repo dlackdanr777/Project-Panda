@@ -42,6 +42,8 @@ namespace Muks.BackEnd
             _signupButton.onClick.AddListener(SignUp);
 
             _hashButton.onClick.AddListener(GetGoogleHash);
+
+            Invoke("GuestLogin", 1f);
         }
 
 
@@ -70,8 +72,6 @@ namespace Muks.BackEnd
                 HideLoginUI();
                 LoadNextScene();
             });
-
-
         }
 
 
@@ -82,6 +82,16 @@ namespace Muks.BackEnd
             string pw = _passwordInput.text;
 
             BackendManager.Instance.CustomSignup(id, pw);
+        }
+
+
+        private void GuestLogin()
+        {
+            BackendManager.Instance.GuestLogin(10, (bro) =>
+            {
+                HideLoginUI();
+                LoadNextScene();
+            });
         }
 
 

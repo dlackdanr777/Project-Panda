@@ -173,10 +173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa20f33c99ae29442918f544fea15c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
+  VisibleState: 0
   _image: {fileID: 1768665155}
-  _transform: {fileID: 1868116153}
-  _angle: 10
-  _duration: 1
+  _background: {fileID: 0}
 --- !u!1 &526650424
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,12 +625,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraApp: {fileID: 733106405}
-  _screenshotCamera: {fileID: 1142457839}
-  _defaultPos: {x: 0, y: 0, z: -10}
-  _areaImage: {fileID: 0}
-  _dragSpeed: 20
-  _clampSize: {x: 20, y: 40}
-  _clampCenter: {x: 0, y: 5}
+  _cameraController: {fileID: 0}
+  _shootingImage: {fileID: 0}
+  _renderTexture: {fileID: 0}
   _isMagnetEnable: 1
   _boxSize: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!20 &1142457839
@@ -797,6 +794,9 @@ MonoBehaviour:
   _rootUiView:
     Name: Main
     UIView: {fileID: 1096889714}
+  _exitUiView:
+    Name: 
+    UIView: {fileID: 0}
   _uiViewList:
   - Name: Camera
     UIView: {fileID: 1422876340}
@@ -887,6 +887,8 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _cameraApp: {fileID: 733106405}
+  _screenshotCamera: {fileID: 0}
+  _angleImage: {fileID: 0}
 --- !u!1 &1564347188
 GameObject:
   m_ObjectHideFlags: 0
@@ -3051,9 +3053,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mbti: ENFP
   IsCameraRequest: 0
-  _uiPanda: {fileID: 6953393934537691532}
+  _uiPandaPrefab: {fileID: 0}
   _intimacy: 0
   _happiness: 0
+  IsSwitchingScene: 0
 --- !u!224 &3137165055617371854
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3133,6 +3136,8 @@ MonoBehaviour:
   RectTransform: {fileID: 0}
   VisibleState: 0
   _cameraApp: {fileID: 7574650482097733206}
+  _screenshotCamera: {fileID: 0}
+  _angleImage: {fileID: 0}
 --- !u!224 &3302715116545624995
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4383,7 +4388,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4736,12 +4741,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraApp: {fileID: 7574650482097733206}
-  _screenshotCamera: {fileID: 7630059382557889747}
-  _defaultPos: {x: 0, y: 0, z: -10}
-  _areaImage: {fileID: 19721830905759840}
-  _dragSpeed: 20
-  _clampSize: {x: 0, y: 0}
-  _clampCenter: {x: 0, y: 0}
+  _cameraController: {fileID: 0}
+  _shootingImage: {fileID: 0}
+  _renderTexture: {fileID: 0}
   _isMagnetEnable: 1
   _boxSize: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &6476563386019965085
@@ -4835,7 +4837,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
-  UiAlbum: {fileID: 7384998756605437851}
+  _library: {fileID: 0}
+  _uiAlbum: {fileID: 0}
 --- !u!222 &6633037470840229537
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4979,17 +4982,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3807531632774561896, guid: eba94e92e16cf624d93eabba6191f7a7, type: 3}
   m_PrefabInstance: {fileID: 5480629613215412675}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6953393934537691532 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2461772435273675221, guid: eba94e92e16cf624d93eabba6191f7a7, type: 3}
-  m_PrefabInstance: {fileID: 5480629613215412675}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541c38b1cfa50f8418847721650f1c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &6953757673488692099
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5178,7 +5170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58127044605ab543abf105145f7dc92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _library: {fileID: 0}
   _layoutGroup: {fileID: 2911677164091200774}
   _slotPrefab: {fileID: 7692192115872891275, guid: 8e93ed7a39711d342adcf88f363b8b95, type: 3}
 --- !u!222 &7419038327089552630
@@ -5583,10 +5574,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa20f33c99ae29442918f544fea15c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
+  VisibleState: 0
   _image: {fileID: 218311133564855404}
-  _transform: {fileID: 1993476816934248646}
-  _angle: 10
-  _duration: 1
+  _background: {fileID: 0}
 --- !u!114 &8089638030778845485
 MonoBehaviour:
   m_ObjectHideFlags: 0

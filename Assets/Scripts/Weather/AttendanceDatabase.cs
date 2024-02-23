@@ -29,7 +29,7 @@ public class AttendanceDatabase
     {
         UserInfo.AttendanceDayCount++;
         UserInfo.LastAttendanceDay = UserInfo.TODAY.ToString();
-        GiveReward(_attendanceDataDic[UserInfo.AttendanceDayCount].Item);
+        GiveReward(_attendanceDataDic[UserInfo.AttendanceDayCount].Item, _attendanceDataDic[UserInfo.AttendanceDayCount].Amount);
     }
 
 
@@ -50,11 +50,10 @@ public class AttendanceDatabase
 
 
     //보상지급 함수
-    private void GiveReward(Item item)
+    private void GiveReward(Item item, int value)
     {
-        InventoryItemField field = GameManager.Instance.Player.GetField(item.Id);
-        int itemType = GameManager.Instance.Player.GetItemType(item.Id);
-        GameManager.Instance.Player.GetItemInventory(field)[itemType].AddById(field, item.Id);
+
+        GameManager.Instance.Player.AddItemById(item.Id, value);
         Debug.Log("보상이 지급됬습니다.");
     }
 

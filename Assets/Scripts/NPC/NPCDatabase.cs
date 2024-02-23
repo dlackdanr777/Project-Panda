@@ -17,6 +17,7 @@ public enum NPCType
 public class NPCDatabase 
 {
     public List<NPC> NpcList = new List<NPC>();
+    public Dictionary<string, NPC> NpcDic = new Dictionary<string, NPC>();  
     private List<Dictionary<string, object>> _dataNPC;
 
     //Image
@@ -58,19 +59,22 @@ public class NPCDatabase
     public void NPCParserByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
-
         NpcList.Clear();
+        NpcDic.Clear();
         for (int i = 0; i < json.Count; i++)
         {
-            NpcList.Add(new NPC(
-                json[i]["NpcID"].ToString(),
-                json[i]["Name"].ToString(),
-                json[i]["Description"].ToString(),
-                json[i]["MBTI"].ToString(),
-                json[i]["Cook"].ToString(),
-                json[i]["mapID"].ToString(),
-                json[i]["MessagePaperID"].ToString(),
-                GetItemSpriteById(json[i]["NpcID"].ToString(), NPCType.Panda)));
+            string id = json[i]["NpcID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            string mbti = json[i]["MBTI"].ToString();
+            string cook = json[i]["Cook"].ToString();
+            string mapID = json[i]["mapID"].ToString();
+            string messagePaperID = json[i]["MessagePaperID"].ToString();
+            Sprite sprite = GetItemSpriteById(json[i]["NpcID"].ToString(), NPCType.Panda);
+
+            NPC npc = new NPC(id, name, description, mbti, cook, mapID, messagePaperID, sprite);
+            NpcList.Add(npc);
+            NpcDic.Add(id, npc);
         }
 
         DatabaseManager.Instance.UserInfo.LoadNPCReceived();
@@ -82,18 +86,23 @@ public class NPCDatabase
     public void NPCParserByLocal()
     {
         _dataNPC = CSVReader.Read("NPC");
+        NpcList.Clear();
+        NpcDic.Clear();
 
         for (int i = 0; i < _dataNPC.Count; i++)
         {
-            NpcList.Add(new NPC(
-                _dataNPC[i]["ID"].ToString(),
-                _dataNPC[i]["이름"].ToString(),
-                _dataNPC[i]["설명"].ToString(),
-                _dataNPC[i]["MBTI"].ToString(),
-                _dataNPC[i]["좋아하는 요리"].ToString(),
-                _dataNPC[i]["맵 ID"].ToString(),
-                _dataNPC[i]["편지지 ID"].ToString(),
-                GetItemSpriteById(_dataNPC[i]["ID"].ToString(), NPCType.Panda)));
+            string id = _dataNPC[i]["ID"].ToString();
+            string name = _dataNPC[i]["이름"].ToString();
+            string description = _dataNPC[i]["설명"].ToString();
+            string mbti = _dataNPC[i]["MBTI"].ToString();
+            string cook = _dataNPC[i]["좋아하는 요리"].ToString();
+            string mapID = _dataNPC[i]["맵 ID"].ToString();
+            string messagePaperID = _dataNPC[i]["편지지 ID"].ToString();
+            Sprite sprite = GetItemSpriteById(id, NPCType.Panda);
+
+            NPC npc = new NPC(id, name, description, mbti, cook, mapID, messagePaperID, sprite);
+            NpcList.Add(npc);
+            NpcDic.Add(id, npc);
         }
 
         DatabaseManager.Instance.UserInfo.LoadNPCReceived();
