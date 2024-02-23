@@ -57,10 +57,10 @@ namespace Cooking
 
         private CookStep _currentCookStep;
 
-        [SerializeField] private float _currentFireValue;
+        private float _currentFireValue;
         public float CurrentFireValue => _currentFireValue;
 
-        [SerializeField] private int _currentStamina;
+        private int _currentStamina;
         public int CurrentStamina => _currentStamina;
 
 

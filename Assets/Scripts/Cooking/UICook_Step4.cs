@@ -6,10 +6,14 @@ namespace Cooking
 {
     public class UICook_Step4 : UICookStep
     {
-
+        [Header("Button")]
         [SerializeField] private Button _endButton;
 
-        [SerializeField] private UICookBar _staminaBar;
+        [Header("Bar")]
+        [Space]
+        [SerializeField] private UICookBar _staminaValueBar;
+
+        [SerializeField] private UICookBar _fireValueBar;
 
         [Space]
         [Header("AddButtons")]
@@ -23,17 +27,18 @@ namespace Cooking
 
             _endButton.onClick.AddListener(CookEnd);
 
-            _cookSystem.OnStaminaValueChanged += _staminaBar.UpdateGauge;
+            _cookSystem.OnStaminaValueChanged += _staminaValueBar.UpdateGauge;
+            _cookSystem.OnFireValueChanged += _fireValueBar.UpdateGauge;
         }
 
 
         public override void StartStep()
         {
             gameObject.SetActive(true);
-
             _cookSystem.ResetStatus();
+            _staminaValueBar.ResetBar(1);
+            _fireValueBar.ResetBar(0);
             CheckAddValueButtons();
-            _staminaBar.ResetBar(1);
             _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookStart();
         }
 
