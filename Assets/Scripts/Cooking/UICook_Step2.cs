@@ -70,12 +70,6 @@ namespace Cooking
         }
 
 
-        public override bool CheckNextStep()
-        {
-            return true;
-        }
-
-
         private void OnMaterialButtonClicked(int index)
         {
 

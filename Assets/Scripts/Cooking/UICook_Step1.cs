@@ -39,12 +39,6 @@ namespace Cooking
         }
 
 
-        public override bool CheckNextStep()
-        {
-            return true;
-        }
-
-
         private void ChangeCookware(int dir)
         {
             int currentCookware = _cookSystem.ChangeCookware(dir);

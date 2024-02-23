@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Random = UnityEngine.Random;
 
 namespace Cooking
 {
@@ -22,6 +22,8 @@ namespace Cooking
         SelectCookware,
         SelectGathering,
         Start,
+        Cooking,
+        End,
         Length
     }
 
@@ -222,8 +224,24 @@ namespace Cooking
         }
 
 
-        public bool CheckDecreaseStaminaEnabled(int value)
+        public bool CheckDecreaseStaminaEnabled(CookValue cookValue)
         {
+            int value = 0;
+            switch (cookValue)
+            {
+                case CookValue.LargeValue:
+                    value = _userData.LargeAddValueStamina;
+                    break;
+
+                case CookValue.NomalValue:
+                    value = _userData.AddValueStamina;
+                    break;
+
+                case CookValue.SmallValue:
+                    value = _userData.SmallAddValueStamina;
+                    break;
+            }
+
             if (_currentStamina < value)
                 return false;
 
@@ -240,21 +258,54 @@ namespace Cooking
         }
 
 
-        public void DecreaseStamina(int value)
+        public void DecreaseStamina(CookValue cookValue)
         {
+            int value = 0;
+            switch (cookValue)
+            {
+                case CookValue.LargeValue:
+                    value = _userData.LargeAddValueStamina;
+                    break;
+
+                case CookValue.NomalValue:
+                    value = _userData.AddValueStamina;
+                    break;
+
+                case CookValue.SmallValue:
+                    value = _userData.SmallAddValueStamina;
+                    break;
+            }
+
             _currentStamina -= value;
-            Debug.Log("Stamina: " + _currentStamina);
         }
 
 
-        public void AddFireValue(int value)
+        public void AddFireValue(CookValue cookValue)
         {
+            int value = 0;
+            int randInt = 0;
+            switch (cookValue)
+            {
+                case CookValue.LargeValue:
+                    randInt = Random.Range(0, _userData.LargeAddValue.Length);
+                    value = _userData.LargeAddValue[randInt];
+                    break;
+
+                case CookValue.NomalValue:
+                    randInt = Random.Range(0, _userData.AddValue.Length);
+                    value = _userData.AddValue[randInt];
+                    break;
+
+                case CookValue.SmallValue:
+                    randInt = Random.Range(0, _userData.SmallAddValue.Length);
+                    value = _userData.SmallAddValue[randInt];
+                    break;
+            }
+
             _currentFireValue += value;
             _currentFireValue = Mathf.Clamp(_currentFireValue, 0, _userData.MaxFireValue);
 
-            Debug.Log("Fire: " +  _currentFireValue);
         }
-
     }
 }
 

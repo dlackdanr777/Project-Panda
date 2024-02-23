@@ -3,6 +3,14 @@ using UnityEngine;
 
 namespace Cooking
 {
+    public enum CookValue
+    {
+        LargeValue,
+        NomalValue,
+        SmallValue,
+        Count
+    }
+
     [Serializable]
     public class CookUserData
     {
@@ -13,8 +21,8 @@ namespace Cooking
         public int MaxStamina => _maxStamina;
 
         [Space]
-        [SerializeField] private int[] _moreAddValue;
-        [SerializeField] private int _moreAddValueStamina;
+        [SerializeField] private int[] _largeAddValue;
+        [SerializeField] private int _largeAddValueStamina;
 
         [Space]
         [SerializeField] private int[] _addValue;
@@ -24,8 +32,8 @@ namespace Cooking
         [SerializeField] private int[] _smallAddValue;
         [SerializeField] private int _smallAddValueStamina;
 
-        public int[] MoreAddValue => _moreAddValue;
-        public int MoreAddValueStamina => _moreAddValueStamina;
+        public int[] LargeAddValue => _largeAddValue;
+        public int LargeAddValueStamina => _largeAddValueStamina;
         public int[] AddValue => _addValue;
         public int AddValueStamina => _addValueStamina;
         public int[] SmallAddValue => _smallAddValue;

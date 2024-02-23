@@ -16,6 +16,8 @@ namespace Cooking
 
         [SerializeField] private UICookStep _uiStep3;
 
+        [SerializeField] private UICookStep _uiStep4;
+
         [Space]
         [SerializeField] private UISelectSlot _cookStepSlot;
         public UISelectSlot CookStepSlot => _cookStepSlot;
@@ -37,6 +39,12 @@ namespace Cooking
 
         [SerializeField] private Transform _step3Target;
 
+        [Space]
+        [Header("Cookware")]
+        //원래 CookStep3에서 관리했으나 CookStep4에서도 필요하여 UI관리 클래스인 UICook으로 이관
+        [SerializeField] private UICookware[] _cookwares; //(Enum)Cooware과 연동 
+        public UICookware[] Cookwares => _cookwares;
+
 
         private int _materialSlotCount = 1;
         public int MaterialSlotCount => _materialSlotCount;
@@ -45,7 +53,9 @@ namespace Cooking
         private CookSystem _cookSystem;
         public CookSystem CookSystem => _cookSystem;
 
-        
+        public Cookware CurrentCookware => _cookSystem.GetCookware();
+
+
 
 
         public void Init(CookSystem cookSystem)
@@ -54,12 +64,16 @@ namespace Cooking
             _uiStep1.Init(this);
             _uiStep2.Init(this);
             _uiStep3.Init(this);
+            _uiStep4.Init(this);
 
             _uiStep1.StartStep();
             _uiStep2.StopStep();
             _uiStep3.StopStep();
+            _uiStep4.StopStep();
+
 
             _cookStepSlot.Init(() => ChangeCookStep(-1), () => ChangeCookStep(1));
+            HideCookware();
             ChangeCookStep(0, true);
         }
 
@@ -71,7 +85,7 @@ namespace Cooking
         }
 
             
-        private void ChangeStepEvent(int cookStep)
+        public void ChangeStepEvent(int cookStep)
         {
             switch ((CookStep)cookStep)
             {
@@ -85,6 +99,10 @@ namespace Cooking
 
                 case CookStep.Start:
                     SelectStep3();
+                    break;
+
+                case CookStep.Cooking:
+                    SelectStep4();
                     break;
             }
         }
@@ -132,10 +150,38 @@ namespace Cooking
             });
         }
 
+        private void SelectStep4()
+        {
+            Tween.Stop(_targetObj);
+
+            _uiStep3.StopStep();
+            _cookStepSlot.gameObject.SetActive(false);
+            _uiStep4.StartStep();
+        }
 
 
 
+        /// <summary>요리 도구를 현재 요리 도구 값에 맞게 설정하여 활성화 하는 함수</summary>
+        public void ShowCookware()
+        {
+            for (int i = 0, count = _cookwares.Length; i < count; i++)
+            {
+                _cookwares[i].gameObject.SetActive(false);
+            }
 
+            _cookwares[(int)CurrentCookware].gameObject.SetActive(true);
+            _cookwares[(int)CurrentCookware].CookSet();
+        }
+
+
+        /// <summary>요리 도구를 비활성화하는 함수</summary>
+        public void HideCookware()
+        {
+            for (int i = 0, count = _cookwares.Length; i < count; i++)
+            {
+                _cookwares[i].gameObject.SetActive(false);
+            }
+        }
 
 
         private void ChangeCookStep(int dir, bool isFirstStart = false)

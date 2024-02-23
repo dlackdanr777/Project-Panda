@@ -19,9 +19,6 @@ namespace Cooking
 
         /// <summary>현재 단계를 중지하는 함수</summary>
         public abstract void StopStep();
-
-        /// <summary>다음 단계으로 넘어갈 수 있나 없나 확인하는 함수</summary>
-        public abstract bool CheckNextStep();
     }
 }
 
