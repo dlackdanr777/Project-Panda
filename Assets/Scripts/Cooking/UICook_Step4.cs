@@ -75,7 +75,10 @@ namespace Cooking
             {
                 _cookSystem.DecreaseStamina(cookValue);
                 _cookSystem.AddFireValue(cookValue);
-                _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookAnimationPlay();
+
+                RecipeData data = _cookSystem.GetCurrentRecipe();
+                float fireValue = _cookSystem.CurrentFireValue;
+                _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookPlayAnime(data, fireValue);
 
                 CheckAddValueButtons();
             });
