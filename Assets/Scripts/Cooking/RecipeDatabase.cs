@@ -45,8 +45,8 @@ public class RecipeData
     public int Tool => _tool;
 
 
-    private Item _item;
-    public Item Item => _item;
+    private FoodItem _item;
+    public FoodItem Item => _item;
 
     public RecipeData(List<KeyValuePair<string, int>> materialItemList, string successItemID,
          float successLocation, float successRangeLevel_S, float successRangeLevel_A, float successRangeLevel_B, int tool)
@@ -73,7 +73,7 @@ public class RecipeDatabase
 
     private Parser _parser = new Parser();
 
-    private string _chartID => "104967";
+    private string _chartID => "109644";
 
 
     public void Register()
@@ -133,8 +133,10 @@ public class RecipeDatabase
             float successRangeLevel_S = float.Parse(json[i]["RangeS"].ToString());
             float successRangeLevel_A = float.Parse(json[i]["RangeA"].ToString());
             float successRangeLevel_B = float.Parse(json[i]["RangeB"].ToString());
-         /*   int tool = -1; //(enum)Cookware에 연동
-            switch (json[i]["Tool"].ToString())
+
+            string toolToStr = json[i]["Tool"].ToString().Trim();
+            int tool = -1; //(enum)Cookware에 연동
+            switch (toolToStr)
             {
                 case "oven":
                     tool = 0;
@@ -147,14 +149,14 @@ public class RecipeDatabase
                 case "pot":
                     tool = 2;
                     break;
-            }*/
+            }
 
             RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
-                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, 1); //레시피 클래스 생성
+                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, tool); //레시피 클래스 생성
 
             recipeDataList.Add(recipeData);
 
-            Tuple<string, string, int> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key, 1);
+            Tuple<string, string, int> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key, tool);
             _recipeDataDic.Add(tuple, recipeData);
         }
 

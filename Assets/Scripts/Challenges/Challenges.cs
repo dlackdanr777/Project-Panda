@@ -406,7 +406,7 @@ public class Challenges
             type = "Fruit";
         }
         // 레시피
-        else if(type == "Recipe")
+        else if(type == "Coo")
         {
             // 아직 미완성 - 추가하기
             eUnlockingBook = EUnlockingBook.Recipe;

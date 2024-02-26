@@ -41,7 +41,6 @@ namespace Cooking
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
-                _cookwareAnimators[i].Animator.Play("Current", -1, 0);
                 _cookwareAnimators[i].Animator.SetTrigger("Cooking");
             }
         }
@@ -51,7 +50,9 @@ namespace Cooking
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
                 _cookwareAnimators[i].gameObject.SetActive(true);
+                _cookwareAnimators[i].Animator.SetBool("Start", true);
                 _cookwareAnimators[i].Animator.Play("Current", -1, 0);
+
             }
         }
 
@@ -68,6 +69,7 @@ namespace Cooking
                 bool setActive = _cookwareAnimators[i].StartSetActive;
                 _cookwareAnimators[i].gameObject.SetActive(setActive);
                 _cookwareAnimators[i].Animator.Play("Current", -1, 0);
+                _cookwareAnimators[i].Animator.SetBool("Start", false);
             }
         }
 
