@@ -3,6 +3,7 @@ using Muks.DataBind;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 
 public class Collection : MonoBehaviour
@@ -307,16 +308,23 @@ public class Collection : MonoBehaviour
 
         string collectionID = SetItem(); // 아이템 결정
 
-        OnCollectionSuccess?.Invoke(collectionID, _gatheringType);
+        if(collectionID != null)
+        {
+            OnCollectionSuccess?.Invoke(collectionID, _gatheringType);
 
-        // 인벤토리로 아이템 이동
-        GameManager.Instance.Player.AddItemById(collectionID, 1);
+            // 인벤토리로 아이템 이동
+            GameManager.Instance.Player.AddItemById(collectionID, 1);
 
 
-        // 도감 업데이트
+            // 도감 업데이트
 
-        // 도전 과제 달성
-        DatabaseManager.Instance.Challenges.GatheringSuccess((int)_gatheringType);
+            // 도전 과제 달성
+            DatabaseManager.Instance.Challenges.GatheringSuccess((int)_gatheringType);
+        }
+        else
+        {
+            CollectionFail();
+        }
     }
 
     private void CollectionFail()
@@ -366,11 +374,13 @@ public class Collection : MonoBehaviour
                     break;
             }
 
+            specialIDList.Clear();
             normalIDList.Clear();
             rareIDList.Clear();
 
             foreach (GatheringItem item in getItemList)
             {
+                Debug.Log("item name all: " + item.Name);
                 // 현재 시간에 채집 가능하다면(1, 2 체크)
                 if (Array.Exists(_timeIds, time => time == item.Time) && Array.Exists(_seasonIds, season => season == item.Season) && item.Map == _map)
                 {
@@ -445,6 +455,12 @@ public class Collection : MonoBehaviour
         float randomRarity = UnityEngine.Random.Range(0f, 1f); // 3. 등급 결정
         int random;
         string collectionID;
+
+        if(specialIDList.Count == 0 && rareIDList.Count == 0 && normalIDList.Count == 0)
+        {
+            Debug.LogError("채집가능한 아이템이 없습니다.");
+            return null;
+        }
         if (specialIDList.Count == 0 && randomRarity >= normal + rare)
         {
             randomRarity = UnityEngine.Random.Range(0f, normal + rare);
