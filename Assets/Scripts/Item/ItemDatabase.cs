@@ -18,6 +18,7 @@ public enum InventoryItemField
 public enum CookItemType
 {
     None = -1,
+    CookFood,
 }
 
 public enum ToolItemType
@@ -89,6 +90,14 @@ public class ItemDatabase
     private Dictionary<string, GatheringItem> _itemFruitDic = new Dictionary<string, GatheringItem>();
     public Dictionary<string, GatheringItem> ItemFruitDic => _itemFruitDic;
 
+
+    //Fruit
+    private List<FoodItem> _itemFoodList = new List<FoodItem>();
+    public List<FoodItem> ItemFoodList => _itemFoodList;
+    private Dictionary<string, FoodItem> _itemFoodDic = new Dictionary<string, FoodItem>();
+    public Dictionary<string, FoodItem> ItemFoodDic => _itemFoodDic;
+
+
     //ToolItem
     private List<ToolItem> _itemToolList = new List<ToolItem>();
     public List<ToolItem> ItemToolList => _itemToolList;
@@ -146,6 +155,7 @@ public class ItemDatabase
         BugItemParserByLocal();
         FishItemParserByLocal();
         FruitItemParserByLocal();
+        FoodItemParserByLocal();
         ToolItemParserByLocal();
 
         //Furniture //아직 수정 중
@@ -198,6 +208,17 @@ public class ItemDatabase
             Debug.LogErrorFormat("{0} ID를 가진 아이템이 존재하지 않습니다.", id);
             return null;
         }
+    }
+
+    public FoodItem GetFoodItemById(string id)
+    {
+        if(ItemFoodDic.TryGetValue(id, out FoodItem item))
+        {
+            return item;
+        }
+
+        Debug.LogErrorFormat("{0} ID를 가진 아이템이 존재하지 않습니다.", id);
+        return null;
     }
 
 
@@ -414,6 +435,31 @@ public class ItemDatabase
             ItemFruitList.Add(item);
             ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
             AllItemDic.Add(item.Id, item);
+        }
+
+        Debug.Log("과일 아이템 받아오기 성공!");
+    }
+
+
+    /// <summary>리소스 폴더에서 음식 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FoodItemParserByLocal()
+    {
+        List<Dictionary<string, object>> dataFood = CSVReader.Read("RecipeFood");
+
+        for (int i = 0; i < dataFood.Count; i++)
+        {
+            string id = dataFood[i]["Id"].ToString();
+            string name = dataFood[i]["Name"].ToString();
+            string description = dataFood[i]["Description"].ToString();
+            int price = int.Parse(dataFood[i]["Price"].ToString());
+            string mbti = dataFood[i]["Mbti"].ToString();
+
+            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, null);
+            //TODO: 추후 이미지 추가해야함
+
+            ItemFoodList.Add(item);
+            ItemFoodDic.Add(id, item);
+            AllItemDic.Add(id, item);
         }
 
         Debug.Log("과일 아이템 받아오기 성공!");
