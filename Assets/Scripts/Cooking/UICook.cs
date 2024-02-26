@@ -56,8 +56,6 @@ namespace Cooking
         public Cookware CurrentCookware => _cookSystem.GetCookware();
 
 
-
-
         public void Init(CookSystem cookSystem)
         {
             _cookSystem = cookSystem;
@@ -87,6 +85,7 @@ namespace Cooking
             
         public void ChangeStepEvent(int cookStep)
         {
+            _cookSystem.SetCookStep((CookStep)cookStep);
             switch ((CookStep)cookStep)
             {
                 case CookStep.SelectCookware:
@@ -107,11 +106,16 @@ namespace Cooking
             }
         }
 
+
         private void SelectStep1()
         {
             Tween.Stop(_targetObj);
 
             _uiStep2.StopStep();
+            _uiStep3.StopStep();
+            _uiStep4.StopStep();
+
+            HideCookware();
             _cookStepSlot.gameObject.SetActive(false);
             Tween.TransformMove(_targetObj, _step1Target.position, _animeDuration, _tweenMode,() =>
             {
@@ -128,6 +132,9 @@ namespace Cooking
 
             _uiStep1.StopStep();
             _uiStep3.StopStep();
+            _uiStep4.StopStep();
+
+            HideCookware();
             _cookStepSlot.gameObject.SetActive(false);
             Tween.TransformMove(_targetObj, _step2Target.position, _animeDuration, _tweenMode, () =>
             {
@@ -142,7 +149,10 @@ namespace Cooking
         {
             Tween.Stop(_targetObj);
 
+            _uiStep1.StopStep();
             _uiStep2.StopStep();
+            _uiStep4.StopStep();
+
             _cookStepSlot.gameObject.SetActive(false);
             Tween.TransformMove(_targetObj, _step3Target.position, _animeDuration, _tweenMode, () =>
             {
@@ -154,6 +164,8 @@ namespace Cooking
         {
             Tween.Stop(_targetObj);
 
+            _uiStep1.StopStep();
+            _uiStep2.StopStep();
             _uiStep3.StopStep();
             _cookStepSlot.gameObject.SetActive(false);
             _uiStep4.StartStep();

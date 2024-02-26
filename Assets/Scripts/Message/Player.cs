@@ -113,7 +113,7 @@ public class Player
     public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
     {
         InventoryItemField field = GetField(id);
-        Debug.Log(field);
+
         switch (field)
         {
             case InventoryItemField.GatheringItem:
@@ -126,6 +126,30 @@ public class Player
 
             case InventoryItemField.Tool:
                 ToolItemInventory[GetItemType(id)].AddById(id, count, type);
+                return true;
+        }
+
+        Debug.LogErrorFormat("{0} id를 가진 아이템이 존재하지 않습니다.");
+        return false;
+    }
+
+
+    public bool RemoveItemById(string id, int count = 1)
+    {
+        InventoryItemField field = GetField(id);
+
+        switch (field)
+        {
+            case InventoryItemField.GatheringItem:
+                GatheringItemInventory[GetItemType(id)].RemoveItemById(id, count);
+                return true;
+
+            case InventoryItemField.Cook:
+                CookItemInventory[GetItemType(id)].RemoveItemById(id, count);
+                return true;
+
+            case InventoryItemField.Tool:
+                ToolItemInventory[GetItemType(id)].RemoveItemById(id, count);
                 return true;
         }
 
