@@ -223,7 +223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9553682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3152,7 +3152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &358988601
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7043,6 +7043,7 @@ GameObject:
   - component: {fileID: 656837329}
   - component: {fileID: 656837331}
   - component: {fileID: 656837330}
+  - component: {fileID: 656837332}
   m_Layer: 5
   m_Name: Door
   m_TagString: Untagged
@@ -7107,6 +7108,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656837328}
   m_CullTransparentMesh: 1
+--- !u!95 &656837332
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656837328}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 27fdb4f1a80eb2b4da4c04b2944fbec9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &657039930
 GameObject:
   m_ObjectHideFlags: 0
@@ -7117,6 +7139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 657039931}
   - component: {fileID: 657039932}
+  - component: {fileID: 657039933}
   m_Layer: 5
   m_Name: Oven Image
   m_TagString: Untagged
@@ -7156,6 +7179,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 657039930}
   m_CullTransparentMesh: 1
+--- !u!95 &657039933
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657039930}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 3692205baa7ab4d4f9c306e78616e7cb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &657171922
 GameObject:
   m_ObjectHideFlags: 0
@@ -7426,7 +7470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &678600066
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9327,10 +9371,10 @@ RectTransform:
   - {fileID: 253442780}
   m_Father: {fileID: 994719364}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 435, y: -50}
+  m_SizeDelta: {x: 270, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &911334365
 MonoBehaviour:
@@ -9644,10 +9688,10 @@ RectTransform:
   - {fileID: 1169753584}
   m_Father: {fileID: 994719364}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 720, y: -50}
+  m_SizeDelta: {x: 270, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921091453
 MonoBehaviour:
@@ -11601,7 +11645,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cookAnimators: []
-  _cookwareAnimators: []
+  _cookwareAnimators:
+  - _animator: {fileID: 657039933}
+    _startSetActive: 1
+  - _animator: {fileID: 656837332}
+    _startSetActive: 1
+  - _animator: {fileID: 1327011793}
+    _startSetActive: 1
 --- !u!1 &1128054556
 GameObject:
   m_ObjectHideFlags: 0
@@ -12730,7 +12780,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110.66675, y: -200}
+  m_AnchoredPosition: {x: 110.66699, y: -200}
   m_SizeDelta: {x: 220, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1247295333
@@ -13406,6 +13456,7 @@ GameObject:
   - component: {fileID: 1327011790}
   - component: {fileID: 1327011792}
   - component: {fileID: 1327011791}
+  - component: {fileID: 1327011793}
   m_Layer: 5
   m_Name: Lever1 (2)
   m_TagString: Untagged
@@ -13470,6 +13521,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327011789}
   m_CullTransparentMesh: 1
+--- !u!95 &1327011793
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327011789}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 905cfef8750181f4bae0b950d5cf6b9d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1333215553
 GameObject:
   m_ObjectHideFlags: 0
@@ -15119,10 +15191,10 @@ RectTransform:
   - {fileID: 1898515898}
   m_Father: {fileID: 994719364}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1005, y: -50}
+  m_SizeDelta: {x: 270, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1508639714
 MonoBehaviour:
@@ -17164,7 +17236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1697473230
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21471,6 +21543,10 @@ PrefabInstance:
     - target: {fileID: 2298536717947736296, guid: 340ffa4acc2ed97438520ae51ce2ca02, type: 3}
       propertyPath: m_Name
       value: DetailView
+      objectReference: {fileID: 0}
+    - target: {fileID: 2298536717947736296, guid: 340ffa4acc2ed97438520ae51ce2ca02, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2968426233306014731, guid: 340ffa4acc2ed97438520ae51ce2ca02, type: 3}
       propertyPath: m_Sprite

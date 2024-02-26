@@ -15,9 +15,11 @@ public class UIDetailView : MonoBehaviour
     [SerializeField] private Button _exitButton;
 
 
-    public void Init(UnityAction onButtonClicked)
+    public void Init(UnityAction onButtonClicked = null)
     {
-        _exitButton.onClick.AddListener(onButtonClicked);
+        if(onButtonClicked != null)
+            _exitButton.onClick.AddListener(onButtonClicked);
+
         _exitButton.onClick.AddListener(() => gameObject.SetActive(false));
     }
 

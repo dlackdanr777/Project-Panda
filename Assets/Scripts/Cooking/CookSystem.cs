@@ -221,7 +221,6 @@ namespace Cooking
         public int SetCookStep(CookStep cookStep)
         {
             _currentCookStep = cookStep;
-
             return (int)cookStep;
         }
 

@@ -65,6 +65,15 @@ namespace Cooking
 
         }
 
+        public void ResetTimer()
+        {
+            _clock.transform.position = _clockTmpPos;
+            _clockHands.transform.eulerAngles = Vector3.zero;
+            _leftClockHead.transform.eulerAngles = Vector3.zero;
+            _rightClockHead.transform.eulerAngles = Vector3.zero;
+        }
+
+
         public void StartTimer(float value, Action onTimeoutd = null)
         {
             _timerValue = value;

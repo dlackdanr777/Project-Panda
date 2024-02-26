@@ -62,6 +62,7 @@ namespace Cooking
             _cookSystem.ResetStatus();
             _staminaValueBar.ResetBar(1);
             _fireValueBar.ResetBar(0);
+            _uiTimer.ResetTimer();
             _uiSuccessLocation.SetSuccessRange(_cookSystem.GetCurrentRecipe(), _fireValueBar.GetBarWedth());
 
             GameManager.Instance.Player.AddItemById("CookFd53", 1, ItemAddEventType.None);
@@ -111,8 +112,6 @@ namespace Cooking
                 _view.Show(item);
             });
         }
-
-
 
 
         private void CheckAddValueButtons()
