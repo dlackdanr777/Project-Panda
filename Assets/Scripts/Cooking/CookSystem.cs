@@ -35,15 +35,9 @@ namespace Cooking
         [Space]
         [Header("CookData")]
         [SerializeField] private CookUserData _userData;
-        public CookUserData UserData => _userData;
 
-        [Space]
-        [Header("Status")]
-
-        [Space]
-
-
-
+        [SerializeField] private float _cookTime;
+        public float CookTime => _cookTime;
 
         [Space]
         [Header("Images")]
@@ -56,7 +50,7 @@ namespace Cooking
 
         public Inventory[] Inventory => GameManager.Instance.Player.GatheringItemInventory;
 
-        private Dictionary<Tuple<string, string>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
+        private Dictionary<Tuple<string, string, int>, RecipeData> _recipeDataDic => DatabaseManager.Instance.RecipeDatabase.RecipeDataDic;
 
         private RecipeData _currentRecipeData;
 
@@ -64,16 +58,21 @@ namespace Cooking
 
         private CookStep _currentCookStep;
 
-        [SerializeField] private float _currentFireValue;
+        private float _currentFireValue;
         public float CurrentFireValue => _currentFireValue;
 
-        [SerializeField] private int _currentStamina;
+        private int _currentStamina;
         public int CurrentStamina => _currentStamina;
+
+
+        public event Action<float, float> OnFireValueChanged;
+
+        public event Action<float, float> OnStaminaValueChanged;
 
 
         private void Start()
         {
-            //Init();
+            Init();
             _uiCook.Init(this);
         }
 
@@ -89,8 +88,25 @@ namespace Cooking
             }
         }
 
+        public void AddFoodItem(string foodItemId, int count = 1)
+        {
+            GameManager.Instance.Player.AddItemById(foodItemId, count);
+        }
 
-        public RecipeData GetkRecipeByItems(InventoryItem item1, InventoryItem item2)
+
+        public void SetCurrentRecipe(InventoryItem item1,  InventoryItem item2)
+        {
+            _currentRecipeData = GetRecipeByItems(item1, item2);
+        }
+
+
+        public RecipeData GetCurrentRecipe()
+        {
+            return _currentRecipeData;
+        }
+
+
+        public RecipeData GetRecipeByItems(InventoryItem item1, InventoryItem item2)
         {
             // 아이템이 존재하지 않는 경우
             if (item1 == null && item2 == null)
@@ -104,31 +120,39 @@ namespace Cooking
                 return null;
             }
 
-            if (GetCookwareSlotNum() == 2 && (item1 == null || item2 == null))
-            {
-                Debug.Log("2구 짜리에선 1구 요리 불가능");
-                return null;
-            }
+            /*            if (GetCookwareSlotNum() == 2 && (item1 == null || item2 == null))
+                        {
+                            Debug.Log("2구 짜리에선 1구 요리 불가능");
+                            return null;
+                        }*/
 
             string item1ID = item1 != null ? item1.Id : "";
             string item2ID = item2 != null ? item2.Id : "";
 
-            Tuple<string, string> tuple1 = Tuple.Create(item1ID, item2ID);
-            Tuple<string, string> tuple2 = Tuple.Create(item2ID, item1ID);
-
+            Tuple<string, string, int> tuple1 = Tuple.Create(item1ID, item2ID, (int)_currentCookware);
+            Tuple<string, string, int> tuple2 = Tuple.Create(item2ID, item1ID, (int)_currentCookware);
 
             if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))
             {
                 return recipe;
             }
 
-            Debug.Log("아무것도 없었다..");
-            return null;
+            //레시피가 존재하지 않을 경우엔 쓰레기 아이템을 준다.
+            string foodId = "CookFd53";
+            float successPos = 0.5f;
+            float pos_S = 0.1f;
+            float pos_A = 0.1f;
+            float pos_B = 0.15f;
+            recipe = new RecipeData(null, foodId, successPos, pos_S, pos_A, pos_B, -1);
+
+            return recipe;
         }
 
 
-        public string CheckItemGrade(RecipeData data, float fireValue)
+        public string CheckItemGrade(float fireValue)
         {
+            RecipeData data = _currentRecipeData;
+
             bool checkLevel_S = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_S) <= fireValue &&
                 data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_S) >= fireValue;
 
@@ -277,6 +301,7 @@ namespace Cooking
             }
 
             _currentStamina -= value;
+            OnStaminaValueChanged?.Invoke(_userData.MaxStamina, _currentStamina);
         }
 
 
@@ -304,6 +329,8 @@ namespace Cooking
 
             _currentFireValue += value;
             _currentFireValue = Mathf.Clamp(_currentFireValue, 0, _userData.MaxFireValue);
+
+            OnFireValueChanged?.Invoke(_userData.MaxFireValue, _currentFireValue);
 
         }
     }

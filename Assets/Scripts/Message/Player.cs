@@ -72,7 +72,9 @@ public class Player
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
-        AddItemById("IBG01");
+        AddItemById("IFI01");
+        AddItemById("IFI44");
+        AddItemById("IFI19");
 
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
     }
@@ -163,7 +165,8 @@ public class Player
                 return (int)GatheringItemType.Fish;
             case "IFR":
                 return (int)GatheringItemType.Fruit;
-
+            case "Coo":
+                return (int)CookItemType.CookFood;
             case "ITG":
                 return (int)ToolItemType.GatheringTool;
 
@@ -186,7 +189,8 @@ public class Player
                 return InventoryItemField.GatheringItem;
             case "IFR":
                 return InventoryItemField.GatheringItem;
-
+            case "Coo":
+                return InventoryItemField.Cook;
             case "ITG":
                 return InventoryItemField.Tool;
 

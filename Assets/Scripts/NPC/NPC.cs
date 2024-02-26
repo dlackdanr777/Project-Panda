@@ -20,7 +20,7 @@ public class NPC : Item
         Mbti = mbti;
         Cook = cook;
         MessagePaper = messagePaper;
-        Image = image;
+        _image = image;
     }
 }
 

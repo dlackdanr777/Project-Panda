@@ -66,6 +66,7 @@ namespace Cooking
 
         public override void StopStep()
         {
+             _cookSystem.SetCurrentRecipe(_materialItemSlots[0].CurrentItem, _materialItemSlots[1].CurrentItem);
             gameObject.SetActive(false);
         }
 
