@@ -9,8 +9,12 @@ namespace Cooking
         [Header("Button")]
         [SerializeField] private Button _endButton;
 
-        [Header("Bar")]
+        [Header("AddButtons")]
+        [Tooltip("(Enum)CookValue와 연동되어있으므로 CookValue의 값과 동일하게 넣어주셔야 합니다.")]
+        [SerializeField] private UIAddValueButton[] _addButtons = new UIAddValueButton[(int)CookValue.Count]; //CookValue와 연동
+
         [Space]
+        [Header("Bar")]
         [SerializeField] private UICookBar _staminaValueBar;
 
         [SerializeField] private UICookBar _fireValueBar;
@@ -18,9 +22,9 @@ namespace Cooking
         [SerializeField] private UISuccessLocation _uiSuccessLocation;
 
         [Space]
-        [Header("AddButtons")]
-        [Tooltip("(Enum)CookValue와 연동되어있으므로 CookValue의 값과 동일하게 넣어주셔야 합니다.")]
-        [SerializeField] private UIAddValueButton[] _addButtons = new UIAddValueButton[(int)CookValue.Count]; //CookValue와 연동
+        [Header("Clock")]
+        [SerializeField] private UICookTimer _uiTimer;
+
 
 
         public override void Init(UICook uiCook)
@@ -41,6 +45,7 @@ namespace Cooking
             _staminaValueBar.ResetBar(1);
             _fireValueBar.ResetBar(0);
             _uiSuccessLocation.SetSuccessRange(_cookSystem.GetCurrentRecipe(), _fireValueBar.GetBarWedth());
+            _uiTimer.StartTimer(_cookSystem.CookTime, CookEnd);
             CheckAddValueButtons();
             _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookStart();
         }
@@ -54,6 +59,7 @@ namespace Cooking
 
         private void CookEnd()
         {
+            _uiTimer.EndTimer();
             _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookEnd();
         }
 

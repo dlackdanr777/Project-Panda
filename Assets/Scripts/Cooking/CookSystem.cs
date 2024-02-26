@@ -36,6 +36,9 @@ namespace Cooking
         [Header("CookData")]
         [SerializeField] private CookUserData _userData;
 
+        [SerializeField] private float _cookTime;
+        public float CookTime => _cookTime;
+
         [Space]
         [Header("Images")]
         [SerializeField] private Sprite _cookwareOvenImage;

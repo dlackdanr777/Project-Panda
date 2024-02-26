@@ -133,7 +133,7 @@ public class RecipeDatabase
             float successRangeLevel_S = float.Parse(json[i]["RangeS"].ToString());
             float successRangeLevel_A = float.Parse(json[i]["RangeA"].ToString());
             float successRangeLevel_B = float.Parse(json[i]["RangeB"].ToString());
-            int tool = -1; //(enum)Cookware에 연동
+         /*   int tool = -1; //(enum)Cookware에 연동
             switch (json[i]["Tool"].ToString())
             {
                 case "oven":
@@ -147,14 +147,14 @@ public class RecipeDatabase
                 case "pot":
                     tool = 2;
                     break;
-            }
+            }*/
 
             RecipeData recipeData = new RecipeData(itemList, successItemID, successLocation,
-                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, tool); //레시피 클래스 생성
+                successRangeLevel_S, successRangeLevel_A, successRangeLevel_B, 1); //레시피 클래스 생성
 
             recipeDataList.Add(recipeData);
 
-            Tuple<string, string, int> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key, tool);
+            Tuple<string, string, int> tuple = Tuple.Create(recipeData.MaterialItemList[0].Key, recipeData.MaterialItemList[1].Key, 1);
             _recipeDataDic.Add(tuple, recipeData);
         }
 
