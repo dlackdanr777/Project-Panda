@@ -4,6 +4,7 @@ using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 //아이템 종류
 public enum InventoryItemField
@@ -113,6 +114,10 @@ public class ItemDatabase
     //GatheringItem
     public ItemSpriteDatabase[] GatheringItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _gatheingItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
+
+    //FoodItem
+    public Dictionary<string, Sprite> _foodItemSpriteDic = new Dictionary<string, Sprite>();
+
     //ToolItem
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -140,6 +145,13 @@ public class ItemDatabase
                 _gatheingItemSpriteDic[i].Add(GatheringItemSpriteArray[i].ItemSprites[j].Id, GatheringItemSpriteArray[i].ItemSprites[j].Image);
             }
         }
+
+        for(int i = 0, count = DatabaseManager.Instance.FoodItemImages.ItemSprites.Length; i < count; i++)
+        {
+            ItemSprite sprite =  DatabaseManager.Instance.FoodItemImages.ItemSprites[i];
+            _foodItemSpriteDic.Add(sprite.Id, sprite.Image);
+        }
+
         //ToolItem
         for (int i = 0; i < _toolItemSpriteDic.Length; i++)
         {
@@ -228,6 +240,12 @@ public class ItemDatabase
         return sprite;
     }
 
+    private Sprite GetItemSpriteById(string id, CookItemType type)
+    {
+        Sprite sprite = _foodItemSpriteDic[id];
+        return sprite;
+    }
+
     private Sprite GetItemSpriteById(string id, ToolItemType type)
     {
         Sprite sprite = _toolItemSpriteDic[(int)type][id];
@@ -239,6 +257,7 @@ public class ItemDatabase
         BackendManager.Instance.GetChartData("105320", 10, BugItemParserByServer);
         BackendManager.Instance.GetChartData("105331", 10, FishItemParserByServer);
         BackendManager.Instance.GetChartData("105332", 10, FruitItemParserByServer);
+        BackendManager.Instance.GetChartData("109693", 10, FoodItemParserByServer);
         BackendManager.Instance.GetChartData("105888", 10, ToolItemParserByServer);
     }
 
@@ -330,6 +349,36 @@ public class ItemDatabase
     }
 
 
+    /// <summary>서버에서 요리 아이템의 정보를 받아와 List에 넣는 함수</summary>
+    public void FoodItemParserByServer(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        ItemFoodDic.Clear();
+        ItemFoodList.Clear();
+
+        for (int i = 0, count = json.Count; i < count; i++)
+        {
+
+            string id = json[i]["ItemID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int price = int.Parse(json[i]["Price"].ToString());
+            string mbti = json[i]["Mbti"].ToString();
+            Sprite sprite = GetItemSpriteById(id, CookItemType.CookFood);
+
+            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, sprite);
+            //TODO: 추후 이미지 추가해야함
+
+            ItemFoodList.Add(item);
+            ItemFoodDic.Add(id, item);
+            AllItemDic.Add(id, item);
+        }
+        Debug.Log("요리 아이템 받아오기 성공!");
+    }
+
+
+
     /// <summary>서버에서 장비 아이템의 정보를 받아와 List에 넣는 함수</summary>
     public void ToolItemParserByServer(BackendReturnObject callback)
     {
@@ -342,14 +391,11 @@ public class ItemDatabase
             string name = json[i]["Name"].ToString();
             string description = json[i]["Description"].ToString();
             int price = int.Parse(json[i]["Price"].ToString());
-            int gatheringPercentage = int.Parse(json[i]["GatheringPercentage"].ToString());
-            int storyStep = int.Parse(json[i]["StoryStep"].ToString());
-            string mapID = json[i]["MapID"].ToString();
+            string mbti = json[i]["Mbti"].ToString();
 
-            ToolItem item = new ToolItem(itemID, name, description, price, mapID, GetItemSpriteById(itemID, ToolItemType.GatheringTool)
-                  , gatheringPercentage, storyStep);
-            ItemToolList.Add(item);
-            ItemToolDic.Add(itemID, item);
+            FoodItem item = new FoodItem(itemID, name, description, price, null, mbti, GetItemSpriteById(itemID, ToolItemType.GatheringTool));
+            ItemFoodList.Add(item);
+            ItemFoodDic.Add(itemID, item);
             AllItemDic.Add(itemID, item);
         }
     }
@@ -444,19 +490,19 @@ public class ItemDatabase
     /// <summary>리소스 폴더에서 음식 아이템의 정보를 받아와 List에 넣는 함수</summary>
     public void FoodItemParserByLocal()
     {
-        List<Dictionary<string, object>> dataFood = CSVReader.Read("RecipeFood");
+        List<Dictionary<string, object>> dataFood = CSVReader.Read("ItemFood");
 
         for (int i = 0; i < dataFood.Count; i++)
         {
-            string id = dataFood[i]["Id"].ToString();
+            string id = dataFood[i]["ItemID"].ToString();
             string name = dataFood[i]["Name"].ToString();
             string description = dataFood[i]["Description"].ToString();
             int price = int.Parse(dataFood[i]["Price"].ToString());
             string mbti = dataFood[i]["Mbti"].ToString();
+            Sprite sprite = GetItemSpriteById(id, CookItemType.CookFood);
 
-            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, null);
+            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, sprite);
             //TODO: 추후 이미지 추가해야함
-
             ItemFoodList.Add(item);
             ItemFoodDic.Add(id, item);
             AllItemDic.Add(id, item);

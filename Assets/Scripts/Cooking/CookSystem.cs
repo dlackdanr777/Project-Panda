@@ -137,8 +137,8 @@ namespace Cooking
                 return recipe;
             }
 
-            //레시피가 존재하지 않을 경우엔 쓰레기 아이템을 준다.
-            string foodId = "CookFd53";
+            //레시피가 존재하지 않을 경우엔 애매한 아이템을 준다.
+            string foodId = "CookFd54";
             float successPos = 0.5f;
             float pos_S = 0.1f;
             float pos_A = 0.1f;
@@ -149,18 +149,23 @@ namespace Cooking
         }
 
 
-        public string CheckItemGrade(float fireValue)
+        public string CheckItemGrade()
         {
             RecipeData data = _currentRecipeData;
+            float fireValue = _currentFireValue * 0.01f;
 
-            bool checkLevel_S = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_S) <= fireValue &&
-                data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_S) >= fireValue;
+            float rangeS = data.SuccessLocation * data.SuccessRangeLevel_S;
+            float rangeA = rangeS + (data.SuccessLocation * data.SuccessRangeLevel_A);
+            float rangeB = rangeA +  (data.SuccessLocation * data.SuccessRangeLevel_B);
 
-            bool checkLevel_A = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_A) <= fireValue &&
-                data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_A) >= fireValue;
+            bool checkLevel_S = data.SuccessLocation - rangeS <= fireValue
+                && data.SuccessLocation + rangeS >= fireValue;
 
-            bool checkLevel_B = data.SuccessLocation - (data.SuccessLocation * data.SuccessRangeLevel_B) <= fireValue &&
-        data.SuccessLocation + (data.SuccessLocation * data.SuccessRangeLevel_B) >= fireValue;
+            bool checkLevel_A = data.SuccessLocation - rangeA <= fireValue 
+                && data.SuccessLocation + rangeA >= fireValue;
+
+            bool checkLevel_B = data.SuccessLocation - rangeB <= fireValue
+                && data.SuccessLocation + rangeB >= fireValue;
 
             if (checkLevel_S)
             {
@@ -210,6 +215,13 @@ namespace Cooking
             _currentCookStep = (CookStep)tmpInt;
 
             return tmpInt;
+        }
+
+
+        public int SetCookStep(CookStep cookStep)
+        {
+            _currentCookStep = cookStep;
+            return (int)cookStep;
         }
 
 
