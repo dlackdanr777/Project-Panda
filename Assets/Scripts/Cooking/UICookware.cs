@@ -7,16 +7,18 @@ namespace Cooking
 {
     public class UICookware : MonoBehaviour
     {
-        [SerializeField] private Animator[] _cookAnimators;
+        [SerializeField] private CookAnimatorData[] _cookAnimators;
 
-        [SerializeField] private CookwareAnimatorData[] _cookwareAnimators;
+        [SerializeField] private CookAnimatorData[] _cookwareAnimators;
 
 
         public void CookSet()
         {
             for (int i = 0, count = _cookAnimators.Length; i < count; i++)
             {
-                _cookAnimators[i].Play("Current", -1, 0);
+                bool setActive = _cookAnimators[i].StartSetActive;
+                _cookAnimators[i].gameObject.SetActive(setActive);
+                _cookAnimators[i].Animator.Play("Current", -1, 0);
             }
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
@@ -24,7 +26,6 @@ namespace Cooking
                 bool setActive = _cookwareAnimators[i].StartSetActive;
                 _cookwareAnimators[i].gameObject.SetActive(setActive);
                 _cookwareAnimators[i].Animator.Play("Current", -1, 0);
-
             }
         }
 
@@ -35,8 +36,8 @@ namespace Cooking
 
             for (int i = 0, count = _cookAnimators.Length; i < count; i++)
             {
-                _cookAnimators[i].Play("Current", -1, 0);
-                _cookAnimators[i].SetTrigger("Cooking");
+                _cookAnimators[i].Animator.Play("Current", -1, 0);
+                _cookAnimators[i].Animator.SetTrigger("Cooking");
             }
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
@@ -47,12 +48,17 @@ namespace Cooking
 
         public void CookStart()
         {
+            for (int i = 0, count = _cookAnimators.Length; i < count; i++)
+            {
+                _cookAnimators[i].gameObject.SetActive(true);
+                _cookAnimators[i].Animator.Play("Current", -1, 0);
+            }
+
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
             {
                 _cookwareAnimators[i].gameObject.SetActive(true);
                 _cookwareAnimators[i].Animator.SetBool("Start", true);
                 _cookwareAnimators[i].Animator.Play("Current", -1, 0);
-
             }
         }
 
@@ -61,7 +67,9 @@ namespace Cooking
         {
             for (int i = 0, count = _cookAnimators.Length; i < count; i++)
             {
-                _cookAnimators[i].Play("Current", -1, 0);
+                bool setActive = _cookAnimators[i].StartSetActive;
+                _cookAnimators[i].gameObject.SetActive(setActive);
+                _cookAnimators[i].Animator.Play("Current", -1, 0);
             }
 
             for (int i = 0, count = _cookwareAnimators.Length; i < count; i++)
@@ -95,7 +103,7 @@ namespace Cooking
             {
                 for (int i = 0, count = _cookAnimators.Length; i < count; i++)
                 {
-                    _cookAnimators[i].SetInteger("Rank", 2);
+                    _cookAnimators[i].Animator.SetInteger("Rank", 2);
                 }
             }
 
@@ -103,7 +111,7 @@ namespace Cooking
             {
                 for (int i = 0, count = _cookAnimators.Length; i < count; i++)
                 {
-                    _cookAnimators[i].SetInteger("Rank", 1);
+                    _cookAnimators[i].Animator.SetInteger("Rank", 1);
                 }
             }
 
@@ -112,7 +120,7 @@ namespace Cooking
             {
                 for (int i = 0, count = _cookAnimators.Length; i < count; i++)
                 {
-                    _cookAnimators[i].SetInteger("Rank", 0);
+                    _cookAnimators[i].Animator.SetInteger("Rank", 0);
                 }
             }
 
