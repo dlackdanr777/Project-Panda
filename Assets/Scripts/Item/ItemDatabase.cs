@@ -4,6 +4,7 @@ using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 //아이템 종류
 public enum InventoryItemField
@@ -113,6 +114,10 @@ public class ItemDatabase
     //GatheringItem
     public ItemSpriteDatabase[] GatheringItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _gatheingItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1];
+
+    //FoodItem
+    public Dictionary<string, Sprite> _foodItemSpriteDic = new Dictionary<string, Sprite>();
+
     //ToolItem
     public ItemSpriteDatabase[] ToolItemSpriteArray = new ItemSpriteDatabase[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
     public Dictionary<string, Sprite>[] _toolItemSpriteDic = new Dictionary<string, Sprite>[System.Enum.GetValues(typeof(ToolItemType)).Length - 1];
@@ -140,6 +145,13 @@ public class ItemDatabase
                 _gatheingItemSpriteDic[i].Add(GatheringItemSpriteArray[i].ItemSprites[j].Id, GatheringItemSpriteArray[i].ItemSprites[j].Image);
             }
         }
+
+        for(int i = 0, count = DatabaseManager.Instance.FoodItemImages.ItemSprites.Length; i < count; i++)
+        {
+            ItemSprite sprite =  DatabaseManager.Instance.FoodItemImages.ItemSprites[i];
+            _foodItemSpriteDic.Add(sprite.Id, sprite.Image);
+        }
+
         //ToolItem
         for (int i = 0; i < _toolItemSpriteDic.Length; i++)
         {
@@ -225,6 +237,12 @@ public class ItemDatabase
     private Sprite GetItemSpriteById(string id, GatheringItemType type)
     {
         Sprite sprite = _gatheingItemSpriteDic[(int)type][id];
+        return sprite;
+    }
+
+    private Sprite GetItemSpriteById(string id, CookItemType type)
+    {
+        Sprite sprite = _foodItemSpriteDic[id];
         return sprite;
     }
 
@@ -347,8 +365,9 @@ public class ItemDatabase
             string description = json[i]["Description"].ToString();
             int price = int.Parse(json[i]["Price"].ToString());
             string mbti = json[i]["Mbti"].ToString();
+            Sprite sprite = GetItemSpriteById(id, CookItemType.CookFood);
 
-            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, null);
+            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, sprite);
             //TODO: 추후 이미지 추가해야함
 
             ItemFoodList.Add(item);
@@ -480,8 +499,9 @@ public class ItemDatabase
             string description = dataFood[i]["Description"].ToString();
             int price = int.Parse(dataFood[i]["Price"].ToString());
             string mbti = dataFood[i]["Mbti"].ToString();
+            Sprite sprite = GetItemSpriteById(id, CookItemType.CookFood);
 
-            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, null);
+            FoodItem item = new FoodItem(id, name, description, price, string.Empty, mbti, sprite);
             //TODO: 추후 이미지 추가해야함
             ItemFoodList.Add(item);
             ItemFoodDic.Add(id, item);

@@ -63,6 +63,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     public ItemSpriteDatabase[] GatheringItemImages => _gatheringItemImages;
 
+    [SerializeField] private ItemSpriteDatabase _foodItemImages;
+    public ItemSpriteDatabase FoodItemImages => _foodItemImages;
+
     [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
     public ItemSpriteDatabase[] ToolItemImages => _toolItemImages;
 
