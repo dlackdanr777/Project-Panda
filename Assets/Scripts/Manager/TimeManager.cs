@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 
 public enum ETime
 {
@@ -27,8 +28,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
     private ETime eTime;
-    private Sprite mapBackGround;
-    public Sprite[] mapBackGrounds;
+    [SerializeField] private Light2D _light;
 
     private MapDatabase _mapDatabase;
 
@@ -108,20 +108,20 @@ public class TimeManager : SingletonHandler<TimeManager>
         switch (GameHour)
         {
             case int hour when hour < NightEndTime: // ¹ã
-                mapBackGround = mapBackGrounds[2];
                 eTime = ETime.Night;
+                _light.intensity = 0.26f;
                 break;
             case int hour when hour < DayEndTime: // ³·
-                mapBackGround = mapBackGrounds[0];
                 eTime = ETime.Day;
+                _light.intensity = 1f;
                 break;
             case int hour when hour < EveningEndTime: // Àú³á
-                mapBackGround = mapBackGrounds[1];
                 eTime = ETime.Evening;
+                _light.intensity = 0.5f;
                 break;
             default: // ¹ã
-                mapBackGround = mapBackGrounds[2];
                 eTime = ETime.Night;
+                _light.intensity = 0.26f;
                 break;
         }
 
