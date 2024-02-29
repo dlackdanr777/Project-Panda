@@ -65,8 +65,6 @@ namespace Cooking
             _uiTimer.ResetTimer();
             _uiSuccessLocation.SetSuccessRange(_cookSystem.GetCurrentRecipe(), _fireValueBar.GetBarWedth());
 
-            GameManager.Instance.Player.AddItemById("CookFd53", 1, ItemAddEventType.None);
-
             StartAnime(() =>
             {
                 _uiTimer.StartTimer(_cookSystem.CookTime, CookEnd);

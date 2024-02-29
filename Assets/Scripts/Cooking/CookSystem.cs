@@ -54,6 +54,10 @@ namespace Cooking
 
         private RecipeData _currentRecipeData;
 
+        private Item _materialItem1;
+
+        private Item _materialItem2;
+
         private Cookware _currentCookware;
 
         private CookStep _currentCookStep;
@@ -65,9 +69,11 @@ namespace Cooking
         public int CurrentStamina => _currentStamina;
 
 
-        public event Action<float, float> OnFireValueChanged;
+        public event Action<float, float> OnFireValueChanged; //화력 게이지가 변경되면 실행할 대리자
 
-        public event Action<float, float> OnStaminaValueChanged;
+        public event Action<float, float> OnStaminaValueChanged; //스테미너 게이지가 변경되면 실행할 대리자
+
+        public event Action OnCookStarted; //요리가 시작되면 실행할 대리자
 
 
         private void Start()
@@ -88,6 +94,36 @@ namespace Cooking
             }
         }
 
+
+        /// <summary>요리 게임이 시작되면 쓰레기 아이템을 획득하고, 레시피 재료 아이템을 삭제시키는 함수</summary>
+        //게임중 강제 종료로 게임의 내용을 없던일로 하는 것을 막기 위해 필요합니다.
+        public bool StartCook()
+        {
+            if (_currentRecipeData == null)
+            {
+                return false;
+            }
+
+            //만약 재료 아이템 ID값이 있으면 아이템 삭제
+            if (_materialItem1 != null)
+            {
+                GameManager.Instance.Player.RemoveItemById(_materialItem1.Id, 1);
+            }
+
+            if (_materialItem2 != null)
+            {
+                GameManager.Instance.Player.RemoveItemById(_materialItem2.Id, 1);
+            }
+
+            //쓰레기 아이템을 획득시킨다.
+            GameManager.Instance.Player.AddItemById("CookFd53", 1, ItemAddEventType.None);
+
+            OnCookStarted?.Invoke();
+
+            return true;
+        }
+
+
         public void AddFoodItem(string foodItemId, int count = 1)
         {
             GameManager.Instance.Player.AddItemById(foodItemId, count);
@@ -96,6 +132,8 @@ namespace Cooking
 
         public void SetCurrentRecipe(InventoryItem item1,  InventoryItem item2)
         {
+            _materialItem1 = item1;
+            _materialItem2 = item2;
             _currentRecipeData = GetRecipeByItems(item1, item2);
         }
 
@@ -106,7 +144,7 @@ namespace Cooking
         }
 
 
-        public RecipeData GetRecipeByItems(InventoryItem item1, InventoryItem item2)
+        private RecipeData GetRecipeByItems(InventoryItem item1, InventoryItem item2)
         {
             // 아이템이 존재하지 않는 경우
             if (item1 == null && item2 == null)
@@ -120,11 +158,6 @@ namespace Cooking
                 return null;
             }
 
-            /*            if (GetCookwareSlotNum() == 2 && (item1 == null || item2 == null))
-                        {
-                            Debug.Log("2구 짜리에선 1구 요리 불가능");
-                            return null;
-                        }*/
 
             string item1ID = item1 != null ? item1.Id : "";
             string item2ID = item2 != null ? item2.Id : "";
@@ -244,12 +277,6 @@ namespace Cooking
                 default:
                     return null;
             }
-        }
-
-
-        public int GetCookwareSlotNum()
-        {
-            return (int)_currentCookware + 1;
         }
 
 
