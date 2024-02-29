@@ -73,7 +73,7 @@ public class RecipeDatabase
 
     private Parser _parser = new Parser();
 
-    private string _chartID => "109644";
+    private string _chartID => "110099";
 
 
     public void Register()

@@ -56,6 +56,7 @@ public class Inventory
                 DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
             }
 
+            UnityEngine.Debug.Log(id + " 획득");
             return Add(item, count);
         }
 

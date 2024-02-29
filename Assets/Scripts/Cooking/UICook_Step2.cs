@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 namespace Cooking
 {
@@ -41,6 +42,7 @@ namespace Cooking
 
             OnMaterialButtonClicked(0);
             _uiCookInventory.Init(ChoiceItem);
+            _cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI(ChoiceItem);
         }
 
 
@@ -137,6 +139,14 @@ namespace Cooking
                     _uiCook.CookStepSlot.EnableRightButton();
                 }
             }
+
+
+            else if (_uiCook.MaterialSlotCount == 2 && (_materialItemSlots[0].CurrentItem == null || _materialItemSlots[1].CurrentItem == null))
+            {
+                Debug.Log("2구 짜리에선 1구 요리 불가능");
+                _uiCook.CookStepSlot.DisableRightButton();
+            }
+
             else if (_materialItemSlots[0].CurrentItem != null || _materialItemSlots[1].CurrentItem != null)
             {
 

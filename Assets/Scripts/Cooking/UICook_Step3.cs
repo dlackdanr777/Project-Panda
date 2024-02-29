@@ -33,7 +33,11 @@ namespace Cooking
 
         private void CookStart()
         {
-            _uiCook.ChangeStepEvent((int)CookStep.Cooking);
+            if (_cookSystem.StartCook()) 
+            {
+                _uiCook.ChangeStepEvent((int)CookStep.Cooking);
+            }
+
         }
     }
 }
