@@ -27,7 +27,8 @@ public class TimeManager : SingletonHandler<TimeManager>
     //private float _checkHour = 0; // 게임에서 한 시간이 지났는지 확인
 
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
-    private ETime eTime;
+    private ETime _eTime;
+    public ETime ETime => _eTime;
     [SerializeField] private Light2D _light;
 
     private MapDatabase _mapDatabase;
@@ -108,19 +109,19 @@ public class TimeManager : SingletonHandler<TimeManager>
         switch (GameHour)
         {
             case int hour when hour < NightEndTime: // 밤
-                eTime = ETime.Night;
+                _eTime = ETime.Night;
                 _light.intensity = 0.26f;
                 break;
             case int hour when hour < DayEndTime: // 낮
-                eTime = ETime.Day;
+                _eTime = ETime.Day;
                 _light.intensity = 1f;
                 break;
             case int hour when hour < EveningEndTime: // 저녁
-                eTime = ETime.Evening;
+                _eTime = ETime.Evening;
                 _light.intensity = 0.5f;
                 break;
             default: // 밤
-                eTime = ETime.Night;
+                _eTime = ETime.Night;
                 _light.intensity = 0.26f;
                 break;
         }
@@ -129,7 +130,7 @@ public class TimeManager : SingletonHandler<TimeManager>
         {
 
             //_mapDic[key].BackGroundRenderer.sprite = mapBackGround;
-            if (_mapDic[key].BackGround[(int)eTime] != null)
+            if (_mapDic[key].BackGround[(int)_eTime] != null)
             {
                 // 모든 시간 배경 끄기
                 for(int i = 0; i < _mapDic[key].BackGround.Length; i++)
@@ -138,7 +139,7 @@ public class TimeManager : SingletonHandler<TimeManager>
                 }
 
                 // 이번 시간 배경 켜기
-                _mapDic[key].BackGround[(int)eTime].SetActive(true);
+                _mapDic[key].BackGround[(int)_eTime].SetActive(true);
             }
         }
     }
