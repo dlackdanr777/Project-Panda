@@ -248,6 +248,17 @@ public class UINavigation : MonoBehaviour
     }
 
 
+    public UIView GetUIView(string viewName)
+    {
+        if(_viewDic.TryGetValue(viewName, out UIView view))
+        {
+            return view;
+        }
+
+        return view;
+    }
+
+
     public void CheckViewListCount()
     {
         if(0 < _uiViews.Count)
