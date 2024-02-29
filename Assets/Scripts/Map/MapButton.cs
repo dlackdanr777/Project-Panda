@@ -180,6 +180,7 @@ public class MapButton : MonoBehaviour
             //Camera.main.transform.position = targetPos;
 
             // 다른 맵으로 이동할 시 가던 방향으로 이동하는 것처럼 보이게 함
+            _width = _height * Screen.width / Screen.height;
             float lx = _cameraController.MapSize.x - _width;
             //float ly = _cameraController.MapSize.y - _height;
 
