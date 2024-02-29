@@ -391,11 +391,14 @@ public class ItemDatabase
             string name = json[i]["Name"].ToString();
             string description = json[i]["Description"].ToString();
             int price = int.Parse(json[i]["Price"].ToString());
-            string mbti = json[i]["Mbti"].ToString();
+            int gat = int.Parse(json[i]["GatheringPercentage"].ToString());
+            int step = int.Parse(json[i]["StoryStep"].ToString());
+            string map = json[i]["MapID"].ToString();
+            Sprite sprite = GetItemSpriteById(itemID, ToolItemType.GatheringTool);
+            ToolItem item = new ToolItem(itemID, name, description, price, map, sprite, gat, step);
 
-            FoodItem item = new FoodItem(itemID, name, description, price, null, mbti, GetItemSpriteById(itemID, ToolItemType.GatheringTool));
-            ItemFoodList.Add(item);
-            ItemFoodDic.Add(itemID, item);
+            ItemToolList.Add(item);
+            ItemToolDic.Add(itemID, item);
             AllItemDic.Add(itemID, item);
         }
     }
