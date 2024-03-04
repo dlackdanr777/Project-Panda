@@ -37,14 +37,18 @@ public class UIChallengeSlot : MonoBehaviour
         _data = data;
         _nameText.text = data.Name;
         _descriptionText.text = data.Description;
-        _clearButton.onClick.AddListener(() => onButtonClicked(_data.Id));
+        _clearButton.onClick.AddListener(() =>
+        {
+            onButtonClicked?.Invoke(_data.Id);
+            Clear();
+        });
 
         _clearButton.gameObject.SetActive(false);
         _clearImage.gameObject.SetActive(false);
     }
 
 
-    public void IsDone()
+    public void Done()
     {
         _clearButton.gameObject.SetActive(true);
         _backgroundImage.sprite = _doneSprite;
@@ -53,7 +57,7 @@ public class UIChallengeSlot : MonoBehaviour
     }
 
 
-    public void IsClear()
+    public void Clear()
     {
         _clearButton.gameObject.SetActive(true);
         _clearButton.interactable = false;
@@ -66,7 +70,7 @@ public class UIChallengeSlot : MonoBehaviour
 
     public void CloseSlot()
     {
-        IsClear();
+        Clear();
         _rectTransform.SetAsLastSibling();
     }
 }

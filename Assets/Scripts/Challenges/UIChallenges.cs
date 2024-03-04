@@ -4,20 +4,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.DataBind;
 using Unity.VisualScripting;
+using Muks.Tween;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class UIChallenges : UIView
 {
-    [SerializeField] private BambooFieldSystem _bambooFieldSystem; // 대나무 획득 위해 필요
+    [Header("ShowUI Animation Setting")]
+    [SerializeField] private float _startAlpha = 0;
+    [SerializeField] private float _targetAlpha = 1;
+    [SerializeField] private float _showDuration;
+    [SerializeField] private TweenMode _showTweenMode;
 
-    [SerializeField] private GameObject _uiChallengesPanel;
+    private CanvasGroup _canvasGroup;
+    private Vector3 _tmpPos;
+    private Vector3 _movePos => new Vector3(0, 50, 0);
+
+    [Space]
+    [Header("Components")]
+    [SerializeField] private BambooFieldSystem _bambooFieldSystem; // 대나무 획득 위해 필요
+    [SerializeField] private RectTransform _uiChallengesPanel;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private ScrollRect _scrollRect;
-    [SerializeField] private Sprite _doneImage;
-
-    [SerializeField] private GameObject _challengesSlotPf;
-
     [SerializeField] private UIChallengeSlot _slotPrefab;
+
     private Dictionary<string, UIChallengeSlot> _slotDic = new Dictionary<string, UIChallengeSlot>();
 
     private List<string> _clearChallenges = new List<string>();
@@ -26,6 +36,9 @@ public class UIChallenges : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
+
+        _canvasGroup = GetComponent<CanvasGroup>(); 
+        _tmpPos = _uiChallengesPanel.anchoredPosition;
 
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
@@ -42,10 +55,10 @@ public class UIChallenges : UIView
             // 성공한 도전 과제라면 완료 이미지로 변경
             if (challengesDic[key].IsDone == true)
             {
-                slot.IsDone();
+                slot.Done();
                 if (challengesDic[key].IsClear == true)
                 {
-                    slot.IsClear();
+                    slot.Clear();
                     _clearChallenges.Add(key);
                 }
             }
@@ -61,14 +74,41 @@ public class UIChallenges : UIView
 
     public override void Show()
     {
+        VisibleState = VisibleState.Appearing;
         gameObject.SetActive(true);
+
+        CloseChallenges();
+        _uiChallengesPanel.anchoredPosition = _tmpPos + _movePos;
+        _canvasGroup.alpha = _startAlpha;
+        _canvasGroup.blocksRaycasts = false;
+
+        Tween.RectTransfromAnchoredPosition(_uiChallengesPanel.gameObject, _tmpPos, _showDuration, _showTweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _showDuration, _showTweenMode, () =>
+        {
+            VisibleState = VisibleState.Appeared;
+            _canvasGroup.blocksRaycasts = true;
+
+        });
     }
 
 
     public override void Hide()
     {
-        gameObject.SetActive(false);
-        CloseChallenges();
+        VisibleState = VisibleState.Disappearing;
+
+        _uiChallengesPanel.anchoredPosition = _tmpPos;
+        _canvasGroup.alpha = _targetAlpha;
+        _canvasGroup.blocksRaycasts = false;
+
+        Tween.RectTransfromAnchoredPosition(_uiChallengesPanel.gameObject, _tmpPos - _movePos, _showDuration, _showTweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _showDuration, _showTweenMode, () =>
+        {
+            VisibleState = VisibleState.Disappeared;
+            _canvasGroup.blocksRaycasts = true;
+
+            gameObject.SetActive(false);
+        });
+
     }
 
 
@@ -76,7 +116,7 @@ public class UIChallenges : UIView
     /// 도전과제 완료 </summary>
     private void ChallengeDone(string id)
     {
-        _slotDic[id].IsDone();
+        _slotDic[id].Done();
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
     private ETime _eTime;
     public ETime ETime => _eTime;
-    [SerializeField] private Light2D _light;
+    private Light2D _light;
 
     private MapDatabase _mapDatabase;
 
@@ -49,6 +49,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 
     public void LoadedSceneEvent(Scene scene, LoadSceneMode mode)
     {
+        FindLight();
         CheckMap();
     }
 
@@ -143,4 +144,20 @@ public class TimeManager : SingletonHandler<TimeManager>
             }
         }
     }
+
+
+    private void FindLight()
+    {
+        GameObject lightObj = GameObject.Find("GlobalLight2D");
+        if (lightObj != null)
+        {
+            _light = lightObj.GetComponent<Light2D>();
+        }
+        else
+        {
+            _light = null;
+            Debug.Log("라이트가 존재하지 않는 맵입니다.");
+        }
+    }
+
 }

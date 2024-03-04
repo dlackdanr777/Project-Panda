@@ -120,7 +120,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2159806866233312790}
   m_HandleRect: {fileID: 2650456307269038542}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -709,6 +709,7 @@ GameObject:
   - component: {fileID: 3696590588877331214}
   - component: {fileID: 1981908591871417647}
   - component: {fileID: 5746280063351884823}
+  - component: {fileID: 7652732233134801044}
   m_Layer: 5
   m_Name: UIChallenges
   m_TagString: Untagged
@@ -760,14 +761,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectTransform: {fileID: 0}
   VisibleState: 0
+  _startAlpha: 0.1
+  _targetAlpha: 1
+  _showDuration: 0.3
+  _showTweenMode: 2
   _bambooFieldSystem: {fileID: 0}
   _uiChallengesPanel: {fileID: 8929259081979031780}
   _content: {fileID: 2085229583965650975}
   _backGroundImage: {fileID: 5897148126849723594}
   _scrollRect: {fileID: 2090168580798355170}
-  _doneImage: {fileID: -4602645503897391486, guid: edb17055ccb486a46a4b1cb47b53bfb9, type: 3}
-  _challengesSlotPf: {fileID: 6595950030856633684, guid: f85f56939eb4307439c09b433f46cb64, type: 3}
   _slotPrefab: {fileID: 6150523438903638497, guid: f85f56939eb4307439c09b433f46cb64, type: 3}
+--- !u!225 &7652732233134801044
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2775332019530277536}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3289860146624940967
 GameObject:
   m_ObjectHideFlags: 0
