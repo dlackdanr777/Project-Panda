@@ -1,6 +1,4 @@
-using Cooking;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -10,11 +8,11 @@ namespace Cooking
     public class UICookInventory : MonoBehaviour
     {
         [Header("인벤토리")]
-        [SerializeField] private UICookInventoryCategory _bugInventory;
+        [SerializeField] private UIInventoryCategory _bugInventory;
 
-        [SerializeField] private UICookInventoryCategory _fishInventory;
+        [SerializeField] private UIInventoryCategory _fishInventory;
 
-        [SerializeField] private UICookInventoryCategory _fruitInventory;
+        [SerializeField] private UIInventoryCategory _fruitInventory;
 
         [Space]
         [Header("인벤토리 버튼")]
@@ -27,32 +25,32 @@ namespace Cooking
         [Space]
         [Header("프리팹")]
         
-        [SerializeField] private UICookInventorySlot _slotPrefab;
+        [SerializeField] private UIInventorySlot _slotPrefab;
 
 
         private Inventory[] _inventorys;
 
 
-        public void Init(UnityAction<InventoryItem> onButtonClicked)
+        public void Init(UnityAction<InventoryItem> onButtonClicked = null)
         {
             _inventorys = GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem);
-            _bugInventory.Init(_inventorys[(int)GatheringItemType.Bug], _slotPrefab);
-            _fishInventory.Init(_inventorys[(int)GatheringItemType.Fish], _slotPrefab);
-            _fruitInventory.Init(_inventorys[(int)GatheringItemType.Fruit], _slotPrefab);
+            _bugInventory.Init(_inventorys[(int)GatheringItemType.Bug], _slotPrefab, onButtonClicked);
+            _fishInventory.Init(_inventorys[(int)GatheringItemType.Fish], _slotPrefab, onButtonClicked);
+            _fruitInventory.Init(_inventorys[(int)GatheringItemType.Fruit], _slotPrefab, onButtonClicked);
 
             _bugButton.onValueChanged.AddListener(OnBugButtonClicked);
             _fishButton.onValueChanged.AddListener(OnFishButtonClicked);
             _fruitButton.onValueChanged.AddListener(OnFruitButtonClicked);
 
-            UpdateUI(onButtonClicked);
+            UpdateUI();
         }
 
 
-        public void UpdateUI(UnityAction<InventoryItem> onButtonClicked)
+        public void UpdateUI()
         {
-            _bugInventory.UpdateUI(onButtonClicked);
-            _fishInventory.UpdateUI(onButtonClicked);
-            _fruitInventory.UpdateUI(onButtonClicked);
+            _bugInventory.UpdateUI();
+            _fishInventory.UpdateUI();
+            _fruitInventory.UpdateUI();
         }
 
 

@@ -30,7 +30,6 @@ public class UIInsideWood : UIView
 
        _inSideWood.gameObject.SetActive(false);
         DataBind.SetButtonValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
         DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
     }
 
@@ -91,19 +90,6 @@ public class UIInsideWood : UIView
         {
             _uiNav.Pop("Diary");
         }
-    }
-
-
-    private void OnInventoryButtonClicked()
-    {
-        if (!_uiNav.Check("WishTreeInventory"))
-        {
-            _uiNav.Push("WishTreeInventory");
-        }
-        else
-        {
-            _uiNav.Pop("WishTreeInventory");
-        }       
     }
 
 

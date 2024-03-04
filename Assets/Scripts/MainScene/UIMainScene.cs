@@ -26,7 +26,7 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("ShowWeatherButton", OnShowWeatherButtonClicked);
         DataBind.SetButtonValue("HideWeatherButton", OnHideWeatherButtonClicked);
 
-        DataBind.SetButtonValue("ShowInventoryButton", OnShowInventoryButtonClicked);
+        DataBind.SetButtonValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
         DataBind.SetButtonValue("HideInventoryButton", OnHideInventoryButtonClicked);
 
         DataBind.SetButtonValue("ShowWoodButton", OnShowWoodButtonClicked);
@@ -108,13 +108,23 @@ public class UIMainScene : MonoBehaviour
         _uiNav.Pop("Weather");
     }
 
-    private void OnShowInventoryButtonClicked()
+    private void OnShowAndHideInventoryButtonClicked()
     {
-        _uiNav.Push("Inventory");
+        UIView UIInventory = _uiNav.GetUIView("Inventory");
 
-        GameManager.Instance.FriezeCameraMove = false;
-        GameManager.Instance.FirezeInteraction = false;
-        //GameManager.Instance.FriezeCameraZoom = false;
+        //만약 인벤토리 UI가 닫혀있을 경우 연다
+        if (UIInventory.VisibleState == VisibleState.Disappeared)
+        {
+            _uiNav.Push("Inventory");
+            GameManager.Instance.FriezeCameraMove = false;
+            GameManager.Instance.FirezeInteraction = false;
+        }
+
+        //열려 있으면 닫는다.
+        else if (UIInventory.VisibleState == VisibleState.Appeared)
+        {
+            _uiNav.Pop("Inventory");
+        }
     }
 
     private void OnHideInventoryButtonClicked()

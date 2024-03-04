@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace Cooking
 {
@@ -42,7 +38,7 @@ namespace Cooking
 
             OnMaterialButtonClicked(0);
             _uiCookInventory.Init(ChoiceItem);
-            _cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI(ChoiceItem);
+            _cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI();
         }
 
 
@@ -97,7 +93,6 @@ namespace Cooking
         {
             _materialItemSlots[_selectMaterialSlotIndex].ChoiceItem(item);
             CheckMaterialItemSlot();
-
             if (item == null)
                 return;
 

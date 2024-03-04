@@ -17,6 +17,9 @@ public enum ItemAddEventType
 [Serializable]
 public class Inventory
 {
+    public event Action OnAddHandler;
+    public event Action OnRemoveHandler;
+
     public int MaxInventoryItem { get; private set; } = 30; //inventory 최대 저장 개수
     public int MaxInventoryItemCount { get; private set; } = 10;//한 아이템당 최대 개수
     public int ItemsCount => _items.Count;
@@ -66,6 +69,7 @@ public class Inventory
 
     private bool Add(Item item, int count)
     {
+        OnAddHandler?.Invoke();
         int remainCount = count; // 남은 아이템 개수
 
         // 이미 존재하는 아이템인지 확인
@@ -110,7 +114,6 @@ public class Inventory
         }
 
         return true;
-
     }
 
     /// <summary>
@@ -194,6 +197,8 @@ public class Inventory
     /// <param name="count"></param>
     public bool RemoveItemById(string id, int count)
     {
+        OnRemoveHandler?.Invoke();
+
         // 해당 아이템과 id가 같은 아이템들을 개수 순으로 정렬합니다.
         var items = _items.Where(item => item.Id.Equals(id)).OrderBy(item => item.Count).ToList();
 

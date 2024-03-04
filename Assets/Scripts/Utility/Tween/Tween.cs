@@ -514,6 +514,34 @@ namespace Muks.Tween
         }
 
 
+        /// <summary>목표 값으로 지속 시간동안 캔버스 그룹 알파 값을 변경하는 함수</summary>
+        public static TweenData CanvasGroupAlpha(GameObject targetObject, float targetAlpha, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
+        {
+            TweenCanvasGroupAlpha objToAlpha = !targetObject.GetComponent<TweenCanvasGroupAlpha>()
+                ? targetObject.AddComponent<TweenCanvasGroupAlpha>()
+                : targetObject.GetComponent<TweenCanvasGroupAlpha>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetAlpha;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
+
+            objToAlpha.IsLoop = false;
+            objToAlpha.AddDataSequence(tempData);
+
+            if (!objToAlpha.enabled)
+            {
+                objToAlpha.ElapsedDuration = 0;
+                objToAlpha.TotalDuration = 0;
+                objToAlpha.enabled = true;
+            }
+
+            return objToAlpha;
+        }
+
+
         /// <summary>목표 값으로 지속 시간동안 카메라 사이즈 값을 변경하는 함수</summary>
         public static TweenData CameraOrthographicSize(GameObject targetObject, float targetSize, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
         {
