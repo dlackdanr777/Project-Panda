@@ -408,6 +408,7 @@ public class Challenges
         // 레시피
         else if(type == "Coo")
         {
+            _unlockingBookCount[(int)EUnlockingBook.Recipe]++;
             // 아직 미완성 - 추가하기
             eUnlockingBook = EUnlockingBook.Recipe;
             type = "Recipe";
