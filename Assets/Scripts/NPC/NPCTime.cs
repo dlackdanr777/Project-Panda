@@ -29,7 +29,6 @@ public class NPCTime : MonoBehaviour
 
     private void SetNPC()
     {
-        Debug.Log("etime: " + _eTime.ToString());
         if (_eTime == ETime.Day)
         {
             gameObject.SetActive(_day);

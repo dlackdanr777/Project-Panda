@@ -8,7 +8,7 @@ public class CatCastle : MonoBehaviour
     [SerializeField] private CameraController _cameraController;
 
     [SerializeField] private GameObject _backGround;
-    [SerializeField] private GameObject _catWorld;
+    //[SerializeField] private GameObject _catWorld;
     [SerializeField] private GameObject _catCastle;
 
     [Header("Button")]
@@ -61,7 +61,7 @@ public class CatCastle : MonoBehaviour
         _cameraController.MapSize = _catCastleMapSize;
 
         _backGround.SetActive(false);
-        _catWorld.SetActive(false);
+        //_catWorld.SetActive(false);
         _enterCatCastleButton.SetActive(false);
         _exitCatCastleButton.SetActive(true);
         _catCastle.SetActive(true);
@@ -89,7 +89,7 @@ public class CatCastle : MonoBehaviour
         _cameraController.transform.position = new Vector3(_cameraController.MapCenter.x + 10, _cameraController.MapCenter.y, _cameraController.transform.position.z);
 
         _backGround.SetActive(true);
-        _catWorld.SetActive(true);
+        //_catWorld.SetActive(true);
         _enterCatCastleButton.SetActive(true);
         _exitCatCastleButton.SetActive(false);
         _catCastle.SetActive(false);

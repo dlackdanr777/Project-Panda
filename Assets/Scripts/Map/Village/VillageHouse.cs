@@ -6,7 +6,7 @@ public class VillageHouse : MonoBehaviour
     [SerializeField] private CameraController _cameraController;
 
     [SerializeField] private GameObject _backGround;
-    [SerializeField] private GameObject _village;
+    //[SerializeField] private GameObject _village;
     [SerializeField] private GameObject _villageHouse;
 
     [Header("Button")]
@@ -59,7 +59,7 @@ public class VillageHouse : MonoBehaviour
         _cameraController.MapSize = _villageHouseMapSize;
 
         _backGround.SetActive(false);
-        _village.SetActive(false);
+        //_village.SetActive(false);
         _enterVillageHouseButton.SetActive(false);
         _exitVillageHouseButton.SetActive(true);
         _villageHouse.SetActive(true);
@@ -87,7 +87,7 @@ public class VillageHouse : MonoBehaviour
         _cameraController.transform.position = new Vector3(_cameraController.MapCenter.x + 10, _cameraController.MapCenter.y, _cameraController.transform.position.z);
 
         _backGround.SetActive(true);
-        _village.SetActive(true);
+        //_village.SetActive(true);
         _enterVillageHouseButton.SetActive(true);
         _exitVillageHouseButton.SetActive(false);
         _villageHouse.SetActive(false);

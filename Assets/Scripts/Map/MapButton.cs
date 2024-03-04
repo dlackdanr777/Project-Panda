@@ -134,7 +134,7 @@ public class MapButton : MonoBehaviour
         CheckDirection();
 
         _currentMap = 7;
-        _cameraController.MapSize = _mapSize;
+        _cameraController.MapSize = new Vector2(31f, _cameraController.MapSize.y);
 
         MoveField(_isLeft);
     }
