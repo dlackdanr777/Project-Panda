@@ -62,7 +62,7 @@ public class Player
         }
 
         //가장 처음 그냥 주는 스티커 3개
-        ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImage().ItemSprites;
+        ItemSprite[] stickerImages = DatabaseManager.Instance.GetStickerImages().ItemSprites;
         for (int i = 0; i < stickerImages.Length; i++)
         {
             StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);

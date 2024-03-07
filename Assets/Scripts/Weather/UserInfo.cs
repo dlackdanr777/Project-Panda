@@ -1,14 +1,9 @@
 using BackEnd;
-using BackEnd.MultiCharacter;
 using LitJson;
 using Muks.BackEnd;
-using Muks.WeightedRandom;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UserInfo
@@ -575,6 +570,7 @@ public class UserInfo
         param.Add("GatheringItemReceived", GatheringItemReceived);
         param.Add("CookItemReceived", CookItemReceived);
         param.Add("ToolItemReceived", ToolItemReceived);
+
         return param;
     }
 
@@ -695,6 +691,7 @@ public class UserInfo
     public void UpdateStickerData(string selectedProbabilityFileId, string inDate)
     {
         SaveUserStickerData();
+        SaveStickerReceived();
 
         _saveStickerDataList.Clear();
         foreach (StickerData data in StickerDataArray)
@@ -1002,17 +999,6 @@ public class UserInfo
     }
 
 
-    public void LoadStickerReceived()
-    {
-        // Sticker
-        for (int i = 0; i < StickerReceived.Count; i++)
-        {
-            GameManager.Instance.Player.StickerInventory.AddById(
-               StickerReceived[i], GetStickerImage(StickerReceived[i]));
-        }
-    }
-
-
     private void SaveNPCReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
@@ -1026,16 +1012,6 @@ public class UserInfo
                     NPCReceived.Add(new NPCData(npcDatabase[i][j].Id, npcDatabase[i][j].Intimacy, npcDatabase[i][j].SSId));
                 }
             }
-        }
-    }
-
-
-    private void SaveStickerReceived()
-    {
-        StickerReceived = new List<string>();
-        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
-        {
-            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
         }
     }
 
@@ -1085,13 +1061,9 @@ public class UserInfo
 
     private Sprite FindItemSpriteById(string id)
     {
-        if(_allItemDic.TryGetValue(id, out Item item))
-        {
-            return item.Image;
-        }
-        Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
-        return null;
+        return DatabaseManager.Instance.GetStickerImage(id);
     }
+
 
     private Sprite FindNPCSpriteById(string id)
     {
@@ -1102,6 +1074,27 @@ public class UserInfo
         }
         Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
         return null;
+    }
+
+
+    private void SaveStickerReceived()
+    {
+        StickerReceived = new List<string>();
+        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
+        {
+            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
+        }
+    }
+
+
+    public void LoadStickerReceived()
+    {
+        // Sticker
+        for (int i = 0; i < StickerReceived.Count; i++)
+        {
+            GameManager.Instance.Player.StickerInventory.AddById(
+               StickerReceived[i], GetStickerImage(StickerReceived[i]));
+        }
     }
 
     #endregion

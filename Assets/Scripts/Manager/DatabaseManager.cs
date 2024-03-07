@@ -373,9 +373,21 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     /// 기존의 스티커 이미지 출력
     /// </summary>
     /// <returns></returns>
-    public ItemSpriteDatabase GetStickerImage()
+    public ItemSpriteDatabase GetStickerImages()
     {
         return _stickerImages;
+    }
+
+    public Sprite GetStickerImage(string id)
+    {
+        for(int i = 0, count = _stickerImages.ItemSprites.Length; i < count; i++)
+        {
+            if (_stickerImages.ItemSprites[i].Id == id)
+                return _stickerImages.ItemSprites[i].Image;
+        }
+
+        Debug.LogFormat("{0} 해당 이미지가 존재하지 않습니다.", id);
+        return null;
     }
 
 
