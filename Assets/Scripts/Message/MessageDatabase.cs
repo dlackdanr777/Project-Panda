@@ -14,7 +14,8 @@ public class MessageDatabase
     public Message[] Messages;
 
     //Mail
-    public List<Message> MailList = new List<Message>();
+    private List<Message> _mailList = new List<Message>();
+    public List<Message> MailList => _mailList;
     private List<Dictionary<string, object>> _dataMail;
 
     //MailPaper
@@ -32,20 +33,7 @@ public class MessageDatabase
             _mailPaperSpriteDic.Add(mailPaper.ItemSprites[i].Id, mailPaper.ItemSprites[i].Image);
         }
 
-        //Mail
-        _dataMail = CSVReader.Read("MailList");
-
-        for(int i=0;i<_dataMail.Count;i++)
-        {
-            MailList.Add(new Message(
-                _dataMail[i]["ID"].ToString(),
-                _dataMail[i]["NPC ID"].ToString(),
-                _dataMail[i]["텍스트"].ToString(),
-                GetItemById(_dataMail[i]["선물 ID"].ToString()),
-                _dataMail[i]["스토리 단계"].ToString(),
-                _dataMail[i]["게임 시간"].ToString(),
-                GetItemSpriteById(_dataMail[i]["NPC ID"].ToString())));
-        }
+        MessageParseByLocal();
     }
 
     private Sprite GetItemSpriteById(string id)
@@ -107,5 +95,25 @@ public class MessageDatabase
             }
         }
         return -1;
+    }
+
+
+    /// <summary>메일리스트 csv파일을 인 게임에서 사용할 수 있게 List에 저장하는 함수</summary>
+    private void MessageParseByLocal()
+    {
+        _dataMail = CSVReader.Read("MailList");
+
+        for (int i = 0; i < _dataMail.Count; i++)
+        {
+            string id = _dataMail[i]["Id"].ToString();
+            string ncpId = _dataMail[i]["NpcId"].ToString();
+            string text = _dataMail[i]["Context"].ToString();
+            Item gift = GetItemById(_dataMail[i]["GiftItemId"].ToString());
+            string storyStep = _dataMail[i]["StoryStep"].ToString();
+            string time = _dataMail[i]["GameTime"].ToString();
+            Sprite sprite = GetItemSpriteById(ncpId);
+            Message message = new Message(id, ncpId, text, gift, storyStep, time, sprite);
+            _mailList.Add(message);
+        }
     }
 }

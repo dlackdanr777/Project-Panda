@@ -1,5 +1,6 @@
 using Muks.DataBind;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using Unity.VisualScripting;
@@ -10,7 +11,7 @@ public class UIMailList : MonoBehaviour
 {
     public Action NoticeHandler;
 
-    [SerializeField] private GameObject _messageSlotPf;
+    [Header("Components")]
     [SerializeField] private GameObject _detailView;
     [SerializeField] private GameObject _giftDetailView;
     [SerializeField] private GameObject _giftButton;
@@ -19,57 +20,75 @@ public class UIMailList : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private Sprite[] _checkMailImage;
 
+    [Space]
+    [Header("Prefabs")]
+    [SerializeField] private UIMailSlot _mailSlotPrefab;
+
     private MessageList _mailList;
+    private List<UIMailSlot> _slotList = new List<UIMailSlot>();
     private int _currentIndex;
 
     private void Awake()
     {
-        for (int i = 0; i < GameManager.Instance.Player.Messages[0].MaxMessageCount; i++) //미리 slot 생성
+        for (int i = 0, count = GameManager.Instance.Player.Messages[0].MaxMessageCount; i < count; i++) //미리 slot 생성
         {
             int index = GameManager.Instance.Player.Messages[0].MaxMessageCount - 1 - i;
-            GameObject messageSlot = Instantiate(_messageSlotPf, _spawnPoint);
-            messageSlot.GetComponent<Button>().onClick.AddListener(()=>OnClickMessageSlot(index));
+            UIMailSlot mailSlot = Instantiate(_mailSlotPrefab, _spawnPoint);
+            mailSlot.Init(() => OnClickMessageSlot(index));
+
+           _slotList.Add(mailSlot);
         }
+
     }
+
 
     private void OnEnable()
     {
-        UpdateList();
-        
+        UpdateList();      
     }
+
 
     private void Start()
     {
         _closeButton.onClick.AddListener(OnClickCloseButton);
         _giftCloseButton.onClick.AddListener(OnClickGiftCloseButton);
+
+
+        GameManager.Instance.Player.Messages[0].AddById("ML01", MessageField.Mail);
     }
+
 
     private void UpdateList()
     {
         _mailList = GameManager.Instance.Player.Messages[0]; //메시지리스트 받아옴
 
         NoticeHandler?.Invoke();
-        for (int i = 0; i < _spawnPoint.childCount; i++)
+        for (int i = 0, count = _slotList.Count; i < count; i++)
         {
             if (i < _mailList.MessagesCount)
             {
-                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).gameObject.SetActive(true); //활성화
+                _slotList[count - 1 - i].gameObject.SetActive(true); //활성화
+
+                //메일을 안 읽은 상태면?
                 if (!_mailList.GetMessageList()[i].IsCheck)
                 {
-                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetComponent<Image>().sprite = _checkMailImage[0];
-                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetChild(0).gameObject.SetActive(true); //느낌표
+                    _slotList[count - 1 - i].SetMailImage(_checkMailImage[0]);
+                    _slotList[count - 1 - i].SetActiveCheckImage(true);
                 }
                 else
                 {
-                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetComponent<Image>().sprite = _checkMailImage[1];
-                    _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(0).GetChild(0).gameObject.SetActive(false); //느낌표
+                    _slotList[count - 1 - i].SetMailImage(_checkMailImage[1]);
+                    _slotList[count - 1 - i].SetActiveCheckImage(false); //느낌표
 
                 }
-                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).GetChild(1).GetComponent<TextMeshProUGUI>().text = GetNPCName(_mailList.GetMessageList()[i].From);//NPC 이름
+
+                string npcId = _mailList.GetMessageList()[i].From;
+                string npcName = DatabaseManager.Instance.NPCDatabase.NpcDic[npcId].Name;
+                _slotList[count - 1 - i].SetNpcNameText(npcName);
             }
             else
             {
-                _spawnPoint.GetChild((_spawnPoint.childCount - 1) - i).gameObject.SetActive(false);
+                _slotList[count - 1 - i].gameObject.SetActive(false);
             }
         }
     }
