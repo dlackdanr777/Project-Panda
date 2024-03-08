@@ -38,6 +38,10 @@ public class MapButton : MonoBehaviour
         DataBind.SetButtonValue("MermaidForestButton", MoveMermaidForest);
         DataBind.SetButtonValue("OtherWorldlyForestButton", MoveOtherWorldlyForest);
         DataBind.SetButtonValue("OtherWorldlyForestEntranceButton", MoveOtherWorldlyForestEntrance);
+        DataBind.SetButtonValue("VillageHouseButton", MoveVillageHouse);
+        DataBind.SetButtonValue("CityHallButton", MoveCityHall);
+        DataBind.SetButtonValue("CityHallOfficeButton", MoveCityHallOffice);
+        DataBind.SetButtonValue("CatCastleButton", MoveCatCastle);
     }
 
     /// <summary>
@@ -102,31 +106,56 @@ public class MapButton : MonoBehaviour
     }
     private void MoveVillage()
     {
-        CheckDirection();
-
-        _currentMap = 4;
         _cameraController.MapSize = _mapSize;
+        if (_currentMap == 10)
+        {
+            _currentMap = 4;
+            MoveCenter();
+        }
+        else
+        {
+            CheckDirection();
 
-        MoveField(_isLeft);
+            _currentMap = 4;
+            MoveField(_isLeft);
+        }
+
     }
     private void MoveMarket()
     {
-        CheckDirection();
-
-        _currentMap = 5;
         _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
 
-        MoveField(_isLeft);
+        if (_currentMap == 11)
+        {
+            _currentMap = 5;
+            MoveCenter();
+        }
+        else
+        {
+            CheckDirection();
+
+            _currentMap = 5;
+            MoveField(_isLeft);
+        }
+
     }
 
     private void MoveCatWorld()
     {
-        CheckDirection();
-
-        _currentMap = 6;
         _cameraController.MapSize = _mapSize;
+        if (_currentMap == 13)
+        {
+            _currentMap = 6;
+            MoveCenter();
+        } 
+        else
+        {
+            CheckDirection();
 
-        MoveField(_isLeft);
+            _currentMap = 6;
+            MoveField(_isLeft);
+        }
+        
     }
 
     private void MoveMermaidForest()
@@ -167,7 +196,39 @@ public class MapButton : MonoBehaviour
         MoveField(_isLeft);
     }
 
+    private void MoveVillageHouse()
+    {
+        _currentMap = 10;
+        _cameraController.MapSize = new Vector2(30f, _cameraController.MapSize.y);
 
+        MoveCenter();
+    }
+
+    private void MoveCityHall()
+    {
+        _currentMap = 11;
+        _cameraController.MapSize = new Vector2(28.5f, _cameraController.MapSize.y);
+
+        MoveCenter();
+    }
+
+    private void MoveCityHallOffice()
+    {
+        _currentMap = 12;
+        _cameraController.MapSize = new Vector2(45, _cameraController.MapSize.y);
+
+        MoveCenter();
+    }
+
+    private void MoveCatCastle()
+    {
+        _currentMap = 13;
+        _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
+
+        MoveCenter();
+    }
+
+    // 끝으로 이동
     private void MoveField(bool isLeft)
     {
         Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
@@ -197,6 +258,7 @@ public class MapButton : MonoBehaviour
         });
     }
 
+    // 같은 위치로 이동
     private void MoveOtherWorld()
     {
         Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
@@ -210,6 +272,22 @@ public class MapButton : MonoBehaviour
             _cameraController.MapCenter = _targetTransform[_currentMap].position;
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
+
+            FadeInOutManager.Instance.FadeOut(_fadeTime);
+        });
+    }
+
+    // 중심으로 이동
+    private void MoveCenter()
+    {
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
+        {
+            TimeManager.Instance.CheckMap();
+
+            _cameraController.MapCenter = _targetTransform[_currentMap].position;
+
+            Camera.main.transform.position = targetPos;
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         });
