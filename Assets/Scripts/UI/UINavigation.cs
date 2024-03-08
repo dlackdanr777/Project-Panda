@@ -182,8 +182,8 @@ public class UINavigation : MonoBehaviour
 
         StartCoroutine(CheckHideVisibleState(selectView));
 
-        if (1 <= _uiViews.Count)
-            _uiViews.Last().RectTransform.SetAsLastSibling();
+/*        if (1 <= _uiViews.Count)
+            _uiViews.Last().RectTransform.SetAsLastSibling();*/
     }
 
 

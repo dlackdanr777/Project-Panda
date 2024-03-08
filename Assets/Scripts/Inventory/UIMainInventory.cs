@@ -3,41 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(CanvasGroup))]
 public class UIMainInventory : UIView
 {
 
+    [Space]
+    [Header("Components")]
     [SerializeField] private UIMainInventoryContoller _inventoryContoller;
-
     [SerializeField] private UIDetailView _detailView;
-
-    [SerializeField] private CanvasGroup _canvasGroup;
-
     [SerializeField] private Transform _slotParent;
 
     [Space]
-    [Header("Animations")]
-    [SerializeField] private float _showDuration;
+    [Header("ShowUI Animation Setting")]
+    [SerializeField] private RectTransform _targetRect;
+    [SerializeField] private float _startAlpha = 0;
+    [SerializeField] private float _targetAlpha = 1;
+    [SerializeField] private float _duration;
+    [SerializeField] private TweenMode _tweenMode;
 
-    [SerializeField] private TweenMode _showTweenMode;
-
-    [Space]
-    [SerializeField] private float _hideDuration;
-
-    [SerializeField] private TweenMode _hideTweenMode;
-
-    [SerializeField] private Vector3 _startScale;
-
-    [SerializeField] private Vector3 _targetScale;
-
-    [SerializeField] private Transform _startPos;
-
-    [SerializeField] private Transform _targetPos;
+    private CanvasGroup _canvasGroup;
+    private Vector3 _tmpPos;
+    private Vector3 _movePos => new Vector3(0, 50, 0);
 
     public override void Init(UINavigation uiNav)
     {
-        base.Init(uiNav);
-        _inventoryContoller.Init(SlotButtonClicked);
+        base.Init(uiNav);     
+        _canvasGroup = GetComponent<CanvasGroup>();
 
+        _inventoryContoller.Init(SlotButtonClicked);
         _detailView.Init(() => _detailView.gameObject.SetActive(false));
         _detailView.gameObject.SetActive(false);
     }
@@ -48,15 +42,13 @@ public class UIMainInventory : UIView
         VisibleState = VisibleState.Appearing;
         gameObject.SetActive(true);
         _slotParent.gameObject.SetActive(false);
-        _detailView.gameObject.SetActive(false);
 
+        _targetRect.anchoredPosition = _tmpPos + _movePos;
+        _canvasGroup.alpha = _startAlpha;
         _canvasGroup.blocksRaycasts = false;
 
-        _inventoryContoller.transform.position = _startPos.position;
-        Tween.TransformMove(_inventoryContoller.gameObject, _targetPos.position, _showDuration, _showTweenMode);
-
-        _inventoryContoller.transform.localScale = _startScale;
-        Tween.TransformScale(_inventoryContoller.gameObject, _targetScale, _showDuration, _showTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
         {
             VisibleState = VisibleState.Appeared;
             _canvasGroup.blocksRaycasts = true;
@@ -68,17 +60,20 @@ public class UIMainInventory : UIView
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
+
         _slotParent.gameObject.SetActive(false);
         _detailView.gameObject.SetActive(false);
+
+        _targetRect.anchoredPosition = _tmpPos;
+        _canvasGroup.alpha = _targetAlpha;
         _canvasGroup.blocksRaycasts = false;
 
-        _inventoryContoller.transform.position = _targetPos.position;
-        Tween.TransformMove(_inventoryContoller.gameObject, _startPos.position, _hideDuration, _hideTweenMode);
-
-        _inventoryContoller.transform.localScale = _targetScale;
-        Tween.TransformScale(_inventoryContoller.gameObject, _startScale, _hideDuration, _hideTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos - _movePos, _duration, _tweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _duration, _tweenMode, () =>
         {
             VisibleState = VisibleState.Disappeared;
+            _canvasGroup.blocksRaycasts = true;
+
             gameObject.SetActive(false);
         });
     }

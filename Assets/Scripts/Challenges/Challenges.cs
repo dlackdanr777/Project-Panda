@@ -366,7 +366,6 @@ public class Challenges
     public void UnlockingBook(string type) // 처음에 카운트 받아온 후 도감 해제될 때마다 실행하기... ? -> IsReceived 변경될 때마다 실행하기
     {
         EUnlockingBook eUnlockingBook = EUnlockingBook.None;
-        Debug.Log(type);
         // 첫 도감 해제
         if (DatabaseManager.Instance.GetChallengesDic()["RWBG03"].IsDone == false)
         {

@@ -128,6 +128,7 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.RecipeDatabase.LoadData();
             DatabaseManager.Instance.AlbumDatabase.LoadData();
             DatabaseManager.Instance.AttendanceDatabase.LoadData();
+            DatabaseManager.Instance.MessageDatabase.LoadData();
 
             BackendManager.Instance.Login = true;
 

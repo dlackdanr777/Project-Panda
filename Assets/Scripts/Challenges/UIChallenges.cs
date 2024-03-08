@@ -10,10 +10,11 @@ using Muks.Tween;
 public class UIChallenges : UIView
 {
     [Header("ShowUI Animation Setting")]
+    [SerializeField] private RectTransform _targetRect;
     [SerializeField] private float _startAlpha = 0;
     [SerializeField] private float _targetAlpha = 1;
-    [SerializeField] private float _showDuration;
-    [SerializeField] private TweenMode _showTweenMode;
+    [SerializeField] private float _duration;
+    [SerializeField] private TweenMode _tweenMode;
 
     private CanvasGroup _canvasGroup;
     private Vector3 _tmpPos;
@@ -22,7 +23,6 @@ public class UIChallenges : UIView
     [Space]
     [Header("Components")]
     [SerializeField] private BambooFieldSystem _bambooFieldSystem; // ´ë³ª¹« È¹µæ À§ÇØ ÇÊ¿ä
-    [SerializeField] private RectTransform _uiChallengesPanel;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private ScrollRect _scrollRect;
@@ -38,7 +38,7 @@ public class UIChallenges : UIView
         base.Init(uiNav);
 
         _canvasGroup = GetComponent<CanvasGroup>(); 
-        _tmpPos = _uiChallengesPanel.anchoredPosition;
+        _tmpPos = _targetRect.anchoredPosition;
 
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
@@ -78,16 +78,15 @@ public class UIChallenges : UIView
         gameObject.SetActive(true);
 
         CloseChallenges();
-        _uiChallengesPanel.anchoredPosition = _tmpPos + _movePos;
+        _targetRect.anchoredPosition = _tmpPos + _movePos;
         _canvasGroup.alpha = _startAlpha;
         _canvasGroup.blocksRaycasts = false;
 
-        Tween.RectTransfromAnchoredPosition(_uiChallengesPanel.gameObject, _tmpPos, _showDuration, _showTweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _showDuration, _showTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
         {
             VisibleState = VisibleState.Appeared;
             _canvasGroup.blocksRaycasts = true;
-
         });
     }
 
@@ -96,19 +95,18 @@ public class UIChallenges : UIView
     {
         VisibleState = VisibleState.Disappearing;
 
-        _uiChallengesPanel.anchoredPosition = _tmpPos;
+        _targetRect.anchoredPosition = _tmpPos;
         _canvasGroup.alpha = _targetAlpha;
         _canvasGroup.blocksRaycasts = false;
 
-        Tween.RectTransfromAnchoredPosition(_uiChallengesPanel.gameObject, _tmpPos - _movePos, _showDuration, _showTweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _showDuration, _showTweenMode, () =>
+        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos - _movePos, _duration, _tweenMode);
+        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _duration, _tweenMode, () =>
         {
             VisibleState = VisibleState.Disappeared;
             _canvasGroup.blocksRaycasts = true;
 
             gameObject.SetActive(false);
         });
-
     }
 
 
