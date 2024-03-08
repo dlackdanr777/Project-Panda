@@ -18,10 +18,13 @@ public class NPCSetting : MonoBehaviour
     private Animator _animator;
     private int _num;
 
+    private bool _isConversation; // 대화 중인지 확인
+
 
     void Start()
     {
         _time = 0f;
+        _isConversation = false;
         _eTime = TimeManager.Instance.ETime;
         SetNPC();
         _animator = GetComponent<Animator>();
