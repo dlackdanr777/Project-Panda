@@ -57,7 +57,7 @@ public class MapDatabase
 
             // 나중에 for문으로 수정
             backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<Transform>().gameObject;
-            backGround[(int)ETime.Evening] = GameObject.Find(id + "EveningBackGround")?.GetComponent<Transform>().gameObject;
+            //backGround[(int)ETime.Evening] = GameObject.Find(id + "EveningBackGround")?.GetComponent<Transform>().gameObject;
             backGround[(int)ETime.Night] = GameObject.Find(id + "NightBackGround")?.GetComponent<Transform>().gameObject;
 
             for(int j = 0; j <backGround.Length; j++)

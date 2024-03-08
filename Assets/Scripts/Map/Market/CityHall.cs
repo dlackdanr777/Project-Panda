@@ -6,7 +6,7 @@ public class CityHall : MonoBehaviour
     [SerializeField] private CameraController _cameraController;
 
     [SerializeField] private GameObject _backGround;
-    [SerializeField] private GameObject _market;
+    //[SerializeField] private GameObject _market;
     [SerializeField] private GameObject _cityHall;
     [SerializeField] private GameObject _cityHallOffice;
 
@@ -29,7 +29,7 @@ public class CityHall : MonoBehaviour
     private float _fadeTime = 1f;
 
     private int _dayEndTime;
-    private int _eveningEndTime;
+    //private int _eveningEndTime;
     private int _nightEndTime;
 
     void Start()
@@ -39,7 +39,7 @@ public class CityHall : MonoBehaviour
         _cityHallOfficeMapSize = new Vector2(45, _cameraController.MapSize.y);
 
         _dayEndTime = TimeManager.Instance.DayEndTime;
-        _eveningEndTime = TimeManager.Instance.EveningEndTime;
+        //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
         DataBind.SetButtonValue("EnterCityHallButton", () => {
@@ -81,7 +81,7 @@ public class CityHall : MonoBehaviour
         _cameraController.MapSize = _cityHallMapSize;
 
         _backGround.SetActive(false);
-        _market.SetActive(false);
+        //_market.SetActive(false);
         _enterCityHallButton.SetActive(false);
         _exitCityHallButton.SetActive(true);
         _enterCityHallOfficeButton.SetActive(true);
@@ -92,15 +92,16 @@ public class CityHall : MonoBehaviour
             _skyCityHall[(int)ETime.Day].SetActive(true);
             _skyCityHall[(int)ETime.Night].SetActive(false);
         }
-        else if(TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
-        {
-            _skyCityHall[(int)ETime.Evening].SetActive(true);
-            _skyCityHall[(int)ETime.Day].SetActive(false);
-        }
+        //else if(TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        //{
+        //    _skyCityHall[(int)ETime.Evening].SetActive(true);
+        //    _skyCityHall[(int)ETime.Day].SetActive(false);
+        //}
         else
         {
             _skyCityHall[(int)ETime.Night].SetActive(true);
-            _skyCityHall[(int)ETime.Evening].SetActive(false);
+            _skyCityHall[(int)ETime.Day].SetActive(false);
+            //_skyCityHall[(int)ETime.Evening].SetActive(false);
         }
     }
 
@@ -110,7 +111,7 @@ public class CityHall : MonoBehaviour
         _cameraController.transform.position = new Vector3(_cameraController.MapCenter.x + 10, _cameraController.MapCenter.y, _cameraController.transform.position.z);
 
         _backGround.SetActive(true);
-        _market.SetActive(true);
+        //_market.SetActive(true);
         _enterCityHallButton.SetActive(true);
         _exitCityHallButton.SetActive(false);
         _enterCityHallOfficeButton.SetActive(false);
@@ -135,15 +136,16 @@ public class CityHall : MonoBehaviour
             _skyOffice[(int)ETime.Day].SetActive(true);
             _skyOffice[(int)ETime.Night].SetActive(false);
         }
-        else if (TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
-        {
-            _skyOffice[(int)ETime.Evening].SetActive(true);
-            _skyOffice[(int)ETime.Day].SetActive(false);
-        }
+        //else if (TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        //{
+        //    _skyOffice[(int)ETime.Evening].SetActive(true);
+        //    _skyOffice[(int)ETime.Day].SetActive(false);
+        //}
         else
         {
             _skyOffice[(int)ETime.Night].SetActive(true);
-            _skyOffice[(int)ETime.Evening].SetActive(false);
+            _skyOffice[(int)ETime.Day].SetActive(false);
+            //_skyOffice[(int)ETime.Evening].SetActive(false);
         }
     }
 

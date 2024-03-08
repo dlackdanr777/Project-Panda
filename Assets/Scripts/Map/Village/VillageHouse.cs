@@ -15,7 +15,7 @@ public class VillageHouse : MonoBehaviour
 
     [Header("Sky")]
     [SerializeField] private GameObject _day;
-    [SerializeField] private GameObject _evening;
+    //[SerializeField] private GameObject _evening;
     [SerializeField] private GameObject _night;
 
     private Vector2 _mapSize;
@@ -33,7 +33,7 @@ public class VillageHouse : MonoBehaviour
         _villageHouseMapSize = new Vector2(30f, _cameraController.MapSize.y);
 
         _dayEndTime = TimeManager.Instance.DayEndTime;
-        _eveningEndTime = TimeManager.Instance.EveningEndTime;
+        //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
         DataBind.SetButtonValue("EnterVillageHouseButton", () => {
@@ -69,15 +69,16 @@ public class VillageHouse : MonoBehaviour
             _day.SetActive(true);
             _night.SetActive(false);
         }
-        else if(TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
-        {
-            _evening.SetActive(true);
-            _day.SetActive(false);
-        }
+        //else if(TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        //{
+        //    _evening.SetActive(true);
+        //    _day.SetActive(false);
+        //}
         else
         {
             _night.SetActive(true);
-            _evening.SetActive(false);
+            _day.SetActive(false);
+            //_evening.SetActive(false);
         }
     }
 

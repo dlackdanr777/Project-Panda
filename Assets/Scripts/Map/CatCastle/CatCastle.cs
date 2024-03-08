@@ -17,7 +17,7 @@ public class CatCastle : MonoBehaviour
 
     [Header("Sky")]
     [SerializeField] private GameObject _day;
-    [SerializeField] private GameObject _evening;
+    //[SerializeField] private GameObject _evening;
     [SerializeField] private GameObject _night;
 
     private Vector2 _mapSize;
@@ -26,7 +26,7 @@ public class CatCastle : MonoBehaviour
     private float _fadeTime = 1f;
 
     private int _dayEndTime;
-    private int _eveningEndTime;
+    //private int _eveningEndTime;
     private int _nightEndTime;
 
     void Start()
@@ -35,7 +35,7 @@ public class CatCastle : MonoBehaviour
         _catCastleMapSize = new Vector2(15f, _cameraController.MapSize.y);
 
         _dayEndTime = TimeManager.Instance.DayEndTime;
-        _eveningEndTime = TimeManager.Instance.EveningEndTime;
+        //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
         DataBind.SetButtonValue("EnterCatCastleButton", () => {
@@ -71,15 +71,16 @@ public class CatCastle : MonoBehaviour
             _day.SetActive(true);
             _night.SetActive(false);
         }
-        else if (TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
-        {
-            _evening.SetActive(true);
-            _day.SetActive(false);
-        }
+        //else if (TimeManager.Instance.GameHour >= _dayEndTime && TimeManager.Instance.GameHour < _eveningEndTime)
+        //{
+        //    _evening.SetActive(true);
+        //    _day.SetActive(false);
+        //}
         else
         {
             _night.SetActive(true);
-            _evening.SetActive(false);
+            _day.SetActive(false);
+            //_evening.SetActive(false);
         }
     }
 

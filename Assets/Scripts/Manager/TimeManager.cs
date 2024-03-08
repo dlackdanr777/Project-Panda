@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 public enum ETime
 {
     Day,
-    Evening,
+    //Evening,
     Night
 }
 
@@ -20,7 +20,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     public string GameWeatherId;
 
     public int DayEndTime = 17; // 낮 종료 시간
-    public int EveningEndTime = 21; // 저녁 종료 시간
+    //public int EveningEndTime = 21; // 저녁 종료 시간
     public int NightEndTime = 7; // 밤 종료 시간
 
     //private float _oneHour = 10 * 60; // 게임에서의 한 시간은 10분
@@ -117,10 +117,10 @@ public class TimeManager : SingletonHandler<TimeManager>
                 _eTime = ETime.Day;
                 _light.intensity = 1f;
                 break;
-            case int hour when hour < EveningEndTime: // 저녁
-                _eTime = ETime.Evening;
-                _light.intensity = 0.5f;
-                break;
+            //case int hour when hour < EveningEndTime: // 저녁
+            //    _eTime = ETime.Evening;
+            //    _light.intensity = 0.5f;
+            //    break;
             default: // 밤
                 _eTime = ETime.Night;
                 _light.intensity = 0.26f;
