@@ -43,7 +43,7 @@ public class UIIntroScene : MonoBehaviour
     }
 
 
-    public void SetDialogueContext(string text, float fontSize = 40)
+    public void SetDialogueContext(string text, float fontSize = 35)
     {
         _dialogueContext.fontSize = fontSize;
         _dialogueContext.text = text;
@@ -57,8 +57,15 @@ public class UIIntroScene : MonoBehaviour
 
     public void SetDialogueImage(Sprite sprite)
     {
-        _pandaImage.gameObject.SetActive(true);
-        _pandaImage.sprite = sprite;
+        if(sprite != null)
+        {
+            _pandaImage.gameObject.SetActive(true);
+            _pandaImage.sprite = sprite;
+            return;
+        }
+
+        _pandaImage.gameObject.SetActive(false);
+
     }
 
 }

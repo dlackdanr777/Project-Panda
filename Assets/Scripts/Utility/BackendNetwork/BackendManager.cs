@@ -403,6 +403,12 @@ namespace Muks.BackEnd
                         return BackendState.Failure;
                     }
                 }
+
+                //만약 기기에는 로그인 정보가 남아있는데 서버에 데이터가 없으면
+                //기기에 저장된 로그인 정보를 삭제한다.
+                else if (bro.GetMessage() == "bad customId, 잘못된 customId 입니다")
+                    Backend.BMember.DeleteGuestInfo();
+
                 else
                 {
                     Debug.LogError(bro.GetErrorCode());

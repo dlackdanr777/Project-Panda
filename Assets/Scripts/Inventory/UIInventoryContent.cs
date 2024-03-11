@@ -95,7 +95,7 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
                     _maxCount[i] += itemInventory[j].MaxInventoryItem;
                     if (itemInventory[j] != null)
                     {
-                        _lists[i].AddRange(itemInventory[j].GetInventoryList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
+                        _lists[i].AddRange(itemInventory[j].GetItemList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
                     }
                 }
 
@@ -125,7 +125,7 @@ public class UIInventoryContent : UIList<InventoryItem, InventoryItemField>
                 {
                     if (itemInventory[j] != null)
                     {
-                        _lists[i].AddRange(itemInventory[j].GetInventoryList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
+                        _lists[i].AddRange(itemInventory[j].GetItemList());//Player에 있는 인벤토리 설정 -> 변경될 때마다 이벤트로 ui 변경해줘야 함
                     }
                 }
             }

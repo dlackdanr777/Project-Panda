@@ -183,7 +183,7 @@ public class CookingSystem : MonoBehaviour
 
         Inventory inventory = _inventory[(int)_inventoryType];
 
-        List<InventoryItem> items = inventory.GetInventoryList();
+        List<InventoryItem> items = inventory.GetItemList();
 
         for (int i = 0; i < items.Count; i++)
         {

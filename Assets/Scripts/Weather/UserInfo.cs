@@ -96,6 +96,7 @@ public class UserInfo
 
     //Storys
     private List<string> _storyCompletedList = new List<string>();
+    public List<string> StoryCompletedList => _storyCompletedList;
 
     //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
@@ -185,7 +186,7 @@ public class UserInfo
                 string item = json[0]["StoryCompletedList"][i].ToString();
                 _storyCompletedList.Add(item);
             }
-            StoryManager.Instance.SetStoryCompletedList(_storyCompletedList);
+
 
             LoadUserChallengesData();
             LoadAlbumReceived();
@@ -258,6 +259,7 @@ public class UserInfo
 
         SaveUserChallengesData();
         SaveUserMailData();
+        SaveAlbumReceived();
 
         Param param = GetUserInfoParam();
 
@@ -274,6 +276,7 @@ public class UserInfo
 
         SaveUserChallengesData();
         SaveUserMailData();
+        SaveAlbumReceived();
 
         Param param = GetUserInfoParam();
 
@@ -472,6 +475,7 @@ public class UserInfo
             }
 
             LoadUserInventory();
+            LoadGatheringItemReceived();
             Debug.Log("Inventory Load성공");
         }
     }
@@ -539,6 +543,7 @@ public class UserInfo
     public void InsertInventoryData(string selectedProbabilityFileId)
     {
         SaveUserInventory();
+        SaveGatheringItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
@@ -551,6 +556,7 @@ public class UserInfo
     public void UpdateInventoryData(string selectedProbabilityFileId, string inDate)
     {
         SaveUserInventory();
+        SaveGatheringItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -872,8 +878,8 @@ public class UserInfo
                 for(int j=0;j< GatheringItemInventory[i].ItemsCount; j++)
                 {
                     GatheringInventoryDataArray.Add(new InventoryData(
-                        GatheringItemInventory[i].GetInventoryList()[j].Id,
-                        GatheringItemInventory[i].GetInventoryList()[j].Count));
+                        GatheringItemInventory[i].GetItemList()[j].Id,
+                        GatheringItemInventory[i].GetItemList()[j].Count));
                 }
             }
         }
@@ -886,8 +892,8 @@ public class UserInfo
                 for (int j = 0; j < CookItemInventory[i].ItemsCount; j++)
                 {
                     CookInventoryDataArray.Add(new InventoryData(
-                        CookItemInventory[i].GetInventoryList()[j].Id,
-                        CookItemInventory[i].GetInventoryList()[j].Count));
+                        CookItemInventory[i].GetItemList()[j].Id,
+                        CookItemInventory[i].GetItemList()[j].Count));
                 }
             }
         }
@@ -900,7 +906,7 @@ public class UserInfo
                 for (int j = 0; j < ToolItemInventory[i].ItemsCount; j++)
                 {
                     ToolInventoryDataArray.Add(new InventoryData(
-                        ToolItemInventory[i].GetInventoryList()[j].Id, 1));
+                        ToolItemInventory[i].GetItemList()[j].Id, 1));
                 }
 
             }
@@ -910,6 +916,45 @@ public class UserInfo
 
     #region Item
     //TODO: 차후 추가
+    public void SaveGatheringItemReceived()
+    {
+        List<InventoryItem> _items = new List<InventoryItem>();
+        for (int i = 0, count = GameManager.Instance.Player.GatheringItemInventory.Length; i < count; i++)
+        {
+            _items.AddRange(GameManager.Instance.Player.GatheringItemInventory[i].GetItemList());
+        }
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (GatheringItemReceived.Find((x) => x == _items[i].Id) != null)
+            {
+                Debug.Log("이미 있는 아이템이야");
+                continue;
+            }
+
+            GatheringItemReceived.Add(_items[i].Id);
+        }
+    }
+
+
+    public void LoadGatheringItemReceived()
+    {
+        List<Item> _items = new List<Item>();
+        _items.AddRange(DatabaseManager.Instance.ItemDatabase.ItemBugList);
+        _items.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
+        _items.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFishList);
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (GatheringItemReceived.Find((x) => x == _items[i].Id) == null)
+            {
+                continue;
+            }
+
+            _items[i].IsReceived = true;
+        }
+    }
+
 
     #endregion
 
@@ -982,21 +1027,6 @@ public class UserInfo
         }
     }
 
-    public void LoadAlbumReceived()
-    {
-        // Album
-        for (int i = 0; i < AlbumReceived.Count; i++)
-        {
-            for (int j = 0; j < DatabaseManager.Instance.GetAlbumList().Count; j++)
-            {
-                if (AlbumReceived[i].Equals(DatabaseManager.Instance.GetAlbumList()[j].Id))
-                {
-                    DatabaseManager.Instance.GetAlbumList()[j].IsReceived = true;
-                }
-            }
-
-        }
-    }
 
 
     private void SaveNPCReceived()
@@ -1015,19 +1045,40 @@ public class UserInfo
         }
     }
 
+    public void LoadAlbumReceived()
+    {
+        // Album
+        for (int i = 0; i < AlbumReceived.Count; i++)
+        {
+            for (int j = 0; j < DatabaseManager.Instance.GetAlbumList().Count; j++)
+            {
+                if (AlbumReceived[i].Equals(DatabaseManager.Instance.GetAlbumList()[j].Id))
+                {
+                    DatabaseManager.Instance.GetAlbumList()[j].IsReceived = true;
+                }
+            }
+
+        }
+    }
+
 
     private void SaveAlbumReceived()
     {
         List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
         AlbumReceived = new List<string>();
+
+        Debug.Log(albumDatabase.Count);
+        Debug.Log(AlbumReceived.Count);
         for (int i = 0; i < albumDatabase.Count; i++)
         {
             if (albumDatabase[i].IsReceived)
             {
+                Debug.Log("추가");
                 AlbumReceived.Add(albumDatabase[i].Id);
             }
         }   
     }
+
     #endregion
 
     #region Sticker

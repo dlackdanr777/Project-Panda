@@ -6,7 +6,6 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 
-public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
 public enum DialogueState
 {
@@ -36,7 +35,7 @@ public class UIDialogue : UIView
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
 
-    public static event Action<string> OnComplateHandler;
+    public static Action<string> OnComplateHandler;
 
 
     public override void Init(UINavigation uiNav)

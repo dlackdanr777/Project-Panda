@@ -23,16 +23,17 @@ public class DialogueManager
 
     public void LoadData()
     {
-        BackendManager.Instance.GetChartData(_chartID, 10, DialogueParse);
+        BackendManager.Instance.GetChartData(_chartID, 10, DialogueParseByServer);
     }
 
-    private void DialogueParse(BackendReturnObject callback)
+    private void DialogueParseByServer(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
         Dictionary<string, StoryDialogue> dialogueDic = new Dictionary<string, StoryDialogue>();
 
         for (int i = 0; i < json.Count;)
         {
+
             string storyID = json[i]["StoryID"].ToString();
             string storyName = json[i]["StoryName"].ToString();
             int requiredIntimacy = int.Parse(json[i]["RequiredIntimacy"].ToString());

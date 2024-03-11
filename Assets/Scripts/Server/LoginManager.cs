@@ -70,7 +70,8 @@ namespace Muks.BackEnd
             BackendManager.Instance.CustomLogin(id, pw, 10, (bro) =>
             {
                 HideLoginUI();
-                LoadNextScene();
+                LoadData();
+                LoadNextScene(bro);
             });
         }
 
@@ -90,7 +91,8 @@ namespace Muks.BackEnd
             BackendManager.Instance.GuestLogin(10, (bro) =>
             {
                 HideLoginUI();
-                LoadNextScene();
+                LoadData();
+                LoadNextScene(bro);
             });
         }
 
@@ -107,9 +109,8 @@ namespace Muks.BackEnd
         }
 
 
-        /// <summary>로그인 성공시 다음 씬으로 넘어가게 하는 함수</summary>
-        /// 차후 첫 로그인 이면 NewUser씬, 아니면 기존유저 씬으로 넘어가게 해야함
-        private void LoadNextScene()
+        //전체 데이터를 서버에서 불러오는 씬
+        private void LoadData()
         {
             //LoadingSceneManager.LoadScene("NewUserSceneMuksTest", LoadingType.FirstLoading);
             DatabaseManager.Instance.ItemDatabase.LoadData();
@@ -121,7 +122,7 @@ namespace Muks.BackEnd
             BackendManager.Instance.GetMyData("Sticker", 10, DatabaseManager.Instance.UserInfo.LoadStickerData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);
-            //DatabaseManager.Instance.Challenges.LoadData();
+            DatabaseManager.Instance.Challenges.LoadData();
             CostumeManager.Instance.LoadData();
             DatabaseManager.Instance.NPCDatabase.LoadData();
             DatabaseManager.Instance.DialogueDatabase.LoadData();
@@ -131,8 +132,26 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.MessageDatabase.LoadData();
 
             BackendManager.Instance.Login = true;
+        }
 
-            LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
+
+        /// <summary>로그인 성공시 다음 씬으로 넘어가게 하는 함수</summary>
+        /// 차후 첫 로그인 이면 NewUser씬, 아니면 기존유저 씬으로 넘어가게 해야함
+        private void LoadNextScene(BackendReturnObject bro)
+        {
+            if(!BackendManager.Instance.Login)
+            {
+                Debug.LogError("뒤끝 로그인이 되지않아 씬을 로드하지 않습니다.");
+                return;
+            }
+
+            //기존 회원인 경우 통합씬으로
+            if (bro.GetStatusCode() == "200")
+                LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
+
+            //신규 회원인 경우 인트로 씬으로 넘어간다.
+            else if (bro.GetStatusCode() == "201")
+                LoadingSceneManager.LoadScene("IntroScene");
         }
     }
 }
