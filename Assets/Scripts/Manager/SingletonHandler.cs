@@ -38,6 +38,7 @@ public class SingletonHandler<T> : MonoBehaviour where T : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 }

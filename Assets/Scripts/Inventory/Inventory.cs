@@ -28,7 +28,7 @@ public class Inventory
 
     private InventoryItemField _field;
 
-    public List<InventoryItem> GetInventoryList()
+    public List<InventoryItem> GetItemList()
     {
         return _items;
     }

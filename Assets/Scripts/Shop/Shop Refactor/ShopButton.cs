@@ -99,7 +99,7 @@ public class ShopButton : MonoBehaviour
             case "IFI":
                 return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fish].RemoveItemById(id, count);
             case "IFR":
-                Debug.Log(GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].GetInventoryList().Count);
+                Debug.Log(GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].GetItemList().Count);
                 return GameManager.Instance.Player.GatheringItemInventory[(int)GatheringItemType.Fruit].RemoveItemById(id, count);
                 //요리 추가해야함
 

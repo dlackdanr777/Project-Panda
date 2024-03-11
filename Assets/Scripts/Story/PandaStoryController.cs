@@ -37,9 +37,9 @@ public class PandaStoryController : MonoBehaviour
 
     public static event Action<PandaStoryController, StoryDialogue, StoryEventData[]> OnStartInteractionHandler;
 
-    public static event Action<string, PandaStoryController> OnStartHandler;
+    public static  Action<string, PandaStoryController> OnStartHandler;
 
-    public static event Action<PandaStoryController> OnCheckActivateHandler;
+    public static  Action<PandaStoryController> OnCheckActivateHandler;
 
 
     private void Start()

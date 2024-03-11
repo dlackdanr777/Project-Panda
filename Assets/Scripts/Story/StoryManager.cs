@@ -19,9 +19,13 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private void Init()
     {
-        UIDialogue.OnComplateHandler += AddComplatedStory;
-        PandaStoryController.OnStartHandler += SetStroyDic;
-        PandaStoryController.OnCheckActivateHandler += CheckStoryActivated;
+        _storyCompletedList.Clear();
+        _storyCompletedList = DatabaseManager.Instance.UserInfo.StoryCompletedList;
+
+        UIDialogue.OnComplateHandler = AddComplatedStory;
+        PandaStoryController.OnStartHandler = SetStroyDic;
+        PandaStoryController.OnCheckActivateHandler = CheckStoryActivated;
+
     }
 
 
@@ -85,7 +89,9 @@ public class StoryManager : SingletonHandler<StoryManager>
         {
             if (panda == null)
             {
+                Debug.LogError("판다 데이터가 존재하지 않습니다.");
                 continue;
+
             }
 
             CheckStoryActivated(panda);
@@ -97,6 +103,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     {
         bool checkClear = !_storyCompletedList.Contains(panda.StoryDialogue.StoryID);
         bool checkPriorStoryID = _storyCompletedList.Contains(panda.StoryDialogue.PriorStoryID) || panda.StoryDialogue.PriorStoryID == "MS99Z" || string.IsNullOrWhiteSpace(panda.StoryDialogue.PriorStoryID);
+
         if (checkClear && checkPriorStoryID)
         {
             panda.gameObject.SetActive(true);

@@ -356,6 +356,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _albumDatabase.AlbumList;
     }
 
+
     public void SetReceiveAlbumById(string id)
     {
         for (int i = 0; i < GetAlbumList().Count; i++)
