@@ -1,4 +1,5 @@
 using Muks.Tween;
+using System;
 using UnityEngine;
 
 public class BambooFieldSystem : MonoBehaviour
@@ -71,12 +72,13 @@ public class BambooFieldSystem : MonoBehaviour
         _targetPos = Camera.main.ScreenToWorldPoint(_UIBamboo.transform.position);
         for (int i = 0; i <= _fieldIndex; i++)
         {
-            HarvestBamboo(0, _fieldSlots[i].Yield, _fieldSlots[i].transform);
+            HarvestBamboo(1, _fieldSlots[i].Yield, _fieldSlots[i].transform);
             _fieldSlots[i].Yield = 0;
 
             // 성장 단계 초기화
             _fieldSlots[i].GrowthStage = 0;
             _fieldSlots[i].ChangeGrowthStageImage(_fieldSlots[i].GrowthStage);
+            _fieldSlots[i].SetTimeDifference();
         }
         Tween.SpriteRendererAlpha(HarvestButton.gameObject, 0, 0.5f, TweenMode.Quadratic, () => { HarvestButton.IsSet = false; });
     }
@@ -85,28 +87,44 @@ public class BambooFieldSystem : MonoBehaviour
     /// 대나무 수확 </summary>
     public void HarvestBamboo(int currentCount, int totalCount, Transform fieldSlotTransform)
     {
-        int count = _bambooPrefabCount;
-        _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
-        _bambooPrefabs[count].transform.position = fieldSlotTransform.position;
-        _bambooPrefabs[count].SetActive(true);
-        Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
-        _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
+            int count = _bambooPrefabCount;
+            _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
+            _bambooPrefabs[count].transform.position = fieldSlotTransform.position;
+            _bambooPrefabs[count].SetActive(true);
+            Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
+            _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
 
 
-        Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
-        {
-            if (currentCount != totalCount)
-            { 
-                HarvestBamboo(currentCount + 1, totalCount, fieldSlotTransform);
-            }
-        });
+            Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
+            {
+                if (totalCount - currentCount > 10)
+                {
+                    HarvestBamboo(currentCount + 10, totalCount, fieldSlotTransform);
+                }
+            });
 
-        Tween.TransformMove(_bambooPrefabs[count], _targetPos, 2, TweenMode.Quadratic, () =>
-        {
-            _player.GainBamboo(1);
-            _bambooPrefabs[count].SetActive(false);
-        });
+            Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
+            {
+                if(totalCount - currentCount <= 10) 
+                {
+                    for (int i = currentCount; i <= totalCount; i++)
+                    {
+                        _player.GainBamboo(1);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        _player.GainBamboo(1);
+                    }
+                }
+                _bambooPrefabs[count].SetActive(false);
+            });
+
     }
+
+
 
     /// <summary>
     /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>

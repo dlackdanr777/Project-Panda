@@ -25,7 +25,7 @@ public class MoveAnimationLeft : MonoBehaviour
         _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
         
-        if (_stateInfo.IsName("NPC17_2"))
+        if (_stateInfo.IsName("NPC17_2") && _animator.speed == 1f)
         {
             transform.position = new Vector3(transform.position.x - speed, transform.position.y, transform.position.z);
             if (transform.position.x < _leftBound)

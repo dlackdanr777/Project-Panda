@@ -127,10 +127,8 @@ public class TimeManager : SingletonHandler<TimeManager>
                 break;
         }
 
-        foreach(string key in _mapDic.Keys)
+        foreach(string key in _mapDic.Keys) // 현재 있는 맵의 배경만 끄도록 수정 + 자식 오브젝트만 끄도록 수정하기
         {
-
-            //_mapDic[key].BackGroundRenderer.sprite = mapBackGround;
             if (_mapDic[key].BackGround[(int)_eTime] != null)
             {
                 // 모든 시간 배경 끄기

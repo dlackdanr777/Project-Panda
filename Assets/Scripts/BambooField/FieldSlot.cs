@@ -2,6 +2,7 @@ using UnityEngine;
 using Muks.Tween;
 using Muks.DataBind;
 using Unity.VisualScripting;
+using System;
 
 public class FieldSlot : MonoBehaviour, IInteraction
 {
@@ -15,26 +16,60 @@ public class FieldSlot : MonoBehaviour, IInteraction
     public HarvestItem HarvestItem;
 
     [SerializeField] private string _growingCropID;
-    [SerializeField] private GameObject _growingCropImage;
+    [SerializeField] private GameObject[] _growingCropImage;
+    [SerializeField] private GameObject _timeObject;
+
+    private Vector3 _timeObjectPosition;
 
     private BambooFieldSystem BFieldSystem;
     private float _time;
+    private float _second;
+    private string _remainingTime;
     private bool _isGrowthComplete;
     private bool _isShowHavestItemDescription;
+    private string _dataID;
+    private TimeSpan _timeDifference;
 
     private void Start()
     {
         HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
-        _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
+        for(int i = 0; i < _growingCropImage.Length; i++)
+        {
+            _growingCropImage[i].GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
+        }
         GrowthTime = HarvestItem.HarvestTime * 6;
 
+        _timeObjectPosition = _timeObject.transform.position;
+
         ChangeGrowthStageImage(0);
+
+        _dataID = gameObject.name + "Time";
+
+        SetTimeDifference();
+
+        DataBind.SetTextValue(_dataID, _remainingTime);
     }
 
     private void Update()
     {
         _time += Time.deltaTime;
-        if(HarvestItem != null)
+        _second += Time.deltaTime;
+
+        if(_timeDifference != TimeSpan.Zero)
+        {
+            _timeDifference = _timeDifference - TimeSpan.FromSeconds(Mathf.FloorToInt(_second));
+            _second -= Mathf.FloorToInt(_second);
+            _remainingTime = string.Format("{0}h {1}m {2}s", _timeDifference.Hours, _timeDifference.Minutes, _timeDifference.Seconds);
+        }
+        else
+        {
+            _timeDifference = TimeSpan.Zero;
+            _remainingTime = "채집 가능!";
+        }
+
+        DataBind.SetTextValue(_dataID, _remainingTime);
+
+        if (HarvestItem != null)
         {
             IsIncreaseYields();
         }
@@ -87,7 +122,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
         ChangeGrowthStageImage(GrowthStage);
 
         // 버튼 생성
-        if (!BFieldSystem.HarvestButton.IsSet)
+        if (!BFieldSystem.HarvestButton.IsSet && GrowthStage == 2)
         {
 
             BFieldSystem.HarvestButton.IsSet = true;
@@ -101,27 +136,42 @@ public class FieldSlot : MonoBehaviour, IInteraction
     {
         if(GrowthStage == 0)
         {
-            _growingCropImage.transform.localScale = new Vector3(1, 1, 1);
-            _growingCropImage.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            _timeObject.transform.position = _timeObjectPosition;
+            for (int i = 0; i < _growingCropImage.Length; i++)
+            {
+                _growingCropImage[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                _growingCropImage[i].transform.position = new Vector3(_growingCropImage[i].transform.position.x, transform.position.y + 0.5f, 0);
+            }
             _isGrowthComplete = false;
         }
         else if(GrowthStage == 1)
         {
-            _growingCropImage.transform.localScale = new Vector3(4/3f, 4/3f, 4/3f);
-            _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 0.4f, 0);
+            _timeObject.transform.position = _timeObjectPosition + Vector3.up;
+            for (int i = 0; i < _growingCropImage.Length; i++)
+            {
+                _growingCropImage[i].transform.localScale = new Vector3(2 / 3f, 2 / 3f, 2 / 3f);
+                _growingCropImage[i].transform.position = _growingCropImage[i].transform.position + new Vector3(0, 0.4f, 0);
+            }
         }
 
         else if (GrowthStage == 2)
         {
-            _growingCropImage.transform.localScale = new Vector3(2, 2, 2);
-            _growingCropImage.transform.position = _growingCropImage.transform.position + new Vector3(0, 1f, 0);
+            _timeObject.transform.position = _timeObjectPosition + Vector3.up * 3;
+            for (int i = 0;i < _growingCropImage.Length; i++)
+            {
+                _growingCropImage[i].transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+                _growingCropImage[i].transform.position = _growingCropImage[i].transform.position + new Vector3(0, 1f, 0);
+            }
         }
-        _growingCropImage.GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[growthStage];
+        for (int i = 0; i < _growingCropImage.Length; i++)
+        {
+            _growingCropImage[i].GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[growthStage];
+        }
     }
 
     private void IsIncreaseYields()
     {
-        if(_time > HarvestItem.HarvestTime * 60)
+        if(_time > HarvestItem.HarvestTime/10) // * 60 // 확인 위해 잠시 시간 짧게 설정 - 나중에 수정
         {
             IncreaseYields();
             _time = 0;
@@ -170,5 +220,12 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     }
 
+    public void SetTimeDifference()
+    {
+        _time = 0;
+        _second = 0;
+        _timeDifference = TimeSpan.FromSeconds(HarvestItem.HarvestTime * Mathf.CeilToInt(HarvestItem.MaxYield / (float)HarvestItem.Yield));
+        _remainingTime = string.Format("{0}h {1}m {2}s", _timeDifference.Hours, _timeDifference.Minutes, _timeDifference.Seconds);
+    }
 
 }
