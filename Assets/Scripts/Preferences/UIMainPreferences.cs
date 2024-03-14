@@ -15,14 +15,15 @@ public class UIMainPreferences : UIView
     [SerializeField] private float _duration;
     [SerializeField] private TweenMode _tweenMode;
 
-    private CanvasGroup _canvasGroup;
-    private Vector3 _tmpPos;
-    private Vector3 _movePos => new Vector3(0, 50, 0);
-
-
     [Space]
     [Header("Components")]
     [SerializeField] private UIPreferences _uiPreferences;
+    [SerializeField] private Button _backgroundButton;
+
+
+    private CanvasGroup _canvasGroup;
+    private Vector3 _tmpPos;
+    private Vector3 _movePos => new Vector3(0, 50, 0);
 
 
     public override void Init(UINavigation uiNav)
@@ -30,8 +31,10 @@ public class UIMainPreferences : UIView
         base.Init(uiNav);
         _canvasGroup = GetComponent<CanvasGroup>();
         _tmpPos = _targetRect.anchoredPosition;
-
+        _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
         _uiPreferences.Init();
+
+        gameObject.SetActive(false);
     }
 
 
@@ -69,6 +72,13 @@ public class UIMainPreferences : UIView
 
             gameObject.SetActive(false);
         });
+    }
+
+
+    private void OnBackgroundButtonClicked()
+    {
+        _uiNav.Pop("DropdownMenuButton");
+        _uiNav.Pop("Preferences");
     }
 
 }

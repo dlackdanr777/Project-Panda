@@ -5,27 +5,64 @@ using UnityEngine.UI;
 public class UIPreferences : MonoBehaviour
 {
     [Header("Components")]
+    [SerializeField] private Button _silentButton;
+    [SerializeField] private Button _vibrateButton;
+    [SerializeField] private Button _soundButton;
     [SerializeField] private Slider _backgroundSlider;
     [SerializeField] private Slider _soundEffectSlider;
 
-    [SerializeField] private AudioClip _clip;
 
     public void Init()
     {
-        _backgroundSlider.onValueChanged.AddListener(BackgroundSliderValueChanged);
-        _soundEffectSlider.onValueChanged.AddListener(SoundEffectSliderValueChanged);
-
-        SoundManager.Instance.PlayBackgroundAudio(_clip);
+        _silentButton.onClick.AddListener(OnSilentButtonClicked);
+        _vibrateButton.onClick.AddListener(OnVibrateButtonClicked);
+        _soundButton.onClick.AddListener(OnSoundButtonClicked);
+        _backgroundSlider.onValueChanged.AddListener(OnBackgroundSliderValueChanged);
+        _soundEffectSlider.onValueChanged.AddListener(OnSoundEffectSliderValueChanged);
     }
 
 
-    private void BackgroundSliderValueChanged(float value)
+    private void OnSilentButtonClicked()
+    {
+        SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
+
+        _backgroundSlider.value = 0;
+        _soundEffectSlider.value = 0;
+
+        //TODO: 진동기능 끄기
+    }
+
+
+    private void OnVibrateButtonClicked()
+    {
+        SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
+
+        _backgroundSlider.value = 0;
+        _soundEffectSlider.value = 0;
+
+        //TODO: 진동기능 켜기
+    }
+
+
+    private void OnSoundButtonClicked()
+    {
+        SoundManager.Instance.SetVolume(1, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(1, AudioType.EffectAudio);
+
+        _backgroundSlider.value = 1;
+        _soundEffectSlider.value = 1;
+    }
+
+
+    private void OnBackgroundSliderValueChanged(float value)
     {
         SoundManager.Instance.SetVolume(value, AudioType.BackgroundAudio);
     }
 
 
-    private void SoundEffectSliderValueChanged(float value)
+    private void OnSoundEffectSliderValueChanged(float value)
     {
         SoundManager.Instance.SetVolume(value, AudioType.EffectAudio);
     }

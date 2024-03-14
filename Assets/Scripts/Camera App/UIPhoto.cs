@@ -18,6 +18,8 @@ public class UIPhoto : UIView
         base.Init(uiNav);
         _tempMat = _image.material;
         ScreenshotCamera.OnStartHandler += ResizeImage;
+
+        gameObject.SetActive(false);
     }
 
     public void OnDestroy()

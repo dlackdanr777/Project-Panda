@@ -19,7 +19,7 @@ public class UILibrary : UIView
         DataBind.SetButtonValue("ExitAlbumButton", OnAlbumButtonClicked);
         
         _uiAlbum.Init();
-        
+        gameObject.SetActive(false);
     }
 
     public override void Hide()

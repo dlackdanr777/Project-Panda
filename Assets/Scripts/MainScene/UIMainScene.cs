@@ -23,8 +23,8 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("ShowPhotoButton", OnShowPhotoButtonClicked);
         DataBind.SetButtonValue("HidePhotoButton", OnHidePhotoButtonClicked);
 
-        DataBind.SetButtonValue("ShowWeatherButton", OnShowWeatherButtonClicked);
-        DataBind.SetButtonValue("HideWeatherButton", OnHideWeatherButtonClicked);
+        DataBind.SetButtonValue("ShowAttendanceButton", OnShowAttendanceButtonClicked);
+        DataBind.SetButtonValue("HideAttendanceButton", OnHideAttendanceButtonClicked);
 
         DataBind.SetButtonValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
         DataBind.SetButtonValue("HideInventoryButton", OnHideInventoryButtonClicked);
@@ -44,6 +44,8 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("ShowPreferencesButton", OnShowPreferencesButtonClicked);
         DataBind.SetButtonValue("ClosePreferencesButton", OnHidePreferencesButtonClicked);
 
+        DataBind.SetButtonValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
+        DataBind.SetButtonValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
     }
 
     private void OnCameraButtonClicked()
@@ -75,10 +77,11 @@ public class UIMainScene : MonoBehaviour
     private void OnInventoryButtonClicked()
     {
         _uiNav.Push("Inventory");
-
+/*
         GameManager.Instance.FirezeInteraction = false;
         GameManager.Instance.FriezeCameraMove = false;
         GameManager.Instance.FriezeCameraZoom = false;
+ */
     }
 
     private void OnShowDiaryButtonClicked()
@@ -101,14 +104,14 @@ public class UIMainScene : MonoBehaviour
         _uiNav.Pop("Photo");
     }
 
-    private void OnShowWeatherButtonClicked()
+    private void OnShowAttendanceButtonClicked()
     {
-        _uiNav.Push("Weather");
+        _uiNav.Push("Attendance");
     }
 
-    private void OnHideWeatherButtonClicked()
+    private void OnHideAttendanceButtonClicked()
     {
-        _uiNav.Pop("Weather");
+        _uiNav.Pop("Attendance");
     }
 
     private void OnShowAndHideInventoryButtonClicked()
@@ -119,8 +122,8 @@ public class UIMainScene : MonoBehaviour
         if (UIInventory.VisibleState == VisibleState.Disappeared)
         {
             _uiNav.Push("Inventory");
-            GameManager.Instance.FriezeCameraMove = false;
-            GameManager.Instance.FirezeInteraction = false;
+/*            GameManager.Instance.FriezeCameraMove = false;
+            GameManager.Instance.FirezeInteraction = false;*/
         }
 
         //열려 있으면 닫는다.
@@ -189,6 +192,16 @@ public class UIMainScene : MonoBehaviour
     public void OnHidePreferencesButtonClicked()
     {
         _uiNav.Pop("Preferences");
+    }
+
+    public void OnShowDropDownMenuButtonClicked()
+    {
+        _uiNav.Push("DropdownMenuButton");
+    }
+
+    public void OnHideDropDownMenuButtonClicked()
+    {
+        _uiNav.Pop("DropdownMenuButton");
     }
 
 }
