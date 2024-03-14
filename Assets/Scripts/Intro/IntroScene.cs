@@ -181,13 +181,7 @@ public class IntroScene : MonoBehaviour
         //포와로 사라짐
         _poirot.gameObject.SetActive(false);
 
-        yield return YieldCache.WaitForSeconds(5f);
-
-
-        //관중 웅성웅성
-        _reporterAnimator.SetTrigger("Turmoil");
-
-        yield return YieldCache.WaitForSeconds(1f);
+        yield return YieldCache.WaitForSeconds(6f);
 
 
         //대사2 시작
@@ -195,7 +189,11 @@ public class IntroScene : MonoBehaviour
         _uiIntroScene.SetDialogueNameText("기자들");
         yield return YieldCache.WaitForSeconds(1f);
 
+        //ui흔들기
+        _uiIntroScene.ShakeDialogue(1.2f);
 
+        //관중 웅성웅성
+        _reporterAnimator.SetTrigger("Turmoil");
 
         tempChars = "포와로가 사라졌다!!!".ToCharArray();
         tempString = string.Empty;
@@ -248,13 +246,19 @@ public class IntroScene : MonoBehaviour
         {
             Tween.RectTransfromAnchoredPosition(_closeLetter.gameObject, new Vector2(0, 0), 1, TweenMode.Smoothstep, () =>
             {
-                _closeLetterButton.interactable = true;
-                _closeLetterButton.onClick.AddListener(OnLetterClicked);
-
-                Color targetColor = new Color(0.5f, 1, 0.5f, 1);
-                _letterEffect.color = new Color(1, 1, 1, 0.5f);
                 _letterEffect.gameObject.SetActive(true);
-                Tween.IamgeColor(_letterEffect.gameObject, targetColor, 1f, TweenMode.EaseInOutBack).Loop(LoopType.Yoyo);
+                _letterEffect.color = new Color(1, 1, 1, 0);
+                Tween.IamgeAlpha(_letterEffect.gameObject, 0.5f, 0.5f, TweenMode.Constant, () =>
+                {
+                    _closeLetterButton.interactable = true;
+                    _closeLetterButton.onClick.AddListener(OnLetterClicked);
+                    _letterEffect.color = new Color(1, 1, 1, 0.5f);
+                    Color targetColor = new Color(1, 1, 1, 1);
+
+
+                    Tween.IamgeColor(_letterEffect.gameObject, targetColor, 2f, TweenMode.EaseInOutBack).Loop(LoopType.Yoyo);
+                });
+
             });
         });
 
@@ -266,9 +270,11 @@ public class IntroScene : MonoBehaviour
             yield return YieldCache.WaitForSeconds(0.02f);
         }
 
+
         //편지 오픈 애니메이션
         _openLetter.GetComponent<CanvasGroup>().alpha = 0;
         _openLetter.gameObject.SetActive(true);
+        _letterEffect.color = new Color(1, 1, 1, 0.4f);
 
         Tween.IamgeAlpha(_closeLetterButton.gameObject, 0, 1, TweenMode.Constant, () => _closeLetter.gameObject.SetActive(false));
         Tween.IamgeAlpha(_letterEffect.gameObject, 0, 1, TweenMode.Constant);
@@ -277,6 +283,7 @@ public class IntroScene : MonoBehaviour
         Tween.CanvasGroupAlpha(_openLetter.gameObject, 1, 3f);
 
         yield return YieldCache.WaitForSeconds(5f);
+
 
         //포야 독백 시작
         _uiIntroScene.StartDialogue();
@@ -349,15 +356,8 @@ public class IntroScene : MonoBehaviour
 
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 0.3f, TweenMode.Quadratic);
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 1.5f);
-        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
-         {
-             _uiFadeImage.color = new Color(0, 0, 0, 0);
-             _uiFadeImage.gameObject.SetActive(false);
-         });
 
-
-        yield return YieldCache.WaitForSeconds(5f);
-
+        yield return YieldCache.WaitForSeconds(2f);
         //포야 대사
         _uiIntroScene.StartDialogue();
         _uiIntroScene.SetDialogueNameText("포야");
@@ -365,16 +365,29 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(1f);
 
+        //ui흔들기
+        _uiIntroScene.ShakeDialogue(1f);
+
         tempChars = "으아악!!        ".ToCharArray();
         tempString = string.Empty;
 
         for (int i = 0, count = tempChars.Length; i < count; i++)
         {
-            _uiIntroScene.SetDialogueContext(tempString);
+            _uiIntroScene.SetDialogueContext(tempString, 60);
             tempString += tempChars[i];
 
             yield return YieldCache.WaitForSeconds(0.1f);
         }
+
+
+        yield return YieldCache.WaitForSeconds(3f);
+
+
+        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
+         {
+             _uiFadeImage.color = new Color(0, 0, 0, 0);
+             _uiFadeImage.gameObject.SetActive(false);
+         });
 
 
         yield return YieldCache.WaitForSeconds(3f);
@@ -496,7 +509,6 @@ public class IntroScene : MonoBehaviour
     {
         _isletterClicked = true;
         Tween.Stop(_letterEffect.gameObject);
-        _letterEffect.gameObject.SetActive(false);
         _closeLetterButton.onClick.RemoveAllListeners();
         _closeLetterButton.interactable = false;
     }
