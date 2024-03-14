@@ -15,6 +15,6 @@ public class MainScene : MonoBehaviour
         DatabaseManager.Instance.Challenges.CheckIsDone();
         StarterPanda.Instance.SwitchingScene();
 
-        SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 2);
+        SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 1);
     }
 }

@@ -8,8 +8,20 @@ public class MapButton : MonoBehaviour
 {
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
-
     [SerializeField] private Transform[] _targetTransform;// = new Transform[DatabaseManager.Instance.GetMapDic().Count];
+
+    [Space]
+    [Header("AudioClips")]
+    [SerializeField] private AudioClip _treeAudioClip;
+    [SerializeField] private AudioClip _fishingGroundAudioClip;
+    [SerializeField] private AudioClip _forestAudioClip;
+    [SerializeField] private AudioClip _crossRoadAudioClip;
+    [SerializeField] private AudioClip _villageAudioClip;
+    [SerializeField] private AudioClip _marcketAudioClip;
+    [SerializeField] private AudioClip _catworldAudioClip;
+    [SerializeField] private AudioClip _mermaidForestAudioClip;
+    [SerializeField] private AudioClip _villageHouseAudioClip;
+
     private float _fadeTime = 1f;
     private int _currentMap;
     //private Vector2 _forestMapSize; // 맵마다 크기가 다르다면 설정
@@ -62,15 +74,19 @@ public class MapButton : MonoBehaviour
     public void MoveWishTree()
     {
         CheckDirection();
+        SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
 
         _currentMap = 0;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
+
+
     private void MoveFishingGround()
     {
         CheckDirection();
+        SoundManager.Instance.PlayBackgroundAudio(_fishingGroundAudioClip, 2);
 
         _currentMap = 1;
         _cameraController.MapSize = _mapSize;
@@ -81,7 +97,7 @@ public class MapButton : MonoBehaviour
     private void MoveForestEntrance()
     {
         CheckDirection();
-
+        SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
         _currentMap = 2;
         _cameraController.MapSize = _mapSize;
 
@@ -89,7 +105,8 @@ public class MapButton : MonoBehaviour
     }
     private void MoveForest()
     {
-        if(_currentMap == 8)
+        SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+        if (_currentMap == 8)
         {
             _currentMap = 3;
             MoveOtherWorld();
@@ -107,6 +124,7 @@ public class MapButton : MonoBehaviour
     private void MoveVillage()
     {
         _cameraController.MapSize = _mapSize;
+        SoundManager.Instance.PlayBackgroundAudio(_villageAudioClip, 2);
         if (_currentMap == 10)
         {
             _currentMap = 4;
@@ -124,7 +142,7 @@ public class MapButton : MonoBehaviour
     private void MoveMarket()
     {
         _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
-
+        SoundManager.Instance.PlayBackgroundAudio(_marcketAudioClip, 2);
         if (_currentMap == 11)
         {
             _currentMap = 5;
@@ -142,6 +160,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCatWorld()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_catworldAudioClip, 2);
         _cameraController.MapSize = _mapSize;
         if (_currentMap == 13)
         {
@@ -161,7 +180,7 @@ public class MapButton : MonoBehaviour
     private void MoveMermaidForest()
     {
         CheckDirection();
-
+        SoundManager.Instance.PlayBackgroundAudio(_mermaidForestAudioClip, 2);
         _currentMap = 7;
         _cameraController.MapSize = new Vector2(31f, _cameraController.MapSize.y);
 
@@ -198,6 +217,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveVillageHouse()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_villageHouseAudioClip, 2);
         _currentMap = 10;
         _cameraController.MapSize = new Vector2(30f, _cameraController.MapSize.y);
 

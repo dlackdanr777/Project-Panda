@@ -159,7 +159,6 @@ public class UINavigation : MonoBehaviour
     /// <summary> viewName을 확인해 해당 UI 를 감추는 함수</summary>
     public void Pop(string viewName)
     {
-        Debug.Log(viewName);
         foreach (UIView view in _viewDic.Values)
         {
             if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
