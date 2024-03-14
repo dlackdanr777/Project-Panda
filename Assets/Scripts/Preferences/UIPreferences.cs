@@ -1,66 +1,32 @@
-using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class UIPreferences : UIView
+/// <summary>환경설정에서 옵션을 조절할 수 있게 해주는 클래스</summary>
+public class UIPreferences : MonoBehaviour
 {
-    [Header("ShowUI Animation Setting")]
-    [SerializeField] private RectTransform _targetRect;
-    [SerializeField] private float _startAlpha = 0;
-    [SerializeField] private float _targetAlpha = 1;
-    [SerializeField] private float _duration;
-    [SerializeField] private TweenMode _tweenMode;
+    [Header("Components")]
+    [SerializeField] private Slider _backgroundSlider;
+    [SerializeField] private Slider _soundEffectSlider;
 
-    private CanvasGroup _canvasGroup;
-    private Vector3 _tmpPos;
-    private Vector3 _movePos => new Vector3(0, 50, 0);
+    [SerializeField] private AudioClip _clip;
 
-
-    public override void Init(UINavigation uiNav)
+    public void Init()
     {
-        base.Init(uiNav);
-        _canvasGroup = GetComponent<CanvasGroup>();
-        _tmpPos = _targetRect.anchoredPosition;
+        _backgroundSlider.onValueChanged.AddListener(BackgroundSliderValueChanged);
+        _soundEffectSlider.onValueChanged.AddListener(SoundEffectSliderValueChanged);
+
+        SoundManager.Instance.PlayBackgroundAudio(_clip);
     }
 
 
-    public override void Show()
+    private void BackgroundSliderValueChanged(float value)
     {
-        VisibleState = VisibleState.Appearing;
-        gameObject.SetActive(true);
-
-        _targetRect.anchoredPosition = _tmpPos + _movePos;
-        _canvasGroup.alpha = _startAlpha;
-        _canvasGroup.blocksRaycasts = false;
-
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Appeared;
-            _canvasGroup.blocksRaycasts = true;
-        });
+        SoundManager.Instance.SetVolume(value, AudioType.BackgroundAudio);
     }
 
 
-    public override void Hide()
+    private void SoundEffectSliderValueChanged(float value)
     {
-        VisibleState = VisibleState.Disappearing;
-
-        _targetRect.anchoredPosition = _tmpPos;
-        _canvasGroup.alpha = _targetAlpha;
-        _canvasGroup.blocksRaycasts = false;
-
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos - _movePos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Disappeared;
-            _canvasGroup.blocksRaycasts = true;
-
-            gameObject.SetActive(false);
-        });
+        SoundManager.Instance.SetVolume(value, AudioType.EffectAudio);
     }
-
 }

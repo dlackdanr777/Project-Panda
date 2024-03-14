@@ -69,7 +69,6 @@ public class Inventory
 
     private bool Add(Item item, int count)
     {
-        OnAddHandler?.Invoke();
         int remainCount = count; // 남은 아이템 개수
 
         // 이미 존재하는 아이템인지 확인
@@ -80,6 +79,7 @@ public class Inventory
                 // 도구는 한 개만 얻을 수 있음
                 if (_field == InventoryItemField.Tool)
                 {
+                    OnAddHandler?.Invoke();
                     return false;
                 }
 
@@ -98,6 +98,7 @@ public class Inventory
                 // 모든 아이템을 추가했으면 종료
                 if (remainCount == 0)
                 {
+                    OnAddHandler?.Invoke();
                     return true;
                 }
             }
@@ -113,6 +114,7 @@ public class Inventory
             remainCount -= addToInventory;
         }
 
+        OnAddHandler?.Invoke();
         return true;
     }
 
@@ -197,7 +199,6 @@ public class Inventory
     /// <param name="count"></param>
     public bool RemoveItemById(string id, int count)
     {
-        OnRemoveHandler?.Invoke();
 
         // 해당 아이템과 id가 같은 아이템들을 개수 순으로 정렬합니다.
         var items = _items.Where(item => item.Id.Equals(id)).OrderBy(item => item.Count).ToList();
@@ -222,6 +223,7 @@ public class Inventory
                 {
                     _items.Remove(item);
                 }
+                OnRemoveHandler?.Invoke();
                 return true; // 아이템을 성공적으로 제거하였음을 반환
             }
             else
@@ -230,7 +232,7 @@ public class Inventory
                 itemCountToRemove -= item.Count;
             }
         }
-
+        OnRemoveHandler?.Invoke();
         return false; // 아이템을 제거하지 못했을 때
     }
 

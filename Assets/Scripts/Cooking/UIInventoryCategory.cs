@@ -36,7 +36,6 @@ public class UIInventoryCategory : MonoBehaviour
 
     public void UpdateUI()
     {
-
         for (int i = 0, count = _inventory.ItemsCount; i < count; i++)
         {
             InventoryItem item = _inventory.FindItemByIndex(i);

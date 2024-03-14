@@ -2,19 +2,12 @@ using Muks.Tween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-
+/// <summary>메인 화면의 환경설정 창</summary>
 [RequireComponent(typeof(CanvasGroup))]
-public class UIMainInventory : UIView
+public class UIMainPreferences : UIView
 {
-
-    [Space]
-    [Header("Components")]
-    [SerializeField] private UIMainInventoryContoller _inventoryContoller;
-    [SerializeField] private UIDetailView _detailView;
-    [SerializeField] private Transform _slotParent;
-
-    [Space]
     [Header("ShowUI Animation Setting")]
     [SerializeField] private RectTransform _targetRect;
     [SerializeField] private float _startAlpha = 0;
@@ -26,14 +19,19 @@ public class UIMainInventory : UIView
     private Vector3 _tmpPos;
     private Vector3 _movePos => new Vector3(0, 50, 0);
 
+
+    [Space]
+    [Header("Components")]
+    [SerializeField] private UIPreferences _uiPreferences;
+
+
     public override void Init(UINavigation uiNav)
     {
-        base.Init(uiNav);     
+        base.Init(uiNav);
         _canvasGroup = GetComponent<CanvasGroup>();
+        _tmpPos = _targetRect.anchoredPosition;
 
-        _inventoryContoller.Init(SlotButtonClicked);
-        _detailView.Init(() => _detailView.gameObject.SetActive(false));
-        _detailView.gameObject.SetActive(false);
+        _uiPreferences.Init();
     }
 
 
@@ -41,7 +39,6 @@ public class UIMainInventory : UIView
     {
         VisibleState = VisibleState.Appearing;
         gameObject.SetActive(true);
-        _slotParent.gameObject.SetActive(false);
 
         _targetRect.anchoredPosition = _tmpPos + _movePos;
         _canvasGroup.alpha = _startAlpha;
@@ -52,7 +49,6 @@ public class UIMainInventory : UIView
         {
             VisibleState = VisibleState.Appeared;
             _canvasGroup.blocksRaycasts = true;
-            _slotParent.gameObject.SetActive(true);
         });
     }
 
@@ -60,9 +56,6 @@ public class UIMainInventory : UIView
     public override void Hide()
     {
         VisibleState = VisibleState.Disappearing;
-
-        _slotParent.gameObject.SetActive(false);
-        _detailView.gameObject.SetActive(false);
 
         _targetRect.anchoredPosition = _tmpPos;
         _canvasGroup.alpha = _targetAlpha;
@@ -77,16 +70,5 @@ public class UIMainInventory : UIView
             gameObject.SetActive(false);
         });
     }
-
-
-    private void SlotButtonClicked(InventoryItem item)
-    {
-        if (item == null)
-            return;
-
-        _detailView.Show(item);
-    }
-
-
 
 }
