@@ -5,31 +5,28 @@ using UnityEngine.UI;
 
 
 /// <summary>메뉴들이 펼쳐지는 애니메이션 버전의 드롭다운 메뉴</summary>
-public class DropdownMenu_Ver2 : MonoBehaviour
+public class DropdownMenu_Ver2 : UIView
 {
     [SerializeField] private DropdownMenuButtonGroup_Ver2 _buttonGroup;
 
-    private void Awake()
-    {
-        DataBind.SetButtonValue("ShowDropdownMenuButton_Ver2", Show);
-        DataBind.SetButtonValue("HideDropdownMenuButton_Ver2", Hide);
-    }
 
-
-    private void Start()
+    public override void Init(UINavigation uiNav)
     {
+        base.Init(uiNav);
         _buttonGroup.Init();
     }
 
 
-    private void Show()
+    public override void Show()
     {
+        VisibleState = VisibleState.Appeared;
         _buttonGroup.ShowAnime();
     }
 
 
-    private void Hide()
+    public override void Hide()
     {
+        VisibleState = VisibleState.Disappeared;
         _buttonGroup.HideAnime();
     }
 

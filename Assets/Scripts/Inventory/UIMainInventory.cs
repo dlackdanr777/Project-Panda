@@ -2,19 +2,12 @@ using Muks.Tween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIMainInventory : UIView
 {
 
-    [Space]
-    [Header("Components")]
-    [SerializeField] private UIMainInventoryContoller _inventoryContoller;
-    [SerializeField] private UIDetailView _detailView;
-    [SerializeField] private Transform _slotParent;
-
-    [Space]
     [Header("ShowUI Animation Setting")]
     [SerializeField] private RectTransform _targetRect;
     [SerializeField] private float _startAlpha = 0;
@@ -26,14 +19,29 @@ public class UIMainInventory : UIView
     private Vector3 _tmpPos;
     private Vector3 _movePos => new Vector3(0, 50, 0);
 
+
+    [Space]
+    [Header("Components")]
+    [SerializeField] private UIMainInventoryContoller _inventoryContoller;
+    [SerializeField] private UIDetailView _detailView;
+    [SerializeField] private Transform _slotParent;
+    [SerializeField] private Button _backgroundButton;
+
+
+
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);     
         _canvasGroup = GetComponent<CanvasGroup>();
+        _tmpPos = _targetRect.anchoredPosition;
 
         _inventoryContoller.Init(SlotButtonClicked);
         _detailView.Init(() => _detailView.gameObject.SetActive(false));
         _detailView.gameObject.SetActive(false);
+
+        _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
+
+        gameObject.SetActive(false);
     }
 
 
@@ -81,7 +89,17 @@ public class UIMainInventory : UIView
 
     private void SlotButtonClicked(InventoryItem item)
     {
+        if (item == null)
+            return;
+
         _detailView.Show(item);
+    }
+
+
+    private void OnBackgroundButtonClicked()
+    {
+        _uiNav.Pop("DropdownMenuButton");
+        _uiNav.Pop("Inventory");
     }
 
 

@@ -7,25 +7,22 @@ using System;
 using UnityEngine.UI;
 using Muks.Tween;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class UIAttendance : UIView
 {
-    [Space]
-    [SerializeField] private GameObject _backgroundButton;
-
-    [Space]
+    [Header("Components")]
     [SerializeField] private Transform _slotLayoutParent;
-
     [SerializeField] private UIAttendanceSlot _slotPrefab;
-
-    [Space]
     [SerializeField] private UIAttendanceButton _attendanceButton;
-
     [SerializeField] private Image _attendanceCheckIamge;
-
     [SerializeField] private Sprite _todayBackroundImage;
+    [SerializeField] private Button _backgroundButton;
 
-    [Space]
-    [SerializeField] private GameObject _dontTouchArea;
+    [Header("ShowUI Animation Setting")]
+    [SerializeField] private GameObject _target;
+    [SerializeField] private float _showDuration;
+    [SerializeField] private float _hideDuration;
+
 
 
     private AttendanceDatabase _attendanceDatabase => DatabaseManager.Instance.AttendanceDatabase;
@@ -37,6 +34,8 @@ public class UIAttendance : UIView
     private Vector3 _tmpSize;
 
     private Vector3 _targetSize => new Vector3(0.7f, 0.7f, 0.7f);
+
+    private CanvasGroup _canvasGroup;
 
 
 
@@ -57,10 +56,10 @@ public class UIAttendance : UIView
     {
         base.Init(uiNav);
         SlotInit();
+        _canvasGroup = GetComponent<CanvasGroup>();
 
+        _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
         _attendanceCheckIamge.gameObject.SetActive(false);
-        _backgroundButton.SetActive(false);
-        _dontTouchArea.SetActive(false);
 
         _tmpSize = gameObject.transform.localScale;
 
@@ -74,20 +73,22 @@ public class UIAttendance : UIView
             _attendanceCheckIamge.gameObject.SetActive(true);
             _attendanceButton.DisableButtonClick();
         }
+
+        gameObject.SetActive(false);
     }
 
     
     private void ShowAnime()
     {
         VisibleState = VisibleState.Appearing;
-
         gameObject.SetActive(true);
-        _backgroundButton.SetActive(true);
-        gameObject.transform.localScale = _targetSize;
+        _canvasGroup.blocksRaycasts = false;
 
-        Tween.TransformScale(gameObject, _tmpSize, 0.3f, TweenMode.EaseOutBack, () =>
+        _target.transform.localScale = _targetSize;
+        Tween.TransformScale(_target, _tmpSize, _showDuration, TweenMode.EaseOutBack, () =>
         {
-                VisibleState = VisibleState.Appeared;
+            _canvasGroup.blocksRaycasts = true;
+            VisibleState = VisibleState.Appeared;
         });
 
     }
@@ -96,8 +97,10 @@ public class UIAttendance : UIView
     private void HideAnime()
     {
         VisibleState = VisibleState.Disappearing;
-        _backgroundButton.SetActive(false);
-        Tween.TransformScale(gameObject, _targetSize * 0.5f, 0.4f, TweenMode.EaseInBack, () =>
+
+        _canvasGroup.blocksRaycasts = false;
+        _target.transform.localScale = _tmpSize;
+        Tween.TransformScale(_target, _targetSize * 0.5f, _hideDuration, TweenMode.EaseInBack, () =>
         {
             VisibleState = VisibleState.Disappeared;
             gameObject.SetActive(false);
@@ -133,14 +136,21 @@ public class UIAttendance : UIView
     {
         _attendanceButton.gameObject.SetActive(true);
         _attendanceCheckIamge.gameObject.SetActive(true);
-        _dontTouchArea.SetActive(true);
+        _canvasGroup.blocksRaycasts = false;
 
         _attendanceCheckIamge.transform.position = _todayUISlot.transform.position;
 
         _attendanceCheckIamge.transform.localScale = new Vector3(2f, 2f, 2f);
-        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.35f, TweenMode.EaseInQuint, () => _dontTouchArea.SetActive(false));
+        Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.35f, TweenMode.EaseInQuint, () => _canvasGroup.blocksRaycasts = true);
 
         _attendanceDatabase.ChecktAttendance();
+    }
+
+
+    private void OnBackgroundButtonClicked()
+    {
+        _uiNav.Pop("DropdownMenuButton");
+        _uiNav.Pop("Attendance");
     }
 
 }

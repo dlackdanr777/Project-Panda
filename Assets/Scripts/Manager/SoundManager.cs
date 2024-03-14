@@ -40,7 +40,8 @@ public class SoundManager : SingletonHandler<SoundManager>
 
     private Coroutine _stopAudioRoutine;
 
-    public event Action<float> OnEffectVolumeChanged; 
+    //´ë¸®ÀÚ
+    public event Action<float, AudioType> OnVolumeChangedHandler;
 
     public override void Awake()
     {
@@ -131,6 +132,8 @@ public class SoundManager : SingletonHandler<SoundManager>
                 _audioMixer.SetFloat("SoundEffect", volume);
                 break;
         }
+
+        OnVolumeChangedHandler?.Invoke(volume, type);
     }
 
 

@@ -31,6 +31,8 @@ public class UIInsideWood : UIView
        _inSideWood.gameObject.SetActive(false);
         DataBind.SetButtonValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
         DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
+
+        gameObject.SetActive(false);
     }
 
     public override void Show()

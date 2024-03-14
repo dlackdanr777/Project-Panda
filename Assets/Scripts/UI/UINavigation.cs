@@ -78,7 +78,6 @@ public class UINavigation : MonoBehaviour
             UIView uiView = _uiViewList[i].UIView;
             _viewDic.Add(name, uiView);
             uiView.Init(this);
-            uiView.gameObject.SetActive(false);
         }
     }
 
@@ -160,7 +159,6 @@ public class UINavigation : MonoBehaviour
     /// <summary> viewName을 확인해 해당 UI 를 감추는 함수</summary>
     public void Pop(string viewName)
     {
-
         foreach (UIView view in _viewDic.Values)
         {
             if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)

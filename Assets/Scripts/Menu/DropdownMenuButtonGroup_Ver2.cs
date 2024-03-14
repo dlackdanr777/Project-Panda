@@ -70,8 +70,11 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
     {
         _showButton.SetActive(false);
 
+
+
         for (int i = 0, count = _buttons.Length; i < count; i++)
         {
+            _buttons[i].RectTransform.anchoredPosition = _tmpButtonsPos[i];
             int index = i;
             Tween.RectTransfromAnchoredPosition(_buttons[index].gameObject, _targetButtonsPos[index],
                 _groupAnimeDuration, _groupAnimeTweenMode, () =>

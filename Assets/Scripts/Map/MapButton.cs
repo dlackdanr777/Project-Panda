@@ -8,17 +8,22 @@ public class MapButton : MonoBehaviour
 {
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
-
     [SerializeField] private Transform[] _targetTransform;// = new Transform[DatabaseManager.Instance.GetMapDic().Count];
+
+    [Space]
+    [Header("AudioClips")]
+    [SerializeField] private AudioClip _treeAudioClip;
+    [SerializeField] private AudioClip _fishingGroundAudioClip;
+    [SerializeField] private AudioClip _forestAudioClip;
+    [SerializeField] private AudioClip _crossRoadAudioClip;
+    [SerializeField] private AudioClip _villageAudioClip;
+    [SerializeField] private AudioClip _marcketAudioClip;
+    [SerializeField] private AudioClip _catworldAudioClip;
+    [SerializeField] private AudioClip _mermaidForestAudioClip;
+    [SerializeField] private AudioClip _villageHouseAudioClip;
+
     private float _fadeTime = 1f;
     private int _currentMap;
-    public int CurrentMap {
-        get { return _currentMap; }
-        set
-        {
-            _currentMap = value;
-            TimeManager.Instance.CurrentMap = "MN" + (_currentMap + 1 >= 10 ? (_currentMap + 1) : "0" + (_currentMap + 1));
-        } }
     //private Vector2 _forestMapSize; // 맵마다 크기가 다르다면 설정
     private Vector2 _mapSize;
     private Camera _camera;
@@ -28,8 +33,6 @@ public class MapButton : MonoBehaviour
 
     private void Awake()
     {
-        _currentMap = 0;
-
         //_forestMapSize = new Vector2(30, _cameraController.MapSize.y);
         _mapSize = _cameraController.MapSize;
         _camera = _cameraController.GetComponent<Camera>();
@@ -57,7 +60,7 @@ public class MapButton : MonoBehaviour
     /// 현재 이동하는 방향 확인</summary>
     private void CheckDirection()
     {
-        if (Camera.main.transform.position.x < _targetTransform[CurrentMap].position.x)
+        if (Camera.main.transform.position.x < _targetTransform[_currentMap].position.x)
         {
             _isLeft = true;
         }
@@ -71,17 +74,21 @@ public class MapButton : MonoBehaviour
     public void MoveWishTree()
     {
         CheckDirection();
+        SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
 
-        CurrentMap = 0;
+        _currentMap = 0;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
+
+
     private void MoveFishingGround()
     {
         CheckDirection();
+        SoundManager.Instance.PlayBackgroundAudio(_fishingGroundAudioClip, 2);
 
-        CurrentMap = 1;
+        _currentMap = 1;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
@@ -90,24 +97,25 @@ public class MapButton : MonoBehaviour
     private void MoveForestEntrance()
     {
         CheckDirection();
-
-        CurrentMap = 2;
+        SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
+        _currentMap = 2;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
     }
     private void MoveForest()
     {
-        if(CurrentMap == 8)
+        SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+        if (_currentMap == 8)
         {
-            CurrentMap = 3;
+            _currentMap = 3;
             MoveOtherWorld();
         }
         else
         {
             CheckDirection();
 
-            CurrentMap = 3;
+            _currentMap = 3;
             _cameraController.MapSize = _mapSize;
 
             MoveField(_isLeft);
@@ -116,16 +124,17 @@ public class MapButton : MonoBehaviour
     private void MoveVillage()
     {
         _cameraController.MapSize = _mapSize;
-        if (CurrentMap == 10)
+        SoundManager.Instance.PlayBackgroundAudio(_villageAudioClip, 2);
+        if (_currentMap == 10)
         {
-            CurrentMap = 4;
+            _currentMap = 4;
             MoveCenter();
         }
         else
         {
             CheckDirection();
 
-            CurrentMap = 4;
+            _currentMap = 4;
             MoveField(_isLeft);
         }
 
@@ -133,17 +142,17 @@ public class MapButton : MonoBehaviour
     private void MoveMarket()
     {
         _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
-
-        if (CurrentMap == 11)
+        SoundManager.Instance.PlayBackgroundAudio(_marcketAudioClip, 2);
+        if (_currentMap == 11)
         {
-            CurrentMap = 5;
+            _currentMap = 5;
             MoveCenter();
         }
         else
         {
             CheckDirection();
 
-            CurrentMap = 5;
+            _currentMap = 5;
             MoveField(_isLeft);
         }
 
@@ -151,17 +160,18 @@ public class MapButton : MonoBehaviour
 
     private void MoveCatWorld()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_catworldAudioClip, 2);
         _cameraController.MapSize = _mapSize;
-        if (CurrentMap == 13)
+        if (_currentMap == 13)
         {
-            CurrentMap = 6;
+            _currentMap = 6;
             MoveCenter();
         } 
         else
         {
             CheckDirection();
 
-            CurrentMap = 6;
+            _currentMap = 6;
             MoveField(_isLeft);
         }
         
@@ -170,8 +180,8 @@ public class MapButton : MonoBehaviour
     private void MoveMermaidForest()
     {
         CheckDirection();
-
-        CurrentMap = 7;
+        SoundManager.Instance.PlayBackgroundAudio(_mermaidForestAudioClip, 2);
+        _currentMap = 7;
         _cameraController.MapSize = new Vector2(31f, _cameraController.MapSize.y);
 
         MoveField(_isLeft);
@@ -179,16 +189,16 @@ public class MapButton : MonoBehaviour
 
     private void MoveOtherWorldlyForest()
     {
-        if(CurrentMap == 3)
+        if(_currentMap == 3)
         {
-            CurrentMap = 8;
+            _currentMap = 8;
             MoveOtherWorld();
         }
         else
         {
             CheckDirection();
 
-            CurrentMap = 8;
+            _currentMap = 8;
             _cameraController.MapSize = _mapSize;
 
             MoveField(_isLeft);
@@ -199,7 +209,7 @@ public class MapButton : MonoBehaviour
     {
         CheckDirection();
 
-        CurrentMap = 9;
+        _currentMap = 9;
         _cameraController.MapSize = _mapSize;
 
         MoveField(_isLeft);
@@ -207,7 +217,8 @@ public class MapButton : MonoBehaviour
 
     private void MoveVillageHouse()
     {
-        CurrentMap = 10;
+        SoundManager.Instance.PlayBackgroundAudio(_villageHouseAudioClip, 2);
+        _currentMap = 10;
         _cameraController.MapSize = new Vector2(30f, _cameraController.MapSize.y);
 
         MoveCenter();
@@ -215,7 +226,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHall()
     {
-        CurrentMap = 11;
+        _currentMap = 11;
         _cameraController.MapSize = new Vector2(28.5f, _cameraController.MapSize.y);
 
         MoveCenter();
@@ -223,7 +234,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHallOffice()
     {
-        CurrentMap = 12;
+        _currentMap = 12;
         _cameraController.MapSize = new Vector2(45, _cameraController.MapSize.y);
 
         MoveCenter();
@@ -231,7 +242,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCatCastle()
     {
-        CurrentMap = 13;
+        _currentMap = 13;
         _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
 
         MoveCenter();
@@ -240,13 +251,13 @@ public class MapButton : MonoBehaviour
     // 끝으로 이동
     private void MoveField(bool isLeft)
     {
-        Vector3 targetPos = new Vector3(_targetTransform[CurrentMap].position.x, _targetTransform[CurrentMap].position.y, Camera.main.transform.position.z);
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
 
-        FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
         {
             TimeManager.Instance.CheckMap();
 
-            _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
+            _cameraController.MapCenter = _targetTransform[_currentMap].position;
             //Camera.main.transform.position = targetPos;
 
             // 다른 맵으로 이동할 시 가던 방향으로 이동하는 것처럼 보이게 함
@@ -264,42 +275,42 @@ public class MapButton : MonoBehaviour
             }
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
-        }));
+        });
     }
 
     // 같은 위치로 이동
     private void MoveOtherWorld()
     {
-        Vector3 targetPos = new Vector3(_targetTransform[CurrentMap].position.x, _targetTransform[CurrentMap].position.y, Camera.main.transform.position.z);
-        FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
         {
             TimeManager.Instance.CheckMap();
 
             // 자동차로 이동 시 같은 위치로 카메라 이동
             float lx = _cameraController.MapCenter.x - Camera.main.transform.position.x;
 
-            _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
+            _cameraController.MapCenter = _targetTransform[_currentMap].position;
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
-        }));
+        });
     }
 
     // 중심으로 이동
     private void MoveCenter()
     {
-        Vector3 targetPos = new Vector3(_targetTransform[CurrentMap].position.x, _targetTransform[CurrentMap].position.y, Camera.main.transform.position.z);
-        FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
+        Vector3 targetPos = new Vector3(_targetTransform[_currentMap].position.x, _targetTransform[_currentMap].position.y, Camera.main.transform.position.z);
+        FadeInOutManager.Instance.FadeIn(_fadeTime, () =>
         {
             TimeManager.Instance.CheckMap();
 
-            _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
+            _cameraController.MapCenter = _targetTransform[_currentMap].position;
 
             Camera.main.transform.position = targetPos;
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
-        }));
+        });
     }
 
 }

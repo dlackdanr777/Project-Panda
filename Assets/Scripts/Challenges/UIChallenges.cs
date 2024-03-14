@@ -9,6 +9,7 @@ using Muks.Tween;
 [RequireComponent(typeof(CanvasGroup))]
 public class UIChallenges : UIView
 {
+
     [Header("ShowUI Animation Setting")]
     [SerializeField] private RectTransform _targetRect;
     [SerializeField] private float _startAlpha = 0;
@@ -16,9 +17,6 @@ public class UIChallenges : UIView
     [SerializeField] private float _duration;
     [SerializeField] private TweenMode _tweenMode;
 
-    private CanvasGroup _canvasGroup;
-    private Vector3 _tmpPos;
-    private Vector3 _movePos => new Vector3(0, 50, 0);
 
     [Space]
     [Header("Components")]
@@ -27,6 +25,12 @@ public class UIChallenges : UIView
     [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private ScrollRect _scrollRect;
     [SerializeField] private UIChallengeSlot _slotPrefab;
+    [SerializeField] private Button _backgroundButton;
+
+
+    private CanvasGroup _canvasGroup;
+    private Vector3 _tmpPos;
+    private Vector3 _movePos => new Vector3(0, 50, 0);
 
     private Dictionary<string, UIChallengeSlot> _slotDic = new Dictionary<string, UIChallengeSlot>();
 
@@ -39,6 +43,8 @@ public class UIChallenges : UIView
 
         _canvasGroup = GetComponent<CanvasGroup>(); 
         _tmpPos = _targetRect.anchoredPosition;
+
+        _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
 
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
@@ -64,6 +70,8 @@ public class UIChallenges : UIView
             }
         }
         CloseChallenges();
+
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -154,5 +162,12 @@ public class UIChallenges : UIView
     private void EarningBamboo(string id)
     {
         _bambooFieldSystem.HarvestBamboo(0, DatabaseManager.Instance.GetChallengesDic()[id].BambooCount, _slotDic[id].GetBambooTransform);
+    }
+
+
+    private void OnBackgroundButtonClicked()
+    {
+        _uiNav.Pop("DropdownMenuButton");
+        _uiNav.Pop("Challenges");
     }
 }

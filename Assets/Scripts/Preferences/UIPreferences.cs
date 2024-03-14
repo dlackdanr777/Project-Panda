@@ -1,66 +1,69 @@
-using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class UIPreferences : UIView
+/// <summary>환경설정에서 옵션을 조절할 수 있게 해주는 클래스</summary>
+public class UIPreferences : MonoBehaviour
 {
-    [Header("ShowUI Animation Setting")]
-    [SerializeField] private RectTransform _targetRect;
-    [SerializeField] private float _startAlpha = 0;
-    [SerializeField] private float _targetAlpha = 1;
-    [SerializeField] private float _duration;
-    [SerializeField] private TweenMode _tweenMode;
-
-    private CanvasGroup _canvasGroup;
-    private Vector3 _tmpPos;
-    private Vector3 _movePos => new Vector3(0, 50, 0);
+    [Header("Components")]
+    [SerializeField] private Button _silentButton;
+    [SerializeField] private Button _vibrateButton;
+    [SerializeField] private Button _soundButton;
+    [SerializeField] private Slider _backgroundSlider;
+    [SerializeField] private Slider _soundEffectSlider;
 
 
-    public override void Init(UINavigation uiNav)
+    public void Init()
     {
-        base.Init(uiNav);
-        _canvasGroup = GetComponent<CanvasGroup>();
-        _tmpPos = _targetRect.anchoredPosition;
+        _silentButton.onClick.AddListener(OnSilentButtonClicked);
+        _vibrateButton.onClick.AddListener(OnVibrateButtonClicked);
+        _soundButton.onClick.AddListener(OnSoundButtonClicked);
+        _backgroundSlider.onValueChanged.AddListener(OnBackgroundSliderValueChanged);
+        _soundEffectSlider.onValueChanged.AddListener(OnSoundEffectSliderValueChanged);
     }
 
 
-    public override void Show()
+    private void OnSilentButtonClicked()
     {
-        VisibleState = VisibleState.Appearing;
-        gameObject.SetActive(true);
+        SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
 
-        _targetRect.anchoredPosition = _tmpPos + _movePos;
-        _canvasGroup.alpha = _startAlpha;
-        _canvasGroup.blocksRaycasts = false;
+        _backgroundSlider.value = 0;
+        _soundEffectSlider.value = 0;
 
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Appeared;
-            _canvasGroup.blocksRaycasts = true;
-        });
+        //TODO: 진동기능 끄기
     }
 
 
-    public override void Hide()
+    private void OnVibrateButtonClicked()
     {
-        VisibleState = VisibleState.Disappearing;
+        SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
 
-        _targetRect.anchoredPosition = _tmpPos;
-        _canvasGroup.alpha = _targetAlpha;
-        _canvasGroup.blocksRaycasts = false;
+        _backgroundSlider.value = 0;
+        _soundEffectSlider.value = 0;
 
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos - _movePos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Disappeared;
-            _canvasGroup.blocksRaycasts = true;
-
-            gameObject.SetActive(false);
-        });
+        //TODO: 진동기능 켜기
     }
 
+
+    private void OnSoundButtonClicked()
+    {
+        SoundManager.Instance.SetVolume(1, AudioType.BackgroundAudio);
+        SoundManager.Instance.SetVolume(1, AudioType.EffectAudio);
+
+        _backgroundSlider.value = 1;
+        _soundEffectSlider.value = 1;
+    }
+
+
+    private void OnBackgroundSliderValueChanged(float value)
+    {
+        SoundManager.Instance.SetVolume(value, AudioType.BackgroundAudio);
+    }
+
+
+    private void OnSoundEffectSliderValueChanged(float value)
+    {
+        SoundManager.Instance.SetVolume(value, AudioType.EffectAudio);
+    }
 }

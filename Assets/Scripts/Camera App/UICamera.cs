@@ -19,6 +19,11 @@ public class UICameraApp : UIView
 
     public event Action OnHideHandler;
 
+    public override void Init(UINavigation uiNav)
+    {
+        base.Init(uiNav);
+        gameObject.SetActive(false);
+    }
 
     public override void Show()
     {

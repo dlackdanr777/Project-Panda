@@ -1,10 +1,12 @@
 using Muks.Tween;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>메인 화면의 환경설정 창</summary>
 [RequireComponent(typeof(CanvasGroup))]
-///<summary>메인 씬 편지UI 클래스</summary>
-public class UIMail : UIView
+public class UIMainPreferences : UIView
 {
     [Header("ShowUI Animation Setting")]
     [SerializeField] private RectTransform _targetRect;
@@ -15,12 +17,13 @@ public class UIMail : UIView
 
     [Space]
     [Header("Components")]
+    [SerializeField] private UIPreferences _uiPreferences;
     [SerializeField] private Button _backgroundButton;
+
 
     private CanvasGroup _canvasGroup;
     private Vector3 _tmpPos;
     private Vector3 _movePos => new Vector3(0, 50, 0);
-
 
 
     public override void Init(UINavigation uiNav)
@@ -29,6 +32,7 @@ public class UIMail : UIView
         _canvasGroup = GetComponent<CanvasGroup>();
         _tmpPos = _targetRect.anchoredPosition;
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
+        _uiPreferences.Init();
 
         gameObject.SetActive(false);
     }
@@ -74,6 +78,7 @@ public class UIMail : UIView
     private void OnBackgroundButtonClicked()
     {
         _uiNav.Pop("DropdownMenuButton");
-        _uiNav.Pop("Mail");
+        _uiNav.Pop("Preferences");
     }
+
 }

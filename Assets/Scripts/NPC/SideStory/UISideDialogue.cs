@@ -54,6 +54,8 @@ public class UISideDialogue : UIView
 
         _leftButton.Init();
         _rightButton.Init();
+
+        gameObject.SetActive(false);
     }
 
     public void OnDestroy()

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -47,6 +48,8 @@ public class UIMainInventoryContoller : MonoBehaviour
 
     public void Init(UnityAction<InventoryItem> onButtonClicked = null)
     {
+        SceneManager.sceneLoaded += LoadedSceneEvent;
+
         _gatheringInventorys = GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem);
         _foodInventory = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Cook)[(int)CookItemType.CookFood];
         _toolInventory = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Tool)[(int)ToolItemType.GatheringTool];
@@ -79,6 +82,7 @@ public class UIMainInventoryContoller : MonoBehaviour
 
     private void OnDestroy()
     {
+        Debug.Log("½ÇÇà");
         _gatheringInventorys[(int)GatheringItemType.Bug].OnAddHandler -= UpdateUI;
         _gatheringInventorys[(int)GatheringItemType.Bug].OnRemoveHandler -= UpdateUI;
         _gatheringInventorys[(int)GatheringItemType.Fish].OnAddHandler -= UpdateUI;
@@ -91,11 +95,6 @@ public class UIMainInventoryContoller : MonoBehaviour
         _toolInventory.OnRemoveHandler -= UpdateUI;
     }
 
-
-    private void _foodInventory_OnAddHandler()
-    {
-        throw new NotImplementedException();
-    }
 
     public void UpdateUI()
     {
@@ -134,6 +133,22 @@ public class UIMainInventoryContoller : MonoBehaviour
     private void OnToolButtonClicked(bool isOn)
     {
         _toolInventoryCategory.SetActive(isOn);
+    }
+
+
+    private void LoadedSceneEvent(Scene scene, LoadSceneMode mode)
+    {
+        _gatheringInventorys[(int)GatheringItemType.Bug].OnAddHandler -= UpdateUI;
+        _gatheringInventorys[(int)GatheringItemType.Bug].OnRemoveHandler -= UpdateUI;
+        _gatheringInventorys[(int)GatheringItemType.Fish].OnAddHandler -= UpdateUI;
+        _gatheringInventorys[(int)GatheringItemType.Fish].OnRemoveHandler -= UpdateUI;
+        _gatheringInventorys[(int)GatheringItemType.Fruit].OnAddHandler -= UpdateUI;
+        _gatheringInventorys[(int)GatheringItemType.Fruit].OnRemoveHandler -= UpdateUI;
+        _foodInventory.OnAddHandler -= UpdateUI;
+        _foodInventory.OnRemoveHandler -= UpdateUI;
+        _toolInventory.OnAddHandler -= UpdateUI;
+        _toolInventory.OnRemoveHandler -= UpdateUI;
+        SceneManager.sceneLoaded -= LoadedSceneEvent;
     }
 }
 

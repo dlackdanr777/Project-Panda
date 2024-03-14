@@ -14,6 +14,7 @@ public abstract class DropdownButton : MonoBehaviour
     [SerializeField] protected GameObject _dontTouchArea;
 
     protected RectTransform _rectTransform;
+    public RectTransform RectTransform => _rectTransform;
 
     /// <summary>UIÀÇ Å©±â</summary>
     public Vector2 SizeDelta => _rectTransform.sizeDelta;
