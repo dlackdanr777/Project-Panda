@@ -30,6 +30,9 @@ public class MapDatabase
         _dataMap = CSVReader.Read("Map");
     }
 
+    public void Register()
+    {
+    }
 
     public void CheckMap()
     {
@@ -64,7 +67,11 @@ public class MapDatabase
             {
                 if (backGround[j] != null)
                 {
-                    backGround[j].SetActive(false);
+                    foreach(Transform child in backGround[j].transform)
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    //backGround[j].SetActive(false);
                 }
             }
 

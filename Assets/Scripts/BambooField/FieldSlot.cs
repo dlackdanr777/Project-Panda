@@ -59,7 +59,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
         {
             _timeDifference = _timeDifference - TimeSpan.FromSeconds(Mathf.FloorToInt(_second));
             _second -= Mathf.FloorToInt(_second);
-            _remainingTime = string.Format("{0}h {1}m {2}s", _timeDifference.Hours, _timeDifference.Minutes, _timeDifference.Seconds);
+            SetRemainimgTime();
         }
         else
         {
@@ -126,7 +126,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
         {
 
             BFieldSystem.HarvestButton.IsSet = true;
-            Tween.SpriteRendererAlpha(BFieldSystem.HarvestButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
+            //Tween.SpriteRendererAlpha(BFieldSystem.HarvestButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
         }
     }
 
@@ -171,7 +171,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     private void IsIncreaseYields()
     {
-        if(_time > HarvestItem.HarvestTime/10) // * 60 // 확인 위해 잠시 시간 짧게 설정 - 나중에 수정
+        if(_time > HarvestItem.HarvestTime * 60) // 시간 설정
         {
             IncreaseYields();
             _time = 0;
@@ -224,8 +224,28 @@ public class FieldSlot : MonoBehaviour, IInteraction
     {
         _time = 0;
         _second = 0;
-        _timeDifference = TimeSpan.FromSeconds(HarvestItem.HarvestTime * Mathf.CeilToInt(HarvestItem.MaxYield / (float)HarvestItem.Yield));
-        _remainingTime = string.Format("{0}h {1}m {2}s", _timeDifference.Hours, _timeDifference.Minutes, _timeDifference.Seconds);
+        _timeDifference = TimeSpan.FromSeconds(HarvestItem.HarvestTime * 60 * Mathf.CeilToInt(HarvestItem.MaxYield / (float)HarvestItem.Yield));
+        SetRemainimgTime();
+    }
+
+    private void SetRemainimgTime()
+    {
+        if (_timeDifference.Hours == 0)
+        {
+            if (_timeDifference.Minutes == 0)
+            {
+                _remainingTime = string.Format("{0}s", _timeDifference.Seconds);
+
+            }
+            else
+            {
+                _remainingTime = string.Format("{0}m {1}s", _timeDifference.Minutes, _timeDifference.Seconds);
+            }
+        }
+        else
+        {
+            _remainingTime = string.Format("{0}h {1}m", _timeDifference.Hours, _timeDifference.Minutes);
+        }
     }
 
 }

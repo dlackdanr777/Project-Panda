@@ -80,7 +80,8 @@ public class BambooFieldSystem : MonoBehaviour
             _fieldSlots[i].ChangeGrowthStageImage(_fieldSlots[i].GrowthStage);
             _fieldSlots[i].SetTimeDifference();
         }
-        Tween.SpriteRendererAlpha(HarvestButton.gameObject, 0, 0.5f, TweenMode.Quadratic, () => { HarvestButton.IsSet = false; });
+        //Tween.SpriteRendererAlpha(HarvestButton.gameObject, 0, 0.5f, TweenMode.Quadratic, () => { HarvestButton.IsSet = false; });
+        HarvestButton.IsSet = false;
     }
 
     /// <summary>

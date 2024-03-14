@@ -29,6 +29,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     private Dictionary<string, MapData> _mapDic => _mapDatabase.GetMapDic();
     private ETime _eTime;
     public ETime ETime => _eTime;
+    public string CurrentMap;
     private Light2D _light;
 
     private MapDatabase _mapDatabase;
@@ -36,6 +37,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     public override void Awake()
     {
         base.Awake();
+        CurrentMap = "MN01";
         _mapDatabase = new MapDatabase();
         SceneManager.sceneLoaded += LoadedSceneEvent;
     }
@@ -127,19 +129,27 @@ public class TimeManager : SingletonHandler<TimeManager>
                 break;
         }
 
-        foreach(string key in _mapDic.Keys) // 현재 있는 맵의 배경만 끄도록 수정 + 자식 오브젝트만 끄도록 수정하기
-        {
-            if (_mapDic[key].BackGround[(int)_eTime] != null)
+        //foreach (string key in _mapDic.Keys) // 현재 있는 맵의 배경만 끄도록 수정 + 자식 오브젝트만 끄도록 수정하기
+        //{
+            if (_mapDic[CurrentMap].BackGround[(int)_eTime] != null)
             {
                 // 모든 시간 배경 끄기
-                for(int i = 0; i < _mapDic[key].BackGround.Length; i++)
+                for (int i = 0; i < _mapDic[CurrentMap].BackGround.Length; i++)
                 {
-                    _mapDic[key].BackGround[i]?.SetActive(false);
+                    foreach (Transform child in _mapDic[CurrentMap].BackGround[i].transform)
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    //_mapDic[key].BackGround[i]?.SetActive(false);
                 }
 
                 // 이번 시간 배경 켜기
-                _mapDic[key].BackGround[(int)_eTime].SetActive(true);
-            }
+                foreach (Transform child in _mapDic[CurrentMap].BackGround[(int)_eTime].transform)
+                {
+                    child.gameObject.SetActive(true);
+                }
+                //_mapDic[key].BackGround[(int)_eTime].SetActive(true);
+            //}
         }
     }
 
