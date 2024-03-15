@@ -20,6 +20,8 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene2 Components")]
+    [SerializeField] private GameObject _backgroundImage;
+    [SerializeField] private GameObject _scene2Poya;
     [SerializeField] private GameObject _closeLetter;
     [SerializeField] private Button _closeLetterButton;
     [SerializeField] private Image _openLetter;
@@ -35,12 +37,14 @@ public class IntroScene : MonoBehaviour
     [SerializeField] private Transform _startPos;
     [SerializeField] private Transform _endCameraPos;
     [SerializeField] private Transform _endPoyaPos;
-    [SerializeField] private GameObject _poya;
+    [SerializeField] private GameObject _scene3Poya;
     [SerializeField] private TextMeshProUGUI _scene3Text;
 
     [Space]
     [Header("Clips")]
-    [SerializeField] private AudioClip _introMusic;
+    [SerializeField] private AudioClip _scene1Music;
+    [SerializeField] private AudioClip _scene2Music;
+    [SerializeField] private AudioClip _scene3Music;
     [SerializeField] private AudioClip _treeMusic;
 
     private Animator _flashAnimator;
@@ -55,7 +59,7 @@ public class IntroScene : MonoBehaviour
         _flashAnimator = _flash.GetComponent<Animator>();
         _poirotAnimator = _poirot.GetComponent<Animator>();
         _reporterAnimator = _reporter.GetComponent<Animator>();
-        _poyaAnimator = _poya.GetComponent<Animator>();
+        _poyaAnimator = _scene3Poya.GetComponent<Animator>();
 
         _uiIntroScene.Init();
         Scene1Init();
@@ -82,6 +86,9 @@ public class IntroScene : MonoBehaviour
 
     private void Scene2Init()
     {
+        _backgroundImage.SetActive(false);
+        _scene2Poya.SetActive(false);
+
         _openLetter.GetComponent<CanvasGroup>().alpha = 0;
         _openLetter.gameObject.SetActive(false);
 
@@ -102,7 +109,7 @@ public class IntroScene : MonoBehaviour
     private IEnumerator Scene1()
     {
         //페이드 아웃
-        SoundManager.Instance.PlayBackgroundAudio(_introMusic, 3);
+        SoundManager.Instance.PlayBackgroundAudio(_scene1Music, 3, false);
         yield return YieldCache.WaitForSeconds(3f);
         Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0, 3f, TweenMode.Constant, () => _fadeImage.gameObject.SetActive(false));
 
@@ -232,12 +239,68 @@ public class IntroScene : MonoBehaviour
 
         Tween.SpriteRendererAlpha(_fadeImage.gameObject, 1, 2, TweenMode.Constant);
 
+        yield return YieldCache.WaitForSeconds(2f);
         StartCoroutine(Scene2());
     }
 
 
     private IEnumerator Scene2()
     {
+        //씬2 셋팅
+        SoundManager.Instance.PlayBackgroundAudio(_scene2Music, 2, true);
+
+        _backgroundImage.SetActive(true);
+        _scene2Poya.SetActive(true);
+
+        yield return YieldCache.WaitForSeconds(4f);
+
+        //페이드 아웃
+        _fadeImage.gameObject.SetActive(true);
+        _fadeImage.color = new Color(_fadeImage.color.r, _fadeImage.color.g, _fadeImage.color.b, 1);
+        Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0, 2, TweenMode.Constant);
+
+
+        yield return YieldCache.WaitForSeconds(5f);
+
+
+        //포야 흐느낌
+        _uiIntroScene.StartDialogue();
+        _uiIntroScene.SetDialogueNameText("포야");
+        _uiIntroScene.SetDialogueImage(_poyaSprite);
+
+        yield return YieldCache.WaitForSeconds(1f);
+
+        char[] tempChars = "흑흑흑... 할아버지... ".ToCharArray();
+        string tempString = string.Empty;
+
+        for (int i = 0, count = tempChars.Length; i < count; i++)
+        {
+            _uiIntroScene.SetDialogueContext(tempString);
+            tempString += tempChars[i];
+
+            yield return YieldCache.WaitForSeconds(0.2f);
+        }
+
+        yield return YieldCache.WaitForSeconds(5f);
+
+
+        tempChars = "어라...?          \n이것은 할아버지의 편지? ".ToCharArray();
+        tempString = string.Empty;
+
+        for (int i = 0, count = tempChars.Length; i < count; i++)
+        {
+            _uiIntroScene.SetDialogueContext(tempString);
+            tempString += tempChars[i];
+
+            yield return YieldCache.WaitForSeconds(0.1f);
+        }
+
+
+        yield return YieldCache.WaitForSeconds(3f);
+
+        //포야 대사 종료
+        _uiIntroScene.EndDialogue();
+
         yield return YieldCache.WaitForSeconds(4f);
 
         //편지가 위로 올라오는 장면
@@ -292,8 +355,8 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(1f);
 
-        char[] tempChars = "내 손주 포야에게 ".ToCharArray();
-        string tempString = string.Empty;
+        tempChars = "내 손주 포야에게 ".ToCharArray();
+        tempString = string.Empty;
 
         for (int i = 0, count = tempChars.Length; i < count; i++)
         {
@@ -383,12 +446,11 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(3f);
 
 
-        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
+/*        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
          {
              _uiFadeImage.color = new Color(0, 0, 0, 0);
              _uiFadeImage.gameObject.SetActive(false);
-         });
-
+         });*/
 
         yield return YieldCache.WaitForSeconds(3f);
 
@@ -428,14 +490,17 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(4f);
 
+        _uiIntroScene.EndDialogue();
+
         //검은색 페이드아웃
-        _uiFadeImage.color = new Color(0, 0, 0, 0);
+        _uiFadeImage.color = new Color(1, 1, 1, 1);
         _uiFadeImage.gameObject.SetActive(true);
 
-        Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 2);
+        Color targetColor = new Color(0, 0, 0, 1);
+        Tween.IamgeColor(_uiFadeImage.gameObject, targetColor, 2);
 
+        SoundManager.Instance.PlayBackgroundAudio(_scene3Music, 3, false);
         yield return YieldCache.WaitForSeconds(4f);
-
 
         //멀티버스 스튜디오 로고명 출력
 
@@ -453,7 +518,7 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(3f);
 
         Tween.CanvasGroupAlpha(_companyLogo, 0, 2);
-        yield return YieldCache.WaitForSeconds(2f);
+        yield return YieldCache.WaitForSeconds(3f);
 
         StartCoroutine(Scene3());
     }
@@ -465,7 +530,7 @@ public class IntroScene : MonoBehaviour
         _uiFadeImage.color = Color.black;
 
         //포야 독백
-        yield return YieldCache.WaitForSeconds(2f);
+        yield return YieldCache.WaitForSeconds(3f);
         _scene3Text.gameObject.SetActive(true);
         char[] tempChars = "신비한 숲에서 꼭 할아버지를 찾아내고     \n나도 대탐정이 되겠어! ".ToCharArray();
         string tempString = string.Empty;
@@ -478,7 +543,7 @@ public class IntroScene : MonoBehaviour
             yield return YieldCache.WaitForSeconds(0.07f);
         }
 
-        yield return YieldCache.WaitForSeconds(3f);
+        yield return YieldCache.WaitForSeconds(4f);
 
         Tween.TMPAlpha(_scene3Text.gameObject, 0, 2);
 
@@ -488,7 +553,7 @@ public class IntroScene : MonoBehaviour
         Camera.main.transform.position = _startPos.position;
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 2);
         _poyaAnimator.SetTrigger("Turn");
-        Tween.TransformMove(_poya, _endPoyaPos.position, 7f, TweenMode.Smoothstep);
+        Tween.TransformMove(_scene3Poya, _endPoyaPos.position, 7f, TweenMode.Smoothstep);
         Tween.TransformMove(Camera.main.gameObject, _endCameraPos.position, 7f, TweenMode.Smoothstep);
 
         yield return YieldCache.WaitForSeconds(5f);
@@ -498,8 +563,8 @@ public class IntroScene : MonoBehaviour
         _uiFadeImage.gameObject.SetActive(true);
 
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 3f, TweenMode.Constant);
-        SoundManager.Instance.PlayBackgroundAudio(_treeMusic, 5);
         yield return YieldCache.WaitForSeconds(6);
+        SoundManager.Instance.PlayBackgroundAudio(_treeMusic, 5);
 
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant, () => _uiFadeImage.gameObject.SetActive(false));
     }

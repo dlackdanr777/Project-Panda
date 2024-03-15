@@ -13,11 +13,8 @@ namespace Cooking
 
         [Header("Anime")]
         [SerializeField] private Transform _animeParent;
-
         [SerializeField] private TextMeshProUGUI _startText;
-
         [SerializeField] private GameObject _complatedAnimePrefab;
-
         [SerializeField] private GameObject _failedAnimePrefab;
 
 
@@ -31,16 +28,24 @@ namespace Cooking
         [Space]
         [Header("Bar")]
         [SerializeField] private UICookBar _staminaValueBar;
-
         [SerializeField] private UICookBar _fireValueBar;
-
         [SerializeField] private UISuccessLocation _uiSuccessLocation;
 
         [Space]
         [Header("Clock")]
         [SerializeField] private UICookTimer _uiTimer;
 
+        [Space]
+        [Header("Audio Clips")]
+        [SerializeField] private AudioClip _startBackgroundMusic;
+        [SerializeField] private AudioClip _readyBackgroundMusic;
 
+        [SerializeField] private AudioClip _countSound; //3, 2, 1 카운트 나올때 재생되는 효과음
+        [SerializeField] private AudioClip _startAndEndSound;
+        [SerializeField] private AudioClip _completedSound;
+        [SerializeField] private AudioClip _gradeSound_S;
+        [SerializeField] private AudioClip _gradeSound_AB;
+        [SerializeField] private AudioClip _gradeSound_F;
 
         public override void Init(UICook uiCook)
         {
@@ -48,7 +53,11 @@ namespace Cooking
             _uiSuccessLocation.Init();
             _uiTimer.Init();
             _endButton.onClick.AddListener(CookEnd);
-            _view.Init(() => _uiCook.ChangeStepEvent((int)CookStep.SelectCookware));
+            _view.Init(() => 
+            {
+                SoundManager.Instance.PlayBackgroundAudio(_readyBackgroundMusic, 1);
+                _uiCook.ChangeStepEvent((int)CookStep.SelectCookware); 
+            });
             _cookSystem.OnStaminaValueChanged += _staminaValueBar.UpdateGauge;
             _cookSystem.OnFireValueChanged += _fireValueBar.UpdateGauge;
         }
@@ -83,6 +92,9 @@ namespace Cooking
 
         private void CookEnd()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+            SoundManager.Instance.PlayEffectAudio(_completedSound);
+
             _uiTimer.EndTimer();
             _canvasGroup.blocksRaycasts = false;
             _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookEnd();
@@ -104,8 +116,24 @@ namespace Cooking
             }
 
             //1초를 기다린 후 
-            Tween.TransformMove(gameObject, transform.position, 1, TweenMode.Constant, () =>
+            Tween.TransformMove(gameObject, transform.position, 1.23f, TweenMode.Constant, () =>
             {
+                switch (grade)
+                {
+                    case "S":
+                        SoundManager.Instance.PlayEffectAudio(_gradeSound_S);
+                        break;
+
+                    case "A":
+                    case "B":
+                        SoundManager.Instance.PlayEffectAudio(_gradeSound_AB);
+                        break;
+
+                    case "F":
+                        SoundManager.Instance.PlayEffectAudio(_gradeSound_F);
+                        break;
+                }
+
                 _canvasGroup.blocksRaycasts = true;
                 _view.Show(item);
             });
@@ -124,7 +152,6 @@ namespace Cooking
         private void AddValueButtonClicked(CookValue cookValue)
         {
             bool check = _cookSystem.CheckAddFireValueEnabled() && _cookSystem.CheckDecreaseStaminaEnabled(cookValue);
-
             _addButtons[(int)cookValue].CheckUsabled(check, () =>
             {
                 _cookSystem.DecreaseStamina(cookValue);
@@ -141,33 +168,49 @@ namespace Cooking
 
         private void StartAnime(Action onCompleted)
         {
-            _startText.gameObject.SetActive(true);
+            SoundManager.Instance.StopBackgroundAudio(0.5f);
+            _startText.gameObject.SetActive(false);
             _canvasGroup.blocksRaycasts = false;
 
-            Color startColor = new Color(_startText.color.r, _startText.color.g, _startText.color.b, 0.5f);
-            _startText.color = startColor;
-            _startText.text = "3";
-
-            Tween.TMPAlpha(_startText.gameObject, 1, 1, TweenMode.EaseOutBack, () =>
+            //1초 대기 후 카운트 시작
+            Tween.TransformMove(gameObject, transform.position, 1, TweenMode.Constant, () =>
             {
+                SoundManager.Instance.PlayEffectAudio(_countSound);
+                _startText.gameObject.SetActive(true);
+
+                Color startColor = new Color(_startText.color.r, _startText.color.g, _startText.color.b, 0.5f);
                 _startText.color = startColor;
-                _startText.text = "2";
+                _startText.text = "3";
+
 
                 Tween.TMPAlpha(_startText.gameObject, 1, 1, TweenMode.EaseOutBack, () =>
                 {
+                    SoundManager.Instance.PlayEffectAudio(_countSound);
+
                     _startText.color = startColor;
-                    _startText.text = "1";
+                    _startText.text = "2";
 
                     Tween.TMPAlpha(_startText.gameObject, 1, 1, TweenMode.EaseOutBack, () =>
                     {
+                        SoundManager.Instance.PlayEffectAudio(_countSound);
 
                         _startText.color = startColor;
-                        _canvasGroup.blocksRaycasts = true;
-                        _startText.gameObject.SetActive(false);
-                        onCompleted?.Invoke();
+                        _startText.text = "1";
+
+                        Tween.TMPAlpha(_startText.gameObject, 1, 1, TweenMode.EaseOutBack, () =>
+                        {
+                            SoundManager.Instance.PlayEffectAudio(_startAndEndSound);
+                            SoundManager.Instance.PlayBackgroundAudio(_startBackgroundMusic, 1);
+
+                            _startText.color = startColor;
+                            _canvasGroup.blocksRaycasts = true;
+                            _startText.gameObject.SetActive(false);
+                            onCompleted?.Invoke();
+                        });
                     });
                 });
             });
+            
         }
     }
 }

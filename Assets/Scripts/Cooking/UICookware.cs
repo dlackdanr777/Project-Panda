@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
+using UnityEngine.Audio;
 
 namespace Cooking
 {
@@ -10,6 +11,13 @@ namespace Cooking
         [SerializeField] private CookAnimatorData[] _cookAnimators;
 
         [SerializeField] private CookAnimatorData[] _cookwareAnimators;
+
+        [SerializeField] private AudioMixer _mixer;
+
+
+        public void Init()
+        {
+        }
 
 
         public void CookSet()
@@ -123,7 +131,6 @@ namespace Cooking
                     _cookAnimators[i].Animator.SetInteger("Rank", 0);
                 }
             }
-
         }
     }
 }
