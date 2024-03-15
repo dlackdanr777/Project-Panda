@@ -197,6 +197,8 @@ public class UIMainScene : MonoBehaviour
     public void OnShowDropDownMenuButtonClicked()
     {
         _uiNav.Push("DropdownMenuButton");
+        GameManager.Instance.FriezeCameraMove = false;
+        GameManager.Instance.FirezeInteraction = false;
     }
 
     public void OnHideDropDownMenuButtonClicked()

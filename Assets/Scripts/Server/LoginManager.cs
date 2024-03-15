@@ -3,6 +3,7 @@ using LitJson;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -72,6 +73,7 @@ namespace Muks.BackEnd
                 HideLoginUI();
                 LoadData();
                 LoadNextScene(bro);
+
             });
         }
 
@@ -139,19 +141,23 @@ namespace Muks.BackEnd
         /// 차후 첫 로그인 이면 NewUser씬, 아니면 기존유저 씬으로 넘어가게 해야함
         private void LoadNextScene(BackendReturnObject bro)
         {
-            if(!BackendManager.Instance.Login)
+            Muks.Tween.Tween.TransformMove(gameObject, transform.position, 2, TweenMode.Constant, () =>
             {
-                Debug.LogError("뒤끝 로그인이 되지않아 씬을 로드하지 않습니다.");
-                return;
-            }
+                if (!BackendManager.Instance.Login)
+                {
+                    Debug.LogError("뒤끝 로그인이 되지않아 씬을 로드하지 않습니다.");
+                    return;
+                }
 
-            //기존 회원인 경우 통합씬으로
-            if (bro.GetStatusCode() == "200")
-                LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
+                //기존 회원인 경우 통합씬으로
+                if (DatabaseManager.Instance.UserInfo.IsExistingUser)
+                    LoadingSceneManager.LoadScene("24_01_09_Integrated", LoadingType.FirstLoading);
 
-            //신규 회원인 경우 인트로 씬으로 넘어간다.
-            else if (bro.GetStatusCode() == "201")
-                LoadingSceneManager.LoadScene("IntroScene");
+                //신규 회원인 경우 인트로 씬으로 넘어간다.
+                else
+                    LoadingSceneManager.LoadScene("IntroScene", LoadingType.FirstLoading);
+            });
+        
         }
     }
 }

@@ -57,8 +57,8 @@ public class UIMainInventoryContoller : MonoBehaviour
         _bugInventoryCategory.Init(_gatheringInventorys[(int)GatheringItemType.Bug], _slotPrefab, onButtonClicked);
         _fishInventoryCategory.Init(_gatheringInventorys[(int)GatheringItemType.Fish], _slotPrefab, onButtonClicked);
         _fruitInventoryCategory.Init(_gatheringInventorys[(int)GatheringItemType.Fruit], _slotPrefab, onButtonClicked);
-        _foodInventoryCategory.Init(_foodInventory, _slotPrefab);
-        _toolInventoryCategory.Init(_toolInventory, _slotPrefab);
+        _foodInventoryCategory.Init(_foodInventory, _slotPrefab, onButtonClicked);
+        _toolInventoryCategory.Init(_toolInventory, _slotPrefab, onButtonClicked);
 
         _bugButton.onValueChanged.AddListener(OnBugButtonClicked);
         _fishButton.onValueChanged.AddListener(OnFishButtonClicked);

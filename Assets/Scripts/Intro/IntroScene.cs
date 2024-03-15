@@ -443,16 +443,7 @@ public class IntroScene : MonoBehaviour
         }
 
 
-        yield return YieldCache.WaitForSeconds(3f);
-
-
-/*        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
-         {
-             _uiFadeImage.color = new Color(0, 0, 0, 0);
-             _uiFadeImage.gameObject.SetActive(false);
-         });*/
-
-        yield return YieldCache.WaitForSeconds(3f);
+        yield return YieldCache.WaitForSeconds(4f);
 
 
         //추신 대화 출력
@@ -514,6 +505,8 @@ public class IntroScene : MonoBehaviour
         //대사 및 편지 비활성화
         _uiIntroScene.EndDialogue();
         _openLetter.gameObject.SetActive(false);
+        _backgroundImage.SetActive(false);
+        _scene2Poya.SetActive(false);
 
         yield return YieldCache.WaitForSeconds(3f);
 
@@ -553,20 +546,20 @@ public class IntroScene : MonoBehaviour
         Camera.main.transform.position = _startPos.position;
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 2);
         _poyaAnimator.SetTrigger("Turn");
-        Tween.TransformMove(_scene3Poya, _endPoyaPos.position, 7f, TweenMode.Smoothstep);
-        Tween.TransformMove(Camera.main.gameObject, _endCameraPos.position, 7f, TweenMode.Smoothstep);
+        Tween.TransformMove(_scene3Poya, _endPoyaPos.position, 9f, TweenMode.Smoothstep);
+        Tween.TransformMove(Camera.main.gameObject, _endCameraPos.position, 7.5f, TweenMode.Smoothstep);
 
-        yield return YieldCache.WaitForSeconds(5f);
+        yield return YieldCache.WaitForSeconds(8f);
 
         //페이드 인 아웃
-        _uiFadeImage.color = new Color(1, 1, 1, 0);
+        _uiFadeImage.color = new Color(0, 0, 0, 0);
         _uiFadeImage.gameObject.SetActive(true);
 
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 3f, TweenMode.Constant);
         yield return YieldCache.WaitForSeconds(6);
-        SoundManager.Instance.PlayBackgroundAudio(_treeMusic, 5);
 
-        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant, () => _uiFadeImage.gameObject.SetActive(false));
+        DatabaseManager.Instance.UserInfo.IsExistingUser = true;
+        LoadingSceneManager.LoadScene("24_01_09_Integrated");
     }
 
 

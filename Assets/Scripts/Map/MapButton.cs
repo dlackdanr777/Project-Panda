@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 using Muks.DataBind;
-using static UnityEditor.PlayerSettings;
+
 
 public class MapButton : MonoBehaviour
 {
