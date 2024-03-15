@@ -238,6 +238,10 @@ public class Collection : MonoBehaviour
 
         // 화면 켜지는 시간에 맞추어 채집 시작
         Invoke("StartCollection", _fadeTime);
+
+        // 진행 중이던 애니메이션 종료
+        _pandaCollectionAnim.SetInteger("Num", -1);
+        _pandaCollectionAnim.Play("Idle");
     }
 
     /// <summary>
@@ -259,7 +263,7 @@ public class Collection : MonoBehaviour
         gameObject.transform.position = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y + 3, gameObject.transform.position.z);
 
         // 채집 애니메이션 판다와 말풍선 실행
-        _pandaCollectionAnim.enabled = true;
+        //_pandaCollectionAnim.enabled = true;
         _pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
 
         _speechBubble.gameObject.SetActive(true);
@@ -334,7 +338,8 @@ public class Collection : MonoBehaviour
 
     private void ExitCollection()
     {
-        _pandaCollectionAnim.enabled = false;
+        _pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
+        //_pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.sprite = _pandaImage;
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;

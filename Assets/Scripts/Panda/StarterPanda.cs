@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,24 @@ namespace BT
 
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
+
+        [Tooltip("애니메이션 개수")]
+        [SerializeField] private int _animationCount = 1;
+
+        private string _map;
+        private Animator _animator;
+        public int Num;
+        private float _time;
+
+        [System.Serializable]
+        public struct MapAnimationData
+        {
+            public string key;
+            public int[] values;
+        }
+
+        public List<MapAnimationData> _mapAnimationDic;
+        [SerializeField] private bool _isConversation; // 대화 중인지 확인
 
 
         private void Awake()
@@ -62,6 +81,16 @@ namespace BT
             Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);
             //Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
             Debug.Log("판다 이미지" + _pandaImage.name);
+
+
+            _time = 0f;
+            _map = TimeManager.Instance.CurrentMap;
+            _isConversation = false;
+            _animator = GetComponent<Animator>();
+            if (_animationCount > 1)
+            {
+                ChangeAnimation();
+            }
         }
 
 
@@ -94,7 +123,22 @@ namespace BT
                 ShowStateImage();
                 GiveAGift();
             }
-            
+
+            _time += Time.deltaTime;
+            if (_isConversation) // 대화 중인 경우 애니메이션 중지
+            {
+                StopAnimation();
+            }
+            else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
+            {
+                _animator.speed = 1f;
+                if (_map != TimeManager.Instance.CurrentMap)
+                {
+                    _map = TimeManager.Instance.CurrentMap;
+                    ChangeAnimation();
+                }
+            }
+
             // 판다 행복도 지속적으로 감소
             ChangeHappiness(-Time.deltaTime * 0.001f);
 
@@ -274,6 +318,24 @@ namespace BT
             {
                 return false;
             }
+        }
+
+        private void ChangeAnimation()
+        {
+            _animator.speed = 1f;
+
+            // 현재 맵의 애니메이션 번호 찾기
+            int[] nums = _mapAnimationDic.Find(x => x.key == _map).values;
+
+            // 애니메이션 중 랜덤 선택
+            Num = UnityEngine.Random.Range(0, nums.Length);
+
+            _animator.SetInteger("Num", nums[Num]); // 현재 맵의 _num번째 애니메이션 실행
+        }
+
+        private void StopAnimation()
+        {
+            _animator.speed = 0f;
         }
     }
 }
