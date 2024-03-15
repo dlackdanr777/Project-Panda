@@ -33,6 +33,7 @@ public class TimeManager : SingletonHandler<TimeManager>
     private Light2D _light;
 
     private MapDatabase _mapDatabase;
+    public MapDatabase MapDatabase => _mapDatabase;
 
     public override void Awake()
     {

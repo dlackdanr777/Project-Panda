@@ -17,6 +17,7 @@ public class NPCSetting : MonoBehaviour
 
     private Animator _animator;
     private int _num;
+    private string _map;
 
     [SerializeField] private bool _isConversation; // 대화 중인지 확인
 
@@ -28,6 +29,7 @@ public class NPCSetting : MonoBehaviour
         _eTime = TimeManager.Instance.ETime;
         SetNPC();
         _animator = GetComponent<Animator>();
+        _map = TimeManager.Instance.CurrentMap;
         if(_animationCount > 1)
         {
             ChangeAnimation();
@@ -44,13 +46,17 @@ public class NPCSetting : MonoBehaviour
         }
         else if (_isConversation) // 대화 중인 경우 애니메이션 중지
         {
-            _time = 11f;
             StopAnimation();
         }
-        else if (_animationCount > 1 && _time > 10f) // 애니메이션이 여러 개인 경우 랜덤 변경
+        else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
         {
-            _time = 0f;
-            ChangeAnimation();
+            _animator.speed = 1f;
+            if(_map != TimeManager.Instance.CurrentMap)
+            {
+                _map = TimeManager.Instance.CurrentMap;
+                ChangeAnimation();
+            }
+            
         }
 
     }
@@ -73,7 +79,6 @@ public class NPCSetting : MonoBehaviour
 
     private void ChangeAnimation()
     {
-        _animator.speed = 1f;
         _num = Random.Range(0, _animationCount);
         _animator.SetInteger("Num", _num);
     }
