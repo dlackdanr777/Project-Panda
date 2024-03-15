@@ -21,6 +21,18 @@ namespace Cooking
 
         [SerializeField] private GameObject _rightClockHead;
 
+        [Space]
+        [Header("Components")]
+        [SerializeField] private AudioSource _audioSource;
+
+
+        [Space]
+        [Header("Audio Clips")]
+        [SerializeField] private AudioClip _timeOutSound;
+        [SerializeField] private AudioClip _loopSound;
+        [SerializeField] private AudioClip _halfLoopSound;
+        [SerializeField] private AudioClip _justBeforeTimeoutSound;
+
         private bool _isStarted;
 
         private bool _animeStarted;
@@ -32,6 +44,8 @@ namespace Cooking
         private Vector3 _clockTmpPos;
 
         private Action _onTimeoutd;
+
+        private bool _isStartJustBeforeTimeoutSound;
 
 
         public void Init()
@@ -47,8 +61,21 @@ namespace Cooking
 
             if(!_animeStarted && _timerValue - (_timerValue * _animeStartTimeMul) < _currentTime)
             {
-                _animeStarted = true;
+
+                _audioSource.clip = _halfLoopSound;
+                _audioSource.Play();
+
                 HeadAnime();
+                _animeStarted = true;
+            }
+
+            //弧府弧府 荤款靛 犁积
+            if(!_isStartJustBeforeTimeoutSound && _timerValue - _currentTime < _timerValue * 0.1f)
+            {
+                _audioSource.clip = _justBeforeTimeoutSound;
+                _audioSource.Play();
+
+                _isStartJustBeforeTimeoutSound = true;
             }
 
             if (_currentTime < _timerValue)
@@ -81,17 +108,23 @@ namespace Cooking
             _isStarted = true;
             _animeStarted = false;
 
+            _isStartJustBeforeTimeoutSound = false;
+
             _clock.transform.position = _clockTmpPos;
             _clockHands.transform.eulerAngles = Vector3.zero;
             _leftClockHead.transform.eulerAngles = Vector3.zero;
             _rightClockHead.transform.eulerAngles = Vector3.zero;
 
             _onTimeoutd = onTimeoutd;
+
+            _audioSource.clip = _loopSound;
+            _audioSource.Play();
         }
 
 
         public void EndTimer()
         {
+            _audioSource.Stop();
             Tween.Stop(_clock);
             Tween.Stop(_leftClockHead);
             Tween.Stop(_rightClockHead);
@@ -104,6 +137,8 @@ namespace Cooking
         private void TimeOut()
         {
             EndTimer();
+            _audioSource.Stop();
+            _audioSource.PlayOneShot(_timeOutSound);
             _onTimeoutd?.Invoke();
         }
 

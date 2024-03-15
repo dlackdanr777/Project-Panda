@@ -70,7 +70,23 @@ namespace Cooking
             _uiStep4.StopStep();
 
 
-            _cookStepSlot.Init(() => ChangeCookStep(-1), () => ChangeCookStep(1));
+            _cookStepSlot.Init(() => 
+            {
+                SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+                ChangeCookStep(-1); 
+            }, 
+
+            () => 
+            {
+                SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+                ChangeCookStep(1); 
+            });
+
+            for(int i = 0, count = _cookwares.Length; i < count; i++)
+            {
+                _cookwares[i].Init();
+            }
+
             HideCookware();
             ChangeCookStep(0, true);
         }

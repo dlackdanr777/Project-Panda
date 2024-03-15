@@ -33,6 +33,7 @@ namespace Cooking
 
         private void CookStart()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             if (_cookSystem.StartCook()) 
             {
                 _uiCook.ChangeStepEvent((int)CookStep.Cooking);

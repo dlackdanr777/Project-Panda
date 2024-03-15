@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cooking
 {
     public class UICook_Step2 : UICookStep
     {
+        [Header("Components")]
         [SerializeField] private UIMaterialItemSlot _slotPrefab;
-
         [SerializeField] private Transform _slotParent;
-
         [SerializeField] private UICookInventory _uiCookInventory;
+        [SerializeField] private Button _exitButton;
 
         private List<UIMaterialItemSlot> _materialItemSlots = new List<UIMaterialItemSlot>();
 
@@ -35,8 +36,9 @@ namespace Cooking
 
                 _materialItemSlots.Add(slot);
             }
-
             OnMaterialButtonClicked(0);
+
+            _exitButton.onClick.AddListener(OnExitButtonClicked);
             _uiCookInventory.Init(ChoiceItem);
             _cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI();
         }
@@ -71,7 +73,6 @@ namespace Cooking
 
         private void OnMaterialButtonClicked(int index)
         {
-
             //만약 같은 슬롯을 한번더 클릭했다면
             if (index == _selectMaterialSlotIndex)
             {
@@ -151,6 +152,13 @@ namespace Cooking
             {
                 _uiCook.CookStepSlot.DisableRightButton();
             }
+        }
+
+
+        private void OnExitButtonClicked()
+        {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+            LoadingSceneManager.LoadScene("24_01_09_Integrated");
         }
     }
 }
