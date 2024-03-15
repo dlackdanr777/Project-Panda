@@ -48,11 +48,13 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _tmpCameraPos;
 
-    private Vector3 _distancemoved;
+    private Vector3 _distanceMoved;
 
     private Vector3 _lastPos;
 
     private Vector3 _velocity;
+
+    private float _touchDownTimer;
 
     private float _height;
 
@@ -187,7 +189,7 @@ public class CameraController : MonoBehaviour
         {
             _touchEnabled = false;
             //터치를 뗀 경우 가속도를 적용한다.
-            SetAcceleration(_distancemoved);
+            SetAcceleration(_distanceMoved);
         }
 
     }
@@ -256,7 +258,7 @@ public class CameraController : MonoBehaviour
         {
             _touchEnabled = false;
             //마우스 좌클릭 버튼을 뗀 경우 가속도를 적용한다.
-            SetAcceleration(_distancemoved);
+            SetAcceleration(_distanceMoved);
         }
     }
 
@@ -296,24 +298,32 @@ public class CameraController : MonoBehaviour
     /// <summary>현재 위치와 이전 위치를 비교하여 가속도 값을 저장하는 함수</summary>
     private void CheckAcceleration()
     {
-        _distancemoved = transform.position - _lastPos; //이전 프레임과 현재 프레임의 위치 차이를 계산해 삽입
+        _distanceMoved = transform.position - _lastPos; //이전 프레임과 현재 프레임의 위치 차이를 계산해 삽입
         _lastPos = transform.position;
         _velocity = Vector3.zero;
+
+        _touchDownTimer += Time.deltaTime; //체크 시간이 일정 시간 이하면 가속도를 적용하지 않는다.
     }
 
 
     /// <summary>가속도 관련 변수를 초기화 하는 함수</summary>
     private void ResetAcceleration()
     {
-        _distancemoved = Vector3.zero;
+        _distanceMoved = Vector3.zero;
         _lastPos = Vector3.zero;
         _velocity = Vector3.zero;
+
+        _touchDownTimer = 0;
     }
 
 
     /// <summary>가속도를 설정하는 함수</summary>
     private void SetAcceleration(Vector3 acceleration)
     {
+        //터치한 시간이 0.05초 미만이면 리턴한다.
+        if (_touchDownTimer <= 0.05f)
+            return;
+
         _velocity = (acceleration / Time.deltaTime) * _accelerationRate;
     }
 

@@ -158,7 +158,7 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(3f);
 
-        tempChars = "그러니 이제 안녕히 계십시오.".ToCharArray();
+        tempChars = "그러니 이제 안녕히... ".ToCharArray();
         tempString = string.Empty;
 
         for (int i = 0, count = tempChars.Length; i < count; i++)
@@ -278,13 +278,13 @@ public class IntroScene : MonoBehaviour
             _uiIntroScene.SetDialogueContext(tempString);
             tempString += tempChars[i];
 
-            yield return YieldCache.WaitForSeconds(0.2f);
+            yield return YieldCache.WaitForSeconds(0.1f);
         }
 
         yield return YieldCache.WaitForSeconds(5f);
 
 
-        tempChars = "어라...?          \n이것은 할아버지의 편지? ".ToCharArray();
+        tempChars = "어라...?          \n이건 뭐지? ".ToCharArray();
         tempString = string.Empty;
 
         for (int i = 0, count = tempChars.Length; i < count; i++)
@@ -300,6 +300,15 @@ public class IntroScene : MonoBehaviour
 
         //포야 대사 종료
         _uiIntroScene.EndDialogue();
+
+        yield return YieldCache.WaitForSeconds(2f);
+
+        //검은색 페이드아웃
+        _fadeImage.color = new Color(0, 0, 0, 0);
+        _fadeImage.gameObject.SetActive(true);
+
+        Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0.8f, 2);
+
 
         yield return YieldCache.WaitForSeconds(4f);
 
@@ -519,6 +528,7 @@ public class IntroScene : MonoBehaviour
 
     private IEnumerator Scene3()
     {
+        _fadeImage.gameObject.SetActive(false);
         _uiFadeImage.gameObject.SetActive(true);
         _uiFadeImage.color = Color.black;
 
