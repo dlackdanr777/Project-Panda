@@ -80,6 +80,7 @@ namespace Cooking
 
         private void OnExitButtonClicked()
         {
+            SoundManager.Instance.StopBackgroundAudio(1);
             SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
             LoadingSceneManager.LoadScene("24_01_09_Integrated");
         }

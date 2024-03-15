@@ -16,6 +16,7 @@ public enum SoundEffectType
 {
     ButtonClick,
     ButtonExit,
+    InputText,
 }
 
 
@@ -35,6 +36,7 @@ public class SoundManager : SingletonHandler<SoundManager>
     [Header("Audio Clips")]
     [SerializeField] private AudioClip _buttonClick;
     [SerializeField] private AudioClip _buttonExit;
+    [SerializeField] private AudioClip _inputText;
 
     private AudioSource[] _audios;
 
@@ -89,11 +91,11 @@ public class SoundManager : SingletonHandler<SoundManager>
     }
 
 
-    public void PlayBackgroundAudio(AudioClip clip, float duration = 0)
+    public void PlayBackgroundAudio(AudioClip clip, float duration = 0, bool isLoop = true)
     {
         if (_changeAudioRoutine != null)
             StopCoroutine(_changeAudioRoutine);
-
+        _audios[(int)AudioType.BackgroundAudio].loop = isLoop;
         if (duration == 0)
         {
             _audios[(int)AudioType.BackgroundAudio].volume = _backgroundVolume;
@@ -127,6 +129,10 @@ public class SoundManager : SingletonHandler<SoundManager>
 
             case SoundEffectType.ButtonExit:
                 clip = _buttonExit;
+                break;
+
+            case SoundEffectType.InputText:
+                clip = _inputText;
                 break;
         }
 
