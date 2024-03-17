@@ -34,6 +34,7 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene3 Components")]
+    [SerializeField] private UIIntroTitle _uiTitle;
     [SerializeField] private Transform _startPos;
     [SerializeField] private Transform _endCameraPos;
     [SerializeField] private Transform _endPoyaPos;
@@ -102,6 +103,7 @@ public class IntroScene : MonoBehaviour
     private void Scene3Init() 
     {
         _scene3Text.text = string.Empty;
+        _uiTitle.Init();
         _scene3Text.gameObject.SetActive(false);
     }
 
@@ -310,7 +312,7 @@ public class IntroScene : MonoBehaviour
         Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0.8f, 2);
 
 
-        yield return YieldCache.WaitForSeconds(4f);
+        yield return YieldCache.WaitForSeconds(3f);
 
         //편지가 위로 올라오는 장면
         _closeLetterButton.interactable = false;
@@ -568,8 +570,12 @@ public class IntroScene : MonoBehaviour
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 3f, TweenMode.Constant);
         yield return YieldCache.WaitForSeconds(6);
 
-        DatabaseManager.Instance.UserInfo.IsExistingUser = true;
-        LoadingSceneManager.LoadScene("24_01_09_Integrated");
+        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant);
+
+        //타이틀 시작
+        yield return YieldCache.WaitForSeconds(6);
+        _uiFadeImage.gameObject.SetActive(false);
+        _uiTitle.Show();
     }
 
 

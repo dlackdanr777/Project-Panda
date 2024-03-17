@@ -149,20 +149,44 @@ namespace Cooking
         }
 
 
+        //화력을 추가하는 버튼을 눌렀을때 실행될 함수
         private void AddValueButtonClicked(CookValue cookValue)
         {
-            bool check = _cookSystem.CheckAddFireValueEnabled() && _cookSystem.CheckDecreaseStaminaEnabled(cookValue);
-            _addButtons[(int)cookValue].CheckUsabled(check, () =>
+            bool check = _cookSystem.CheckAddFireValueEnabled();
+
+            if (check)
             {
-                _cookSystem.DecreaseStamina(cookValue);
-                _cookSystem.AddFireValue(cookValue);
+                _addButtons[(int)cookValue].OnButtonClicked(() =>
+                {
+                    //해당 버튼 스테미나 요구치보다 현재 스테미나가 적으면?
+                    if (!_cookSystem.CheckDecreaseStaminaEnabled(cookValue))
+                    {
+                        if (_cookSystem.CurrentStamina < 10) //만약 스테미나가 10이하(최소 스테미나 사용량) 일 경우
+                        {
+                            CookEnd();
+                            return;
+                        }
 
-                RecipeData data = _cookSystem.GetCurrentRecipe();
-                float fireValue = _cookSystem.CurrentFireValue;
-                _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookPlayAnime(data, fireValue);
+                        _addButtons[(int)cookValue].NotUsabledAnimation();
+                        return;
+                    }
 
-                CheckAddValueButtons();
-            });
+                    _cookSystem.DecreaseStamina(cookValue);
+                    _cookSystem.AddFireValue(cookValue);
+
+                    RecipeData data = _cookSystem.GetCurrentRecipe();
+                    float fireValue = _cookSystem.CurrentFireValue;
+                    _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookPlayAnime(data, fireValue);
+
+                    CheckAddValueButtons();
+                });
+            }
+
+            else
+            {
+                CookEnd();
+            }
+          
         }
 
 

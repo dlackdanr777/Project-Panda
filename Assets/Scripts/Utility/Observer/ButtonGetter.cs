@@ -54,8 +54,6 @@ namespace Muks.DataBind
             _action = _data.Item;
             _button.onClick.AddListener(_action);
             _isAddListenerClear = true;
-
-            Debug.Log(gameObject.name + "버튼 이벤트 등록 ");
         }
 
 
