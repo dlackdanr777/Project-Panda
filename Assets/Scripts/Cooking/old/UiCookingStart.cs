@@ -200,7 +200,7 @@ public class UiCookingStart : MonoBehaviour
         bool check = _cookingUserData.MoreAddValueStamina <= _stamina;
         check = check && _fireValue < _maxFireValue;
 
-        _moreAddButton.CheckUsabled(check, () =>
+        _moreAddButton.OnButtonClicked(/*check,*/ () =>
         {
             DecreaseStamina(_cookingUserData.MoreAddValueStamina);
             int rendInt = Random.Range(0, _cookingUserData.MoreAddValue.Length);
@@ -215,7 +215,7 @@ public class UiCookingStart : MonoBehaviour
         bool check = _cookingUserData.AddValueStamina <= _stamina;
         check = check && _fireValue < _maxFireValue;
 
-        _addButton.CheckUsabled(check, () =>
+        _addButton.OnButtonClicked(/*check, */() =>
         {
             DecreaseStamina(_cookingUserData.AddValueStamina);
             int rendInt = Random.Range(0, _cookingUserData.AddValue.Length);
@@ -231,7 +231,7 @@ public class UiCookingStart : MonoBehaviour
         check = check && _fireValue < _maxFireValue;
 
 
-        _smallAddButton.CheckUsabled(check, () =>
+        _smallAddButton.OnButtonClicked(/*check, */() =>
         {
             DecreaseStamina(_cookingUserData.SmallAddValueStamina);
             int rendInt = Random.Range(0, _cookingUserData.SmallAddValue.Length);

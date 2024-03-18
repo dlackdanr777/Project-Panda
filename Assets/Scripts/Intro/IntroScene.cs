@@ -34,6 +34,7 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene3 Components")]
+    [SerializeField] private UIIntroTitle _uiTitle;
     [SerializeField] private Transform _startPos;
     [SerializeField] private Transform _endCameraPos;
     [SerializeField] private Transform _endPoyaPos;
@@ -46,6 +47,8 @@ public class IntroScene : MonoBehaviour
     [SerializeField] private AudioClip _scene2Music;
     [SerializeField] private AudioClip _scene3Music;
     [SerializeField] private AudioClip _treeMusic;
+    [SerializeField] private AudioClip _poirotHideSound;
+    [SerializeField] private AudioClip _reportersRumblingSound;
 
     private Animator _flashAnimator;
     private Animator _poirotAnimator;
@@ -102,6 +105,7 @@ public class IntroScene : MonoBehaviour
     private void Scene3Init() 
     {
         _scene3Text.text = string.Empty;
+        _uiTitle.Init();
         _scene3Text.gameObject.SetActive(false);
     }
 
@@ -109,7 +113,7 @@ public class IntroScene : MonoBehaviour
     private IEnumerator Scene1()
     {
         //페이드 아웃
-        SoundManager.Instance.PlayBackgroundAudio(_scene1Music, 3, false);
+        SoundManager.Instance.PlayBackgroundAudio(_scene1Music, 3);
         yield return YieldCache.WaitForSeconds(3f);
         Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0, 3f, TweenMode.Constant, () => _fadeImage.gameObject.SetActive(false));
 
@@ -131,49 +135,21 @@ public class IntroScene : MonoBehaviour
         _uiIntroScene.SetDialogueNameText("포와로");
         yield return YieldCache.WaitForSeconds(1f);
 
-        char[] tempChars = "여러분... ".ToCharArray();
-        string tempString = string.Empty;
+        string context = "여러분... ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.15f));
 
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
+        context = "저는 오늘을 기점으로   \n탐정 생활을 마감하고 새로운 여정을 시작하려 합니다. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
 
-            yield return YieldCache.WaitForSeconds(0.1f);
-        }
+        context = "그러니 이제 안녕히... ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
 
-        yield return YieldCache.WaitForSeconds(3f);
-
-        tempChars = "저는 오늘을 기점으로   \n탐정 생활을 마감하고 새로운 여정을 시작하려 합니다. ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-
-        yield return YieldCache.WaitForSeconds(3f);
-
-        tempChars = "그러니 이제 안녕히 계십시오.".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-        yield return YieldCache.WaitForSeconds(3f);
-
+        //대사 종료
         _uiIntroScene.EndDialogue();
 
-        yield return YieldCache.WaitForSeconds(2.5f);
+        SoundManager.Instance.PlayBackgroundAudio(_poirotHideSound, 1.5f, false);
+
+        yield return YieldCache.WaitForSeconds(5.5f);
 
         //인사
         _poirotAnimator.SetTrigger("Greet");
@@ -201,33 +177,14 @@ public class IntroScene : MonoBehaviour
 
         //관중 웅성웅성
         _reporterAnimator.SetTrigger("Turmoil");
+        SoundManager.Instance.PlayEffectAudio(_reportersRumblingSound);
 
-        tempChars = "포와로가 사라졌다!!!".ToCharArray();
-        tempString = string.Empty;
+        context = "포와로가 사라졌다!!! ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 60, 0.07f));
 
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString, 60);
-            tempString += tempChars[i];
+        context = "이건 대단한 뉴스야!         \n은퇴 기자회견에서 사라진 세계적인 탐정!  ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-            yield return YieldCache.WaitForSeconds(0.05f);
-        }
-
-        yield return YieldCache.WaitForSeconds(4f);
-
-        tempChars = "이건 대단한 뉴스야!         \n은퇴 기자회견에서 사라진 세계적인 탐정!  ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-
-        yield return YieldCache.WaitForSeconds(4f);
         //대사 종료
         _uiIntroScene.EndDialogue();
 
@@ -270,38 +227,26 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(1f);
 
-        char[] tempChars = "흑흑흑... 할아버지... ".ToCharArray();
-        string tempString = string.Empty;
+        string context = "흑흑흑... 할아버지... ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.15f));
 
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
+        context = "어라...?          \n이건 뭐지? ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
 
-            yield return YieldCache.WaitForSeconds(0.2f);
-        }
-
-        yield return YieldCache.WaitForSeconds(5f);
-
-
-        tempChars = "어라...?          \n이것은 할아버지의 편지? ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.1f);
-        }
-
-
-        yield return YieldCache.WaitForSeconds(3f);
 
         //포야 대사 종료
         _uiIntroScene.EndDialogue();
 
-        yield return YieldCache.WaitForSeconds(4f);
+        yield return YieldCache.WaitForSeconds(2f);
+
+        //검은색 페이드아웃
+        _fadeImage.color = new Color(0, 0, 0, 0);
+        _fadeImage.gameObject.SetActive(true);
+
+        Tween.SpriteRendererAlpha(_fadeImage.gameObject, 0.8f, 2);
+
+
+        yield return YieldCache.WaitForSeconds(3f);
 
         //편지가 위로 올라오는 장면
         _closeLetterButton.interactable = false;
@@ -355,59 +300,21 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(1f);
 
-        tempChars = "내 손주 포야에게 ".ToCharArray();
-        tempString = string.Empty;
+        context = "내 손주 포야에게 ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
+        context = "네가 할아버지의 마지막 모습에 놀랐을 거라 생각해. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-        yield return YieldCache.WaitForSeconds(2.5f);
-
-
-        tempChars = "네가 할아버지의 마지막 모습에 놀랐을 거라 생각해. ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-        yield return YieldCache.WaitForSeconds(3f);
-
-        tempChars = "하지만 이건 시작에 불과해.          \n나의 진짜 모험은 이제부터야. ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-        yield return YieldCache.WaitForSeconds(3f);
+        context = "하지만 이건 시작에 불과해.          \n나의 진짜 모험은 이제부터야. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         _uiIntroScene.SetDialogueImage(_poirotGreetSprite);
-        tempChars = "내가 남긴 책과 소원나무의 열쇠로 너의 여정을 시작하길 바란다. ".ToCharArray();
-        tempString = string.Empty;
 
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
+        context = "내가 남긴 책과 소원나무의 열쇠로 너의 여정을 시작하길 바란다. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
 
-        yield return YieldCache.WaitForSeconds(3f);
         //대사 종료
         _uiIntroScene.EndDialogue();
 
@@ -429,67 +336,27 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(1f);
 
         //ui흔들기
-        _uiIntroScene.ShakeDialogue(1f);
+        _uiIntroScene.ShakeDialogue(1.2f);
 
-        tempChars = "으아악!!        ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString, 60);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.1f);
-        }
-
-
-        yield return YieldCache.WaitForSeconds(3f);
-
-
-/*        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 1f, TweenMode.Smoothstep, () =>
-         {
-             _uiFadeImage.color = new Color(0, 0, 0, 0);
-             _uiFadeImage.gameObject.SetActive(false);
-         });*/
-
-        yield return YieldCache.WaitForSeconds(3f);
+        context = "으아악!!        ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 60, 0.05f));
 
 
         //추신 대화 출력
         _uiIntroScene.SetDialogueNameText("");
         _uiIntroScene.SetDialogueImage(null);
 
-        tempChars = ". . . ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.15f);
-        }
-
-        yield return YieldCache.WaitForSeconds(2f);
+        context = ". . . ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.2f));
 
         //추신 대화 출력
         _uiIntroScene.SetDialogueNameText("포아로");
         _uiIntroScene.SetDialogueImage(_poirotSprite);
 
+        context = "ps. 아 맞다. 편지 읽자마자 전송되니 조심하거라      \n- 바이바이 - ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        tempChars = "ps. 아 맞다. 편지 읽자마자 전송되니 조심하거라      \n- 바이바이 - ".ToCharArray();
-        tempString = string.Empty;
-
-        for (int i = 0, count = tempChars.Length; i < count; i++)
-        {
-            _uiIntroScene.SetDialogueContext(tempString);
-            tempString += tempChars[i];
-
-            yield return YieldCache.WaitForSeconds(0.07f);
-        }
-
-        yield return YieldCache.WaitForSeconds(4f);
-
+      
         _uiIntroScene.EndDialogue();
 
         //검은색 페이드아웃
@@ -514,6 +381,8 @@ public class IntroScene : MonoBehaviour
         //대사 및 편지 비활성화
         _uiIntroScene.EndDialogue();
         _openLetter.gameObject.SetActive(false);
+        _backgroundImage.SetActive(false);
+        _scene2Poya.SetActive(false);
 
         yield return YieldCache.WaitForSeconds(3f);
 
@@ -526,6 +395,7 @@ public class IntroScene : MonoBehaviour
 
     private IEnumerator Scene3()
     {
+        _fadeImage.gameObject.SetActive(false);
         _uiFadeImage.gameObject.SetActive(true);
         _uiFadeImage.color = Color.black;
 
@@ -553,20 +423,24 @@ public class IntroScene : MonoBehaviour
         Camera.main.transform.position = _startPos.position;
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 2);
         _poyaAnimator.SetTrigger("Turn");
-        Tween.TransformMove(_scene3Poya, _endPoyaPos.position, 7f, TweenMode.Smoothstep);
-        Tween.TransformMove(Camera.main.gameObject, _endCameraPos.position, 7f, TweenMode.Smoothstep);
+        Tween.TransformMove(_scene3Poya, _endPoyaPos.position, 9f, TweenMode.Smoothstep);
+        Tween.TransformMove(Camera.main.gameObject, _endCameraPos.position, 7.5f, TweenMode.Smoothstep);
 
-        yield return YieldCache.WaitForSeconds(5f);
+        yield return YieldCache.WaitForSeconds(8f);
 
         //페이드 인 아웃
-        _uiFadeImage.color = new Color(1, 1, 1, 0);
+        _uiFadeImage.color = new Color(0, 0, 0, 0);
         _uiFadeImage.gameObject.SetActive(true);
 
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 1, 3f, TweenMode.Constant);
         yield return YieldCache.WaitForSeconds(6);
-        SoundManager.Instance.PlayBackgroundAudio(_treeMusic, 5);
 
-        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant, () => _uiFadeImage.gameObject.SetActive(false));
+        Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant);
+
+        //타이틀 시작
+        yield return YieldCache.WaitForSeconds(6);
+        _uiFadeImage.gameObject.SetActive(false);
+        _uiTitle.Show();
     }
 
 

@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Muks.Tween;
 using Muks.DataBind;
-using static UnityEditor.PlayerSettings;
-using BT;
+
 
 public class MapButton : MonoBehaviour
 {
@@ -303,7 +302,6 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
-
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         }));
     }
@@ -319,7 +317,6 @@ public class MapButton : MonoBehaviour
             _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
 
             Camera.main.transform.position = targetPos;
-
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         }));

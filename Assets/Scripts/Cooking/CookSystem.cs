@@ -186,10 +186,9 @@ namespace Cooking
         {
             RecipeData data = _currentRecipeData;
             float fireValue = _currentFireValue * 0.01f;
-
-            float rangeS = data.SuccessLocation * data.SuccessRangeLevel_S;
-            float rangeA = rangeS + (data.SuccessLocation * data.SuccessRangeLevel_A);
-            float rangeB = rangeA +  (data.SuccessLocation * data.SuccessRangeLevel_B);
+            float rangeS = data.SuccessRangeLevel_S * 0.5f;
+            float rangeA = rangeS + (data.SuccessRangeLevel_A * 0.5f);
+            float rangeB = rangeA +  (data.SuccessRangeLevel_B * 0.5f);
 
             bool checkLevel_S = data.SuccessLocation - rangeS <= fireValue
                 && data.SuccessLocation + rangeS >= fireValue;

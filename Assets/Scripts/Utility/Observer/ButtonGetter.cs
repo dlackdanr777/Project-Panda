@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,6 +13,8 @@ namespace Muks.DataBind
         private BindData<UnityAction> _data;
         private UnityAction _action;
 
+
+        private bool _isAddListenerClear; //버튼에 함수가 등록됬나 안됬나 확인하는 함수
         private void Awake()
         {
             _button = GetComponent<Button>();
@@ -27,18 +28,21 @@ namespace Muks.DataBind
 
         private void Start()
         {
-            Invoke("Enabled", 0.02f);
+            Invoke("Enabled", 0.05f);
         }
 
 
         private void OnEnable()
         {
-            Invoke("Enabled", 0.02f);
+            Invoke("Enabled", 0.05f);
         }
 
 
         private void Enabled()
         {
+            if (_isAddListenerClear)
+                return;
+
             _data = DataBind.GetButtonValue(_dataID);
 
             if(_data.Item == null)
@@ -47,11 +51,9 @@ namespace Muks.DataBind
                 return;
             }
 
-            if (IsListenerRegistered(_data.Item))
-                return;
-
             _action = _data.Item;
-            UnityEventTools.AddPersistentListener(_button.onClick, _action);
+            _button.onClick.AddListener(_action);
+            _isAddListenerClear = true;
         }
 
 
@@ -69,20 +71,5 @@ namespace Muks.DataBind
             }
             return false;
         }
-
-
-        private void RemoveListener(UnityAction method)
-        {
-            var listeners = _button.onClick.GetPersistentEventCount();
-
-            for (int i = 0; i < listeners; i++)
-            {
-                if (_button.onClick.GetPersistentMethodName(i) == method.Method.Name)
-                {
-                    UnityEventTools.RemovePersistentListener(_button.onClick, i);
-                }
-            }
-        }
-
     }
 }

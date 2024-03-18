@@ -55,9 +55,9 @@ namespace Cooking
             _endButton.onClick.AddListener(CookEnd);
             _view.Init(() => 
             {
-                SoundManager.Instance.PlayBackgroundAudio(_readyBackgroundMusic, 1);
                 _uiCook.ChangeStepEvent((int)CookStep.SelectCookware); 
             });
+
             _cookSystem.OnStaminaValueChanged += _staminaValueBar.UpdateGauge;
             _cookSystem.OnFireValueChanged += _fireValueBar.UpdateGauge;
         }
@@ -94,6 +94,7 @@ namespace Cooking
         {
             SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             SoundManager.Instance.PlayEffectAudio(_completedSound);
+            SoundManager.Instance.PlayBackgroundAudio(_readyBackgroundMusic, 3);
 
             _uiTimer.EndTimer();
             _canvasGroup.blocksRaycasts = false;
@@ -149,20 +150,45 @@ namespace Cooking
         }
 
 
+        //화력을 추가하는 버튼을 눌렀을때 실행될 함수
         private void AddValueButtonClicked(CookValue cookValue)
         {
-            bool check = _cookSystem.CheckAddFireValueEnabled() && _cookSystem.CheckDecreaseStaminaEnabled(cookValue);
-            _addButtons[(int)cookValue].CheckUsabled(check, () =>
+            _addButtons[(int)cookValue].OnButtonClicked(() =>
             {
-                _cookSystem.DecreaseStamina(cookValue);
-                _cookSystem.AddFireValue(cookValue);
+                bool check = _cookSystem.CheckAddFireValueEnabled();
 
-                RecipeData data = _cookSystem.GetCurrentRecipe();
-                float fireValue = _cookSystem.CurrentFireValue;
-                _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookPlayAnime(data, fireValue);
+                if (check)
+                {
+                    //해당 버튼 스테미나 요구치보다 현재 스테미나가 적으면?
+                    if (!_cookSystem.CheckDecreaseStaminaEnabled(cookValue))
+                    {
+                        if (_cookSystem.CurrentStamina < 10) //만약 스테미나가 10이하(최소 스테미나 사용량) 일 경우
+                        {
+                            CookEnd();
+                            return;
+                        }
 
-                CheckAddValueButtons();
+                        _addButtons[(int)cookValue].NotUsabledAnimation();
+                        return;
+                    }
+
+                    _cookSystem.DecreaseStamina(cookValue);
+                    _cookSystem.AddFireValue(cookValue);
+
+                    RecipeData data = _cookSystem.GetCurrentRecipe();
+                    float fireValue = _cookSystem.CurrentFireValue;
+                    _uiCook.Cookwares[(int)_uiCook.CurrentCookware].CookPlayAnime(data, fireValue);
+
+                    CheckAddValueButtons();
+                }
+
+                else
+                {
+                    CookEnd();
+                }
             });
+           
+          
         }
 
 

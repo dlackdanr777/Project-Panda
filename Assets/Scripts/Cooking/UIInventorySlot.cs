@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+
 
 /// <summary>인벤토리 아이템 슬롯</summary>
 public class UIInventorySlot : MonoBehaviour

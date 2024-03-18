@@ -4,7 +4,7 @@ using Muks.BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
+
 
 //아이템 종류
 public enum InventoryItemField
