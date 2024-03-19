@@ -8,8 +8,9 @@ using UnityEngine.UI;
 public class IntroScene : MonoBehaviour
 {
 
-    [Header("UI")]
+    [Header("Components")]
     [SerializeField] private UIIntroScene _uiIntroScene;
+    [SerializeField] private Button _skipButton;
 
     [Space]
     [Header("Scene1 Components")]
@@ -68,6 +69,8 @@ public class IntroScene : MonoBehaviour
         Scene1Init();
         Scene2Init();
         Scene3Init();
+
+        _skipButton.onClick.AddListener(OnSkipButtonClicked);
     }
 
 
@@ -450,5 +453,13 @@ public class IntroScene : MonoBehaviour
         Tween.Stop(_letterEffect.gameObject);
         _closeLetterButton.onClick.RemoveAllListeners();
         _closeLetterButton.interactable = false;
+    }
+
+
+    private void OnSkipButtonClicked()
+    {
+        DatabaseManager.Instance.UserInfo.IsExistingUser = true;
+        DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
+        LoadingSceneManager.LoadScene("24_01_09_Integrated");
     }
 }

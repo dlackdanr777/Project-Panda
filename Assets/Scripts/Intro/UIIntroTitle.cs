@@ -96,6 +96,7 @@ public class UIIntroTitle : MonoBehaviour
         _touchText.color = new Color(_touchText.color.r, _touchText.color.g, _touchText.color.b, 1);
 
         DatabaseManager.Instance.UserInfo.IsExistingUser = true;
+        DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
         LoadingSceneManager.LoadScene("24_01_09_Integrated");
     }
 }

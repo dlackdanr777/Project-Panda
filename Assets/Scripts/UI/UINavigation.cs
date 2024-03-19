@@ -120,7 +120,7 @@ public class UINavigation : MonoBehaviour
             }
 
             uiView.RectTransform.SetAsLastSibling();
-            CheckViewListCount();
+            CheckViewListUnlockCamera();
         }
         else
         {
@@ -202,7 +202,7 @@ public class UINavigation : MonoBehaviour
             _uiViews.Last().Hide();
             _uiViews.Remove(_uiViews.Last());
         }
-        CheckViewListCount();
+        CheckViewListUnlockCamera();
     }
 
 
@@ -257,13 +257,25 @@ public class UINavigation : MonoBehaviour
     }
 
 
-    public void CheckViewListCount()
+    /// <summary>View들의 갯수, 카메라잠금 여부를 확인해 카메라 조작, 상호작용을 제한하는 함수 </summary>
+    public void CheckViewListUnlockCamera()
     {
+
         if(0 < _uiViews.Count)
         {
-            GameManager.Instance.FriezeCameraMove = true;
-            GameManager.Instance.FriezeCameraZoom = true;
-            GameManager.Instance.FirezeInteraction = true;
+            if (_uiViews.Last().UnlockCamera)
+            {
+                GameManager.Instance.FriezeCameraMove = false;
+                GameManager.Instance.FriezeCameraZoom = false;
+                GameManager.Instance.FirezeInteraction = false;
+            }
+            else
+            {
+                GameManager.Instance.FriezeCameraMove = true;
+                GameManager.Instance.FriezeCameraZoom = true;
+                GameManager.Instance.FirezeInteraction = true;
+            }
+
         }
         else
         {
@@ -281,8 +293,8 @@ public class UINavigation : MonoBehaviour
         {
             if(hideView.VisibleState == VisibleState.Disappeared || hideView.VisibleState == VisibleState.Appeared)
             {
-                CheckViewListCount();
-                break;
+                CheckViewListUnlockCamera();
+                yield break;
             }
 
             yield return YieldCache.WaitForSeconds(0.02f);

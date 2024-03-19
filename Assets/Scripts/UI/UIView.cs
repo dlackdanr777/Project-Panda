@@ -11,6 +11,10 @@ public enum VisibleState
 
 public abstract class UIView : MonoBehaviour
 {
+    [Tooltip("카메라 움직임, 상호작용을 막을것인가 풀것인가?")]
+    [SerializeField] private bool _unlockCamera;
+    public bool UnlockCamera => _unlockCamera;
+
     protected UINavigation _uiNav;
 
     [HideInInspector] public RectTransform RectTransform;

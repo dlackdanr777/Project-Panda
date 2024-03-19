@@ -342,6 +342,7 @@ public class Challenges
     public void GatheringSuccess(int gatheringType) // 채집 성공할 때마다 불러오기
     {
         GatheringSuccessCount[gatheringType]++;
+        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
 
         // 몇 번 성공해야 하는지
         int successNum = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Count;
@@ -570,12 +571,11 @@ public class Challenges
     {
         Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
-        DatabaseManager.Instance.UserInfo.ChallengeDoneId.Add(challengesId);
-
+        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
         // 현재 메인 씬이면 바로 도전과제 UI에 반영
         //if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
         //{
-            ChallengeDone?.Invoke(challengesId);
+        ChallengeDone?.Invoke(challengesId);
         //}
         //else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 UI에 반영
         //{
@@ -588,11 +588,10 @@ public class Challenges
     {
         // 대나무 획득
 
-
         // 아이템 획득 - 도구
         GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
-        DatabaseManager.Instance.UserInfo.ChallengeClearId.Add(challengesId);
+        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
     }
 }
