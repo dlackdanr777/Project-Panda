@@ -257,7 +257,7 @@ public class ItemDatabase
         BackendManager.Instance.GetChartData("105320", 10, BugItemParserByServer);
         BackendManager.Instance.GetChartData("105331", 10, FishItemParserByServer);
         BackendManager.Instance.GetChartData("105332", 10, FruitItemParserByServer);
-        BackendManager.Instance.GetChartData("109693", 10, FoodItemParserByServer);
+        BackendManager.Instance.GetChartData("112294", 10, FoodItemParserByServer);
         BackendManager.Instance.GetChartData("105888", 10, ToolItemParserByServer);
     }
 

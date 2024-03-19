@@ -98,6 +98,7 @@ public class UserInfo
     private List<string> _storyCompletedList = new List<string>();
     public List<string> StoryCompletedList => _storyCompletedList;
 
+
     //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
@@ -476,6 +477,7 @@ public class UserInfo
 
             LoadUserInventory();
             LoadGatheringItemReceived();
+            LoadFoodItemReceived();
             Debug.Log("Inventory Load성공");
         }
     }
@@ -544,6 +546,7 @@ public class UserInfo
     {
         SaveUserInventory();
         SaveGatheringItemReceived();
+        SaveFoodItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
@@ -557,6 +560,7 @@ public class UserInfo
     {
         SaveUserInventory();
         SaveGatheringItemReceived();
+        SaveFoodItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -861,6 +865,12 @@ public class UserInfo
             InventoryData data = GatheringInventoryDataArray[i];
             GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
         }
+
+        for(int i = 0, count = CookInventoryDataArray.Count; i < count; i++)
+        {
+            InventoryData data = CookInventoryDataArray[i];
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
+        }
     }
 
 
@@ -914,6 +924,7 @@ public class UserInfo
     }
     #endregion
 
+
     #region Item
     //TODO: 차후 추가
     public void SaveGatheringItemReceived()
@@ -950,6 +961,39 @@ public class UserInfo
             {
                 continue;
             }
+
+            _items[i].IsReceived = true;
+        }
+    }
+
+
+    public void SaveFoodItemReceived()
+    {
+        List<InventoryItem> _items = new List<InventoryItem>();
+        for (int i = 0, count = GameManager.Instance.Player.CookItemInventory.Length; i < count; i++)
+        {
+            _items.AddRange(GameManager.Instance.Player.CookItemInventory[i].GetItemList());
+        }
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (CookItemReceived.Find((x) => x == _items[i].Id) != null)
+                continue;
+
+            CookItemReceived.Add(_items[i].Id);
+        }
+    }
+
+
+    public void LoadFoodItemReceived()
+    {
+        List<Item> _items = new List<Item>();
+        _items.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFoodList);
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (CookItemReceived.Find((x) => x == _items[i].Id) == null)
+                continue;
 
             _items[i].IsReceived = true;
         }
