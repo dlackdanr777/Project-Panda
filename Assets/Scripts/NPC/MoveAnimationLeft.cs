@@ -28,9 +28,11 @@ public class MoveAnimationLeft : MonoBehaviour
         if (_stateInfo.IsName(_animationName) && _animator.speed == 1f)
         {
             transform.position = new Vector3(transform.position.x - speed, transform.position.y, transform.position.z);
-            if (transform.position.x < _leftBound)
+            if (transform.position.x < _leftBound || transform.position.x > _rightBound)
             {
-                transform.position = new Vector3(_rightBound, transform.position.y, transform.position.z);
+                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                speed = -speed;
+                //transform.position = new Vector3(_rightBound, transform.position.y, transform.position.z);
             }
         }
     }
