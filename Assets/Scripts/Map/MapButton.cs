@@ -63,6 +63,7 @@ public class MapButton : MonoBehaviour
         DataBind.SetButtonValue("CityHallButton", MoveCityHall);
         DataBind.SetButtonValue("CityHallOfficeButton", MoveCityHallOffice);
         DataBind.SetButtonValue("CatCastleButton", MoveCatCastle);
+        DataBind.SetButtonValue("InsideWishTreeButton", MoveInsideWishTree);
     }
 
     /// <summary>
@@ -80,17 +81,24 @@ public class MapButton : MonoBehaviour
     }
 
 
-    public void MoveWishTree()
+    private void MoveWishTree()
     {
-        CheckDirection();
+        _cameraController.MapSize = _mapSize;
         SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
 
-        CurrentMap = 0;
-        _cameraController.MapSize = _mapSize;
+        if (CurrentMap == 14)
+        {
+            CurrentMap = 0;
+            MoveCenter();
+        }
+        else
+        {
+            CheckDirection();
 
-        MoveField(_isLeft);
+            CurrentMap = 0;
+            MoveField(_isLeft);
+        }
     }
-
 
     private void MoveFishingGround()
     {
@@ -253,6 +261,14 @@ public class MapButton : MonoBehaviour
     {
         CurrentMap = 13;
         _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
+
+        MoveCenter();
+    }
+
+    private void MoveInsideWishTree()
+    {
+        CurrentMap = 14;
+        _cameraController.MapSize = new Vector2(22.7f, _cameraController.MapSize.y);
 
         MoveCenter();
     }

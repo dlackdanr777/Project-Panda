@@ -10,7 +10,7 @@ public class Event8_21 : StoryEvent
     [SerializeField] private MapButton _mapButton;
     public override void EventStart(Action onComplate)
     {
-        _mapButton.MoveWishTree();
+        //_mapButton.MoveWishTree();
 
         _starterPanda.SetActive(true);
         _Jiji.SetActive(true);

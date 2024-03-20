@@ -24,7 +24,6 @@ public class MoveAnimationUp : MonoBehaviour
     {
         _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
-        
         if (_stateInfo.IsName("ClimbingTree_7") && _animator.speed == 1f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + speed, transform.position.z);
