@@ -170,7 +170,7 @@ public class Challenges
         }
 
         // 도감 해제
-        string type = "";
+        string type;
         for (int i = 1; i < _challengesDatas[(int)EChallengesKategorie.book].Count; i++)
         {
             count = _challengesDatas[(int)EChallengesKategorie.book][i].Count;
@@ -420,7 +420,7 @@ public class Challenges
         }
 
         // 한 가지 종류 도감 달성 체크
-        int challengesNum = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == type || n.IsDone == false);
+        int challengesNum = _challengesDatas[(int)EChallengesKategorie.book].FindIndex(n => n.Type == type && n.IsDone == false);
         int count = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Count;
         string challengesId = _challengesDatas[(int)EChallengesKategorie.book][challengesNum].Id;
         if (_unlockingBookCount[(int)eUnlockingBook] >= count)
