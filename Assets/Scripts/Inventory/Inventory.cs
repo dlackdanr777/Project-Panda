@@ -55,7 +55,10 @@ public class Inventory
             if (type == ItemAddEventType.AddChallengesCount)
             {
                 string startId = id.Substring(0, 3);
-                DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
+                if (item.IsReceived == false)
+                {
+                    DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
+                }
             }
 
             if (Add(item, count))

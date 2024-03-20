@@ -22,11 +22,12 @@ public class FieldSlot : MonoBehaviour, IInteraction
     private Vector3 _timeObjectPosition;
 
     private BambooFieldSystem BFieldSystem;
-    private float _time;
-    private float _second;
+    //private float _time;
+    //private float _second;
     private string _remainingTime;
     private bool _isGrowthComplete;
     private bool _isShowHavestItemDescription;
+    private bool _isShowHavestItemDescriptionTrue;
     private string _dataID;
     private TimeSpan _timeDifference;
 
@@ -37,7 +38,7 @@ public class FieldSlot : MonoBehaviour, IInteraction
         {
             _growingCropImage[i].GetComponent<SpriteRenderer>().sprite = HarvestItem.Image[0];
         }
-        GrowthTime = HarvestItem.HarvestTime * 6;
+        GrowthTime = HarvestItem.HarvestTime * 6; // HarvestTime이 6번이면 작물 성장
 
         _timeObjectPosition = _timeObject.transform.position;
 
@@ -45,40 +46,40 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
         _dataID = gameObject.name + "Time";
 
-        SetTimeDifference();
+        //SetTimeDifference();
 
         DataBind.SetTextValue(_dataID, _remainingTime);
     }
 
     private void Update()
     {
-        _time += Time.deltaTime;
-        _second += Time.deltaTime;
+        //_time += Time.deltaTime;
+        //_second += Time.deltaTime;
 
-        if(_timeDifference != TimeSpan.Zero)
-        {
-            _timeDifference = _timeDifference - TimeSpan.FromSeconds(Mathf.FloorToInt(_second));
-            _second -= Mathf.FloorToInt(_second);
-            SetRemainimgTime();
-        }
-        else
-        {
-            _timeDifference = TimeSpan.Zero;
-            _remainingTime = "채집 가능!";
-        }
+        //if(_timeDifference != TimeSpan.Zero)
+        //{
+        //    _timeDifference = _timeDifference - TimeSpan.FromSeconds(Mathf.FloorToInt(_second));
+        //    _second -= Mathf.FloorToInt(_second);
+        //    SetRemainingTime();
+        //}
+        //else
+        //{
+        //    _timeDifference = TimeSpan.Zero;
+        //    SetRemainingTimeZero();
+        //}
 
         DataBind.SetTextValue(_dataID, _remainingTime);
 
-        if (HarvestItem != null)
-        {
-            IsIncreaseYields();
-        }
-        else
-        {
-            Debug.Log("HarvestItem null");
-            HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
+        //if (HarvestItem != null)
+        //{
+        //    IsIncreaseYields();
+        //}
+        //else
+        //{
+        //    Debug.Log("HarvestItem null");
+        //    HarvestItem = DatabaseManager.Instance.GetHarvestItemdata(_growingCropID);
 
-        }
+        //}
 
         if (_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
         {
@@ -94,7 +95,11 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        ShowHavestItem();
+        if (_isShowHavestItemDescriptionTrue == false)
+        {
+            ShowHavestItem();
+        }
+
     }
 
     public void UpdateInteraction()
@@ -124,7 +129,6 @@ public class FieldSlot : MonoBehaviour, IInteraction
         // 버튼 생성
         if (!BFieldSystem.HarvestButton.IsSet && GrowthStage == 2)
         {
-
             BFieldSystem.HarvestButton.IsSet = true;
             //Tween.SpriteRendererAlpha(BFieldSystem.HarvestButton.gameObject, 1, 0.5f, TweenMode.Quadratic);
         }
@@ -169,13 +173,14 @@ public class FieldSlot : MonoBehaviour, IInteraction
         }
     }
 
-    private void IsIncreaseYields()
+    public float IsIncreaseYields(float time)
     {
-        if(_time > HarvestItem.HarvestTime * 60) // 시간 설정
+        if (time > HarvestItem.HarvestTime) // 시간 설정  * 60
         {
             IncreaseYields();
-            _time = 0;
+            time -= HarvestItem.HarvestTime;
         }
+        return time;
     }
 
     private void IncreaseYields()
@@ -185,7 +190,6 @@ public class FieldSlot : MonoBehaviour, IInteraction
         {
             Yield = HarvestItem.MaxYield;
         }
-
         //일정 시간이 지나면 버튼 생성 후 수확
         if (Yield == HarvestItem.MaxYield && !_isGrowthComplete)
         {
@@ -203,8 +207,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
     private void ShowHavestItem()
     {
         _isShowHavestItemDescription = !_isShowHavestItemDescription;
+
         if (_isShowHavestItemDescription)
         {
+            _isShowHavestItemDescriptionTrue = true;
             BFieldSystem._UIBambooField.transform.position = Camera.main.WorldToScreenPoint(transform.position);
             BFieldSystem._UIBambooField.SetActive(true);
             Tween.IamgeAlpha(BFieldSystem._UIBambooField, 0.5f, 0.2f, TweenMode.Quadratic);
@@ -215,37 +221,49 @@ public class FieldSlot : MonoBehaviour, IInteraction
             Tween.IamgeAlpha(BFieldSystem._UIBambooField, 0, 0.2f, TweenMode.Quadratic, () =>
             {
                 BFieldSystem._UIBambooField.SetActive(false);
+                _isShowHavestItemDescriptionTrue = false;
             });
         }
 
     }
 
-    public void SetTimeDifference()
+    /// <summary>
+    /// 수확 시간 설정</summary>
+    public TimeSpan SetTimeDifference()
     {
-        _time = 0;
-        _second = 0;
-        _timeDifference = TimeSpan.FromSeconds(HarvestItem.HarvestTime * 60 * Mathf.CeilToInt(HarvestItem.MaxYield / (float)HarvestItem.Yield));
-        SetRemainimgTime();
+        //_time = 0;
+        //_second = 0;
+        _timeDifference = TimeSpan.FromSeconds(HarvestItem.HarvestTime * Mathf.CeilToInt(HarvestItem.MaxYield / (float)HarvestItem.Yield)); //  * 60
+        SetRemainingTime(_timeDifference);
+
+        return _timeDifference;
     }
 
-    private void SetRemainimgTime()
+    /// <summary>
+    /// 수확까지 남은 시간 설정 </summary>
+    public void SetRemainingTime(TimeSpan timeDifference)
     {
-        if (_timeDifference.Hours == 0)
+        if (timeDifference.Hours == 0)
         {
-            if (_timeDifference.Minutes == 0)
+            if (timeDifference.Minutes == 0)
             {
-                _remainingTime = string.Format("{0}s", _timeDifference.Seconds);
+                _remainingTime = string.Format("{0}s", timeDifference.Seconds);
 
             }
             else
             {
-                _remainingTime = string.Format("{0}m {1}s", _timeDifference.Minutes, _timeDifference.Seconds);
+                _remainingTime = string.Format("{0}m {1}s", timeDifference.Minutes, timeDifference.Seconds);
             }
         }
         else
         {
-            _remainingTime = string.Format("{0}h {1}m", _timeDifference.Hours, _timeDifference.Minutes);
+            _remainingTime = string.Format("{0}h {1}m", timeDifference.Hours, timeDifference.Minutes);
         }
+    }
+
+    public void SetRemainingTimeZero()
+    {
+        _remainingTime = "채집 가능!";
     }
 
 }

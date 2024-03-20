@@ -242,6 +242,7 @@ public class Collection : MonoBehaviour
         // 진행 중이던 애니메이션 종료
         _pandaCollectionAnim.SetInteger("Num", -1);
         _pandaCollectionAnim.Play("Idle");
+        _pandaCollectionAnim.enabled = false;
     }
 
     /// <summary>
@@ -263,7 +264,7 @@ public class Collection : MonoBehaviour
         gameObject.transform.position = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y + 3, gameObject.transform.position.z);
 
         // 채집 애니메이션 판다와 말풍선 실행
-        //_pandaCollectionAnim.enabled = true;
+        _pandaCollectionAnim.enabled = true;
         _pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
 
         _speechBubble.gameObject.SetActive(true);

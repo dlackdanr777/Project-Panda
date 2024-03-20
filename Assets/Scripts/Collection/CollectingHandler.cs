@@ -8,8 +8,6 @@ public class CollectingHandler : MonoBehaviour
 
     [SerializeField] private GameObject _checkResultButton;
 
-
-
     private void EndAnimation()
     {
         Debug.Log("애니메이션 종료");
