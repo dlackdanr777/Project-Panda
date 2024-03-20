@@ -244,9 +244,10 @@ public class Inventory
             {
                 _items.Remove(item);
                 itemCountToRemove -= item.Count;
+                OnRemoveHandler?.Invoke();
+                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
             }
         }
-        OnRemoveHandler?.Invoke();
         return false; // 아이템을 제거하지 못했을 때
     }
 

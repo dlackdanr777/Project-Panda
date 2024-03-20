@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using Shop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,43 +9,71 @@ using UnityEngine.UI;
 
 public class UIShopContent : MonoBehaviour
 {
-    [SerializeField] private string _mapId;
-    [SerializeField] private GameObject _shopSlotPf;
+    [Header("Components")]
+    [SerializeField] private UIShopSlot _slotPrefab;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private GameObject _detailView;
-    [SerializeField] private Button _closeButton;
+    [SerializeField] private UIShopBuyDetailView _buyDetailView;
 
-    private List<ToolItem> _shopItem; //아직 상점 데이터베이스가 없어서 툴로 사용
+
+    [Header("Setting")]
+    [SerializeField] private string _mapId;
+
+    private List<Item> _shopItem = new List<Item>(); //아직 상점 데이터베이스가 없어서 툴로 사용
+    private List<Item> _buyItemList = new List<Item>();
+    private List<UIShopSlot> _slotList = new List<UIShopSlot>();
     private int _currentIndex;
 
 
     private void Awake()
     {
-        ShopButton.ShopItemHandler += UpdateSoldOut;
         DataBind.SetButtonValue("ShopExitButton", OnExitButtonClicked);
+        _buyDetailView.Init();
+        _buyDetailView.gameObject.SetActive(false);
+
+        LoadingSceneManager.OnLoadSceneHandler += OnSceneChanged;
+        UIBuyView.OnBuyCompleteHandler += UpdateSoldOut;
+        UISellView.OnSellCompleteHandler += UpdateSoldOut;
     }
 
 
     void Start()
     {
-        _shopItem = DatabaseManager.Instance.ItemDatabase.ItemToolList;
-        _closeButton.onClick.AddListener(OnClickCloseButton);
-
+        _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemBugList);
+        _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFishList);
+        _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
+        _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
         CreateSlots();
+
+        GameManager.Instance.Player.GainBamboo(5000);
     }
 
 
     private void CreateSlots()
     {
-        for(int i = 0; i < _shopItem.Count; i++)
+        int index = 0;
+
+        for (int i = 0; i < _shopItem.Count; i++)
         {
+
+            if (string.IsNullOrWhiteSpace(_mapId))
+            {
+                continue;
+            }
+
             if (_shopItem[i].Map.Equals(_mapId))
             {
-                int index = i;
-                GameObject slot = Instantiate(_shopSlotPf, _spawnPoint);
-                slot.GetComponent<Button>().onClick.AddListener(()=>OnClickDetailView(index));
-                slot.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = _shopItem[i].Image; //이미지
-                slot.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = _shopItem[i].Price.ToString(); //가격
+                UIShopSlot slot = Instantiate(_slotPrefab, _spawnPoint);
+                slot.Init();
+
+                int itemIndex = index;
+                slot.AddOnButtonClicked(() => OnClickDetailView(itemIndex));
+                slot.SetItemImage(_shopItem[i].Image);
+                slot.SetPriceText(_shopItem[i].Price.ToString());
+                slot.transform.localScale = Vector3.one;
+
+                _slotList.Add(slot);
+                _buyItemList.Add(_shopItem[i]);
+                index++;
             }
         }
     }
@@ -53,49 +82,50 @@ public class UIShopContent : MonoBehaviour
     private void OnClickDetailView(int index)
     {   
         GetContent(index);
-        _detailView.SetActive(true);
-    }
-
-
-    private void OnClickCloseButton()
-    {
-        _detailView.SetActive(false);
-        ClearContent();
-    }
-
-
-    private void ClearContent()
-    {
-        DataBind.SetTextValue("ShopBuyItemDetailName", "");
-        DataBind.SetTextValue("ShopBuyItemDetailDescription", "");
-        DataBind.SetTextValue("ShopBuyItemDetailPrice", "");
-        DataBind.SetSpriteValue("ShopBuyItemDetailImage", null);
     }
 
 
     private void GetContent(int index)
     {
         _currentIndex = index;
-
-        DataBind.SetTextValue("ShopBuyItemDetailName", _shopItem[index].Name);
-        DataBind.SetTextValue("ShopBuyItemDetailDescription", _shopItem[index].Description);
-        DataBind.SetSpriteValue("ShopBuyItemDetailImage", _shopItem[index].Image);
-        DataBind.SetTextValue("ShopBuyItemDetailPrice", _shopItem[index].Price.ToString());
-        DataBind.SetTextValue("ShopBuyItemDetailID", _shopItem[index].Id);
+        _buyDetailView.Show(_buyItemList[index]);
     }
+
 
 
     private void UpdateSoldOut()
     {
         //soldout
-        _spawnPoint.GetChild(_currentIndex).GetComponent<Button>().interactable = false;
-        _spawnPoint.GetChild(_currentIndex).GetChild(2).gameObject.SetActive(true);
+        Debug.Log("매진 확인");
+        //보유중인 도구 아이템을 확인해 보유중이면 매진 처리를 한다.
+        List<InventoryItem> possessedItemList = new List<InventoryItem>();
+        possessedItemList.AddRange(GameManager.Instance.Player.ToolItemInventory[(int)ToolItemType.GatheringTool].GetItemList());
+
+        for (int i = 0, count = _buyItemList.Count; i < count; i++)
+        {
+            if (possessedItemList.Find(x => x.Id == _buyItemList[i].Id) == null)
+            {
+                _slotList[i].NotSoldOut();
+                continue;
+            }
+                
+            _slotList[i].SoldOut();
+        }
     }
 
 
     private void OnExitButtonClicked()
     {
         LoadingSceneManager.LoadScene("24_01_09_Integrated");
+    }
+
+
+    private void OnSceneChanged()
+    {
+        UIBuyView.OnBuyCompleteHandler -= UpdateSoldOut;
+        UISellView.OnSellCompleteHandler -= UpdateSoldOut;
+        LoadingSceneManager.OnLoadSceneHandler -= OnSceneChanged;
+
     }
 
 }

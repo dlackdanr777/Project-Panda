@@ -28,12 +28,10 @@ public class Player
     public List<StickerData> StickerPosList = new List<StickerData>();
 
     public int Bamboo { get; private set; }
-    public int MaxBamboo;
-
+    public int MaxBamboo => 10000;
 
     public void Init()
     {
-        MaxBamboo = 1000;
 
         //Message
         Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
@@ -98,7 +96,7 @@ public class Player
     {
         if(Bamboo + amount <= MaxBamboo)
         {
-            Bamboo += amount;
+            Bamboo = Mathf.Clamp(Bamboo + amount, 0, MaxBamboo);
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
             DatabaseManager.Instance.Challenges.StackedBambooCount += amount; // 도전과제 달성 체크
             return true;
@@ -137,7 +135,6 @@ public class Player
     public bool RemoveItemById(string id, int count = 1)
     {
         InventoryItemField field = GetField(id);
-
         switch (field)
         {
             case InventoryItemField.GatheringItem:
