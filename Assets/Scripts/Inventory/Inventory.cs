@@ -52,15 +52,25 @@ public class Inventory
 
         if (itemDic.TryGetValue(id, out Item item))
         {
-            UnityEngine.Debug.Log("존재함");
             if (type == ItemAddEventType.AddChallengesCount)
             {
                 string startId = id.Substring(0, 3);
                 DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
             }
 
-            UnityEngine.Debug.Log(id + " 획득");
-            return Add(item, count);
+            if (Add(item, count))
+            {
+                UnityEngine.Debug.Log(id + " 획득");
+                item.IsReceived = true;
+                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+                return true;
+            }
+
+            else
+            {
+                UnityEngine.Debug.Log(id + " 인벤토리가 꽉차 획득 안됨");
+                return false;
+            }
         }
 
         return false;
@@ -224,6 +234,7 @@ public class Inventory
                     _items.Remove(item);
                 }
                 OnRemoveHandler?.Invoke();
+                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
                 return true; // 아이템을 성공적으로 제거하였음을 반환
             }
             else

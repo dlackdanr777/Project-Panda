@@ -50,7 +50,7 @@ public class UIBookList : MonoBehaviour
                     }
                     else if (_typeField == 2)
                     {
-                        _gatheringDatabase = DatabaseManager.Instance.ItemDatabase.ItemFishList;
+                        _gatheringDatabase = DatabaseManager.Instance.ItemDatabase.ItemFruitList;
                     }
                     else
                     {

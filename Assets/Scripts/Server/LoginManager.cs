@@ -117,6 +117,8 @@ namespace Muks.BackEnd
             //LoadingSceneManager.LoadScene("NewUserSceneMuksTest", LoadingType.FirstLoading);
             DatabaseManager.Instance.ItemDatabase.LoadData();
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
+            BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.LoadChallengesData);
+            BackendManager.Instance.GetMyData("Story", 10, DatabaseManager.Instance.UserInfo.LoadStoryData);
             BackendManager.Instance.GetMyData("Attendance", 10, DatabaseManager.Instance.UserInfo.LoadAttendanceData);
             BackendManager.Instance.GetMyData("NPC", 10, DatabaseManager.Instance.UserInfo.LoadNPCData);
             BackendManager.Instance.GetMyData("Bamboo", 10, GameManager.Instance.Player.LoadBambooData);

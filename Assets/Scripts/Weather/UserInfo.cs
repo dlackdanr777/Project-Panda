@@ -103,8 +103,6 @@ public class UserInfo
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
     private static string _path => Path.Combine(Application.dataPath, "UserInfo.json");
 
-    //public static string PhotoPath => Application.persistentDataPath;
-
     public static string PhotoPath => "Data/";
 
     //쿼터니언 값을 서버에 올릴 수 없으므로 중간에 관리해 줄 Class List
@@ -120,7 +118,6 @@ public class UserInfo
 
     private void CreateUserInfoData()
     {
-
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
         AttendanceDayCount = 0;
@@ -146,28 +143,6 @@ public class UserInfo
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
-            // 도전과제 관련
-            for(int i = 0, count = json[0]["ChallengesNum"].Count; i < count; i++)
-            {
-                ChallengesNum[i] = int.Parse(json[0]["ChallengesNum"][i].ToString());
-            }
-            for (int i = 0, count = json[0]["GatheringSuccessCount"].Count; i < count; i++)
-            {
-                GatheringSuccessCount[i] = int.Parse(json[0]["GatheringSuccessCount"][i].ToString());
-            }
-            for (int i = 0, count = json[0]["ChallengesCount"].Count; i < count; i++)
-            {
-                ChallengesCount[i] = int.Parse(json[0]["ChallengesCount"][i].ToString());
-            }
-            for (int i = 0, count = json[0]["ChallengeDoneId"].Count; i < count; i++)
-            {
-                ChallengeDoneId.Add(json[0]["ChallengeDoneId"][i].ToString());
-            }
-
-            for (int i = 0, count = json[0]["ChallengeClearId"].Count; i < count; i++)
-            {
-                ChallengeClearId.Add(json[0]["ChallengeClearId"][i].ToString());
-            }
 
             for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
@@ -175,21 +150,13 @@ public class UserInfo
                 AlbumReceived.Add(item);
             }
 
+            //우편 관련
             for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
             {
                 MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
                 MessageDataArray.Add(item);
             }
 
-
-            for(int i = 0, count = json[0]["StoryCompletedList"].Count; i < count; i++)
-            {
-                string item = json[0]["StoryCompletedList"][i].ToString();
-                _storyCompletedList.Add(item);
-            }
-
-
-            LoadUserChallengesData();
             LoadAlbumReceived();
             Debug.Log("UserInfo Load성공");
         }
@@ -258,7 +225,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserChallengesData();
         SaveUserMailData();
         SaveAlbumReceived();
 
@@ -275,7 +241,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserChallengesData();
         SaveUserMailData();
         SaveAlbumReceived();
 
@@ -297,17 +262,8 @@ public class UserInfo
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
 
-        param.Add("ChallengesNum", ChallengesNum);
-        param.Add("GatheringSuccessCount", GatheringSuccessCount);
-        param.Add("ChallengesCount", ChallengesCount);
-        param.Add("ChallengeDoneId", ChallengeDoneId);
-        param.Add("ChallengeClearId", ChallengeClearId);
-
         param.Add("AlbumReceived", AlbumReceived);
         param.Add("MessageDataArray", MessageDataArray);
-
-        _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
-        param.Add("StoryCompletedList", _storyCompletedList);
 
         return param;
     }
@@ -478,6 +434,7 @@ public class UserInfo
             LoadUserInventory();
             LoadGatheringItemReceived();
             LoadFoodItemReceived();
+            LoadToolItemReceived();
             Debug.Log("Inventory Load성공");
         }
     }
@@ -547,6 +504,7 @@ public class UserInfo
         SaveUserInventory();
         SaveGatheringItemReceived();
         SaveFoodItemReceived();
+        SaveToolItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
@@ -561,6 +519,7 @@ public class UserInfo
         SaveUserInventory();
         SaveGatheringItemReceived();
         SaveFoodItemReceived();
+        SaveToolItemReceived();
         Param param = GetInventoryParam();
 
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
@@ -924,7 +883,6 @@ public class UserInfo
     }
     #endregion
 
-
     #region Item
     //TODO: 차후 추가
     public void SaveGatheringItemReceived()
@@ -994,6 +952,40 @@ public class UserInfo
         {
             if (CookItemReceived.Find((x) => x == _items[i].Id) == null)
                 continue;
+
+            _items[i].IsReceived = true;
+        }
+    }
+
+
+    public void SaveToolItemReceived()
+    {
+        List<InventoryItem> _items = new List<InventoryItem>();
+        for (int i = 0, count = GameManager.Instance.Player.ToolItemInventory.Length; i < count; i++)
+        {
+            _items.AddRange(GameManager.Instance.Player.ToolItemInventory[i].GetItemList());
+        }
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (ToolItemReceived.Find((x) => x == _items[i].Id) != null)
+                continue;
+
+            ToolItemReceived.Add(_items[i].Id);
+        }
+    }
+
+
+    public void LoadToolItemReceived()
+    {
+        List<Item> _items = new List<Item>();
+        _items.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
+
+        for (int i = 0, count = _items.Count; i < count; i++)
+        {
+            if (ToolItemReceived.Find((x) => x == _items[i].Id) == null)
+                continue;
+
 
             _items[i].IsReceived = true;
         }
@@ -1195,7 +1187,147 @@ public class UserInfo
     #endregion
 
     #region Challenges
-    public void SaveUserChallengesData()
+
+    public void LoadChallengesData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+
+            // 도전과제 관련
+            for (int i = 0, count = json[0]["ChallengesNum"].Count; i < count; i++)
+            {
+                ChallengesNum[i] = int.Parse(json[0]["ChallengesNum"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["GatheringSuccessCount"].Count; i < count; i++)
+            {
+                GatheringSuccessCount[i] = int.Parse(json[0]["GatheringSuccessCount"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["ChallengesCount"].Count; i < count; i++)
+            {
+                ChallengesCount[i] = int.Parse(json[0]["ChallengesCount"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["ChallengeDoneId"].Count; i < count; i++)
+            {
+                ChallengeDoneId.Add(json[0]["ChallengeDoneId"][i].ToString());
+            }
+
+            for (int i = 0, count = json[0]["ChallengeClearId"].Count; i < count; i++)
+            {
+                ChallengeClearId.Add(json[0]["ChallengeClearId"][i].ToString());
+            }
+
+            LoadChallengesReceived();
+            Debug.Log("Challenges Load성공");
+        }
+    }
+
+
+    public void SaveChallengesData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Challenges";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertChallengesData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateChallengesData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertChallengesData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertChallengesData(string selectedProbabilityFileId)
+    {
+        SaveChallengesReceived();
+        Param param = GetChallengesParam();
+
+        Debug.LogFormat("도전과제 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateChallengesData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveChallengesReceived();
+        Param param = GetChallengesParam();
+
+        Debug.LogFormat("도전과제 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 도전과제 정보를 모아 반환하는 클래스 </summary>
+    public Param GetChallengesParam()
+    {
+        Param param = new Param();
+
+        param.Add("ChallengesNum", ChallengesNum);
+        param.Add("GatheringSuccessCount", GatheringSuccessCount);
+        param.Add("ChallengesCount", ChallengesCount);
+        param.Add("ChallengeDoneId", ChallengeDoneId);
+        param.Add("ChallengeClearId", ChallengeClearId);
+
+        return param;
+    }
+
+
+    private void SaveChallengesReceived()
     {
         ChallengesNum = DatabaseManager.Instance.Challenges.ChallengesNum;
         GatheringSuccessCount = DatabaseManager.Instance.Challenges.GatheringSuccessCount;
@@ -1207,9 +1339,22 @@ public class UserInfo
         ChallengesCount[4] = DatabaseManager.Instance.Challenges.CookingCount;
         ChallengesCount[5] = DatabaseManager.Instance.Challenges.TakePhotoCount;
         ChallengesCount[6] = DatabaseManager.Instance.Challenges.SharingPhotoCount;
+
+        ChallengeDoneId.Clear();
+        ChallengeClearId.Clear();
+        Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
+
+        foreach (string key in challengesDic.Keys)
+        {
+            if (challengesDic[key].IsDone)
+                ChallengeDoneId.Add(key);
+
+            if (challengesDic[key].IsClear)
+                ChallengeClearId.Add(key);
+        }
     }
 
-    public void LoadUserChallengesData()
+    private void LoadChallengesReceived()
     {
         DatabaseManager.Instance.Challenges.ChallengesNum = ChallengesNum;
         DatabaseManager.Instance.Challenges.GatheringSuccessCount = GatheringSuccessCount;
@@ -1235,5 +1380,119 @@ public class UserInfo
             DatabaseManager.Instance.GetChallengesDic()[ChallengeClearId[i]].IsClear = true;
         }
     }
+    #endregion
+
+    #region Story
+    public void LoadStoryData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            for (int i = 0, count = json[0]["StoryCompletedList"].Count; i < count; i++)
+            {
+                string item = json[0]["StoryCompletedList"][i].ToString();
+                _storyCompletedList.Add(item);
+            }
+
+            Debug.Log("StoryData Load성공");
+        }
+    }
+
+
+    public void SaveStoryData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Story";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveUserInfoData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertStoryData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateStoryData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertStoryData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertStoryData(string selectedProbabilityFileId)
+    {
+
+        Param param = GetStoryParam();
+
+        Debug.LogFormat("스토리 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateStoryData(string selectedProbabilityFileId, string inDate)
+    {
+        Param param = GetStoryParam();
+
+        Debug.LogFormat("스토리 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetStoryParam()
+    {
+        Param param = new Param();
+        _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
+        param.Add("StoryCompletedList", _storyCompletedList);
+
+        return param;
+    }
+
     #endregion
 }

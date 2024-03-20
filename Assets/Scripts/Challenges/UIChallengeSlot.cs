@@ -1,3 +1,4 @@
+using Muks.BackEnd;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,6 +67,8 @@ public class UIChallengeSlot : MonoBehaviour
 
         _backgroundImage.sprite = _doneSprite;
         _backgroundImage.color = _clearBackgroundColor;
+
+        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
     }
 
     public void CloseSlot()

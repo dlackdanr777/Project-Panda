@@ -30,6 +30,7 @@ public class AttendanceDatabase
         UserInfo.AttendanceDayCount++;
         UserInfo.LastAttendanceDay = UserInfo.TODAY.ToString();
         GiveReward(_attendanceDataDic[UserInfo.AttendanceDayCount].Item, _attendanceDataDic[UserInfo.AttendanceDayCount].Amount);
+        DatabaseManager.Instance.UserInfo.SaveAttendanceData(10);
     }
 
 
