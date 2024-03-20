@@ -288,7 +288,7 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.GameData.Insert(selectedProbabilityFileId, param, callback =>
+            Backend.GameData.Insert(selectedProbabilityFileId, param, (callback) =>
             {
                 switch (ErrorCheck(callback))
                 {
@@ -329,7 +329,7 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.GameData.UpdateV2(selectedProbabilityFileId, inDate, Backend.UserInDate, param, callback =>
+            Backend.GameData.UpdateV2(selectedProbabilityFileId, inDate, Backend.UserInDate, param, (callback) =>
             {
                 switch (ErrorCheck(callback))
                 {

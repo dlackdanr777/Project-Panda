@@ -105,7 +105,8 @@ public class ItemDatabase
     private Dictionary<string, ToolItem> _itemToolDic = new Dictionary<string, ToolItem>();
     public Dictionary<string, ToolItem> ItemToolDic => _itemToolDic;
 
-
+    private List<Item> _allItemList = new List<Item>();
+    public List<Item> AllItemList => _allItemList;
     private Dictionary<string, Item> _allItemDic = new Dictionary<string, Item>();
     public Dictionary<string, Item> AllItemDic => _allItemDic;
 
@@ -270,8 +271,8 @@ public class ItemDatabase
 
         ItemBugList.Clear();
         ItemBugDic.Clear();
+        _allItemList.Clear();
         AllItemDic.Clear();
-
         for (int i = 0, count = json.Count; i < count; i++)
         {
             string itemID = json[i]["ItemID"].ToString();
@@ -287,6 +288,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemBugList.Add(item);
             ItemBugDic.Add(itemID, item);
+            _allItemList.Add(item);
             AllItemDic.Add(itemID, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
@@ -314,6 +316,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemFishList.Add(item);
             ItemFishDic.Add(itemID, item);
+            _allItemList.Add(item);
             AllItemDic.Add(itemID, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
@@ -343,6 +346,7 @@ public class ItemDatabase
             GatheringItem item = new GatheringItem(itemID, name, description, price, rating, mapID, sprite, time, season);
             ItemFruitList.Add(item);
             ItemFruitDic.Add(itemID, item);
+            _allItemList.Add(item);
             AllItemDic.Add(itemID, item);
         }
         Debug.Log("과일 아이템 받아오기 성공!");
@@ -372,6 +376,7 @@ public class ItemDatabase
 
             ItemFoodList.Add(item);
             ItemFoodDic.Add(id, item);
+            _allItemList.Add(item);
             AllItemDic.Add(id, item);
         }
         Debug.Log("요리 아이템 받아오기 성공!");
@@ -399,6 +404,7 @@ public class ItemDatabase
 
             ItemToolList.Add(item);
             ItemToolDic.Add(itemID, item);
+            _allItemList.Add(item);
             AllItemDic.Add(itemID, item);
         }
     }
@@ -429,6 +435,7 @@ public class ItemDatabase
 
             ItemBugList.Add(item);
             ItemBugDic.Add(dataBug[i]["ID"].ToString(), item);
+            _allItemList.Add(item);
             AllItemDic.Add(item.Id, item);
         }
         Debug.Log("곤충 아이템 받아오기 성공!");
@@ -456,6 +463,7 @@ public class ItemDatabase
 
             ItemFishList.Add(item);
             ItemFishDic.Add(item.Id, item);
+            _allItemList.Add(item);
             AllItemDic.Add(item.Id, item);
         }
         Debug.Log("생선 아이템 받아오기 성공!");
@@ -483,6 +491,7 @@ public class ItemDatabase
 
             ItemFruitList.Add(item);
             ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
+            _allItemList.Add(item);
             AllItemDic.Add(item.Id, item);
         }
 
@@ -508,6 +517,7 @@ public class ItemDatabase
             //TODO: 추후 이미지 추가해야함
             ItemFoodList.Add(item);
             ItemFoodDic.Add(id, item);
+            _allItemList.Add(item);
             AllItemDic.Add(id, item);
         }
 
@@ -535,6 +545,7 @@ public class ItemDatabase
 
             ItemToolList.Add(item);
             ItemToolDic.Add(item.Id, item);
+            _allItemList.Add(item);
             AllItemDic.Add(item.Id, item);
         }
         Debug.Log("장비 아이템 받아오기 성공!");

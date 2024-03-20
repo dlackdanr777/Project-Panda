@@ -40,15 +40,10 @@ public class UIMainInventoryContoller : MonoBehaviour
     private Inventory _foodInventory;
     private Inventory _toolInventory;
 
-    public void Start()
-    {
-        Init(null);
-    }
-
 
     public void Init(UnityAction<InventoryItem> onButtonClicked = null)
     {
-        SceneManager.sceneLoaded += LoadedSceneEvent;
+        LoadingSceneManager.OnLoadSceneHandler += LoadedSceneEvent;
 
         _gatheringInventorys = GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem);
         _foodInventory = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Cook)[(int)CookItemType.CookFood];
@@ -82,7 +77,6 @@ public class UIMainInventoryContoller : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.Log("½ÇÇà");
         _gatheringInventorys[(int)GatheringItemType.Bug].OnAddHandler -= UpdateUI;
         _gatheringInventorys[(int)GatheringItemType.Bug].OnRemoveHandler -= UpdateUI;
         _gatheringInventorys[(int)GatheringItemType.Fish].OnAddHandler -= UpdateUI;
@@ -136,7 +130,7 @@ public class UIMainInventoryContoller : MonoBehaviour
     }
 
 
-    private void LoadedSceneEvent(Scene scene, LoadSceneMode mode)
+    private void LoadedSceneEvent()
     {
         _gatheringInventorys[(int)GatheringItemType.Bug].OnAddHandler -= UpdateUI;
         _gatheringInventorys[(int)GatheringItemType.Bug].OnRemoveHandler -= UpdateUI;
@@ -148,7 +142,7 @@ public class UIMainInventoryContoller : MonoBehaviour
         _foodInventory.OnRemoveHandler -= UpdateUI;
         _toolInventory.OnAddHandler -= UpdateUI;
         _toolInventory.OnRemoveHandler -= UpdateUI;
-        SceneManager.sceneLoaded -= LoadedSceneEvent;
+        LoadingSceneManager.OnLoadSceneHandler -= LoadedSceneEvent;
     }
 }
 

@@ -11,6 +11,12 @@ public class GameManager : SingletonHandler<GameManager>
     public Player Player;
     public MessageDatabase MessageDatabase;
 
+    private PreferencesData _option;
+    public PreferencesData Option => _option;
+
+    private TempCameraData _tmpCameraData;
+    public TempCameraData TmpCameraData => _tmpCameraData;
+
     /// <summary> 참일 경우 카메라 이동을 막는다. </summary>
     public bool FriezeCameraMove;
 
@@ -23,16 +29,11 @@ public class GameManager : SingletonHandler<GameManager>
     public override void Awake()
     {
         base.Awake();
+        _option = new PreferencesData();
+        _tmpCameraData = new TempCameraData();
         Application.targetFrameRate = 60;
         Player = new Player();
         Player.Init();
-    }
-
-    public void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.A))
-        { Player.GainBamboo(1); }
-
     }
 
 

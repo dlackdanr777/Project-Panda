@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using BT;
 using Muks.DataBind;
@@ -7,6 +5,7 @@ using Muks.DataBind;
 public class MainScene : MonoBehaviour
 {
     [SerializeField] private AudioClip _backgroundAudioClip;
+    [SerializeField] private CameraController _cameraController;
 
     // Start is called before the first frame update
     void Start()
@@ -17,4 +16,7 @@ public class MainScene : MonoBehaviour
 
         SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 1);
     }
+
+
+
 }

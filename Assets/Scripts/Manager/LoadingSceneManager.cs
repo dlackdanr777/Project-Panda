@@ -16,6 +16,8 @@ public class LoadingSceneManager : MonoBehaviour
 
     private static LoadingType _loadingType;
 
+    public static event Action OnLoadSceneHandler;
+
 
     private void Start()
     {
@@ -27,6 +29,7 @@ public class LoadingSceneManager : MonoBehaviour
     {
         _nextScene = sceneName;
         _loadingType = type;
+        OnLoadSceneHandler?.Invoke();
         FadeInOutManager.Instance.FadeIn( onComplete: () => SceneManager.LoadScene("LoadingScene") );
     }
 

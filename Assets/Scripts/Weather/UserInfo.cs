@@ -1290,6 +1290,67 @@ public class UserInfo
     }
 
 
+    public void SaveChallengesDataByAsync(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Challenges";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        
+        //BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+        Backend.GameData.GetMyData(selectedProbabilityFileId, new Where(), 10, bro =>
+        {
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    Debug.LogError("초기화 실패");
+                    break;
+
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
+
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    SaveUserInfoData(maxRepeatCount - 1);
+                    break;
+
+                case BackendState.Success:
+
+                    if (bro.GetReturnValuetoJSON() != null)
+                    {
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            InsertChallengesData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            UpdateChallengesData(selectedProbabilityFileId, bro.GetInDate());
+                        }
+                    }
+                    else
+                    {
+                        InsertChallengesData(selectedProbabilityFileId);
+                    }
+
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        });
+       
+    }
+
+
     public void InsertChallengesData(string selectedProbabilityFileId)
     {
         SaveChallengesReceived();
