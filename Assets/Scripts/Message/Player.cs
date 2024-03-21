@@ -84,6 +84,7 @@ public class Player
         {
             Bamboo -= amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+            SaveBambooData(3);
             return true;
         }
         else
@@ -99,6 +100,7 @@ public class Player
             Bamboo = Mathf.Clamp(Bamboo + amount, 0, MaxBamboo);
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
             DatabaseManager.Instance.Challenges.StackedBambooCount += amount; // 도전과제 달성 체크
+            SaveBambooData(3);
             return true;
         }
         else
@@ -381,44 +383,45 @@ public class Player
             return;
         }
 
-        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
-
-        switch (BackendManager.Instance.ErrorCheck(bro))
+        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
         {
-            case BackendState.Failure:
-                Debug.LogError("초기화 실패");
-                break;
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    Debug.LogError("초기화 실패");
+                    break;
 
-            case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
-                break;
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
 
-            case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
-                SaveBambooData(maxRepeatCount - 1);
-                break;
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    SaveBambooData(maxRepeatCount - 1);
+                    break;
 
-            case BackendState.Success:
+                case BackendState.Success:
 
-                if (bro.GetReturnValuetoJSON() != null)
-                {
-                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    if (bro.GetReturnValuetoJSON() != null)
                     {
-                        InsertBambooData(selectedProbabilityFileId);
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            InsertBambooData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                        }
                     }
                     else
                     {
-                        UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                        InsertBambooData(selectedProbabilityFileId);
                     }
-                }
-                else
-                {
-                    InsertBambooData(selectedProbabilityFileId);
-                }
 
-                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-                break;
-        }
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        });   
     }
 
 

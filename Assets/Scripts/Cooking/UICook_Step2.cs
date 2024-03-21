@@ -9,7 +9,7 @@ namespace Cooking
         [Header("Components")]
         [SerializeField] private UIMaterialItemSlot _slotPrefab;
         [SerializeField] private Transform _slotParent;
-        [SerializeField] private UICookInventory _uiCookInventory;
+        [SerializeField] private UICookInventoryController _uiCookInventory;
         [SerializeField] private Button _exitButton;
 
         private List<UIMaterialItemSlot> _materialItemSlots = new List<UIMaterialItemSlot>();
@@ -40,7 +40,7 @@ namespace Cooking
 
             _exitButton.onClick.AddListener(OnExitButtonClicked);
             _uiCookInventory.Init(ChoiceItem);
-            _cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI();
+            //_cookSystem.OnCookStarted += () => _uiCookInventory.UpdateUI();
         }
 
 

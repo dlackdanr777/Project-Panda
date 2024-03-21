@@ -52,9 +52,6 @@ public class UIMailList : MonoBehaviour
     {
         _closeButton.onClick.AddListener(OnClickCloseButton);
         _giftCloseButton.onClick.AddListener(OnClickGiftCloseButton);
-
-
-        GameManager.Instance.Player.Messages[0].AddById("ML01", MessageField.Mail);
     }
 
 
