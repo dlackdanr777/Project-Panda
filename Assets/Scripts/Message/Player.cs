@@ -80,7 +80,7 @@ public class Player
 
     public bool SpendBamboo(int amount)
     {
-        if(Bamboo > 0) 
+        if(0 <= Bamboo - amount) 
         {
             Bamboo -= amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());

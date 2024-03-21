@@ -15,12 +15,15 @@ namespace Shop
         [SerializeField] private Button _sellButton;
         [SerializeField] private Button _exitButton;
         [SerializeField] private GameObject _completeImage;
+        [SerializeField] private GameObject _maxBambooImage;
 
         private InventoryItem _sellItem;
         private int _sellMoney; //판매 금액
         private int _sellCount;
 
         private CanvasGroup _canvasGroup;
+        private CanvasGroup _completeImageCanvasGroup;
+        private CanvasGroup _maxBambooImageCanvasGroup;
 
         public static event Action OnSellCompleteHandler;
 
@@ -28,11 +31,14 @@ namespace Shop
         public void Init()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
+            _completeImageCanvasGroup = _completeImage.GetComponent<CanvasGroup>();
+            _maxBambooImageCanvasGroup = _maxBambooImage.GetComponent<CanvasGroup>();
 
             _exitButton.onClick.AddListener(Hide);
             _sellButton.onClick.AddListener(OnSellButtonClicked);
 
             _completeImage.SetActive(false);
+            _maxBambooImage.SetActive(false);
 
         }
 
@@ -44,7 +50,7 @@ namespace Shop
             _canvasGroup.blocksRaycasts = true;
             _sellItem = sellItem;
             _sellCount = sellCount;
-            _sellMoney = sellItem.Price * sellCount;
+            _sellMoney = (int)(sellItem.Price * 0.8f) * sellCount;
         }
 
 
@@ -56,22 +62,45 @@ namespace Shop
 
         private void OnSellButtonClicked()
         {
-            GameManager.Instance.Player.RemoveItemById(_sellItem.Id, _sellCount);
-            GameManager.Instance.Player.GainBamboo(_sellMoney);
-
-            _canvasGroup.blocksRaycasts = false;
-
-            _completeImage.SetActive(true);
-            Tween.CanvasGroupAlpha(_completeImage, 1, 0.3f, TweenMode.Constant, () =>
+            if (GameManager.Instance.Player.GainBamboo(_sellMoney))
             {
-                //2초 대기 후 닫기
-                Tween.TransformMove(_completeImage, _completeImage.transform.position, 2, TweenMode.Constant, () =>
+                GameManager.Instance.Player.RemoveItemById(_sellItem.Id, _sellCount);
+
+
+                _canvasGroup.blocksRaycasts = false;
+
+                _completeImage.SetActive(true);
+                _completeImageCanvasGroup.alpha = 0.1f;
+                Tween.CanvasGroupAlpha(_completeImage, 1, 0.1f, TweenMode.Constant, () =>
                 {
-                    _completeImage.gameObject.SetActive(false);
-                    gameObject.SetActive(false);
-                    OnSellCompleteHandler?.Invoke();
+                    //2초 대기 후 닫기
+                    Tween.TransformMove(_completeImage, _completeImage.transform.position, 2, TweenMode.Constant, () =>
+                    {
+                        _completeImage.gameObject.SetActive(false);
+                        gameObject.SetActive(false);
+                        OnSellCompleteHandler?.Invoke();
+                    });
                 });
-            });
+            }
+
+            else
+            {
+                _canvasGroup.blocksRaycasts = false;
+
+                _maxBambooImage.SetActive(true);
+                _maxBambooImageCanvasGroup.alpha = 0.1f;
+                Tween.CanvasGroupAlpha(_maxBambooImage, 1, 0.1f, TweenMode.Constant, () =>
+                {
+                    //2초 대기 후 닫기
+                    Tween.TransformMove(_maxBambooImage, _maxBambooImage.transform.position, 2, TweenMode.Constant, () =>
+                    {
+                        _maxBambooImage.gameObject.SetActive(false);
+                        gameObject.SetActive(false);
+                        OnSellCompleteHandler?.Invoke();
+                    });
+                });
+            }
+            
 
         }
 

@@ -43,8 +43,6 @@ public class UIShopContent : MonoBehaviour
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
         CreateSlots();
-
-        GameManager.Instance.Player.GainBamboo(5000);
     }
 
 
@@ -96,7 +94,6 @@ public class UIShopContent : MonoBehaviour
     private void UpdateSoldOut()
     {
         //soldout
-        Debug.Log("매진 확인");
         //보유중인 도구 아이템을 확인해 보유중이면 매진 처리를 한다.
         List<InventoryItem> possessedItemList = new List<InventoryItem>();
         possessedItemList.AddRange(GameManager.Instance.Player.ToolItemInventory[(int)ToolItemType.GatheringTool].GetItemList());

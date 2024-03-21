@@ -23,6 +23,8 @@ namespace Shop
         private int _buyCount;
 
         private CanvasGroup _canvasGroup;
+        private CanvasGroup _completeImageCanvasGroup;
+        private CanvasGroup _notBuyImageCanvasGroup;
 
         public static event Action OnBuyCompleteHandler;
 
@@ -30,6 +32,8 @@ namespace Shop
         public void Init()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
+            _completeImageCanvasGroup = _completeImage.GetComponent<CanvasGroup>();
+            _notBuyImageCanvasGroup = _notBuyImage.GetComponent<CanvasGroup>();
 
             _exitButton.onClick.AddListener(Hide);
             _buyButton.onClick.AddListener(OnBuyButtonClicked);
@@ -61,12 +65,13 @@ namespace Shop
         private void OnBuyButtonClicked()
         {
             //소지 금액이 구매 금액보다 작을 경우
-            if(GameManager.Instance.Player.Bamboo < _buyMoney)
+            if (!GameManager.Instance.Player.SpendBamboo(_buyMoney))
             {
                 _canvasGroup.blocksRaycasts = false;
 
                 _notBuyImage.SetActive(true);
-                Tween.CanvasGroupAlpha(_notBuyImage, 1, 0.3f, TweenMode.Constant, () =>
+                _notBuyImageCanvasGroup.alpha = 0.1f;
+                Tween.CanvasGroupAlpha(_notBuyImage, 1, 0.1f, TweenMode.Constant, () =>
                 {
                     //2초 대기 후 닫기
                     Tween.TransformMove(_notBuyImage, _notBuyImage.transform.position, 2, TweenMode.Constant, () =>
@@ -79,13 +84,15 @@ namespace Shop
 
                 return;
             }
+
             GameManager.Instance.Player.AddItemById(_buyItem.Id, _buyCount);
-            GameManager.Instance.Player.SpendBamboo(_buyMoney);
+
             DatabaseManager.Instance.Challenges.UsingShop(false);
             _canvasGroup.blocksRaycasts = false;
 
             _completeImage.SetActive(true);
-            Tween.CanvasGroupAlpha(_completeImage, 1, 0.3f, TweenMode.Constant, () =>
+            _completeImageCanvasGroup.alpha = 0.1f;
+            Tween.CanvasGroupAlpha(_completeImage, 1, 0.1f, TweenMode.Constant, () =>
             {
                 //2초 대기 후 닫기
                 Tween.TransformMove(_completeImage, _completeImage.transform.position, 2, TweenMode.Constant, () =>
