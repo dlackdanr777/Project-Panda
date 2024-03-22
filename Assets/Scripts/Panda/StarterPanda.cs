@@ -28,6 +28,7 @@ namespace BT
         {
             public string key;
             public int[] values;
+            public Transform PandaTransform;
         }
 
         public List<MapAnimationData> _mapAnimationDic;
@@ -75,13 +76,6 @@ namespace BT
 
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
-            //_preference = DatabaseManager.Instance.SetPreference(Mbti);
-
-            //test 잘 설정되었는지 확인 - 나중에 지우기
-            Debug.Log("판다ID: " + _pandaID + "판다 이름: " + _pandaName + "판다 행복도: " + _happiness);
-            //Debug.Log("성향: 아이템" + _preference._favoriteToy + "성향: 간식"+ _preference._favoriteSnack);
-            Debug.Log("판다 이미지" + _pandaImage.name);
-
 
             _time = 0f;
             _map = TimeManager.Instance.CurrentMap;
@@ -121,7 +115,7 @@ namespace BT
             {
                 //PandaMouseClick();
                 ShowStateImage();
-                GiveAGift();
+                //GiveAGift();
             }
 
             _time += Time.deltaTime;
@@ -323,6 +317,7 @@ namespace BT
         private void ChangeAnimation()
         {
             _animator.speed = 1f;
+            _animator.Play("Idle");
 
             // 현재 맵의 애니메이션 번호 찾기
             int[] nums = _mapAnimationDic.Find(x => x.key == _map).values;
@@ -330,12 +325,20 @@ namespace BT
             // 애니메이션 중 랜덤 선택
             Num = UnityEngine.Random.Range(0, nums.Length);
 
+            // 애니메이션에 맞는 위치 설정
+            SetPosition();
+
             _animator.SetInteger("Num", nums[Num]); // 현재 맵의 _num번째 애니메이션 실행
         }
 
         private void StopAnimation()
         {
             _animator.speed = 0f;
+        }
+
+        private void SetPosition()
+        {
+            gameObject.transform.position = _mapAnimationDic.Find(x => x.key == _map).PandaTransform.position;
         }
     }
 }

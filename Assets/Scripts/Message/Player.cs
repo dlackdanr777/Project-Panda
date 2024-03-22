@@ -138,16 +138,32 @@ public class Player
         switch (field)
         {
             case InventoryItemField.GatheringItem:
-                GatheringItemInventory[GetItemType(id)].RemoveItemById(id, count);
-                return true;
+                return GatheringItemInventory[GetItemType(id)].RemoveItemById(id, count);
 
             case InventoryItemField.Cook:
-                CookItemInventory[GetItemType(id)].RemoveItemById(id, count);
-                return true;
+                return CookItemInventory[GetItemType(id)].RemoveItemById(id, count);
 
             case InventoryItemField.Tool:
-                ToolItemInventory[GetItemType(id)].RemoveItemById(id, count);
-                return true;
+                return ToolItemInventory[GetItemType(id)].RemoveItemById(id, count);
+        }
+
+        Debug.LogErrorFormat("{0} id를 가진 아이템이 존재하지 않습니다.");
+        return false;
+    }
+
+    public bool FindItemById(string id, int count = 1)
+    {
+        InventoryItemField field = GetField(id);
+        switch (field)
+        {
+            case InventoryItemField.GatheringItem:
+                return GatheringItemInventory[GetItemType(id)].FindItemById(id, count);
+
+            case InventoryItemField.Cook:
+                return CookItemInventory[GetItemType(id)].FindItemById(id, count);
+
+            case InventoryItemField.Tool:
+                return ToolItemInventory[GetItemType(id)].FindItemById(id, count);
         }
 
         Debug.LogErrorFormat("{0} id를 가진 아이템이 존재하지 않습니다.");

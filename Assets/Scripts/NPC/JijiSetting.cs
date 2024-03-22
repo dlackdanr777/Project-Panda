@@ -12,7 +12,17 @@ public class JijiSetting : MonoBehaviour
     public int[] _treeMapAnimations;
     public int[] _elseMapAnimations;
 
+    [System.Serializable]
+    public struct MapAnimationData
+    {
+        public string key;
+        public Transform PandaTransform;
+    }
+
+    public List<MapAnimationData> _mapAnimationDic;
+
     [SerializeField] private bool _isConversation; // 대화 중인지 확인
+
 
     void Start()
     {
@@ -42,6 +52,7 @@ public class JijiSetting : MonoBehaviour
     private void ChangeAnimation()
     {
         _animator.speed = 1f;
+        _animator.Play("Idle");
 
         int[] nums;
         // 현재 맵의 애니메이션 번호 찾기
@@ -57,11 +68,19 @@ public class JijiSetting : MonoBehaviour
         // 애니메이션 중 랜덤 선택
         Num = UnityEngine.Random.Range(0, nums.Length);
 
+        // 애니메이션에 맞는 위치 설정
+        SetPosition();
+
         _animator.SetInteger("Num", nums[Num]); // 현재 맵의 _num번째 애니메이션 실행
     }
 
     private void StopAnimation()
     {
         _animator.speed = 0f;
+    }
+
+    private void SetPosition()
+    {
+        gameObject.transform.position = _mapAnimationDic.Find(x => x.key == _map).PandaTransform.position;
     }
 }

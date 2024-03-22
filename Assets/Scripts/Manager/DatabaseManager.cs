@@ -41,6 +41,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private SideStoryDialogueManager _sideStoryDialogueDatabase;
     public SideStoryDialogueManager SideDialogueDatabase => _sideStoryDialogueDatabase;
 
+    private MainStoryDialogueManager _mainStoryDialogueDatabase;
+    public MainStoryDialogueManager MainDialogueDatabase => _mainStoryDialogueDatabase; 
+
     private ChallengesDatabase _challengesDatabase;
     private Challenges _challenges;
     public Challenges Challenges => _challenges;
@@ -124,6 +127,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _harvestItemDatabase = new HarvestItemManager();
         _npcDatabase = new NPCDatabase();
         _sideStoryDialogueDatabase = new SideStoryDialogueManager();
+        _mainStoryDialogueDatabase = new MainStoryDialogueManager();
         _messageDatabase = new MessageDatabase();
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
@@ -142,6 +146,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _weatherDatabase.Register();
         _npcDatabase.Register();
         _sideStoryDialogueDatabase.Register();
+        _mainStoryDialogueDatabase.Register();
         _messageDatabase.Register();
         _albumDatabase.Register();
         _challengesDatabase.Register();

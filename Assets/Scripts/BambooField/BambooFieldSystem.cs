@@ -139,7 +139,6 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             {
                 foreach (Transform child in _fieldSlots[i].gameObject.transform)
                 {
-                    Debug.Log(child.name);
                     child.gameObject.SetActive(true);
                 }
             }

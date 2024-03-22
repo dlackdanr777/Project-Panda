@@ -33,6 +33,8 @@ public class UICollection : MonoBehaviour
     [SerializeField] private string[] _dictionaryId;
     #endregion
 
+
+
     private GatheringItemType _gathringItemType;
     private string _map;
 
