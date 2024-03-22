@@ -5,26 +5,21 @@ using UnityEngine.UI;
 
 namespace Cooking
 {
-    public class UICookInventory : MonoBehaviour
+    public class UICookInventoryController : MonoBehaviour
     {
-        [Header("인벤토리")]
+        [Header("Inventory")]
         [SerializeField] private UIInventoryCategory _bugInventory;
-
         [SerializeField] private UIInventoryCategory _fishInventory;
-
         [SerializeField] private UIInventoryCategory _fruitInventory;
 
         [Space]
-        [Header("인벤토리 버튼")]
+        [Header("Toggles")]
         [SerializeField] private Toggle _bugButton;
-
         [SerializeField] private Toggle _fishButton;
-
         [SerializeField] private Toggle _fruitButton;
 
         [Space]
-        [Header("프리팹")]
-        
+        [Header("Prefabs")]   
         [SerializeField] private UIInventorySlot _slotPrefab;
 
 
@@ -33,6 +28,8 @@ namespace Cooking
 
         public void Init(UnityAction<InventoryItem> onButtonClicked = null)
         {
+            LoadingSceneManager.OnLoadSceneHandler += LoadedSceneEvent;
+
             _inventorys = GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem);
             _bugInventory.Init(_inventorys[(int)GatheringItemType.Bug], _slotPrefab, onButtonClicked);
             _fishInventory.Init(_inventorys[(int)GatheringItemType.Fish], _slotPrefab, onButtonClicked);
@@ -41,6 +38,13 @@ namespace Cooking
             _bugButton.onValueChanged.AddListener(OnBugButtonClicked);
             _fishButton.onValueChanged.AddListener(OnFishButtonClicked);
             _fruitButton.onValueChanged.AddListener(OnFruitButtonClicked);
+
+            _inventorys[(int)GatheringItemType.Bug].OnAddHandler += UpdateUI;
+            _inventorys[(int)GatheringItemType.Bug].OnRemoveHandler += UpdateUI;
+            _inventorys[(int)GatheringItemType.Fish].OnAddHandler += UpdateUI;
+            _inventorys[(int)GatheringItemType.Fish].OnRemoveHandler += UpdateUI;
+            _inventorys[(int)GatheringItemType.Fruit].OnAddHandler += UpdateUI;
+            _inventorys[(int)GatheringItemType.Fruit].OnRemoveHandler += UpdateUI;
 
             UpdateUI();
         }
@@ -69,6 +73,19 @@ namespace Cooking
         private void OnFruitButtonClicked(bool isOn)
         {
             _fruitInventory.SetActive(isOn);
+        }
+
+
+        private void LoadedSceneEvent()
+        {
+            _inventorys[(int)GatheringItemType.Bug].OnAddHandler -= UpdateUI;
+            _inventorys[(int)GatheringItemType.Bug].OnRemoveHandler -= UpdateUI;
+            _inventorys[(int)GatheringItemType.Fish].OnAddHandler -= UpdateUI;
+            _inventorys[(int)GatheringItemType.Fish].OnRemoveHandler -= UpdateUI;
+            _inventorys[(int)GatheringItemType.Fruit].OnAddHandler -= UpdateUI;
+            _inventorys[(int)GatheringItemType.Fruit].OnRemoveHandler -= UpdateUI;
+
+            LoadingSceneManager.OnLoadSceneHandler -= LoadedSceneEvent;
         }
     }
 }

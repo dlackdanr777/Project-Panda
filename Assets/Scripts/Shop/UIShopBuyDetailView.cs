@@ -64,12 +64,15 @@ namespace Shop
 
         private void Hide()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
             gameObject.SetActive(false);
         }
 
 
         private void OnLeftCountButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
             //만약 도구 아이템이면 한개만 살 수 있다.
             string itemType = _currentItem.Id.Substring(0, 3);
             if (itemType == "ITG")
@@ -87,6 +90,8 @@ namespace Shop
 
         private void OnRightCountButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
             //만약 도구 아이템이면 한개만 살 수 있다.
             string itemType = _currentItem.Id.Substring(0, 3);
             if(itemType == "ITG")
@@ -104,6 +109,7 @@ namespace Shop
 
         private void OnBuyButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _buyView.Show(_currentItem, _currentItemCount);
         }
 

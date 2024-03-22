@@ -46,6 +46,10 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetButtonValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
         DataBind.SetButtonValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
+
+        GameManager.Instance.Player.AddItemById("IFI01");
+        GameManager.Instance.Player.AddItemById("IFI44");
+        GameManager.Instance.Player.AddItemById("CookFd53");
     }
 
     private void OnCameraButtonClicked()

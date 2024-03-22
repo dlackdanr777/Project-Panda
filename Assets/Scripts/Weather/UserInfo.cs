@@ -76,7 +76,7 @@ public class UserInfo
     public List<string> AlbumReceived = new List<string>();
 
     //Message
-    public List<MessageData> MessageDataArray = new List<MessageData>(); //저장할 메시지 데이터
+
     private MessageList[] MessageLists; //게임 속 메시지리스트
 
 
@@ -150,13 +150,6 @@ public class UserInfo
                 AlbumReceived.Add(item);
             }
 
-            //우편 관련
-            for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
-            {
-                MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
-                MessageDataArray.Add(item);
-            }
-
             LoadAlbumReceived();
             Debug.Log("UserInfo Load성공");
         }
@@ -225,7 +218,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserMailData();
         SaveAlbumReceived();
 
         Param param = GetUserInfoParam();
@@ -241,7 +233,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveUserMailData();
         SaveAlbumReceived();
 
         Param param = GetUserInfoParam();
@@ -263,7 +254,6 @@ public class UserInfo
         param.Add("IsExistingUser", IsExistingUser);
 
         param.Add("AlbumReceived", AlbumReceived);
-        param.Add("MessageDataArray", MessageDataArray);
 
         return param;
     }
@@ -440,6 +430,7 @@ public class UserInfo
     }
 
 
+    /// <summary>서버에 인벤토리 데이터를 동기적으로 입력하는 함수</summary>
     public void SaveInventoryData(int maxRepeatCount)
     {
         string selectedProbabilityFileId = "Inventory";
@@ -488,7 +479,7 @@ public class UserInfo
                 }
                 else
                 {
-                    InsertInventoryData(selectedProbabilityFileId);
+                     InsertInventoryData(selectedProbabilityFileId);
                 }
 
                 Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
@@ -497,7 +488,65 @@ public class UserInfo
     }
 
 
-    /// <summary> 서버 인벤토리 데이터 삽입 함수 </summary>
+    /// <summary>서버에 인벤토리 데이터를 비동기적으로 입력하는 함수</summary>
+    public void AsyncSaveInventoryData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Inventory";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                AsyncSaveInventoryData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        AsyncInsertInventoryData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        AsyncUpdateInventoryData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    AsyncInsertInventoryData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    /// <summary> 서버 인벤토리 데이터를 동기적으로 삽입하는 함수 </summary>
 
     public void InsertInventoryData(string selectedProbabilityFileId)
     {
@@ -513,7 +562,23 @@ public class UserInfo
     }
 
 
-    /// <summary> 서버 인벤토리 데이터 수정 함수 </summary>
+    /// <summary> 서버 인벤토리 데이터를 비동기적으로 삽입하는 함수 </summary>
+
+    public void AsyncInsertInventoryData(string selectedProbabilityFileId)
+    {
+        SaveUserInventory();
+        SaveGatheringItemReceived();
+        SaveFoodItemReceived();
+        SaveToolItemReceived();
+        Param param = GetInventoryParam();
+
+        Debug.LogFormat("인벤토리 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 서버 인벤토리 데이터를 동기적으로 수정하는 함수 </summary>
     public void UpdateInventoryData(string selectedProbabilityFileId, string inDate)
     {
         SaveUserInventory();
@@ -525,6 +590,21 @@ public class UserInfo
         Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
 
         BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버 인벤토리 데이터를 비동기적으로 수정하는 함수 </summary>
+    public void AsyncUpdateInventoryData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveUserInventory();
+        SaveGatheringItemReceived();
+        SaveFoodItemReceived();
+        SaveToolItemReceived();
+        Param param = GetInventoryParam();
+
+        Debug.LogFormat("인벤토리 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
     }
 
 
@@ -822,13 +902,13 @@ public class UserInfo
         for (int i = 0; i < GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
             InventoryData data = GatheringInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
         }
 
         for(int i = 0, count = CookInventoryDataArray.Count; i < count; i++)
         {
             InventoryData data = CookInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
         }
     }
 
@@ -839,47 +919,38 @@ public class UserInfo
         CookItemInventory = GameManager.Instance.Player.CookItemInventory;
         ToolItemInventory = GameManager.Instance.Player.ToolItemInventory;
 
-        if(GatheringInventoryDataArray != null)
+        GatheringInventoryDataArray.Clear(); //있던 데이터 지우고 거기에 저장
+        for (int i = 0; i < GatheringItemInventory.Length; i++)
         {
-            GatheringInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
-            for(int i=0;i< GatheringItemInventory.Length; i++)
+            for (int j = 0; j < GatheringItemInventory[i].ItemsCount; j++)
             {
-                for(int j=0;j< GatheringItemInventory[i].ItemsCount; j++)
-                {
-                    GatheringInventoryDataArray.Add(new InventoryData(
-                        GatheringItemInventory[i].GetItemList()[j].Id,
-                        GatheringItemInventory[i].GetItemList()[j].Count));
-                }
+                GatheringInventoryDataArray.Add(new InventoryData(
+                    GatheringItemInventory[i].GetItemList()[j].Id,
+                    GatheringItemInventory[i].GetItemList()[j].Count));
             }
         }
 
-        if (CookInventoryDataArray != null)
+
+        int index = (int)CookItemType.CookFood;
+        CookInventoryDataArray.Clear(); //있던 데이터 지우고 거기에 저장
+        List<InventoryItem> cookInventory = CookItemInventory[index].GetItemList();
+
+        for (int i = 0; i < cookInventory.Count; i++)
         {
-            CookInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
-            for (int i = 0; i < CookItemInventory.Length; i++)
-            {
-                for (int j = 0; j < CookItemInventory[i].ItemsCount; j++)
-                {
-                    CookInventoryDataArray.Add(new InventoryData(
-                        CookItemInventory[i].GetItemList()[j].Id,
-                        CookItemInventory[i].GetItemList()[j].Count));
-                }
-            }
+            CookInventoryDataArray.Add(new InventoryData(
+                cookInventory[i].Id,
+                cookInventory[i].Count));
         }
 
-        if (ToolInventoryDataArray != null)
-        {
-            ToolInventoryDataArray = new List<InventoryData>(); //있던 데이터 지우고 거기에 저장
-            for (int i = 0; i < ToolItemInventory.Length; i++)
-            {
-                for (int j = 0; j < ToolItemInventory[i].ItemsCount; j++)
-                {
-                    ToolInventoryDataArray.Add(new InventoryData(
-                        ToolItemInventory[i].GetItemList()[j].Id, 1));
-                }
+        index = (int)ToolItemType.GatheringTool;
+        ToolInventoryDataArray.Clear(); //있던 데이터 지우고 거기에 저장
+        List<InventoryItem> toolInventory = ToolItemInventory[index].GetItemList();
 
-            }
+        for (int i = 0; i < toolInventory.Count; i++)
+        {
+            ToolInventoryDataArray.Add(new InventoryData(toolInventory[i].Id, 1));
         }
+
     }
     #endregion
 
@@ -897,7 +968,6 @@ public class UserInfo
         {
             if (GatheringItemReceived.Find((x) => x == _items[i].Id) != null)
             {
-                Debug.Log("이미 있는 아이템이야");
                 continue;
             }
 
@@ -994,55 +1064,6 @@ public class UserInfo
 
     #endregion
 
-    #region Mail
-    public class MessageData
-    {
-        public string Id;
-        public bool IsCheck;
-        public bool IsReceived;
-        public MessageData(string id, bool isCheck, bool isReceived)
-        {
-            Id = id;
-            IsCheck = isCheck;
-            IsReceived = isReceived;
-        }
-    }
-
-    public void SaveUserMailData()
-    {
-        MessageLists = GameManager.Instance.Player.Messages;
-
-        if (MessageLists != null)
-        {
-            MessageDataArray = new List<MessageData>();
-            for (int i = 0; i < MessageLists.Length; i++)
-            {
-                for (int j = 0; j < MessageLists[i].MessagesCount; j++)
-                {
-                    MessageDataArray.Add(new MessageData(
-                        MessageLists[i].GetMessageList()[j].Id,
-                        MessageLists[i].GetMessageList()[j].IsCheck,
-                        MessageLists[i].GetMessageList()[j].IsReceived));
-                }
-
-            }
-        }
-    }
-
-    public void LoadUserMailData()
-    {
-        for(int i = 0; i < MessageDataArray.Count; i++)
-        {
-            if (MessageDataArray[i].Id.StartsWith("ML"))
-            {
-                Debug.Log(MessageDataArray[i].Id);
-                GameManager.Instance.Player.Messages[0].AddById(MessageDataArray[i].Id, MessageField.Mail);
-                GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsCheck = MessageDataArray[i].IsCheck;
-                GameManager.Instance.Player.Messages[0].GetMessageList()[i].IsReceived = MessageDataArray[i].IsReceived;
-            }
-        }
-    }
-    #endregion
 
     #region NPC, Album, Sticker Received
     public void LoadNPCReceived()
@@ -1103,8 +1124,6 @@ public class UserInfo
         List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
         AlbumReceived = new List<string>();
 
-        Debug.Log(albumDatabase.Count);
-        Debug.Log(AlbumReceived.Count);
         for (int i = 0; i < albumDatabase.Count; i++)
         {
             if (albumDatabase[i].IsReceived)

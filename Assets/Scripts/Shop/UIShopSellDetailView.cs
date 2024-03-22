@@ -25,6 +25,7 @@ namespace Shop
         private InventoryItem _currentItem;
         private int _currentItemCount;
         private int _maxItemCount;
+        private int _sellPrice;
 
 
         public void Init(UnityAction onButtonClicked = null)
@@ -51,10 +52,10 @@ namespace Shop
             gameObject.SetActive(true);
 
             _currentItem = showItem;
-
+            _sellPrice = (int)(showItem.Price * 0.8f);
             _nameText.text = showItem.Name;
             _descriptionText.text = showItem.Description;
-            _priceText.text = showItem.Price.ToString();
+            _priceText.text = _sellPrice.ToString();
             _itemImage.sprite = showItem.Image;
 
             _maxItemCount = showItem.Count;
@@ -65,26 +66,32 @@ namespace Shop
 
         private void Hide()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
             gameObject.SetActive(false);
         }
 
 
         private void OnLeftCountButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _currentItemCount = Mathf.Clamp(_currentItemCount - 1, 1, _maxItemCount);
             _itemCount.text = _currentItemCount.ToString();
+            _priceText.text = (_sellPrice * _currentItemCount).ToString();
         }
 
 
         private void OnRightCountButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _currentItemCount = Mathf.Clamp(_currentItemCount + 1, 1, _maxItemCount);
             _itemCount.text = _currentItemCount.ToString();
+            _priceText.text = (_sellPrice * _currentItemCount).ToString();
         }
 
 
         private void OnSellButtonClicked()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _sellView.Show(_currentItem, _currentItemCount);
         }
 

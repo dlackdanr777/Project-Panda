@@ -43,8 +43,6 @@ public class UIShopContent : MonoBehaviour
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
         CreateSlots();
-
-        GameManager.Instance.Player.GainBamboo(5000);
     }
 
 
@@ -66,7 +64,7 @@ public class UIShopContent : MonoBehaviour
                 slot.Init();
 
                 int itemIndex = index;
-                slot.AddOnButtonClicked(() => OnClickDetailView(itemIndex));
+                slot.AddOnButtonClicked(() => OnSlotClicked(itemIndex));
                 slot.SetItemImage(_shopItem[i].Image);
                 slot.SetPriceText(_shopItem[i].Price.ToString());
                 slot.transform.localScale = Vector3.one;
@@ -79,8 +77,9 @@ public class UIShopContent : MonoBehaviour
     }
 
 
-    private void OnClickDetailView(int index)
-    {   
+    private void OnSlotClicked(int index)
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         GetContent(index);
     }
 
@@ -96,7 +95,6 @@ public class UIShopContent : MonoBehaviour
     private void UpdateSoldOut()
     {
         //soldout
-        Debug.Log("매진 확인");
         //보유중인 도구 아이템을 확인해 보유중이면 매진 처리를 한다.
         List<InventoryItem> possessedItemList = new List<InventoryItem>();
         possessedItemList.AddRange(GameManager.Instance.Player.ToolItemInventory[(int)ToolItemType.GatheringTool].GetItemList());
@@ -116,6 +114,7 @@ public class UIShopContent : MonoBehaviour
 
     private void OnExitButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         LoadingSceneManager.LoadScene("24_01_09_Integrated");
     }
 

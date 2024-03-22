@@ -367,11 +367,7 @@ public class MapButton : MonoBehaviour
     /// <summary>메인 씬에서 다른 씬으로 변경될때 실행되는 함수</summary>
     private void OnSceneChanged()
     {
-        Debug.Log("체인지 씬");
         GameManager.Instance.TmpCameraData.SaveData(_cameraController.transform.position, CurrentMap);
-        Debug.Log(GameManager.Instance.TmpCameraData.TmpPos);
-        Debug.Log(GameManager.Instance.TmpCameraData.TmpCenterIndex);
-
         LoadingSceneManager.OnLoadSceneHandler -= OnSceneChanged;
     }
 }

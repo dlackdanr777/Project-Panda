@@ -122,6 +122,7 @@ namespace Muks.BackEnd
             BackendManager.Instance.GetMyData("Attendance", 10, DatabaseManager.Instance.UserInfo.LoadAttendanceData);
             BackendManager.Instance.GetMyData("NPC", 10, DatabaseManager.Instance.UserInfo.LoadNPCData);
             BackendManager.Instance.GetMyData("Bamboo", 10, GameManager.Instance.Player.LoadBambooData);
+            BackendManager.Instance.GetMyData("Mail", 10, GameManager.Instance.Player.LoadMailData);
             BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
             BackendManager.Instance.GetMyData("Sticker", 10, DatabaseManager.Instance.UserInfo.LoadStickerData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);

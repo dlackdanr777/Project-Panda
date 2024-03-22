@@ -10,19 +10,21 @@ public class MailBox : MonoBehaviour
     [SerializeField] private GameObject _mailNotice;
     private Player player;
     
+
     private void Awake()
     {
         player = GameManager.Instance.Player;
-        player.Messages[0].NoticeHandler += SetNotice;
+        player.GetMailList(Player.MailType.Mail).NoticeHandler += SetNotice;
         _uiMailList.NoticeHandler += SetNotice;
     }
+
 
     private void SetNotice() //알림 설정, 알림 갯수 설정
     {
         int count = 0;
-        for (int i = 0; i < player.Messages[0].MessagesCount; i++)
+        for (int i = 0; i < player.GetMailList(Player.MailType.Mail).MessagesCount; i++)
         {
-            count += player.Messages[0].CurrentNotCheckedMessage;
+            count += player.GetMailList(Player.MailType.Mail).CurrentNotCheckedMessage;
         }
         if (count == 0)
         {
