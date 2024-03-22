@@ -14,7 +14,7 @@ public class UIAlbumList : MonoBehaviour
 
     private void Awake()
     {
-        _albumDatabase = DatabaseManager.Instance.GetAlbumList();
+        _albumDatabase = DatabaseManager.Instance.AlbumDatabase.GetAlbumList();
 
         _leftButton.onClick.AddListener(() => OnClickPageButton(0));
         _rightButton.onClick.AddListener(() => OnClickPageButton(1));

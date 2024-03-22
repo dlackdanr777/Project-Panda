@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class UserInfo
 {
@@ -70,19 +71,17 @@ public class UserInfo
 
     //Item
     public List<string> GatheringItemReceived = new List<string>();
-    public List<NPCData> NPCReceived = new List<NPCData>();
     public List<string> CookItemReceived = new List<string>();
     public List<string> ToolItemReceived = new List<string>();
     public List<string> AlbumReceived = new List<string>();
 
     //Message
-
     private MessageList[] MessageLists; //게임 속 메시지리스트
 
 
     //Sticker
     public List<string> StickerReceived = new List<string>();
-    public List<StickerData> StickerDataArray = new List<StickerData>();
+    public List<StickerData> StickerDataList = new List<StickerData>();
 
     //Challenges
     public List<string> ChallengeDoneId = new List<string>(); // 도전과제 완료
@@ -143,14 +142,6 @@ public class UserInfo
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
-
-            for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["AlbumReceived"][i].ToString();
-                AlbumReceived.Add(item);
-            }
-
-            LoadAlbumReceived();
             Debug.Log("UserInfo Load성공");
         }
     }
@@ -218,8 +209,6 @@ public class UserInfo
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
 
-        SaveAlbumReceived();
-
         Param param = GetUserInfoParam();
 
         Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
@@ -232,8 +221,6 @@ public class UserInfo
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
-
-        SaveAlbumReceived();
 
         Param param = GetUserInfoParam();
 
@@ -252,8 +239,6 @@ public class UserInfo
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
-
-        param.Add("AlbumReceived", AlbumReceived);
 
         return param;
     }
@@ -625,149 +610,10 @@ public class UserInfo
 
     #endregion
 
-    #region SaveAndLoadSticker
-
-    public void LoadStickerData(BackendReturnObject callback)
-    {
-        JsonData json = callback.FlattenRows();
-
-        if (json.Count <= 0)
-        {
-            Debug.LogWarning("데이터가 존재하지 않습니다.");
-            return;
-        }
-
-        else
-        {
-            for (int i = 0, count = json[0]["StickerReceived"].Count; i < count; i++)
-            {
-                string item = json[0]["StickerReceived"][i].ToString();
-                StickerReceived.Add(item);
-            }
-
-            _saveStickerDataList.Clear();
-            for (int i = 0; i < json[0]["StickerDataArray"].Count; i++)
-            {
-                SaveStickerData item = JsonUtility.FromJson<SaveStickerData>(json[0]["StickerDataArray"][i].ToJson());
-                _saveStickerDataList.Add(item);
-                StickerDataArray.Add(item.GetStickerData());
-            }
-
-            LoadStickerReceived();
-            LoadUserStickerData();
-            Debug.Log("Sticker Load성공");
-        }
-    }
-
-
-    public void SaveStickerData(int maxRepeatCount)
-    {
-        string selectedProbabilityFileId = "Sticker";
-
-        if (!Backend.IsLogin)
-        {
-            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
-            return;
-        }
-
-        if (maxRepeatCount <= 0)
-        {
-            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
-            return;
-        }
-
-        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
-
-        switch (BackendManager.Instance.ErrorCheck(bro))
-        {
-            case BackendState.Failure:
-                Debug.LogError("초기화 실패");
-                break;
-
-            case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
-                break;
-
-            case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
-                SaveInventoryData(maxRepeatCount - 1);
-                break;
-
-            case BackendState.Success:
-
-                if (bro.GetReturnValuetoJSON() != null)
-                {
-                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
-                    {
-                        InsertStickerData(selectedProbabilityFileId);
-                    }
-                    else
-                    {
-                        UpdateStickerData(selectedProbabilityFileId, bro.GetInDate());
-                    }
-                }
-                else
-                {
-                    InsertStickerData(selectedProbabilityFileId);
-                }
-
-                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-                break;
-        }
-    }
-
-
-    /// <summary> 서버 스티커 데이터 삽입 함수 </summary>
-    public void InsertStickerData(string selectedProbabilityFileId)
-    {
-        SaveUserStickerData();
-
-        _saveStickerDataList.Clear();
-        foreach (StickerData data in StickerDataArray)
-        {
-            _saveStickerDataList.Add(data.GetSaveStickerData());
-        }
-
-        Param param = GetStickerParam();
-
-        Debug.LogFormat("스티커 데이터 삽입을 요청합니다.");
-
-        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
-    }
-
-
-    /// <summary> 서버 스티커 데이터 수정 함수 </summary>
-    public void UpdateStickerData(string selectedProbabilityFileId, string inDate)
-    {
-        SaveUserStickerData();
-        SaveStickerReceived();
-
-        _saveStickerDataList.Clear();
-        foreach (StickerData data in StickerDataArray)
-        {
-            _saveStickerDataList.Add(data.GetSaveStickerData());
-        }
-
-        Param param = GetStickerParam();
-
-        Debug.LogFormat("스티커 데이터 수정을 요청합니다.");
-
-        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
-    }
-
-
-    /// <summary> 서버에 저장할 스티커 데이터를 모아 반환하는 클래스 </summary>
-    public Param GetStickerParam()
-    {
-        Param param = new Param();
-        param.Add("StickerReceived", StickerReceived);
-        param.Add("StickerDataArray", _saveStickerDataList);
-        return param;
-    }
-
-    #endregion
-
     #region SaveAndLoadNPC
+
+    public List<NPCData> NPCReceived = new List<NPCData>();
+
 
     public void LoadNPCData(BackendReturnObject callback)
     {
@@ -844,7 +690,7 @@ public class UserInfo
                     InsertNPCData(selectedProbabilityFileId);
                 }
 
-                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                Debug.LogFormat("{0} 정보를 저장했습니다..", selectedProbabilityFileId);
                 break;
         }
     }
@@ -1064,20 +910,20 @@ public class UserInfo
 
     #endregion
 
-
-    #region NPC, Album, Sticker Received
+    #region NPC Received
     public void LoadNPCReceived()
     {
+        List<NPC> npcList = DatabaseManager.Instance.GetNPCList();
         //NPC
         for (int i = 0; i < NPCReceived.Count; i++)
         {
-            for (int j = 0; j < DatabaseManager.Instance.GetNPCList().Count; j++)
+            for (int j = 0, count = npcList.Count; j < count; j++)
             {
-                if (NPCReceived[i].Id.Equals(DatabaseManager.Instance.GetNPCList()[j].Id))
+                if (NPCReceived[i].Id.Equals(npcList[j].Id))
                 {
-                    DatabaseManager.Instance.GetNPCList()[j].IsReceived = true;
-                    DatabaseManager.Instance.GetNPCList()[j].Intimacy = NPCReceived[i].Intimacy;
-                    DatabaseManager.Instance.GetNPCList()[j].SSId = NPCReceived[i].SSId;
+                    npcList[j].IsReceived = true;
+                    npcList[j].Intimacy = NPCReceived[i].Intimacy;
+                    npcList[j].SSId = NPCReceived[i].SSId;
                 }
             }
 
@@ -1089,6 +935,7 @@ public class UserInfo
     private void SaveNPCReceived()
     {
         List<NPC>[] npcDatabase = { DatabaseManager.Instance.GetNPCList() };
+
         NPCReceived.Clear();
         for (int i = 0; i < npcDatabase.Length; i++)
         {
@@ -1102,49 +949,205 @@ public class UserInfo
         }
     }
 
-    public void LoadAlbumReceived()
+    #endregion
+
+    #region Book
+
+    public void LoadBookData(BackendReturnObject callback)
     {
-        // Album
-        for (int i = 0; i < AlbumReceived.Count; i++)
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
         {
-            for (int j = 0; j < DatabaseManager.Instance.GetAlbumList().Count; j++)
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+            for (int i = 0, count = json[0]["AlbumReceived"].Count; i < count; i++)
             {
-                if (AlbumReceived[i].Equals(DatabaseManager.Instance.GetAlbumList()[j].Id))
-                {
-                    DatabaseManager.Instance.GetAlbumList()[j].IsReceived = true;
-                }
+                string item = json[0]["AlbumReceived"][i].ToString();
+                AlbumReceived.Add(item);
             }
 
+            for (int i = 0, count = json[0]["StickerReceived"].Count; i < count; i++)
+            {
+                string item = json[0]["StickerReceived"][i].ToString();
+                StickerReceived.Add(item);
+            }
+
+            _saveStickerDataList.Clear();
+            for (int i = 0; i < json[0]["StickerDataArray"].Count; i++)
+            {
+                SaveStickerData item = JsonUtility.FromJson<SaveStickerData>(json[0]["StickerDataArray"][i].ToJson());
+                _saveStickerDataList.Add(item);
+                StickerDataList.Add(item.GetStickerData());
+            }
+
+            LoadAlbumReceived();
+            LoadStickerReceived();
+            Debug.Log("Book Load성공");
+        }
+    }
+
+
+    public void SaveBookData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Book";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveBookData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertBookData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateBookData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertBookData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0} 정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertBookData(string selectedProbabilityFileId)
+    {
+        SaveAlbumReceived();
+        SaveStickerReceived();
+
+        _saveStickerDataList.Clear();
+        foreach (StickerData data in StickerDataList)
+        {
+            Debug.Log(data.Id);
+            _saveStickerDataList.Add(data.GetSaveStickerData());
+        }
+
+        Param param = GetBookParam();
+
+        Debug.LogFormat("{0} 데이터 삽입을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateBookData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveAlbumReceived();
+        SaveStickerReceived();
+
+        _saveStickerDataList.Clear();
+        foreach (StickerData data in StickerDataList)
+        {
+            Debug.Log(data.Id);
+            _saveStickerDataList.Add(data.GetSaveStickerData());
+        }
+
+        Param param = GetBookParam();
+
+        Debug.LogFormat("{0} 데이터 수정을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 도감 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetBookParam()
+    {
+        Param param = new Param();
+
+        param.Add("AlbumReceived", AlbumReceived);
+        param.Add("StickerReceived", StickerReceived);
+        param.Add("StickerDataArray", _saveStickerDataList);
+
+        return param;
+    }
+
+
+    public void LoadAlbumReceived()
+    {
+        List<Album> albumList = DatabaseManager.Instance.AlbumDatabase.GetAlbumList();
+
+        for (int i = 0; i < AlbumReceived.Count; i++)
+        {
+            Album album = albumList.Find(x => x.Id == AlbumReceived[i]);
+            if (album == null)
+                continue;
+
+            album.IsReceived = true;
         }
     }
 
 
     private void SaveAlbumReceived()
     {
-        List<Album> albumDatabase = DatabaseManager.Instance.GetAlbumList();
-        AlbumReceived = new List<string>();
+        List<Album> albumList = DatabaseManager.Instance.AlbumDatabase.GetAlbumList();
 
-        for (int i = 0; i < albumDatabase.Count; i++)
+        for (int i = 0; i < albumList.Count; i++)
         {
-            if (albumDatabase[i].IsReceived)
-            {
-                Debug.Log("추가");
-                AlbumReceived.Add(albumDatabase[i].Id);
-            }
-        }   
+            if (AlbumReceived.Find((x) => x == albumList[i].Id) != null)
+                continue;
+
+            AlbumReceived.Add(albumList[i].Id);
+        }
     }
 
-    #endregion
 
-    #region Sticker
-    public void SaveUserStickerData()
+    private void SaveStickerReceived()
     {
-        StickerDataArray = GameManager.Instance.Player.StickerPosList;
+        StickerReceived.Clear();
+        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
+        {
+            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
+        }
     }
 
-    public void LoadUserStickerData()
+
+    private void LoadStickerReceived()
     {
-        GameManager.Instance.Player.StickerPosList = StickerDataArray;
+        // Sticker
+        for (int i = 0; i < StickerReceived.Count; i++)
+        {
+            GameManager.Instance.Player.StickerInventory.AddById(StickerReceived[i], GetStickerImage(StickerReceived[i]));
+        }
     }
 
     private Sprite GetStickerImage(string id)
@@ -1165,6 +1168,15 @@ public class UserInfo
         return image;
     }
 
+    public List<StickerData> GetStickerList()
+    {
+        return StickerDataList;
+    }
+
+    #endregion
+
+    #region Find
+
     private Sprite FindItemSpriteById(string id)
     {
         return DatabaseManager.Instance.GetStickerImage(id);
@@ -1180,27 +1192,6 @@ public class UserInfo
         }
         Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
         return null;
-    }
-
-
-    private void SaveStickerReceived()
-    {
-        StickerReceived = new List<string>();
-        for (int i = 0; i < GameManager.Instance.Player.StickerInventory.Count; i++)
-        {
-            StickerReceived.Add(GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id);
-        }
-    }
-
-
-    public void LoadStickerReceived()
-    {
-        // Sticker
-        for (int i = 0; i < StickerReceived.Count; i++)
-        {
-            GameManager.Instance.Player.StickerInventory.AddById(
-               StickerReceived[i], GetStickerImage(StickerReceived[i]));
-        }
     }
 
     #endregion

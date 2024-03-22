@@ -38,15 +38,14 @@ public class NPCDatabase
             }
         }
 
-        //Image
-        for (int i = 0; i < _npcSpriteDic.Length; i++)
-        {
-
-        }
-
         NPCParserByLocal();
     }
 
+
+
+
+
+    #region LoadNPCData
 
     public void LoadData()
     {
@@ -54,7 +53,6 @@ public class NPCDatabase
     }
 
 
-    #region LoadNPC
     /// <summary>서버에서 NPC 정보를 받아와 List에 넣는 함수</summary>
     public void NPCParserByServer(BackendReturnObject callback)
     {

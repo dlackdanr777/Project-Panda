@@ -8,15 +8,14 @@ using UnityEngine;
 
 public class AlbumDatabase : MonoBehaviour
 {
-    //Mail
-    public List<Album> AlbumList = new List<Album>();
+    private List<Album> _albumList = new List<Album>();
+    private int Count => _albumList.Count;
 
-    //MailPaper
-    public Dictionary<string, Sprite> _albumSpriteDic;
+    private Dictionary<string, Sprite> _albumSpriteDic;
 
     public void Register()
     {
-        //편지지 Image
+        //앨범 Image
         _albumSpriteDic = new Dictionary<string, Sprite>();
 
         ItemSpriteDatabase albumSprites = DatabaseManager.Instance.AlbumImages;
@@ -36,6 +35,25 @@ public class AlbumDatabase : MonoBehaviour
     }
 
 
+    public List<Album> GetAlbumList()
+    {
+        return _albumList;
+    }
+
+
+    public void SetReceiveAlbumById(string id)
+    {
+        for (int i = 0, count = _albumList.Count; i < count; i++)
+        {
+            if (_albumList[i].StoryStep.Equals(id))
+            {
+                _albumList[i].IsReceived = true;
+                return;
+            }
+        }
+    }
+
+
     /// <summary>리소스 폴더에서 앨범 정보를 받아와 리스트에 넣는 함수</summary>
     private void AlbumParserByLocal()
     {
@@ -43,21 +61,20 @@ public class AlbumDatabase : MonoBehaviour
 
         for (int i = 0; i < _dataAlbum.Count; i++)
         {
-            AlbumList.Add(new Album(
+            _albumList.Add(new Album(
                 _dataAlbum[i]["ID"].ToString(),
                 _dataAlbum[i]["이름"].ToString(),
                 _dataAlbum[i]["설명"].ToString(),
                 _dataAlbum[i]["스토리 단계"].ToString(),
                 GetItemSpriteById(_dataAlbum[i]["ID"].ToString())));
         }
-        DatabaseManager.Instance.UserInfo.LoadAlbumReceived();
     }
 
 
     /// <summary>서버에서 앨범 정보를 받아와 리스트에 넣는 함수</summary>
     private void AlbumParserByServer(BackendReturnObject callback)
     {
-        AlbumList.Clear();
+        _albumList.Clear();
         JsonData json = callback.FlattenRows();
 
         for (int i = 0, count = json.Count; i < count; i++)
@@ -67,7 +84,7 @@ public class AlbumDatabase : MonoBehaviour
             string description = json[i]["Description"].ToString();
             string storyStep = json[i]["StoryStep"].ToString();
             Sprite sprite = GetItemSpriteById(albumID);
-            AlbumList.Add(new Album(albumID, name, description, storyStep, sprite));
+            _albumList.Add(new Album(albumID, name, description, storyStep, sprite));
         }
 
         Debug.Log("앨범 정보 받아오기 성공");

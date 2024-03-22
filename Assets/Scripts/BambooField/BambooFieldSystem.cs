@@ -1,3 +1,7 @@
+using BackEnd.MultiCharacter;
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
 using Muks.DataBind;
 using Muks.Tween;
 using System;
@@ -5,6 +9,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UserInfo;
 
 public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 {
@@ -39,11 +44,10 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     private int _bambooPrefabCount;
 
     // 저장할 값
-    private List<int> _yield;
-    private List<float> _time;
-    private List<float> _second; // 저장 x
-    private List<TimeSpan> _timeDifference;
-
+    private List<int> _yield = new List<int>();
+    private List<float> _time = new List<float>();
+    private List<float> _second = new List<float>(); // 저장 x
+    private List<TimeSpan> _timeDifference = new List<TimeSpan>();
 
 
     public override void Awake()
@@ -62,17 +66,15 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     {
         for (int i = 0; i <= _fieldIndex; i++)
         {
-            // if 서버에 저장된 값이 없다면
+            //서버에 저장된 값이 없다면?
             _yield.Add(0);
             _time.Add(0);
             _second.Add(0);
             _timeDifference.Add(_fieldSlots[i].SetTimeDifference());
-
-            // else 0 대신 저장된 값 서버에서 불러오기
-
         }
         Invoke("FirstCheckGrowth", 0.1f);
     }
+
 
     private void Update()
     {
@@ -251,5 +253,161 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             }
         }
     }
+
+
+    #region SaveAndLoadBamboo
+
+    public void LoadBambooFieldData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+
+            _yield.Clear();
+            _time.Clear();
+            _timeDifference.Clear();
+            for (int i = 0, count = json[0]["Yield"].Count; i < count; i++)
+            {
+                int yield = int.Parse(json[0]["Yield"][i].ToString());
+                _yield.Add(yield);
+            }
+
+            for (int i = 0, count = json[0]["Time"].Count; i < count; i++)
+            {
+                float time = float.Parse(json[0]["Time"][i].ToString());
+                _time.Add(time);
+            }
+
+            for (int i = 0, count = json[0]["TimeDifference"].Count; i < count; i++)
+            {
+                string timeDifferenceToStr = json[0]["TimeDifference"][i].ToString();
+                TimeSpan timeDifference = TimeSpan.Parse(timeDifferenceToStr);
+                _timeDifference.Add(timeDifference);
+            }
+
+            if((_fieldIndex - json[0]["Yield"].Count) < 0)
+            {
+                Debug.Log(_fieldIndex - json[0]["Yield"].Count);
+                for (int i = 0, count = _fieldIndex - json[0]["Yield"].Count; i < count; i++)
+                {
+                    _yield.Add(0);
+                    _time.Add(0);
+                    _second.Add(0);
+                    _timeDifference.Add(_fieldSlots[i].SetTimeDifference());
+                }
+            }
+
+            Debug.Log("Bamboo Load성공");
+        }
+    }
+
+
+    public void SaveBambooFieldData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "BambooField";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveBambooFieldData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertBambooFieldData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateBambooFieldData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertBambooFieldData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertBambooFieldData(string selectedProbabilityFileId)
+    {
+
+        Param param = GetBambooFieldParam();
+
+        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateBambooFieldData(string selectedProbabilityFileId, string inDate)
+    {
+
+        Param param = GetBambooFieldParam();
+
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    private List<string> _timeDifferenceToStr = new List<string>();
+
+    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetBambooFieldParam()
+    {
+        _timeDifferenceToStr.Clear();
+        for (int i = 0, count = _timeDifference.Count; i < count; i++)
+        {
+            _timeDifferenceToStr.Add(_timeDifference[i].ToString());
+        }
+
+        Param param = new Param();
+
+        param.Add("Yield", _yield);
+        param.Add("Time", _time);
+        param.Add("TimeDifference", _timeDifferenceToStr);
+
+        return param;
+    }
+
+    #endregion
 
 }

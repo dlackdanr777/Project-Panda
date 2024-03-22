@@ -47,8 +47,9 @@ public class GameManager : SingletonHandler<GameManager>
         Player.SaveBambooData(10);
         Player.SaveMailData(10);
         DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
-        DatabaseManager.Instance.UserInfo.SaveStickerData(10);
+        DatabaseManager.Instance.UserInfo.SaveBookData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);
         DatabaseManager.Instance.StartPandaInfo.SavePandaInfoData(10);
+        BambooFieldSystem.Instance.SaveBambooFieldData(10);
     }
 }

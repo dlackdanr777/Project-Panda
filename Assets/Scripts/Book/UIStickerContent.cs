@@ -21,14 +21,17 @@ public class UIStickerContent : MonoBehaviour
         _clearButton.onClick.AddListener(OnClickClearButton);
 
         CreateSlots();
-        for (int i = 0; i < GameManager.Instance.Player.StickerPosList.Count; i++)
+
+        List<StickerData> stickerList = DatabaseManager.Instance.UserInfo.GetStickerList();
+
+        for (int i = 0; i < stickerList.Count; i++)
         {
             GameObject sticker = Instantiate(_stickerContentPf.GetComponent<SpawnSticker>().StickerClone, _stickerZone.transform);
-            sticker.transform.localPosition = GameManager.Instance.Player.StickerPosList[i].Pos;
-            sticker.transform.localRotation = GameManager.Instance.Player.StickerPosList[i].Rot;
-            sticker.transform.localScale = GameManager.Instance.Player.StickerPosList[i].Scale;
-            sticker.GetComponent<Image>().sprite = GetStickerImage(GameManager.Instance.Player.StickerPosList[i].Id);
-            sticker.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerPosList[i].Id;
+            sticker.transform.localPosition = stickerList[i].Pos;
+            sticker.transform.localRotation = stickerList[i].Rot;
+            sticker.transform.localScale = stickerList[i].Scale;
+            sticker.GetComponent<Image>().sprite = GetStickerImage(stickerList[i].Id);
+            sticker.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = stickerList[i].Id;
             sticker.transform.GetChild(0).gameObject.SetActive(false); //tool ²ô±â
         }
     }
@@ -42,10 +45,11 @@ public class UIStickerContent : MonoBehaviour
 
     public void Save()
     {
-        GameManager.Instance.Player.StickerPosList.Clear();
+        List<StickerData> stickerList = DatabaseManager.Instance.UserInfo.GetStickerList();
+        stickerList.Clear();
         for (int i = 0; i < _stickerZone.transform.childCount; i++)
         {
-            GameManager.Instance.Player.StickerPosList.Add(new StickerData(
+            stickerList.Add(new StickerData(
                 _stickerZone.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text,
                 _stickerZone.transform.GetChild(i).localPosition,
                 _stickerZone.transform.GetChild(i).localRotation,

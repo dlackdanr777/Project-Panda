@@ -352,27 +352,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _messageDatabase.MailList;
     }
 
-    /// <summary>
-    /// Album List
-    /// </summary>
-    /// <returns></returns>
-    public List<Album> GetAlbumList()
-    {
-        return _albumDatabase.AlbumList;
-    }
 
-
-    public void SetReceiveAlbumById(string id)
-    {
-        for (int i = 0; i < GetAlbumList().Count; i++)
-        {
-            if (GetAlbumList()[i].StoryStep.Equals(id))
-            {
-                GetAlbumList()[i].IsReceived = true;
-                return;
-            }
-        }
-    }
 
 
     /// <summary>
