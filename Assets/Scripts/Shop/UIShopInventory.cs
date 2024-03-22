@@ -25,6 +25,11 @@ namespace Shop
             if (item == null)
                 return;
 
+            //판매가격이 0이거나 음수면 판매불가
+            if (item.Price < 0)
+                return;
+
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _sellDetailView.Show(item);
         }
     }

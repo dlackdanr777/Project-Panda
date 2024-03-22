@@ -273,7 +273,7 @@ namespace Muks.BackEnd
         }
 
 
-        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 추가하는 함수 </summary>
+        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 동기적으로 추가하는 함수 </summary>
         public void GameDataInsert(string selectedProbabilityFileId, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
         {
             if (!Backend.IsLogin || !Login)
@@ -288,9 +288,49 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.GameData.Insert(selectedProbabilityFileId, param, (callback) =>
+            BackendReturnObject bro = Backend.GameData.Insert(selectedProbabilityFileId, param);
+
+            switch (ErrorCheck(bro))
             {
-                switch (ErrorCheck(callback))
+                case BackendState.Failure:
+                    Debug.LogError("연결 실패");
+                    break;
+
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
+
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    GameDataInsert(selectedProbabilityFileId, maxRepeatCount - 1, param, onCompleted);
+                    break;
+
+                case BackendState.Success:
+                    Debug.Log("정보 추가 성공");
+                    onCompleted?.Invoke(bro);
+                    break;
+            }
+        }
+
+
+        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 비동기적으로 추가하는 함수 </summary>
+        public void AsyncGameDataInsert(string selectedProbabilityFileId, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
+        {
+            if (!Backend.IsLogin || !Login)
+            {
+                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                return;
+            }
+
+            if (maxRepeatCount <= 0)
+            {
+                Debug.LogErrorFormat("{0} 게임 정보를 추가하지 못했습니다.", selectedProbabilityFileId);
+                return;
+            }
+
+            Backend.GameData.Insert(selectedProbabilityFileId, param, bro =>
+            {
+                switch (ErrorCheck(bro))
                 {
                     case BackendState.Failure:
                         Debug.LogError("연결 실패");
@@ -307,14 +347,14 @@ namespace Muks.BackEnd
 
                     case BackendState.Success:
                         Debug.Log("정보 추가 성공");
-                        onCompleted?.Invoke(callback);
+                        onCompleted?.Invoke(bro);
                         break;
-                }        
-            });
+                }
+            });      
         }
 
 
-        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 추가하는 함수 </summary>
+        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 동기적으로 추가하는 함수 </summary>
         public void GameDataUpdate(string selectedProbabilityFileId, string inDate, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
         {
             if (!Backend.IsLogin || !Login)
@@ -329,9 +369,49 @@ namespace Muks.BackEnd
                 return;
             }
 
-            Backend.GameData.UpdateV2(selectedProbabilityFileId, inDate, Backend.UserInDate, param, (callback) =>
+            BackendReturnObject bro = Backend.GameData.UpdateV2(selectedProbabilityFileId, inDate, Backend.UserInDate, param);
+
+            switch (ErrorCheck(bro))
             {
-                switch (ErrorCheck(callback))
+                case BackendState.Failure:
+                    Debug.LogError("연결 실패");
+                    break;
+
+                case BackendState.Maintainance:
+                    Debug.LogError("서버 점검 중");
+                    break;
+
+                case BackendState.Retry:
+                    Debug.LogWarning("연결 재시도");
+                    GameDataUpdate(selectedProbabilityFileId, inDate, maxRepeatCount - 1, param, onCompleted);
+                    break;
+
+                case BackendState.Success:
+                    Debug.Log("정보 수정 성공");
+                    onCompleted?.Invoke(bro);
+                    break;
+            }
+        }
+
+
+        /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝 GameData란에 정보를 비동기적으로 추가하는 함수 </summary>
+        public void AsyncGameDataUpdate(string selectedProbabilityFileId, string inDate, int maxRepeatCount, Param param, Action<BackendReturnObject> onCompleted = null)
+        {
+            if (!Backend.IsLogin || !Login)
+            {
+                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                return;
+            }
+
+            if (maxRepeatCount <= 0)
+            {
+                Debug.LogErrorFormat("{0} 게임 정보를 수정하지 못했습니다.", selectedProbabilityFileId);
+                return;
+            }
+
+            Backend.GameData.UpdateV2(selectedProbabilityFileId, inDate, Backend.UserInDate, param, bro =>
+            {
+                switch (ErrorCheck(bro))
                 {
                     case BackendState.Failure:
                         Debug.LogError("연결 실패");
@@ -348,12 +428,12 @@ namespace Muks.BackEnd
 
                     case BackendState.Success:
                         Debug.Log("정보 수정 성공");
-                        onCompleted?.Invoke(callback);
+                        onCompleted?.Invoke(bro);
                         break;
                 }
-
-            });
+            });    
         }
+
 
 
         /// <summary> 서버와 연결 상태를 체크하고 BackendState값을 반환하는 함수 </summary>

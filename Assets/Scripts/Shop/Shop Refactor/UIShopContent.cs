@@ -64,7 +64,7 @@ public class UIShopContent : MonoBehaviour
                 slot.Init();
 
                 int itemIndex = index;
-                slot.AddOnButtonClicked(() => OnClickDetailView(itemIndex));
+                slot.AddOnButtonClicked(() => OnSlotClicked(itemIndex));
                 slot.SetItemImage(_shopItem[i].Image);
                 slot.SetPriceText(_shopItem[i].Price.ToString());
                 slot.transform.localScale = Vector3.one;
@@ -77,8 +77,9 @@ public class UIShopContent : MonoBehaviour
     }
 
 
-    private void OnClickDetailView(int index)
-    {   
+    private void OnSlotClicked(int index)
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         GetContent(index);
     }
 
@@ -113,6 +114,7 @@ public class UIShopContent : MonoBehaviour
 
     private void OnExitButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         LoadingSceneManager.LoadScene("24_01_09_Integrated");
     }
 

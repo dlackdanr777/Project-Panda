@@ -30,9 +30,9 @@ public class UIMailList : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0, count = GameManager.Instance.Player.Messages[0].MaxMessageCount; i < count; i++) //미리 slot 생성
+        for (int i = 0, count = GameManager.Instance.Player.GetMailList(Player.MailType.Mail).MaxMessageCount; i < count; i++) //미리 slot 생성
         {
-            int index = GameManager.Instance.Player.Messages[0].MaxMessageCount - 1 - i;
+            int index = GameManager.Instance.Player.GetMailList(Player.MailType.Mail).MaxMessageCount - 1 - i;
             UIMailSlot mailSlot = Instantiate(_mailSlotPrefab, _spawnPoint);
             mailSlot.Init(() => OnClickMessageSlot(index));
 
@@ -44,7 +44,8 @@ public class UIMailList : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateList();      
+        UpdateList();
+        _detailView.SetActive(false);
     }
 
 
@@ -57,7 +58,7 @@ public class UIMailList : MonoBehaviour
 
     private void UpdateList()
     {
-        _mailList = GameManager.Instance.Player.Messages[0]; //메시지리스트 받아옴
+        _mailList = GameManager.Instance.Player.GetMailList(Player.MailType.Mail); //메시지리스트 받아옴
 
         NoticeHandler?.Invoke();
         for (int i = 0, count = _slotList.Count; i < count; i++)
@@ -93,7 +94,6 @@ public class UIMailList : MonoBehaviour
     private void OnClickCloseButton()
     {
         _detailView.SetActive(false);
-        GameManager.Instance.Player.Messages[0] = _mailList; //정보 저장
         UpdateList();
     }
 
@@ -108,8 +108,13 @@ public class UIMailList : MonoBehaviour
         DataBind.SetTextValue("MailDetailFrom", "From. " + GetNPCName(_mailList.GetMessageList()[index].From));
         DataBind.SetSpriteValue("MailDetailImage", _mailList.GetMessageList()[index].PaperImage);
         DataBind.SetButtonValue("MailDetailGiftButton", OnClickGiftButton);
-        
-        _mailList.GetMessageList()[index].IsCheck = true;
+
+        if (!_mailList.GetMessageList()[index].IsCheck)
+        {
+            GameManager.Instance.Player.SaveMailData(3);
+            _mailList.GetMessageList()[index].IsCheck = true;
+        }
+
 
         _detailView.gameObject.SetActive(true);
 
@@ -150,6 +155,7 @@ public class UIMailList : MonoBehaviour
         string giftId = _mailList.GetMessageList()[index].Gift.Id;
         GameManager.Instance.Player.AddItemById(_mailList.GetMessageList()[index].Gift.Id);
         _mailList.GetMessageList()[index].IsReceived = true;
+        GameManager.Instance.Player.SaveMailData(3);
     }
 
     private void SetDetail(int index)

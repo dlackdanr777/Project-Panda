@@ -17,13 +17,12 @@ public class UIMessageList : UIList<Message, MessageField>
     private void Awake()
     {
         _player = GameManager.Instance.Player;
-        for (int i = 0; i < _player.Messages.Length; i++)
-        {
-            _maxCount[i] = _player.Messages[i].MaxMessageCount;
-        }
+        _maxCount[(int)Player.MailType.Mail] = _player.GetMailList(Player.MailType.Mail).MaxMessageCount;
+        _maxCount[(int)Player.MailType.Wish] = _player.GetMailList(Player.MailType.Wish).MaxMessageCount;
 
         Init();
     }
+
 
     private void Start()
     {
@@ -33,11 +32,8 @@ public class UIMessageList : UIList<Message, MessageField>
 
     private void UpdateList()
     {
-        for (int i = 0; i < _player.Messages.Length; i++)
-        {
-            _lists[i] = _player.Messages[i].GetMessageList();
-
-        }
+        _lists[(int)Player.MailType.Mail] = _player.GetMailList(Player.MailType.Mail).GetMessageList();
+        _lists[(int)Player.MailType.Wish] = _player.GetMailList(Player.MailType.Wish).GetMessageList();
     }
 
     private void OnAddInventoryItem(int index)
@@ -80,7 +76,7 @@ public class UIMessageList : UIList<Message, MessageField>
                 {
                     message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn = false;
 
-                    _player.Messages[(int)_currentField].RemoveByIndex(i);
+                    _player.GetMailList((Player.MailType)_currentField).RemoveByIndex(i);
                     //_player.Messages[0].IsReceiveGift.RemoveAt(i);
                     //_player.Messages[0].IsCheckMessage.RemoveAt(i);
 
@@ -122,7 +118,7 @@ public class UIMessageList : UIList<Message, MessageField>
 
         for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 message에 저장된 개수
         {
-            if (j < _player.Messages[(int)_currentField].GetMessageList().Count)
+            if (j < _player.GetMailList((Player.MailType)_currentField).GetMessageList().Count)
             {
                 _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
                 _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].From; //Text 변경

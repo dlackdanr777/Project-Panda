@@ -56,6 +56,7 @@ namespace Shop
 
         private void Hide()
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             gameObject.SetActive(false);
         }
 

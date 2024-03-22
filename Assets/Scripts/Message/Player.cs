@@ -20,8 +20,6 @@ public class Player
     //Tool Inventory
     public Inventory[] ToolItemInventory; 
 
-    [Header("Message")]
-    public MessageList[] Messages; //0:Mail, 1:Wish
 
     [Header("Sticker")]
     public StickerList StickerInventory = new StickerList();
@@ -32,14 +30,7 @@ public class Player
 
     public void Init()
     {
-
-        //Message
-        Messages = new MessageList[System.Enum.GetValues(typeof(MessageField)).Length - 1];
-        for (int i = 0; i < System.Enum.GetValues(typeof(MessageField)).Length - 1; i++)
-        {
-            Messages[i] = new MessageList();
-        }
-
+        MailInit();
         //Inventory
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
@@ -66,15 +57,12 @@ public class Player
             StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);
         }
    
-        DatabaseManager.Instance.UserInfo.LoadUserMailData();
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
 
-        AddItemById("IFI01");
-        AddItemById("IFI44");
-        AddItemById("IFI19");
-
         DataBind.SetTextValue("BambooCount", Bamboo.ToString());
+
+
     }
 
 
@@ -110,22 +98,22 @@ public class Player
     }
 
 
-    public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
+    public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true)
     {
         InventoryItemField field = GetField(id);
 
         switch (field)
         {
             case InventoryItemField.GatheringItem:
-                GatheringItemInventory[GetItemType(id)].AddById(id, count, type);
+                GatheringItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
                 return true;
 
             case InventoryItemField.Cook:
-                CookItemInventory[GetItemType(id)].AddById(id, count, type);
+                CookItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
                 return true;
 
             case InventoryItemField.Tool:
-                ToolItemInventory[GetItemType(id)].AddById(id, count, type);
+                ToolItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
                 return true;
         }
 
@@ -383,45 +371,44 @@ public class Player
             return;
         }
 
-        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
         {
-            switch (BackendManager.Instance.ErrorCheck(bro))
-            {
-                case BackendState.Failure:
-                    Debug.LogError("초기화 실패");
-                    break;
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
 
-                case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
-                    break;
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
 
-                case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
-                    SaveBambooData(maxRepeatCount - 1);
-                    break;
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveBambooData(maxRepeatCount - 1);
+                break;
 
-                case BackendState.Success:
+            case BackendState.Success:
 
-                    if (bro.GetReturnValuetoJSON() != null)
-                    {
-                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
-                        {
-                            InsertBambooData(selectedProbabilityFileId);
-                        }
-                        else
-                        {
-                            UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
-                        }
-                    }
-                    else
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
                     {
                         InsertBambooData(selectedProbabilityFileId);
                     }
+                    else
+                    {
+                        UpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertBambooData(selectedProbabilityFileId);
+                }
 
-                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-                    break;
-            }
-        });   
+                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
     }
 
 
@@ -455,6 +442,255 @@ public class Player
         param.Add("Bamboo", Bamboo);
         return param;
     }
+
+    #endregion
+
+
+    #region Mail
+
+    private MessageList[] _mailLists = new MessageList[Enum.GetValues(typeof(MessageField)).Length - 1];
+    private List<string> _mailRecivedList = new List<string>();
+
+    private List<MessageData> MessageDataArray = new List<MessageData>(); //저장할 메시지 데이터
+
+
+    public class MessageData
+    {
+        public string Id;
+        public bool IsCheck;
+        public bool IsReceived;
+        public MessageData(string id, bool isCheck, bool isReceived)
+        {
+            Id = id;
+            IsCheck = isCheck;
+            IsReceived = isReceived;
+        }
+    }
+
+    public enum MailType
+    {
+        Mail,
+        Wish
+    }
+
+
+    public MessageList GetMailList(MailType mailType)
+    {
+        return _mailLists[(int)mailType];
+    }
+
+
+    private void MailInit()
+    {
+        //Message
+        for (int i = 0; i < _mailLists.Length - 1; i++)
+        {
+            _mailLists[i] = new MessageList();
+        }
+    }
+
+
+    public void LoadMailData(BackendReturnObject callback)
+    {
+        JsonData json = callback.FlattenRows();
+
+        if (json.Count <= 0)
+        {
+            Debug.LogWarning("데이터가 존재하지 않습니다.");
+            return;
+        }
+
+        else
+        {
+
+            for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
+            {
+                MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
+                MessageDataArray.Add(item);
+            }
+            LoadUserMailData();
+
+            for (int i = 0, count = json[0]["MailRecivedList"].Count; i < count; i++)
+            {
+                string id = json[0]["MailRecivedList"].ToString();
+                _mailRecivedList.Add(id);
+            }
+
+
+            Debug.Log("Mail Load성공");
+        }
+    }
+
+
+    public void SaveMailData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "Mail";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
+
+        switch (BackendManager.Instance.ErrorCheck(bro))
+        {
+            case BackendState.Failure:
+                Debug.LogError("초기화 실패");
+                break;
+
+            case BackendState.Maintainance:
+                Debug.LogError("서버 점검 중");
+                break;
+
+            case BackendState.Retry:
+                Debug.LogWarning("연결 재시도");
+                SaveMailData(maxRepeatCount - 1);
+                break;
+
+            case BackendState.Success:
+
+                if (bro.GetReturnValuetoJSON() != null)
+                {
+                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    {
+                        InsertMailData(selectedProbabilityFileId);
+                    }
+                    else
+                    {
+                        UpdateMailData(selectedProbabilityFileId, bro.GetInDate());
+                    }
+                }
+                else
+                {
+                    InsertMailData(selectedProbabilityFileId);
+                }
+
+                Debug.LogFormat("{0} 정보를 저장했습니다..", selectedProbabilityFileId);
+                break;
+        }
+    }
+
+
+    public void InsertMailData(string selectedProbabilityFileId)
+    {
+        SaveUserMailData();
+
+        Param param = GetMailParam();
+
+        Debug.LogFormat("{0} 데이터 삽입을 요청합니다.",  selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    public void UpdateMailData(string selectedProbabilityFileId, string inDate)
+    {
+        SaveUserMailData();
+        SaveMailReceived();
+
+        Param param = GetMailParam();
+
+        Debug.LogFormat("{0} 데이터 수정을 요청합니다.", selectedProbabilityFileId);
+
+        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+
+    /// <summary> 서버에 저장할 메일 데이터를 모아 반환하는 클래스 </summary>
+    public Param GetMailParam()
+    {
+        Param param = new Param();
+        param.Add("MessageDataArray", MessageDataArray);
+        param.Add("MailRecivedList", _mailRecivedList);
+        return param;
+    }
+
+
+    public void SaveUserMailData()
+    {
+        MessageDataArray.Clear();
+
+        for (int i = 0; i < _mailLists.Length; i++)
+        {
+            if (_mailLists[i] == null)
+                continue;
+
+            List<Message> mailList = _mailLists[i].GetMessageList();
+            for (int j = 0; j < _mailLists[i].MessagesCount; j++)
+            {
+                string id = mailList[j].Id;
+                bool isCheck = mailList[j].IsCheck;
+                bool isReceived = mailList[j].IsReceived;
+
+                MessageDataArray.Add(new MessageData(id, isCheck, isReceived));
+            }
+
+        }
+    }
+
+
+    public void LoadUserMailData()
+    {
+        for (int i = 0; i < MessageDataArray.Count; i++)
+        {
+            if (MessageDataArray[i].Id.StartsWith("ML"))
+            {
+                _mailLists[0].AddById(MessageDataArray[i].Id, MessageField.Mail, false);
+                _mailLists[0].GetMessageList()[i].IsCheck = MessageDataArray[i].IsCheck;
+                _mailLists[0].GetMessageList()[i].IsReceived = MessageDataArray[i].IsReceived;
+            }
+        }
+    }
+
+
+    public bool FindMailReceivedById(string id)
+    {
+        for(int i = 0, count = _mailRecivedList.Count; i < count; i++)
+        {
+            if (_mailRecivedList[i] == id)
+                return true;
+        }
+
+        return false;
+    }
+
+
+    public void SaveMailReceived()
+    {
+        List<Message> mailList = new List<Message>();
+        mailList.AddRange(_mailLists[(int)MailType.Mail].GetMessageList());
+        for (int i = 0, count = mailList.Count; i < count; i++)
+        {
+            if (_mailRecivedList.Find((x) => x == mailList[i].Id) != null)
+                continue;
+
+            _mailRecivedList.Add(mailList[i].Id);
+        }
+    }
+
+
+    public void AddMailReceived(string id)
+    {
+        UnityEngine.Debug.Log(id);
+
+        if (_mailRecivedList.Find((x) => x == id) != null)
+        {
+            Debug.Log("이미 존재하는 메일 입니다.");
+            return;
+        }
+            
+        _mailRecivedList.Add(id);
+    }
+
 
     #endregion
 }

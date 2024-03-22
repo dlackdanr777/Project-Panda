@@ -46,7 +46,7 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public bool AddById(string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
+    public bool AddById(string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true)
     {
         Dictionary<string, Item> itemDic = DatabaseManager.Instance.ItemDatabase.AllItemDic;
 
@@ -65,7 +65,10 @@ public class Inventory
             {
                 UnityEngine.Debug.Log(id + " 획득");
                 item.IsReceived = true;
-                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+
+                if(isServerUploaded)
+                    DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+
                 return true;
             }
 
@@ -192,12 +195,6 @@ public class Inventory
                 break;
         }
     }*/
-
-
-    public void addItem(Item item, int count = 1)
-    {
-        AddById(item.Id, count);
-    }
 
    
     public void RemoveItem(Item item, int count = 1)

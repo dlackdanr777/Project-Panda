@@ -45,6 +45,7 @@ public class GameManager : SingletonHandler<GameManager>
         DatabaseManager.Instance.UserInfo.SaveAttendanceData(10);
         DatabaseManager.Instance.UserInfo.SaveNPCData(10);
         Player.SaveBambooData(10);
+        Player.SaveMailData(10);
         DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
         DatabaseManager.Instance.UserInfo.SaveStickerData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);

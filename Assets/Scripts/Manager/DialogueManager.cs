@@ -17,13 +17,13 @@ public class DialogueManager
 
     public void Register()
     {
-        //임시로 주석처리. 뒤끝테스트를 위해 로컬 Csv는 꺼놓습니다.
-        //_storyDialogueDic = _parser.StroyParse("StoryDialogue");
+        _storyDialogueDic = _parser.StroyParse("StoryDialogue");
     }
 
     public void LoadData()
     {
-        BackendManager.Instance.GetChartData(_chartID, 10, DialogueParseByServer);
+        //스토리 데이터 서버에서 로컬로 변경
+        //BackendManager.Instance.GetChartData(_chartID, 10, DialogueParseByServer);
     }
 
     private void DialogueParseByServer(BackendReturnObject callback)
