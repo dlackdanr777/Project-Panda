@@ -85,6 +85,7 @@ public class UIDiary : UIView
 
     private void OnBackgroundButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
         _uiNav.Pop("Diary");
     }

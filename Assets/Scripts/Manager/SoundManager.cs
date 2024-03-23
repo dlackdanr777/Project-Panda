@@ -16,7 +16,8 @@ public enum SoundEffectType
 {
     ButtonClick,
     ButtonExit,
-    InputText,
+    Sell,
+    Buy
 }
 
 
@@ -36,7 +37,8 @@ public class SoundManager : SingletonHandler<SoundManager>
     [Header("Audio Clips")]
     [SerializeField] private AudioClip _buttonClick;
     [SerializeField] private AudioClip _buttonExit;
-    [SerializeField] private AudioClip _inputText;
+    [SerializeField] private AudioClip _sellSound;
+    [SerializeField] private AudioClip _buySound;
 
     private AudioSource[] _audios;
 
@@ -131,8 +133,12 @@ public class SoundManager : SingletonHandler<SoundManager>
                 clip = _buttonExit;
                 break;
 
-            case SoundEffectType.InputText:
-                clip = _inputText;
+            case SoundEffectType.Sell:
+                clip = _sellSound;
+                break;
+
+            case SoundEffectType.Buy:
+                clip = _buySound;
                 break;
         }
 

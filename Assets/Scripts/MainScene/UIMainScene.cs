@@ -29,9 +29,6 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
         DataBind.SetButtonValue("HideInventoryButton", OnHideInventoryButtonClicked);
 
-        DataBind.SetButtonValue("ShowWoodButton", OnShowWoodButtonClicked);
-        DataBind.SetButtonValue("HideWoodButton", OnHideWoodButtonClicked);
-
         DataBind.SetButtonValue("ShowPictureButton", OnShowPictureButtonClicked);
         DataBind.SetButtonValue("HidePictureButton", OnHidePictureButtonClicked);
 
@@ -69,32 +66,32 @@ public class UIMainScene : MonoBehaviour
 
     private void OnShowMailButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Mail");
     }
 
     private void OnHideMailButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Mail");
     }
 
 
     private void OnInventoryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Inventory");
-/*
-        GameManager.Instance.FirezeInteraction = false;
-        GameManager.Instance.FriezeCameraMove = false;
-        GameManager.Instance.FriezeCameraZoom = false;
- */
     }
 
     private void OnShowDiaryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Diary");
     }
 
     private void OnHideDiaryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Diary");
     }
 
@@ -110,11 +107,13 @@ public class UIMainScene : MonoBehaviour
 
     private void OnShowAttendanceButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Attendance");
     }
 
     private void OnHideAttendanceButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Attendance");
     }
 
@@ -125,6 +124,7 @@ public class UIMainScene : MonoBehaviour
         //만약 인벤토리 UI가 닫혀있을 경우 연다
         if (UIInventory.VisibleState == VisibleState.Disappeared)
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             _uiNav.Push("Inventory");
 /*            GameManager.Instance.FriezeCameraMove = false;
             GameManager.Instance.FirezeInteraction = false;*/
@@ -133,25 +133,15 @@ public class UIMainScene : MonoBehaviour
         //열려 있으면 닫는다.
         else if (UIInventory.VisibleState == VisibleState.Appeared)
         {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
             _uiNav.Pop("Inventory");
         }
     }
 
     private void OnHideInventoryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Inventory");
-    }
-
-
-    public void OnShowWoodButtonClicked()
-    {
-        _uiNav.Push("InsideWood");
-    }
-
-
-    public void OnHideWoodButtonClicked()
-    {
-        _uiNav.Pop("InsideWood");
     }
 
 
@@ -180,26 +170,31 @@ public class UIMainScene : MonoBehaviour
 
     public void OnShowChallengesButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Challenges");
     }
 
     public void OnHideChallengesButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Challenges");
     }
 
     public void OnShowPreferencesButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Preferences");
     }
 
     public void OnHidePreferencesButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Preferences");
     }
 
     public void OnShowDropDownMenuButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("DropdownMenuButton");
         GameManager.Instance.FriezeCameraMove = false;
         GameManager.Instance.FirezeInteraction = false;
@@ -207,6 +202,7 @@ public class UIMainScene : MonoBehaviour
 
     public void OnHideDropDownMenuButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
     }
 

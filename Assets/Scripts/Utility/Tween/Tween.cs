@@ -569,6 +569,34 @@ namespace Muks.Tween
             return objToColor;
         }
 
+
+        /// <summary>목표 값으로 지속 시간동안 캔버스 그룹 알파 값을 변경하는 함수</summary>
+        public static TweenData Light2DIntensity(GameObject targetObject, float targetIntensity, float duration, TweenMode tweenMode = TweenMode.Constant, Action onComplete = null, Action onUpdate = null)
+        {
+            TweenLight2DIntensity objToLight2D = !targetObject.GetComponent<TweenLight2DIntensity>()
+                ? targetObject.AddComponent<TweenLight2DIntensity>()
+                : targetObject.GetComponent<TweenLight2DIntensity>();
+
+            DataSequence tempData = new DataSequence();
+            tempData.TargetValue = targetIntensity;
+            tempData.Duration = duration;
+            tempData.TweenMode = tweenMode;
+            tempData.OnComplete = onComplete;
+            tempData.OnUpdate = onUpdate;
+
+            objToLight2D.IsLoop = false;
+            objToLight2D.AddDataSequence(tempData);
+
+            if (!objToLight2D.enabled)
+            {
+                objToLight2D.ElapsedDuration = 0;
+                objToLight2D.TotalDuration = 0;
+                objToLight2D.enabled = true;
+            }
+
+            return objToLight2D;
+        }
+
     }
 }
 

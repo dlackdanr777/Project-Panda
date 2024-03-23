@@ -70,8 +70,6 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
     {
         _showButton.SetActive(false);
 
-
-
         for (int i = 0, count = _buttons.Length; i < count; i++)
         {
             _buttons[i].RectTransform.anchoredPosition = _tmpButtonsPos[i];
@@ -88,7 +86,6 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
             Tween.RectTransfromAnchoredPosition(_exitButton.gameObject, _targetExitButtonPos, _exitButtonAnimeDuration, _exitButtonAnimeTweenMode);
             _exitButton.ShowAnime(_buttonAnimeDuration, _buttonAnimeTweenMode);
         });
-
 
     }
 

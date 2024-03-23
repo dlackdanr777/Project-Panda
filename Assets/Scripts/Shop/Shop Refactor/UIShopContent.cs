@@ -21,13 +21,12 @@ public class UIShopContent : MonoBehaviour
     private List<Item> _shopItem = new List<Item>(); //아직 상점 데이터베이스가 없어서 툴로 사용
     private List<Item> _buyItemList = new List<Item>();
     private List<UIShopSlot> _slotList = new List<UIShopSlot>();
-    private int _currentIndex;
 
 
     private void Awake()
     {
         DataBind.SetButtonValue("ShopExitButton", OnExitButtonClicked);
-        _buyDetailView.Init();
+        _buyDetailView.Init(() => SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit));
         _buyDetailView.gameObject.SetActive(false);
 
         LoadingSceneManager.OnLoadSceneHandler += OnSceneChanged;
@@ -43,15 +42,6 @@ public class UIShopContent : MonoBehaviour
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
         CreateSlots();
-    }
-
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            GameManager.Instance.Player.GainBamboo(1000);
-        }
     }
 
 
@@ -95,7 +85,6 @@ public class UIShopContent : MonoBehaviour
 
     private void GetContent(int index)
     {
-        _currentIndex = index;
         _buyDetailView.Show(_buyItemList[index]);
     }
 

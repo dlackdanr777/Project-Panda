@@ -65,9 +65,8 @@ namespace Shop
         {
             if (GameManager.Instance.Player.GainBamboo(_sellMoney))
             {
+                SoundManager.Instance.PlayEffectAudio(SoundEffectType.Sell);
                 GameManager.Instance.Player.RemoveItemById(_sellItem.Id, _sellCount);
-
-
                 _canvasGroup.blocksRaycasts = false;
 
                 _completeImage.SetActive(true);

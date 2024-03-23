@@ -14,14 +14,20 @@ public class MapButton : MonoBehaviour
     [Space]
     [Header("AudioClips")]
     [SerializeField] private AudioClip _treeAudioClip;
+    [SerializeField] private AudioClip _mainTreeInsideAudioClip;
     [SerializeField] private AudioClip _fishingGroundAudioClip;
     [SerializeField] private AudioClip _forestAudioClip;
     [SerializeField] private AudioClip _crossRoadAudioClip;
     [SerializeField] private AudioClip _villageAudioClip;
     [SerializeField] private AudioClip _marcketAudioClip;
+    [SerializeField] private AudioClip _cityHallLobbyAudioClip;
+    [SerializeField] private AudioClip _cityHallBossRoomAudioClip;
     [SerializeField] private AudioClip _catworldAudioClip;
+    [SerializeField] private AudioClip _castleNyangAudioClip;
     [SerializeField] private AudioClip _mermaidForestAudioClip;
     [SerializeField] private AudioClip _villageHouseAudioClip;
+
+
 
     private float _fadeTime = 1f;
     private int _currentMap;
@@ -101,6 +107,7 @@ public class MapButton : MonoBehaviour
     {
         _cameraController.MapSize = _mapSize;
         SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         if (CurrentMap == 14)
         {
@@ -120,6 +127,7 @@ public class MapButton : MonoBehaviour
     {
         CheckDirection();
         SoundManager.Instance.PlayBackgroundAudio(_fishingGroundAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 1;
         _cameraController.MapSize = _mapSize;
@@ -131,6 +139,8 @@ public class MapButton : MonoBehaviour
     {
         CheckDirection();
         SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 2;
         _cameraController.MapSize = _mapSize;
 
@@ -139,6 +149,8 @@ public class MapButton : MonoBehaviour
     private void MoveForest()
     {
         SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         if (CurrentMap == 8)
         {
             CurrentMap = 3;
@@ -158,6 +170,8 @@ public class MapButton : MonoBehaviour
     {
         _cameraController.MapSize = _mapSize;
         SoundManager.Instance.PlayBackgroundAudio(_villageAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         if (CurrentMap == 10)
         {
             CurrentMap = 4;
@@ -176,6 +190,8 @@ public class MapButton : MonoBehaviour
     {
         _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
         SoundManager.Instance.PlayBackgroundAudio(_marcketAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         if (CurrentMap == 11)
         {
             CurrentMap = 5;
@@ -194,6 +210,8 @@ public class MapButton : MonoBehaviour
     private void MoveCatWorld()
     {
         SoundManager.Instance.PlayBackgroundAudio(_catworldAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         _cameraController.MapSize = _mapSize;
         if (CurrentMap == 13)
         {
@@ -214,6 +232,8 @@ public class MapButton : MonoBehaviour
     {
         CheckDirection();
         SoundManager.Instance.PlayBackgroundAudio(_mermaidForestAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 7;
         _cameraController.MapSize = new Vector2(31f, _cameraController.MapSize.y);
 
@@ -251,6 +271,8 @@ public class MapButton : MonoBehaviour
     private void MoveVillageHouse()
     {
         SoundManager.Instance.PlayBackgroundAudio(_villageHouseAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 10;
         _cameraController.MapSize = new Vector2(30f, _cameraController.MapSize.y);
 
@@ -259,6 +281,9 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHall()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_cityHallLobbyAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 11;
         _cameraController.MapSize = new Vector2(28.5f, _cameraController.MapSize.y);
 
@@ -267,6 +292,9 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHallOffice()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_cityHallBossRoomAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 12;
         _cameraController.MapSize = new Vector2(45, _cameraController.MapSize.y);
 
@@ -275,6 +303,9 @@ public class MapButton : MonoBehaviour
 
     private void MoveCatCastle()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_castleNyangAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 13;
         _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
 
@@ -283,6 +314,9 @@ public class MapButton : MonoBehaviour
 
     private void MoveInsideWishTree()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_mainTreeInsideAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CurrentMap = 14;
         _cameraController.MapSize = new Vector2(22.7f, _cameraController.MapSize.y);
 

@@ -167,6 +167,7 @@ public class UIChallenges : UIView
 
     private void OnBackgroundButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
         _uiNav.Pop("Challenges");
     }

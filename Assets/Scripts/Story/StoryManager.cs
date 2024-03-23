@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 public class StoryManager : SingletonHandler<StoryManager>
@@ -9,6 +10,7 @@ public class StoryManager : SingletonHandler<StoryManager>
 
     private Dictionary<string, PandaStoryController> _pandaStoryControllerDic = new Dictionary<string, PandaStoryController>();
 
+    public event Action OnAddCompletedStoryHandler;
 
     public override void Awake()
     {
@@ -68,6 +70,8 @@ public class StoryManager : SingletonHandler<StoryManager>
         //일기장 추가
         DatabaseManager.Instance.AlbumDatabase.SetReceiveAlbumById(id);
         DatabaseManager.Instance.Challenges.MainStoryDone(id);
+
+        OnAddCompletedStoryHandler?.Invoke();
 
         DatabaseManager.Instance.UserInfo.SaveStoryData(10);
     }
