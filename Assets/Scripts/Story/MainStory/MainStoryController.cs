@@ -14,12 +14,14 @@ public class MainStoryController : MonoBehaviour
     private NPCButton _npcButton;
     private Dictionary<string, MainStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
-    private int _storyIndex;
+    private string _storyIndex;
     private bool _isInitialized = false;
     private bool _isStartStory = false;
 
-    private NPCAnimeControllCenter _poyaAnimControll;
-    private NPCAnimeControllCenter _jijiAnimControll;
+    private GameObject _poyaAnimControll;
+    private GameObject _jijiAnimControll;
+
+    public List<string> NextStory = new List<string>();
 
     private void Awake()
     {
@@ -43,22 +45,29 @@ public class MainStoryController : MonoBehaviour
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
 
-        NPCAnimeControllCenter poyaAnimControll = GameObject.Find("Poya Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
-        NPCAnimeControllCenter jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
+        _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
 
         Init();
     }
 
     private void Update()
     {
-        if(_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(_npcID) && _isStartStory == false)
+        foreach(string key in NextStory)
         {
-            if (_storyDatabase[_storyKey[_storyIndex + 1]].EventType == MainEventType.None || CheckCondition(_storyDatabase[_storyKey[_storyIndex + 1]].EventType, 
-                _storyDatabase[_storyKey[_storyIndex + 1]].EventTypeCondition, _storyDatabase[_storyKey[_storyIndex + 1]].EventTypeAmount))
+            if (_storyDatabase[key].DialogueData[0].TalkPandaID.Equals(_npcID) && _isStartStory == false && !_questMark.activeSelf)
             {
-                _questMark.SetActive(true);
+                if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
+                    _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
+                {
+                    _questMark.SetActive(true);
+                    // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
+                    PoyaSetTrue();
+                    JijiSetTrue();
+                }
             }
         }
+
     }
 
     // NPC 버튼 클릭했을 때
@@ -66,15 +75,22 @@ public class MainStoryController : MonoBehaviour
     {
         _questMark.SetActive(false);
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
-        if (_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(_npcID))
+        foreach(string key in NextStory)
         {
-            if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
+            if (_storyDatabase[key].DialogueData[0].TalkPandaID.Equals(_npcID))
             {
-                DatabaseManager.Instance.GetNPC(_npcID).IsReceived = true; //NPC 만남
+                if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
+                {
+                    DatabaseManager.Instance.GetNPC(_npcID).IsReceived = true; //NPC 만남
+                }
+                _storyIndex = key;
+                Debug.Log("key" + key);
+                StartMainStory();
+                _isInitialized = true;
+                break;
             }
-            StartMainStory();
-            _isInitialized = true;
         }
+
     }
 
     // 초기 설정
@@ -82,20 +98,19 @@ public class MainStoryController : MonoBehaviour
     {
         _storyDatabase = DatabaseManager.Instance.MainDialogueDatabase.MSDic;
         _storyKey.Clear();
-        _storyIndex = -1;
 
         foreach(var key in _storyDatabase.Keys)
         {
             _storyKey.Add(key);
         }
 
+        _storyIndex = _storyKey[0];
         // 저장된 값 불러오기
         for(int i = 0; i < _storyDatabase.Count; i++)
         {
             // 완료된 id일 경우
             if(!string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i]))){
                 _storyDatabase[_storyKey[i]].IsSuccess = true;
-                _storyIndex = i;
             }
             else
             {
@@ -103,44 +118,55 @@ public class MainStoryController : MonoBehaviour
             }
         }
 
+        for (int j = 1; j < _storyKey.Count; j++)
+        {
+            if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+            {
+                if (!NextStory.Contains(_storyKey[j]))
+                {
+                    NextStory.Add(_storyKey[j]);
+                }
+            }
+        }
+
+        if(NextStory.Count ==0 ) 
+        {
+            NextStory.Add(_storyKey[0]);
+        }
 
         _isInitialized = true;
     }
 
     private void StartMainStory()
     {
-        for(int i = _storyIndex + 1; i < _storyKey.Count; i++)
+        MainStoryDialogue currentStory = _storyDatabase[_storyIndex];
+
+        if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
         {
-            MainStoryDialogue currentStory = _storyDatabase[_storyKey[i]];
+            //이전 스토리 다음 스토리 비교
+            bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
+            int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
 
-            if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
+            if (priorCheck && //이전 스토리 성공했는지 비교
+                StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
             {
-                //이전 스토리 다음 스토리 비교
-                bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
-                int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
-
-                if (priorCheck && //이전 스토리 성공했는지 비교
-                    StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
+                if (currentStory.EventType != MainEventType.None)// 이벤트 조건이 있으면
                 {
-                    if (currentStory.EventType != MainEventType.None)// 이벤트 조건이 있으면
+                    //조건 비교
+                    if (!CheckCondition(currentStory.EventType, currentStory.EventTypeCondition, currentStory.EventTypeAmount))
                     {
-                        //조건 비교
-                        if (!CheckCondition(currentStory.EventType, currentStory.EventTypeCondition, currentStory.EventTypeAmount))
-                        {
-                            i--;
-                            currentStory = _storyDatabase[_storyKey[i]];
-                        }
+                        //i--;
+                        //currentStory = _storyDatabase[key];
+                        return;
                     }
-                    if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
-                    {
-                        _isStartStory = true;
-                        ShowContext(currentStory);
-                    }
-
-                    break;
                 }
-                //다음 스토리와 친밀도가 같으면 다음 스토리로 넘어감
+                if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
+                {
+                    _isStartStory = true;
+                    ShowContext(currentStory);
+                }
             }
+            //다음 스토리와 친밀도가 같으면 다음 스토리로 넘어감
         }
     }
 
@@ -243,36 +269,107 @@ public class MainStoryController : MonoBehaviour
 
     private void FinishStory(string id)
     {
-        for(int i = _storyIndex + 1; i < _storyKey.Count; i++) 
+        foreach(string key in NextStory)
         {
-            if(_storyKey[i] == id)
+            if(key == id)
             {
-                _storyDatabase[_storyKey[i]].IsSuccess = true;
-                if (string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i])))
+                _storyDatabase[key].IsSuccess = true;
+                if (string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == key)))
                 {
-                    DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(_storyKey[i]);
+                    DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
                 }
-                _storyIndex = i;
-                DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = _storyKey[i];
+                NextStory.Remove(key);
+
+
+                _storyIndex = key;
+                DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
+
+                for(int j = 0;  j < _storyKey.Count; j++)
+                {
+                    if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+                    {
+                        if (!NextStory.Contains(_storyKey[j]))
+                        {
+                            NextStory.Add(_storyKey[j]);
+                        }
+                    }
+                }
 
                 // 채집이 있다면 채집 활성화
-                string name = id + "Collection";
-                GameObject gameObject = GameObject.Find(name);
-                if(gameObject != null)
+                foreach(string nextStoryId in NextStory)
                 {
-                    MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
-                    msCollection.CollectionID = _storyDatabase[_storyKey[i+1]].EventTypeCondition;
-                    msCollection.NextMainStoryID = _storyDatabase[_storyKey[i]].NextStoryID;
+                    string name = nextStoryId + "Collection";
+                    GameObject gameObject = GameObject.Find(name);
+                    if (gameObject != null)
+                    {
+                        MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
+                        msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
+                        msCollection.NextMainStoryID = _storyDatabase[nextStoryId].StoryID;
 
+                    }
                 }
 
-                // 지지와 포야 애니메이션 켜기
-                
 
+                // 지지와 포야 애니메이션 켜기
+                PoyaSetFalse();
+                JijiSetFalse();
                 break;
             }
         }
         _isStartStory = false;
+    }
+
+    // 애니메이션 끄고 포야 켜기
+    private void PoyaSetTrue()
+    {
+        // 다음 스토리에 포야가 포함되어 있다면
+        foreach(string key in NextStory)
+        {
+            if (DatabaseManager.Instance.MainDialogueDatabase.PoyaStoryList.Contains(key))
+            {
+                foreach (Transform child in _poyaAnimControll.transform)
+                {
+                    Debug.Log(child.name);
+                    child.gameObject.SetActive(false);
+                }
+                StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = true;
+
+            }
+
+        }
+
+    }
+
+    private void PoyaSetFalse()
+    {
+        foreach (Transform child in _poyaAnimControll.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
+    private void JijiSetTrue()
+    {
+        foreach (string key in NextStory)
+        {
+            if (DatabaseManager.Instance.MainDialogueDatabase.JijiStoryList.Contains(key))
+            {
+                foreach (Transform child in _jijiAnimControll.transform)
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+            GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = true;
+        }
+    }
+    private void JijiSetFalse()
+    {
+        foreach (Transform child in _jijiAnimControll.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = false;
     }
 
 }

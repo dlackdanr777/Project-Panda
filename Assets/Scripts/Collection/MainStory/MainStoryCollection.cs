@@ -107,7 +107,17 @@ public class MainStoryCollection : MonoBehaviour
         _waitTime = _spawnTime - 1;
         _collectionAnim = _starButton.GetComponent<Animator>();
         //_collectionButton.OnCollectionButtonClicked += ClickCollectionButton;
-
+        switch (_gatheringType)
+        {
+            case GatheringItemType.Bug:
+                toolId = "ITG02";
+                break;
+            case GatheringItemType.Fish:
+                toolId = "ITG01";
+                break;
+            case GatheringItemType.Fruit:
+                break;
+        }
         DataBind.SetButtonValue(_starButton.name, ClickStarButton);
 
         MainStoryID = gameObject.name.Substring(0, 5);
@@ -134,7 +144,7 @@ public class MainStoryCollection : MonoBehaviour
         {
             _waitTime += Time.deltaTime;
         }
-        else if (_waitTime >= _spawnTime && !string.IsNullOrEmpty(CollectionID))
+        else if (_waitTime >= _spawnTime && !string.IsNullOrEmpty(CollectionID) && (_gatheringType == GatheringItemType.Fruit || GameManager.Instance.Player.FindItemById(toolId)))
         {
             _waitTime = 0;
 
