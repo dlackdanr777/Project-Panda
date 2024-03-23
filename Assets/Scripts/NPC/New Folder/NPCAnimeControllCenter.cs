@@ -109,10 +109,10 @@ public class NPCAnimeControllCenter : MonoBehaviour
         for (int i = 0, count = _mn10NPCs.Length; i < count; i++)
             _mn10NPCs[i].Init();
 
-        for (int i = 0, count = _mn10NPCs.Length; i < count; i++)
+        for (int i = 0, count = _mn11NPCs.Length; i < count; i++)
             _mn11NPCs[i].Init();
 
-        for (int i = 0, count = _mn11NPCs.Length; i < count; i++)
+        for (int i = 0, count = _mn12NPCs.Length; i < count; i++)
             _mn12NPCs[i].Init();
 
         for (int i = 0, count = _mn13NPCs.Length; i < count; i++)
@@ -120,7 +120,7 @@ public class NPCAnimeControllCenter : MonoBehaviour
 
         for (int i = 0, count = _mn14NPCs.Length; i < count; i++)
             _mn14NPCs[i].Init();
-        for (int i = 0, count = _mn14NPCs.Length; i < count; i++)
+        for (int i = 0, count = _mn15NPCs.Length; i < count; i++)
             _mn15NPCs[i].Init();
         
     }

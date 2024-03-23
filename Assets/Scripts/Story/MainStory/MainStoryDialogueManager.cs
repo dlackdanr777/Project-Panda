@@ -76,7 +76,6 @@ public class MainStoryDialogueManager : MonoBehaviour
             GetMainEventType(_dataMainStory[i]["이벤트 타입"].ToString()),
             _dataMainStory[i]["이벤트 타입 조건"].ToString(),
             GetIntType(_dataMainStory[i]["이벤트 타입 수량"])));
-            i++;
 
             if(_dataMainStory[i]["talkPandaID"].ToString() == "POYA00"){
                 _isExistPoya = true;
@@ -86,6 +85,7 @@ public class MainStoryDialogueManager : MonoBehaviour
                 _isExistJiji = true;
             }
 
+            i++;
         }
 
 
