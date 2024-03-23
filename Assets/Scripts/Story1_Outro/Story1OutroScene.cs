@@ -116,6 +116,10 @@ public class Story1OutroScene : MonoBehaviour
         _uiOutroScene.StartFadeIn(3);
         yield return YieldCache.WaitForSeconds(5);
 
+        //스토리1 아웃트로 완료
+        DatabaseManager.Instance.UserInfo.IsExistingStory1Outro = true;
+        DatabaseManager.Instance.UserInfo.SaveUserInfoData(3);
+
         _uiOutroScene.StartEndText(2);
 
         yield return YieldCache.WaitForSeconds(8);

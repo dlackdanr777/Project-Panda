@@ -51,6 +51,8 @@ public class UserInfo
 
     public bool IsExistingUser; //기존 유저인가?
 
+    public bool IsExistingStory1Outro; //스토리1 아웃트로를 감상했는가?
+
 
     //출석 체크
     //==========================================================================================================
@@ -141,6 +143,9 @@ public class UserInfo
             DayCount = int.Parse(json[0]["DayCount"].ToString());
             _lastAccessDay = json[0]["LastAccessDay"].ToString();
             IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+            if (json[0].ContainsKey("IsExistingStory1Outro"))
+                IsExistingStory1Outro = (bool)json[0]["IsExistingStory1Outro"];
 
             Debug.Log("UserInfo Load성공");
         }
@@ -239,6 +244,7 @@ public class UserInfo
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
+        param.Add("IsExistingStory1Outro", IsExistingStory1Outro);
 
         return param;
     }

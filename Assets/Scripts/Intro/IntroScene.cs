@@ -139,13 +139,13 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(1f);
 
         string context = "여러분... ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.15f));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.15f));
 
         context = "저는 오늘을 기점으로   \n탐정 생활을 마감하고 새로운 여정을 시작하려 합니다. ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 40));
 
         context = "그러니 이제 안녕히... ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         //대사 종료
         _uiIntroScene.EndDialogue();
@@ -183,7 +183,7 @@ public class IntroScene : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(_reportersRumblingSound);
 
         context = "포와로가 사라졌다!!! ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 60, 0.07f));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 70, 0.07f));
 
         context = "이건 대단한 뉴스야!         \n은퇴 기자회견에서 사라진 세계적인 탐정!  ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
@@ -231,10 +231,10 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(1f);
 
         string context = "흑흑흑... 할아버지... ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.15f));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.12f));
 
         context = "어라...?          \n이건 뭐지? ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45));
 
 
         //포야 대사 종료
@@ -342,7 +342,7 @@ public class IntroScene : MonoBehaviour
         _uiIntroScene.ShakeDialogue(1.2f);
 
         context = "으아악!!        ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 60, 0.05f));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 70, 0.05f));
 
 
         //추신 대화 출력
@@ -350,7 +350,7 @@ public class IntroScene : MonoBehaviour
         _uiIntroScene.SetDialogueImage(null);
 
         context = ". . . ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 35, 0.2f));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.2f));
 
         //추신 대화 출력
         _uiIntroScene.SetDialogueNameText("포아로");

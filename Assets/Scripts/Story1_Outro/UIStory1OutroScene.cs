@@ -50,18 +50,20 @@ public class UIStory1OutroScene : MonoBehaviour
     }
 
 
-    public IEnumerator StartContext(string context, float fontSize = 35, float contextTimeInterval = 0.08f, float contextEndWaitTime = 1f)
+    public IEnumerator StartContext(string context, float fontSize = 45, float contextTimeInterval = 0.08f, float contextEndWaitTime = 1f)
     {
         _isSkipButtonClicked = false;
+        _dialogueContext.fontSize = fontSize;
         HideNextText();
         Tween.TransformMove(gameObject, transform.position, 0.25f, TweenMode.Constant, () => _dialogueSkipButton.gameObject.SetActive(true));
 
         char[] tempChars = context.ToCharArray();
         string tempString = string.Empty;
 
+
         for (int i = 0, count = tempChars.Length; i < count; i++)
         {
-            SetDialogueContext(tempString, fontSize);
+            SetDialogueContext(tempString);
             tempString += tempChars[i];
 
             yield return YieldCache.WaitForSeconds(contextTimeInterval);
@@ -70,7 +72,7 @@ public class UIStory1OutroScene : MonoBehaviour
             if (_isSkipButtonClicked)
             {
                 //순차적으로 나오는 대사를 한번에 출력한다.
-                SetDialogueContext(context, fontSize);
+                SetDialogueContext(context);
                 break;
             }
         }
@@ -99,9 +101,8 @@ public class UIStory1OutroScene : MonoBehaviour
     }
 
 
-    public void SetDialogueContext(string text, float fontSize = 35)
+    public void SetDialogueContext(string text)
     {
-        _dialogueContext.fontSize = fontSize;
         _dialogueContext.text = text;
     }
 
