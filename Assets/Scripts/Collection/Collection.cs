@@ -72,7 +72,7 @@ public class Collection : MonoBehaviour
     [SerializeField] private GatheringItemType _gatheringType;
     private string[] _isCollecting = { "IsCollectingBug", "IsCollectingFish", "IsCollectingFruit" };
 
-    [SerializeField] private string toolId; // 나중에 플레이어 도구 정보로 수정
+    private string toolId; // 채집에 필요한 도구ID
 
     // 아이템 등급 확률
     private float normal = 0.87f;
@@ -114,9 +114,11 @@ public class Collection : MonoBehaviour
         {
             case GatheringItemType.Bug:
                 starButton = "BugStarButton";
+                toolId = "ITG02";
                 break;
             case GatheringItemType.Fish:
                 starButton = "FishStarButton";
+                toolId = "ITG01";
                 break;
             case GatheringItemType.Fruit:
                 starButton = "FruitStarButton";
@@ -138,7 +140,7 @@ public class Collection : MonoBehaviour
         {
             _waitTime += Time.deltaTime;
         }
-        else if(_waitTime >= _spawnTime)
+        else if(_waitTime >= _spawnTime && (_gatheringType == GatheringItemType.Fruit || GameManager.Instance.Player.FindItemById(toolId)))
         {
             _waitTime = 0;
             
@@ -508,35 +510,12 @@ public class Collection : MonoBehaviour
 
         if (_gatheringType == GatheringItemType.Bug)
         {
-            // 플레이어 도구에 따라 확률 변경하기
-            switch (toolId)
-            {
-                case "ITG02":
-                    _successRate = 0.6f;
-                    break;
-                case "ITG04":
-                    _successRate = 0.7f;
-                    break;
-                case "ITG06":
-                    _successRate = 0.8f;
-                    break;
-            }
-
+            _successRate = 0.7f;
         }
         else if (_gatheringType == GatheringItemType.Fish)
         {
-            switch (toolId)
-            {
-                case "ITG01":
-                    _successRate = 0.6f;
-                    break;
-                case "ITG03":
-                    _successRate = 0.7f;
-                    break;
-                case "ITG05":
-                    _successRate = 0.8f;
-                    break;
-            }
+            _successRate = 0.7f;
+
         }
         else if (_gatheringType == GatheringItemType.Fruit)
         {

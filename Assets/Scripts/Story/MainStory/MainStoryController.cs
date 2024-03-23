@@ -7,8 +7,8 @@ public class MainStoryController : MonoBehaviour
 {
     public static event Action<MainStoryDialogue> OnStartInteractionHandler;
 
-    [SerializeField] private string NPCID;
     [SerializeField] private SpriteRenderer _npcRenderer;
+    private string _npcID;
 
     private NPCButton _npcButton;
     private Dictionary<string, MainStoryDialogue> _storyDatabase;
@@ -29,12 +29,12 @@ public class MainStoryController : MonoBehaviour
 
     private void Start()
     {
-        NPCID = gameObject.name;
+        _npcID = gameObject.name;
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
         Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
-        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
+        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
 
         Init();
@@ -44,11 +44,11 @@ public class MainStoryController : MonoBehaviour
     public void OnClickStartButton()
     {
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
-        if (_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(NPCID))
+        if (_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(_npcID))
         {
-            if (!DatabaseManager.Instance.GetNPC(NPCID).IsReceived)
+            if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
             {
-                DatabaseManager.Instance.GetNPC(NPCID).IsReceived = true; //NPC 만남
+                DatabaseManager.Instance.GetNPC(_npcID).IsReceived = true; //NPC 만남
             }
             StartMainStory();
             _isInitialized = true;
@@ -181,15 +181,15 @@ public class MainStoryController : MonoBehaviour
             return;
         }
 
-        NPC currentNPC = DatabaseManager.Instance.GetNPC(NPCID);
+        NPC currentNPC = DatabaseManager.Instance.GetNPC(_npcID);
         MainStoryDialogue currentStory = _storyDatabase[id];
 
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
-        DatabaseManager.Instance.AddIntimacy(NPCID, currentStory.RewardIntimacy); //보상 친밀도
+        DatabaseManager.Instance.AddIntimacy(_npcID, currentStory.RewardIntimacy); //보상 친밀도
 
         if (currentNPC.Intimacy > nextStoryInti)
         {
-            DatabaseManager.Instance.GetNPC(NPCID).Intimacy = nextStoryInti;
+            DatabaseManager.Instance.GetNPC(_npcID).Intimacy = nextStoryInti;
         }
 
         //보상

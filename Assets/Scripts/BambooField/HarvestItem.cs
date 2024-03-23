@@ -16,7 +16,7 @@ public class HarvestItem
     {
         ID = id;
         Name = name;
-        HarvestTime = harvestTime;
+        HarvestTime = harvestTime * 60; // 시간 단위: 분
         Yield = yield;
         MaxYield = maxYield;
         Description = description;

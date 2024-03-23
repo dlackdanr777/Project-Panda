@@ -40,7 +40,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 
     [SerializeField] private GameObject _harvestBamboos;
     [SerializeField] private GameObject _harvestBamboo;
-    private GameObject[] _bambooPrefabs = new GameObject[300];
+    private GameObject[] _bambooPrefabs = new GameObject[50];
     private int _bambooPrefabCount;
 
     // 저장할 값
