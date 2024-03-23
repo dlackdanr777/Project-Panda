@@ -8,13 +8,15 @@ public class MainStoryController : MonoBehaviour
     public static event Action<MainStoryDialogue> OnStartInteractionHandler;
 
     [SerializeField] private SpriteRenderer _npcRenderer;
-    private string _npcID;
+    [SerializeField] private string _npcID;
+    [SerializeField] private GameObject _questMark;
 
     private NPCButton _npcButton;
     private Dictionary<string, MainStoryDialogue> _storyDatabase;
     private List<string> _storyKey = new List<string>();
     private int _storyIndex;
     private bool _isInitialized = false;
+    private bool _isStartStory = false;
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class MainStoryController : MonoBehaviour
     private void Start()
     {
         _npcID = gameObject.name;
+
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
         Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
@@ -40,9 +43,22 @@ public class MainStoryController : MonoBehaviour
         Init();
     }
 
+    private void Update()
+    {
+        if(_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(_npcID) && _isStartStory == false)
+        {
+            if (_storyDatabase[_storyKey[_storyIndex + 1]].EventType == MainEventType.None || CheckCondition(_storyDatabase[_storyKey[_storyIndex + 1]].EventType, 
+                _storyDatabase[_storyKey[_storyIndex + 1]].EventTypeCondition, _storyDatabase[_storyKey[_storyIndex + 1]].EventTypeAmount))
+            {
+                _questMark.SetActive(true);
+            }
+        }
+    }
+
     // NPC 버튼 클릭했을 때
     public void OnClickStartButton()
     {
+        _questMark.SetActive(false);
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
         if (_storyDatabase[_storyKey[_storyIndex + 1]].DialogueData[0].TalkPandaID.Equals(_npcID))
         {
@@ -90,6 +106,7 @@ public class MainStoryController : MonoBehaviour
         for(int i = _storyIndex + 1; i < _storyKey.Count; i++)
         {
             MainStoryDialogue currentStory = _storyDatabase[_storyKey[i]];
+
             if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
             {
                 //이전 스토리 다음 스토리 비교
@@ -110,6 +127,7 @@ public class MainStoryController : MonoBehaviour
                     }
                     if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
                     {
+                        _isStartStory = true;
                         ShowContext(currentStory);
                     }
 
@@ -185,12 +203,8 @@ public class MainStoryController : MonoBehaviour
         MainStoryDialogue currentStory = _storyDatabase[id];
 
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
-        DatabaseManager.Instance.AddIntimacy(_npcID, currentStory.RewardIntimacy); //보상 친밀도
 
-        if (currentNPC.Intimacy > nextStoryInti)
-        {
-            DatabaseManager.Instance.GetNPC(_npcID).Intimacy = nextStoryInti;
-        }
+        StarterPanda.Instance.Intimacy += currentStory.RewardIntimacy; // 보상 친밀도
 
         //보상
         RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
@@ -247,6 +261,7 @@ public class MainStoryController : MonoBehaviour
                 break;
             }
         }
+        _isStartStory = false;
     }
 
 }

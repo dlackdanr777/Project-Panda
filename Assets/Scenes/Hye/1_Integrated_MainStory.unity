@@ -2342,8 +2342,6 @@ MonoBehaviour:
     UIView: {fileID: 615842586}
   - Name: WishTreeInventory
     UIView: {fileID: 5341532245792099474}
-  - Name: InsideWood
-    UIView: {fileID: 530097742284771519}
   - Name: Challenges
     UIView: {fileID: 1436310446}
   - Name: Preferences
@@ -8968,6 +8966,90 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &858696389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 858696390}
+  - component: {fileID: 858696391}
+  m_Layer: 0
+  m_Name: QuestMark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &858696390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858696389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.15, y: 4.43, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1499805696}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &858696391
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858696389}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2072736103
+  m_SortingLayer: 5
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -8320159355231086760, guid: 3f9e39d0571ddac45a569ee136a47358, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 10.03, y: 25.92}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &858885180
 GameObject:
   m_ObjectHideFlags: 0
@@ -10761,7 +10843,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6775272571245942422, guid: d6870fbbe989bc447baaff4734431e55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 858696390}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7413029592119845268, guid: d6870fbbe989bc447baaff4734431e55, type: 3}
       insertIndex: -1
@@ -15593,11 +15678,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsComplate: 0
---- !u!212 &1477579508 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8854536816892997691, guid: a404adac922c72146af36391084b4d8c, type: 3}
-  m_PrefabInstance: {fileID: 1246146218}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1480185536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15798,6 +15878,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _npcRenderer: {fileID: 1499805688}
+  _npcID: 
+  _questMark: {fileID: 858696389}
+--- !u!4 &1499805696 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6775272571245942422, guid: d6870fbbe989bc447baaff4734431e55, type: 3}
+  m_PrefabInstance: {fileID: 1065518921}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1504950075
 GameObject:
   m_ObjectHideFlags: 0
@@ -25840,7 +25927,7 @@ MonoBehaviour:
   VisibleState: 0
   _dontTouchArea: {fileID: 177586242}
   _cameraMovePos: {x: -0.1048288, y: -4, z: -10}
-  _inSideWood: {fileID: 1477579508}
+  _inSideWood: {fileID: 0}
   _outSideWood: {fileID: 635930884}
 --- !u!224 &531570029533468533
 RectTransform:

@@ -35,7 +35,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public float Intimacy
     {
         get { return _intimacy; }
-        private set { }
+        set { _intimacy = value; }
     }
 
     /// <summary>판다 행복도</summary>
