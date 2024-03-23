@@ -27,6 +27,7 @@ public class NPCAnimeControllCenter : MonoBehaviour
     [SerializeField] private NPCAnimeContollor[] _mn13NPCs;
     [SerializeField] private NPCAnimeContollor[] _mn14NPCs;
     [SerializeField] private NPCAnimeContollor[] _mn15NPCs;
+    
 
 
     private void Start()
@@ -71,6 +72,7 @@ public class NPCAnimeControllCenter : MonoBehaviour
         ChangeMapEvent_Mn13();
         ChangeMapEvent_Mn14();
         ChangeMapEvent_Mn15();
+     
 
     }
 
@@ -98,12 +100,6 @@ public class NPCAnimeControllCenter : MonoBehaviour
         for (int i = 0, count = _mn07NPCs.Length; i < count; i++)
             _mn07NPCs[i].Init();
 
-        for (int i = 0, count = _mn07NPCs.Length; i < count; i++)
-            _mn07NPCs[i].Init();
-
-        for (int i = 0, count = _mn07NPCs.Length; i < count; i++)
-            _mn07NPCs[i].Init();
-
         for (int i = 0, count = _mn08NPCs.Length; i < count; i++)
             _mn08NPCs[i].Init();
 
@@ -113,6 +109,9 @@ public class NPCAnimeControllCenter : MonoBehaviour
         for (int i = 0, count = _mn10NPCs.Length; i < count; i++)
             _mn10NPCs[i].Init();
 
+        for (int i = 0, count = _mn10NPCs.Length; i < count; i++)
+            _mn11NPCs[i].Init();
+
         for (int i = 0, count = _mn11NPCs.Length; i < count; i++)
             _mn12NPCs[i].Init();
 
@@ -121,6 +120,9 @@ public class NPCAnimeControllCenter : MonoBehaviour
 
         for (int i = 0, count = _mn14NPCs.Length; i < count; i++)
             _mn14NPCs[i].Init();
+        for (int i = 0, count = _mn14NPCs.Length; i < count; i++)
+            _mn15NPCs[i].Init();
+        
     }
 
 
