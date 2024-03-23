@@ -46,6 +46,15 @@ public class UIShopContent : MonoBehaviour
     }
 
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            GameManager.Instance.Player.GainBamboo(1000);
+        }
+    }
+
+
     private void CreateSlots()
     {
         int index = 0;

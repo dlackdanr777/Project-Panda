@@ -44,19 +44,12 @@ public class MapDatabase
             Debug.LogError("맵 데이터가 존재하지 않습니다.");
             return;
         }
-
+        string id = string.Empty;
         for (int i = 0; i < _dataMap.Count; i++)
         {
-            string id = _dataMap[i]["ID"].ToString();
-            string name = _dataMap[i]["이름"].ToString();
+            id = _dataMap[i]["MapID"].ToString();
+            string name = _dataMap[i]["Name"].ToString();
             GameObject[] backGround = new GameObject[System.Enum.GetValues(typeof(ETime)).Length];
-
-
-            if (GameObject.Find(id + "BackGround") == null)
-            {
-                _isMapExists = false;
-                return;
-            }
 
             // 나중에 for문으로 수정
             backGround[(int)ETime.Day] = GameObject.Find(id + "DayBackGround")?.GetComponent<Transform>().gameObject;
@@ -78,6 +71,13 @@ public class MapDatabase
 
             MapData data = new MapData(id, name, backGround);
             _mapDic.Add(id, data);
+        }
+
+        id = _dataMap[0]["MapID"].ToString();
+        if (GameObject.Find(id + "BackGround") == null)
+        {
+            _isMapExists = false;
+            return;
         }
 
         _isMapExists = true;

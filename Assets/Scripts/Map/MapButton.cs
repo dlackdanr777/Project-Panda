@@ -347,7 +347,6 @@ public class MapButton : MonoBehaviour
     // 중심으로 이동
     private void MoveCenter()
     {
-        Debug.Log(CurrentMap);
         Vector3 targetPos = new Vector3(_targetTransform[CurrentMap].position.x, _targetTransform[CurrentMap].position.y, Camera.main.transform.position.z);
         FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
         {

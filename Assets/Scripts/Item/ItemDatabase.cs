@@ -478,19 +478,19 @@ public class ItemDatabase
         for (int i = 0; i < dataFruit.Count; i++)
         {
             GatheringItem item = new GatheringItem(
-                    dataFruit[i]["ID"].ToString(),
-                    dataFruit[i]["이름"].ToString(),
-                    dataFruit[i]["설명"].ToString(),
-                    (int)dataFruit[i]["가격"],
-                    dataFruit[i]["등급"].ToString(),
-                    dataFruit[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(dataFruit[i]["ID"].ToString(), GatheringItemType.Fruit),
-                    dataFruit[i]["시간"].ToString(),
-                    dataFruit[i]["계절"].ToString()
+                    dataFruit[i]["ItemID"].ToString(),
+                    dataFruit[i]["Name"].ToString(),
+                    dataFruit[i]["Description"].ToString(),
+                    (int)dataFruit[i]["Price"],
+                    dataFruit[i]["Rating"].ToString(),
+                    dataFruit[i]["MapID"].ToString(),
+                    GetItemSpriteById(dataFruit[i]["ItemID"].ToString(), GatheringItemType.Fruit),
+                    dataFruit[i]["Time"].ToString(),
+                    dataFruit[i]["Season"].ToString()
                     );
 
             ItemFruitList.Add(item);
-            ItemFruitDic.Add(dataFruit[i]["ID"].ToString(), item);
+            ItemFruitDic.Add(dataFruit[i]["ItemID"].ToString(), item);
             _allItemList.Add(item);
             AllItemDic.Add(item.Id, item);
         }
@@ -532,15 +532,16 @@ public class ItemDatabase
 
         for (int i = 0; i < dataTool.Count; i++)
         {
+            Debug.Log(dataTool[i]["ItemID"].ToString());
             ToolItem item = new ToolItem(
-                    dataTool[i]["ID"].ToString(),
-                    dataTool[i]["이름"].ToString(),
-                    dataTool[i]["설명"].ToString(),
-                    (int)dataTool[i]["가격"],
-                    dataTool[i]["맵 ID"].ToString(),
-                    GetItemSpriteById(dataTool[i]["ID"].ToString(), ToolItemType.GatheringTool),
-                    (int)dataTool[i]["채집 확률"],
-                    (int)dataTool[i]["스토리 단계"]
+                    dataTool[i]["ItemID"].ToString(),
+                    dataTool[i]["Name"].ToString(),
+                    dataTool[i]["Description"].ToString(),
+                    (int)dataTool[i]["Price"],
+                    dataTool[i]["MapID"].ToString(),
+                    GetItemSpriteById(dataTool[i]["ItemID"].ToString(), ToolItemType.GatheringTool),
+                    (int)dataTool[i]["GatheringPercentage"],
+                    (int)dataTool[i]["StoryStep"]
                     );
 
             ItemToolList.Add(item);
