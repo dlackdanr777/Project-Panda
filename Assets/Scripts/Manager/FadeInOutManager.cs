@@ -30,6 +30,10 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
     private bool _isLoading;
 
 
+    public event Action OnFadeInHandler;
+    public event Action OnFadeOutHandler;
+
+
     public void Start()
     {
         _isLoading = false;
@@ -60,6 +64,8 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
 
         duration = duration == 0 ? _fadeDuration : duration;
         Tween.IamgeAlpha(_fadeImage.gameObject, 1, duration, _fadeTweenMode, onComplete);
+
+        OnFadeInHandler?.Invoke();
      }
 
 
@@ -85,6 +91,8 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
                 _isLoading = false;
             });
         });
+
+        OnFadeOutHandler?.Invoke();
     }
 
 
