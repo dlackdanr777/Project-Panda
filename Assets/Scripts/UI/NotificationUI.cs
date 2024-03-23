@@ -10,6 +10,8 @@ public class NotificationUI : MonoBehaviour
     [Tooltip("세부 위치 조정")]
     [SerializeField] private Vector3 _addPos;
 
+    [Tooltip("해당 스토리ID가 완료 상태일 경우 활성(공백일 경우 무조건 활성)")]
+    [SerializeField] private string _stroyId;
 
     private void Start()
     {

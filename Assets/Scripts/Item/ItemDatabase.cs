@@ -257,9 +257,9 @@ public class ItemDatabase
     {
         BackendManager.Instance.GetChartData("112894", 10, BugItemParserByServer);
         BackendManager.Instance.GetChartData("112895", 10, FishItemParserByServer);
-        BackendManager.Instance.GetChartData("112896", 10, FruitItemParserByServer);
+        BackendManager.Instance.GetChartData("113689", 10, FruitItemParserByServer);
         BackendManager.Instance.GetChartData("112294", 10, FoodItemParserByServer);
-        BackendManager.Instance.GetChartData("105888", 10, ToolItemParserByServer);
+        BackendManager.Instance.GetChartData("113690", 10, ToolItemParserByServer);
     }
 
     #region Load Server
