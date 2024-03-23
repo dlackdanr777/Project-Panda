@@ -18,6 +18,9 @@ public class MainStoryController : MonoBehaviour
     private bool _isInitialized = false;
     private bool _isStartStory = false;
 
+    private NPCAnimeControllCenter _poyaAnimControll;
+    private NPCAnimeControllCenter _jijiAnimControll;
+
     private void Awake()
     {
         UIMainDialogue.OnAddRewardHandler += AddReward;
@@ -39,6 +42,9 @@ public class MainStoryController : MonoBehaviour
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
+
+        NPCAnimeControllCenter poyaAnimControll = GameObject.Find("Poya Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
+        NPCAnimeControllCenter jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
 
         Init();
     }
@@ -247,6 +253,7 @@ public class MainStoryController : MonoBehaviour
                     DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(_storyKey[i]);
                 }
                 _storyIndex = i;
+                DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = _storyKey[i];
 
                 // 채집이 있다면 채집 활성화
                 string name = id + "Collection";
@@ -258,6 +265,10 @@ public class MainStoryController : MonoBehaviour
                     msCollection.NextMainStoryID = _storyDatabase[_storyKey[i]].NextStoryID;
 
                 }
+
+                // 지지와 포야 애니메이션 켜기
+                
+
                 break;
             }
         }

@@ -10,6 +10,14 @@ public class MainStoryDialogueManager : MonoBehaviour
     private List<string> _storyCompletedList = new List<string>();
     public List<string> StoryCompletedList => _storyCompletedList;
 
+    public List<string> PoyaStoryList = new List<string>();
+    public List<string> JijiStoryList = new List<string>();
+
+    private bool _isExistPoya;
+    private bool _isExistJiji;
+
+    public string CurrentStoryID;
+
     private int _goTo = 0;
 
     public void Register()
@@ -17,6 +25,8 @@ public class MainStoryDialogueManager : MonoBehaviour
         _dataMainStory = CSVReader.Read("01__TEST_1"); // 이름 나중에 수정
         for(int i = 0; i< _dataMainStory.Count; i++)
         {
+            _isExistPoya = false;
+            _isExistJiji = false;
             MSDic.Add(_dataMainStory[i]["스토리ID"].ToString(),
                         new MainStoryDialogue(_dataMainStory[i]["스토리ID"].ToString(),
                         _dataMainStory[i]["스토리 이름"].ToString(),
@@ -31,6 +41,14 @@ public class MainStoryDialogueManager : MonoBehaviour
                         _dataMainStory[i]["보상 아이템 ID"].ToString(),
                         GetIntType(_dataMainStory[i]["보상 수량"]),
                         GetIntType(_dataMainStory[i]["클리어 보상 친밀도"])));
+            if(_isExistPoya)
+            {
+                PoyaStoryList.Add(_dataMainStory[i]["스토리ID"].ToString());
+            }
+            if(_isExistJiji)
+            {
+                JijiStoryList.Add(_dataMainStory[i]["스토리ID"].ToString());
+            }
             i = _goTo; //대화 뛰어 넘기
         }
     }
@@ -59,6 +77,15 @@ public class MainStoryDialogueManager : MonoBehaviour
             _dataMainStory[i]["이벤트 타입 조건"].ToString(),
             GetIntType(_dataMainStory[i]["이벤트 타입 수량"])));
             i++;
+
+            if(_dataMainStory[i]["talkPandaID"].ToString() == "POYA00"){
+                _isExistPoya = true;
+            }
+            else if(_dataMainStory[i]["talkPandaID"].ToString() == "NPC01")
+            {
+                _isExistJiji = true;
+            }
+
         }
 
 
