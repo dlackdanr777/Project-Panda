@@ -15,14 +15,21 @@ public class Story1OutroScene : MonoBehaviour
     [SerializeField] private Light2D _gemOutlineLight;
     [SerializeField] private Animator _gemAnimator;
 
+    [Space]
     [Header("PandaImages")]
     [SerializeField] private Sprite _poyaImage;
     [SerializeField] private Sprite _jijiImage;
+
+    [Space]
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _backgroundSound;
+
 
 
     private void Start()
     {
         Init();
+        SoundManager.Instance.PlayBackgroundAudio(_backgroundSound, 1);
         StartCoroutine(StartOutro());
     }
 

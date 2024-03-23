@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,6 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
     [Header("Options")]
     [Tooltip("해당 스토리ID가 완료 상태일 경우 활성(공백일 경우 무조건 활성)")]
     [SerializeField] private string _storyId;
-
 
 
     private void Start()

@@ -329,7 +329,6 @@ public class MainStoryController : MonoBehaviour
             {
                 foreach (Transform child in _poyaAnimControll.transform)
                 {
-                    Debug.Log(child.name);
                     child.gameObject.SetActive(false);
                 }
                 StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = true;

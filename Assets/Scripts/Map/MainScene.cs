@@ -6,13 +6,6 @@ public class MainScene : MonoBehaviour
 {
     [SerializeField] private AudioClip _backgroundAudioClip;
 
-    // Start is called before the first frame update
-
-    private void Awake()
-    {
-        DataBind.SetButtonValue("ShopButton", OnShopButtonClicked);
-    }
-
     void Start()
     {
         DataBind.SetTextValue("BambooCount", GameManager.Instance.Player.Bamboo.ToString());
@@ -23,22 +16,4 @@ public class MainScene : MonoBehaviour
 
      
     }
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            GameManager.Instance.Player.GetMailList(Player.MailType.Mail).AddByStoryId("MS00C", MessageField.Mail);
-        }
-    }
-
-
-    private void OnShopButtonClicked()
-    {
-        LoadingSceneManager.LoadScene("ShopScene");
-    }
-
-
-
 }
