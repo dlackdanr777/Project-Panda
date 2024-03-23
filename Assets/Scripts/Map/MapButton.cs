@@ -14,14 +14,20 @@ public class MapButton : MonoBehaviour
     [Space]
     [Header("AudioClips")]
     [SerializeField] private AudioClip _treeAudioClip;
+    [SerializeField] private AudioClip _mainTreeInsideAudioClip;
     [SerializeField] private AudioClip _fishingGroundAudioClip;
     [SerializeField] private AudioClip _forestAudioClip;
     [SerializeField] private AudioClip _crossRoadAudioClip;
     [SerializeField] private AudioClip _villageAudioClip;
     [SerializeField] private AudioClip _marcketAudioClip;
+    [SerializeField] private AudioClip _cityHallLobbyAudioClip;
+    [SerializeField] private AudioClip _cityHallBossRoomAudioClip;
     [SerializeField] private AudioClip _catworldAudioClip;
+    [SerializeField] private AudioClip _castleNyangAudioClip;
     [SerializeField] private AudioClip _mermaidForestAudioClip;
     [SerializeField] private AudioClip _villageHouseAudioClip;
+
+
 
     private float _fadeTime = 1f;
     private int _currentMap;
@@ -259,6 +265,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHall()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_cityHallLobbyAudioClip, 2);
         CurrentMap = 11;
         _cameraController.MapSize = new Vector2(28.5f, _cameraController.MapSize.y);
 
@@ -267,6 +274,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCityHallOffice()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_cityHallBossRoomAudioClip, 2);
         CurrentMap = 12;
         _cameraController.MapSize = new Vector2(45, _cameraController.MapSize.y);
 
@@ -275,6 +283,7 @@ public class MapButton : MonoBehaviour
 
     private void MoveCatCastle()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_castleNyangAudioClip, 2);
         CurrentMap = 13;
         _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
 
@@ -283,6 +292,8 @@ public class MapButton : MonoBehaviour
 
     private void MoveInsideWishTree()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_mainTreeInsideAudioClip, 2);
+
         CurrentMap = 14;
         _cameraController.MapSize = new Vector2(22.7f, _cameraController.MapSize.y);
 

@@ -13,7 +13,7 @@ namespace Shop
 
         private void Awake()
         {
-            _sellDetailView.Init();
+            _sellDetailView.Init(() => SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit));
             _sellDetailView.gameObject.SetActive(false);
 
             _inventoryContoller.Init(SlotButtonClicked);

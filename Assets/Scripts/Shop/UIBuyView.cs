@@ -86,6 +86,7 @@ namespace Shop
                 return;
             }
 
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.Buy);
             GameManager.Instance.Player.AddItemById(_buyItem.Id, _buyCount);
 
             DatabaseManager.Instance.Challenges.UsingShop(false);

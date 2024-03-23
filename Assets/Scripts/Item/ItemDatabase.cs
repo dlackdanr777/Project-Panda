@@ -532,7 +532,6 @@ public class ItemDatabase
 
         for (int i = 0; i < dataTool.Count; i++)
         {
-            Debug.Log(dataTool[i]["ItemID"].ToString());
             ToolItem item = new ToolItem(
                     dataTool[i]["ItemID"].ToString(),
                     dataTool[i]["Name"].ToString(),
