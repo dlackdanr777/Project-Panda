@@ -50,9 +50,6 @@ public class MainStoryController : MonoBehaviour
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
         _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
 
-        FinishStory("MS01B");
-        FinishStory("MS01O");
-
         Init();
     }
 

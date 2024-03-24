@@ -13,7 +13,5 @@ public class MainScene : MonoBehaviour
         StarterPanda.Instance.SwitchingScene();
 
         SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 1);
-
-     
     }
 }

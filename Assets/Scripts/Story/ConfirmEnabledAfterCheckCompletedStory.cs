@@ -27,7 +27,6 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
     /// <summary>인스펙터창에 적힌 스토리id가 완료된 상태면 아이콘을 활성화, 아닐경우 비활성화 하는 함수</summary>
     private void CheckCompletedStory()
     {
-        Debug.Log("실행");
         if (string.IsNullOrWhiteSpace(_storyId))
         {
             gameObject.SetActive(true);
