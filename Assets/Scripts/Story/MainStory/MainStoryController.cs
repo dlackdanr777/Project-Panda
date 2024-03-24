@@ -7,6 +7,8 @@ public class MainStoryController : MonoBehaviour
 {
     public static event Action<MainStoryDialogue> OnStartInteractionHandler;
 
+    public static event Action OnFinishStoryHandler;
+
     [SerializeField] private SpriteRenderer _npcRenderer;
     [SerializeField] private string _npcID;
     [SerializeField] private GameObject _questMark;
@@ -47,6 +49,9 @@ public class MainStoryController : MonoBehaviour
 
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
         _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
+
+        FinishStory("MS01B");
+        FinishStory("MS01O");
 
         Init();
     }
@@ -316,7 +321,9 @@ public class MainStoryController : MonoBehaviour
                 break;
             }
         }
+
         _isStartStory = false;
+        OnFinishStoryHandler?.Invoke();
     }
 
     // 애니메이션 끄고 포야 켜기

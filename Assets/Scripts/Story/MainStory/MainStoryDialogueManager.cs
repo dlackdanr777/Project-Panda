@@ -20,6 +20,14 @@ public class MainStoryDialogueManager : MonoBehaviour
 
     private int _goTo = 0;
 
+
+    public void SetCompletedStoryList(List<string> storyCompletedList)
+    {
+        _storyCompletedList.Clear();
+        _storyCompletedList = storyCompletedList;
+    }
+
+
     public void Register()
     {
         _dataMainStory = CSVReader.Read("01__TEST_1"); // 이름 나중에 수정

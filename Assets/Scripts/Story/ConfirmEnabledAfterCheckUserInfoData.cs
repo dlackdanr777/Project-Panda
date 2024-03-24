@@ -29,7 +29,7 @@ public class ConfirmEnabledAfterCompletedOutro : MonoBehaviour
     {
         Check();
 
-        StoryManager.Instance.OnAddCompletedStoryHandler += Check;
+        MainStoryController.OnFinishStoryHandler += Check;
         FadeInOutManager.Instance.OnFadeOutHandler += Check;
         LoadingSceneManager.OnLoadSceneHandler += OnChangeSceneEvent;
     }
@@ -77,7 +77,7 @@ public class ConfirmEnabledAfterCompletedOutro : MonoBehaviour
             return;
         }
 
-        List<string> completeStoryList = StoryManager.Instance.StoryCompletedList;
+        List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
 
         for (int i = 0, count = completeStoryList.Count; i < count; i++)
         {
@@ -93,7 +93,7 @@ public class ConfirmEnabledAfterCompletedOutro : MonoBehaviour
 
     private void OnChangeSceneEvent()
     {
-        StoryManager.Instance.OnAddCompletedStoryHandler -= Check;
+        MainStoryController.OnFinishStoryHandler -= Check;
         FadeInOutManager.Instance.OnFadeOutHandler -= Check;
         LoadingSceneManager.OnLoadSceneHandler -= OnChangeSceneEvent;
     }

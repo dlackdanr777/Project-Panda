@@ -1477,7 +1477,7 @@ public class UserInfo
                 string item = json[0]["StoryCompletedList"][i].ToString();
                 _storyCompletedList.Add(item);
             }
-
+            DatabaseManager.Instance.MainDialogueDatabase.SetCompletedStoryList(_storyCompletedList);
             Debug.Log("StoryData Load¼º°ø");
         }
     }
@@ -1565,7 +1565,7 @@ public class UserInfo
     public Param GetStoryParam()
     {
         Param param = new Param();
-        _storyCompletedList = StoryManager.Instance.GetStoryCompletedList();
+        _storyCompletedList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
         param.Add("StoryCompletedList", _storyCompletedList);
 
         return param;
