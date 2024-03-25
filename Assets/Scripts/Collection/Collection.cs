@@ -175,7 +175,7 @@ public class Collection : MonoBehaviour
 
             _isExit = false;
 
-            _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
+            //_pandaCollectionAnim.SetBool("IsCollectionLatency", false);
             Invoke("ExitCollection", _fadeTime);
             OnExitCollection?.Invoke();
         }
@@ -365,6 +365,7 @@ public class Collection : MonoBehaviour
 
     private void ExitCollection()
     {
+        _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
         // 포야 원래 상태로 설정
         //_pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
         _pandaCollectionAnim.enabled = false;
