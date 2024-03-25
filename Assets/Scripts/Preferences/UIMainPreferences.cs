@@ -1,6 +1,4 @@
 using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +31,6 @@ public class UIMainPreferences : UIView
         _tmpPos = _targetRect.anchoredPosition;
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
         _uiPreferences.Init();
-
         gameObject.SetActive(false);
     }
 

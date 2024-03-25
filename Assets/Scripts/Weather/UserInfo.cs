@@ -51,7 +51,7 @@ public class UserInfo
 
     public bool IsExistingUser; //기존 유저인가?
 
-    public bool IsExistingStory1Outro; //스토리1 아웃트로를 감상했는가?
+    private bool _isExistingStory1Outro; //스토리1 아웃트로를 감상했는가?
 
 
     //출석 체크
@@ -126,7 +126,18 @@ public class UserInfo
     }
 
 
-    #region SaveAndLoadUserInfo
+    #region UserInfoData
+
+    public enum StoryOutroType
+    {
+        Story1,
+        Syory2
+    }
+
+
+    public event Action OnSetOutroHandler;
+
+
     public void LoadUserInfoData(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
@@ -145,7 +156,7 @@ public class UserInfo
             IsExistingUser = (bool)json[0]["IsExistingUser"];
 
             if (json[0].ContainsKey("IsExistingStory1Outro"))
-                IsExistingStory1Outro = (bool)json[0]["IsExistingStory1Outro"];
+                _isExistingStory1Outro = (bool)json[0]["IsExistingStory1Outro"];
 
             Debug.Log("UserInfo Load성공");
         }
@@ -244,9 +255,38 @@ public class UserInfo
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
-        param.Add("IsExistingStory1Outro", IsExistingStory1Outro);
+        param.Add("IsExistingStory1Outro", _isExistingStory1Outro);
 
         return param;
+    }
+
+
+    public void SetStoryOutro(StoryOutroType type)
+    {
+        switch (type)
+        {
+            case StoryOutroType.Story1:
+                _isExistingStory1Outro = true;
+                break;
+        }
+
+
+        OnSetOutroHandler?.Invoke();
+    }
+
+
+    public bool GetStoryOutroBool(StoryOutroType type)
+    {
+        switch (type)
+        {
+            case StoryOutroType.Story1:
+                return _isExistingStory1Outro;
+
+
+
+            default:
+                return false;
+        }
     }
 
     #endregion
