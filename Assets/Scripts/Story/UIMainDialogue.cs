@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIMainDialogue : UIView
 {
-    public static event Action<string> OnAddRewardHandler;
+    public static event Action<string, string> OnAddRewardHandler;
     public static event Action<string> OnFinishStoryHandler;
 
     [SerializeField] private Image _pandaImage;
@@ -190,7 +190,7 @@ public class UIMainDialogue : UIView
 
                 if (!_isFail) //실패가 아닐 때만 보상
                 {
-                    OnAddRewardHandler.Invoke(_dialogue.StoryID);
+                    OnAddRewardHandler.Invoke(_dialogue.StoryID, _dialogue.StoryStartPanda);
                 }
             }
             _currentIndex++;

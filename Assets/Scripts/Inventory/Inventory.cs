@@ -84,7 +84,6 @@ public class Inventory
     private bool Add(Item item, int count)
     {
         int remainCount = count; // 남은 아이템 개수
-        UnityEngine.Debug.Log(item.Id);
         // 이미 존재하는 아이템인지 확인
         foreach (var existingItem in _items)
         {

@@ -247,9 +247,10 @@ public class MainStoryController : MonoBehaviour
         OnStartInteractionHandler?.Invoke(data); //대화 출력
     }
 
-    private void AddReward(string id)
+    private void AddReward(string id, string npcId)
     {
-        if (!_isInitialized)
+
+        if (!_isInitialized || npcId != _npcID)
         {
             return;
         }
@@ -269,7 +270,7 @@ public class MainStoryController : MonoBehaviour
         {
             RewardItem(lastMainDialogue.EventType, lastMainDialogue.EventTypeCondition, lastMainDialogue.EventTypeAmount);
         }
-        
+
         _isInitialized = false;
     }
 
