@@ -36,11 +36,14 @@ public class MainStoryController : MonoBehaviour
     {
         UIMainDialogue.OnAddRewardHandler += AddReward;
         UIMainDialogue.OnFinishStoryHandler += FinishStory;
+        SceneManager.sceneLoaded += ChangeScene;
     }
     private void OnDestroy()
     {
         UIMainDialogue.OnAddRewardHandler -= AddReward;
         UIMainDialogue.OnFinishStoryHandler += FinishStory;
+        SceneManager.sceneLoaded -= ChangeScene;
+
     }
 
     private void Start()
@@ -64,7 +67,7 @@ public class MainStoryController : MonoBehaviour
     {
         foreach(string key in NextStory)
         {
-            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _isStartStory == false && !_questMark.activeSelf)
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && !_questMark.activeSelf)
             {
                 if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
                     _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
@@ -140,7 +143,6 @@ public class MainStoryController : MonoBehaviour
             {
                 if (!NextStory.Contains(_storyKey[j]))
                 {
-                    Debug.Log("NextStory" + _storyKey[j]);
                     NextStory.Add(_storyKey[j]);
                 }
             }
@@ -330,7 +332,6 @@ public class MainStoryController : MonoBehaviour
                     {
                         MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
                         msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
-                        Debug.Log("CollectionID" + msCollection.CollectionID);
                     }
                 }
 
@@ -432,5 +433,11 @@ public class MainStoryController : MonoBehaviour
             }
             jiji.transform.position = _jijiTransform[key].position;
         }
+    }
+
+    private void ChangeScene(Scene scene, LoadSceneMode loadscene)
+    {
+        _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
     }
 }

@@ -122,7 +122,6 @@ public class MainStoryCollection : MonoBehaviour
         DataBind.SetButtonValue(_starButton.name, ClickStarButton);
 
         MainStoryID = gameObject.name.Substring(0, gameObject.name.Length - 10);
-        Debug.Log("MainStoryID" + MainStoryID);
         PriorMainStoryID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].PriorStoryID;
 
     }
@@ -148,7 +147,6 @@ public class MainStoryCollection : MonoBehaviour
         else if (_waitTime >= _spawnTime && DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(PriorMainStoryID) && (_gatheringType == GatheringItemType.Fruit || GameManager.Instance.Player.FindItemById(toolId)))
         {
             CollectionID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].EventTypeCondition;
-            Debug.Log("toolid??" + toolId);
             _waitTime = 0;
 
             // 채집 위치 설정
