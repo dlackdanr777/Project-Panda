@@ -36,6 +36,18 @@ public class GameManager : SingletonHandler<GameManager>
         Player.Init();
     }
 
+    public void OnApplicationPause(bool pause)
+    {
+        if(pause)
+        {
+            DatabaseManager.Instance.UserInfo.SaveUserInfoData(3);
+            DatabaseManager.Instance.UserInfo.SaveChallengesData(3);
+            BambooFieldSystem.Instance.SaveBambooFieldData(3);
+            Player.SaveBambooData(3);
+            Debug.Log("일시정지");
+        }
+    }
+
 
     public void OnApplicationQuit()
     {

@@ -199,7 +199,6 @@ public class SoundManager : SingletonHandler<SoundManager>
     }
 
 
-
     public void StopBackgroundAudio(float duration = 0)
     {
         if(_stopBackgroundAudioRoutine != null)
@@ -213,6 +212,7 @@ public class SoundManager : SingletonHandler<SoundManager>
 
         _stopBackgroundAudioRoutine = StartCoroutine(IEStopBackgroundAudio(duration));
     }
+
 
     public void StopEffectAudio(float duration = 0)
     {
