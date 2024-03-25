@@ -101,7 +101,7 @@ public class MainStoryController : MonoBehaviour
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
         foreach(string key in NextStory)
         {
-            if (_storyDatabase[key].DialogueData[0].TalkPandaID.Equals(_npcID))
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID))
             {
                 if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
                 {
