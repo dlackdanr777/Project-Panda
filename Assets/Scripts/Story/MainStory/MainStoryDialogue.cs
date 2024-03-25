@@ -23,6 +23,8 @@ public class MainStoryDialogue
     public MainEventType EventType { get; private set; }
     public string EventTypeCondition { get; private set; }
     public int EventTypeAmount { get; private set; }
+    public string StoryStartPanda { get; private set; }
+    public string MapID { get; private set; }
     public List<MainDialogueData> DialogueData { get; private set; }
     public MainEventType RewardType { get; private set; }
     public string RewardID { get; private set; }
@@ -30,7 +32,7 @@ public class MainStoryDialogue
     public int RewardIntimacy { get; private set; }
     public bool IsSuccess { get; set; }
 
-    public MainStoryDialogue(string storyID, string stroyName, string priorStoryID, string nextStoryID, int requiredIntimacy, MainEventType eventType, string eventTypeCondition, int eventTypeAmount, List<MainDialogueData> dialogueData, MainEventType rewardType, string rewardID, int rewardCount, int rewardIntimacy)
+    public MainStoryDialogue(string storyID, string stroyName, string priorStoryID, string nextStoryID, int requiredIntimacy, MainEventType eventType, string eventTypeCondition, int eventTypeAmount, string storyStartPanda, string mapId, List<MainDialogueData> dialogueData, MainEventType rewardType, string rewardID, int rewardCount, int rewardIntimacy)
     {
         StoryID = storyID;
         StroyName = stroyName;
@@ -40,6 +42,8 @@ public class MainStoryDialogue
         EventType = eventType;
         EventTypeCondition = eventTypeCondition;
         EventTypeAmount = eventTypeAmount;
+        StoryStartPanda = storyStartPanda;
+        MapID = mapId;
         DialogueData = dialogueData;
         RewardType = rewardType;
         RewardID = rewardID;
