@@ -66,13 +66,11 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     {
         for (int i = 0; i <= _fieldIndex; i++)
         {
-            //서버에 저장된 값이 없다면?
             _yield.Add(0);
             _time.Add(0);
             _second.Add(0);
             _timeDifference.Add(_fieldSlots[i].SetTimeDifference());
         }
-        Invoke("FirstCheckGrowth", 0.1f);
     }
 
 
@@ -234,14 +232,15 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>
     private void FirstCheckGrowth()
     {
-        for(int i = 0; i <= _fieldIndex; i++)
+        Debug.Log(_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay);
+        for (int i = 0; i <= _fieldIndex; i++)
         {
             //현재 접속 시간과 마지막 접속 시간을 비교
             if ((_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay).Minutes + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
             {
                 //_fieldSlots[i].GrowingCrops(2);
 
-                // 작물 성장 시간 최대
+                // 작물 성장 시간 최대 
                 _time[i] = _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime;
             }
             else
@@ -304,6 +303,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
                 }
             }
 
+            FirstCheckGrowth();
             Debug.Log("Bamboo Load성공");
         }
     }

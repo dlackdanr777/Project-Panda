@@ -201,6 +201,7 @@ public class UIMainDialogue : UIView
             if (!_isFail) //실패가 아닐 때만
             {
                 OnFinishStoryHandler?.Invoke(_dialogue.StoryID);
+                DatabaseManager.Instance.UserInfo.SaveStoryData(3);
             }
         }
 

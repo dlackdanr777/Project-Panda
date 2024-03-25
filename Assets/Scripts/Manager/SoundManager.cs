@@ -58,11 +58,6 @@ public class SoundManager : SingletonHandler<SoundManager>
     private Coroutine _stopEffectAudioRoutine;
 
 
-    //家府 单捞磐
-    private float _saveMasterVolume;
-    private float _saveBackgroundVolume;
-    private float _saveSoundEffectVolume;
-
     //措府磊
     public event Action<float, AudioType> OnVolumeChangedHandler;
 
@@ -105,37 +100,23 @@ public class SoundManager : SingletonHandler<SoundManager>
     }
 
 
-    public float GetVolume(AudioType audioType)
-    {
-        switch (audioType)
-        {
-            case AudioType.Master:
-                return _saveMasterVolume;
-
-            case AudioType.BackgroundAudio:
-                return _saveBackgroundVolume;
-
-            case AudioType.EffectAudio:
-                return _saveSoundEffectVolume;
-        }
-
-        return -1;
-    }
+   
 
 
     public void LoadSoundData()
     {
         float masterVolume = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 0;
-        _saveMasterVolume = masterVolume;
-        _audioMixer.SetFloat("Master", _saveMasterVolume);
+        GameManager.Instance.Option.SetVolume(AudioType.Master, masterVolume);
 
         float backgroundVolume = PlayerPrefs.HasKey("BackgroundVolume") ? PlayerPrefs.GetFloat("BackgroundVolume") : 0;
-        _saveBackgroundVolume = backgroundVolume;
-        _audioMixer.SetFloat("Background", _saveBackgroundVolume);
+        GameManager.Instance.Option.SetVolume(AudioType.BackgroundAudio, backgroundVolume);
 
-        float soundeffectVolume = PlayerPrefs.HasKey("SoundEffectVolume") ? PlayerPrefs.GetFloat("SoundEffectVolume") : 0;
-        _saveSoundEffectVolume = soundeffectVolume;
-        _audioMixer.SetFloat("SoundEffect", _saveSoundEffectVolume);
+        float soundEffectVolume = PlayerPrefs.HasKey("SoundEffectVolume") ? PlayerPrefs.GetFloat("SoundEffectVolume") : 0;
+        GameManager.Instance.Option.SetVolume(AudioType.EffectAudio, soundEffectVolume);
+
+        _audioMixer.SetFloat("Master", masterVolume);
+        _audioMixer.SetFloat("Background", backgroundVolume);
+        _audioMixer.SetFloat("SoundEffect", soundEffectVolume);
     }
 
 
@@ -199,7 +180,6 @@ public class SoundManager : SingletonHandler<SoundManager>
     }
 
 
-
     public void StopBackgroundAudio(float duration = 0)
     {
         if(_stopBackgroundAudioRoutine != null)
@@ -213,6 +193,7 @@ public class SoundManager : SingletonHandler<SoundManager>
 
         _stopBackgroundAudioRoutine = StartCoroutine(IEStopBackgroundAudio(duration));
     }
+
 
     public void StopEffectAudio(float duration = 0)
     {
