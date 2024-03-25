@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /// <summary>환경설정에서 옵션을 조절할 수 있게 해주는 클래스</summary>
@@ -14,6 +15,12 @@ public class UIPreferences : MonoBehaviour
 
     public void Init()
     {
+        float backgroundVolume = SoundManager.Instance.GetVolume(AudioType.BackgroundAudio);
+        _backgroundSlider.value = backgroundVolume != -80 ? Mathf.Pow(10, backgroundVolume / 20) : 0;
+
+        float soundEffectVolume = SoundManager.Instance.GetVolume(AudioType.EffectAudio);
+        _soundEffectSlider.value = soundEffectVolume != -80 ? Mathf.Pow(10, soundEffectVolume / 20) : 0;
+
         _silentButton.onClick.AddListener(OnSilentButtonClicked);
         _vibrateButton.onClick.AddListener(OnVibrateButtonClicked);
         _soundButton.onClick.AddListener(OnSoundButtonClicked);

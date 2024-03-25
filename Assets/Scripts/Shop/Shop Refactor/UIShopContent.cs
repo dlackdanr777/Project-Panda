@@ -42,6 +42,7 @@ public class UIShopContent : MonoBehaviour
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemFruitList);
         _shopItem.AddRange(DatabaseManager.Instance.ItemDatabase.ItemToolList);
         CreateSlots();
+        UpdateSoldOut();
     }
 
 

@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum AudioType
 {
@@ -48,13 +50,18 @@ public class SoundManager : SingletonHandler<SoundManager>
     private float _effectVolumeMul;
     public float EffectVolumeMul => _effectVolumeMul;
 
-
     //배경 음악 변경시 볼륨 업, 다운 기능을 위한 변수
     private Coroutine _changeAudioRoutine;
 
     private Coroutine _stopBackgroundAudioRoutine;
 
     private Coroutine _stopEffectAudioRoutine;
+
+
+    //소리 데이터
+    private float _saveMasterVolume;
+    private float _saveBackgroundVolume;
+    private float _saveSoundEffectVolume;
 
     //대리자
     public event Action<float, AudioType> OnVolumeChangedHandler;
@@ -63,6 +70,11 @@ public class SoundManager : SingletonHandler<SoundManager>
     {
         base.Awake();
         Init();
+    }
+
+    private void Start()
+    {
+        LoadSoundData();
     }
 
 
@@ -90,6 +102,46 @@ public class SoundManager : SingletonHandler<SoundManager>
         _audios[((int)AudioType.EffectAudio)].volume = _effectVolume;
         _audios[(int)AudioType.EffectAudio].outputAudioMixerGroup = _audioMixer.FindMatchingGroups("Master")[2];
 
+    }
+
+
+    public float GetVolume(AudioType audioType)
+    {
+        switch (audioType)
+        {
+            case AudioType.Master:
+                return _saveMasterVolume;
+
+            case AudioType.BackgroundAudio:
+                return _saveBackgroundVolume;
+
+            case AudioType.EffectAudio:
+                return _saveSoundEffectVolume;
+        }
+
+        return -1;
+    }
+
+
+    public void LoadSoundData()
+    {
+        float masterVolume = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 0;
+        _saveMasterVolume = masterVolume;
+        _audioMixer.SetFloat("Master", _saveMasterVolume);
+
+        float backgroundVolume = PlayerPrefs.HasKey("BackgroundVolume") ? PlayerPrefs.GetFloat("BackgroundVolume") : 0;
+        _saveBackgroundVolume = backgroundVolume;
+        _audioMixer.SetFloat("Background", _saveBackgroundVolume);
+
+        float soundeffectVolume = PlayerPrefs.HasKey("SoundEffectVolume") ? PlayerPrefs.GetFloat("SoundEffectVolume") : 0;
+        _saveSoundEffectVolume = soundeffectVolume;
+        _audioMixer.SetFloat("SoundEffect", _saveSoundEffectVolume);
+    }
+
+
+    public void SaveSoundData(string name, float value)
+    {
+        PlayerPrefs.SetFloat(name + "Volume", value);
     }
 
 
@@ -186,16 +238,20 @@ public class SoundManager : SingletonHandler<SoundManager>
         {
             case AudioType.Master:
                 _audioMixer.SetFloat("Master", volume);
+                SaveSoundData("Master", volume);
                 break;
 
             case AudioType.BackgroundAudio:
                 _audioMixer.SetFloat("Background", volume);
+                SaveSoundData("Background", volume);
                 break;
 
             case AudioType.EffectAudio:
                 _audioMixer.SetFloat("SoundEffect", volume);
+                SaveSoundData("SoundEffect", volume);
                 break;
         }
+
 
         OnVolumeChangedHandler?.Invoke(volume, type);
     }

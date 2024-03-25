@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+
 public class UIShopSlot : MonoBehaviour
 {
     [Header("Components")]
@@ -13,6 +14,7 @@ public class UIShopSlot : MonoBehaviour
     [SerializeField] private Image _soldOutImage;
     [SerializeField] private TextMeshProUGUI _priceText;
 
+    private string _tmpPriceText;
 
     public void Init()
     {
@@ -36,6 +38,7 @@ public class UIShopSlot : MonoBehaviour
     public void SetPriceText(string text)
     {
         _priceText.text = text;
+        _tmpPriceText = text;
     }
 
 
@@ -43,12 +46,14 @@ public class UIShopSlot : MonoBehaviour
     {
         _button.interactable = false;
         _soldOutImage.gameObject.SetActive(true);
+        _priceText.text = "Sold Out";
     }
 
     public void NotSoldOut()
     {
         _button.interactable = true;
         _soldOutImage.gameObject.SetActive(false);
+        _priceText.text = _tmpPriceText;
     }
 
 }

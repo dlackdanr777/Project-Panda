@@ -17,15 +17,15 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
 
     private void Start()
     {
-        CheckCompletedStory();
+        CheckCompletedStory("0");
 
-        MainStoryController.OnFinishStoryHandler += CheckCompletedStory;
+        UIMainDialogue.OnFinishStoryHandler += CheckCompletedStory;
         LoadingSceneManager.OnLoadSceneHandler += OnChangeSceneEvent;
     }
 
 
     /// <summary>인스펙터창에 적힌 스토리id가 완료된 상태면 아이콘을 활성화, 아닐경우 비활성화 하는 함수</summary>
-    private void CheckCompletedStory()
+    private void CheckCompletedStory(string id)
     {
         if (string.IsNullOrWhiteSpace(_storyId))
         {
@@ -33,7 +33,6 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
             return;
         }
         List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
-        //List<string> completeStoryList = StoryManager.Instance.StoryCompletedList;
 
         for (int i = 0, count = completeStoryList.Count; i < count; i++)
         {
@@ -50,7 +49,7 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
 
     private void OnChangeSceneEvent()
     {
-        MainStoryController.OnFinishStoryHandler -= CheckCompletedStory;
+        UIMainDialogue.OnFinishStoryHandler -= CheckCompletedStory;
         LoadingSceneManager.OnLoadSceneHandler -= OnChangeSceneEvent;
     }
 }
