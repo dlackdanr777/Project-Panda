@@ -65,7 +65,6 @@ public class UIAttendance : UIView
 
         if (!_attendanceDatabase.CheckTodayAttendance())
         {
-            Debug.Log("아직 출첵 안함");
             _attendanceButton.EnableButtonClick(OnAttendanceButtonClicked);
         }
         else

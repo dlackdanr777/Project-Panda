@@ -63,7 +63,6 @@ public class Inventory
 
             if (Add(item, count))
             {
-                UnityEngine.Debug.Log(id + " 획득");
                 item.IsReceived = true;
 
                 if(isServerUploaded)
@@ -74,7 +73,6 @@ public class Inventory
 
             else
             {
-                UnityEngine.Debug.Log(id + " 인벤토리가 꽉차 획득 안됨");
                 return false;
             }
         }
@@ -133,68 +131,6 @@ public class Inventory
         OnAddHandler?.Invoke();
         return true;
     }
-
-    /// <summary>
-    /// 플레이어의 인벤토리에 있는 아이템 id을 이용해서 add
-    /// field는 종류 가 있음
-    /// </summary>
-    /// <param name="field"></param>
-    /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
-    /// <param name="id"></param>
-   /* public void AddById(InventoryItemField field, string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount)
-    {
-        string startId = id.Substring(0, 3);
-
-        switch (field)
-        {
-            case InventoryItemField.GatheringItem:
-                List<GatheringItem> gatheringDatabase = null;
-                if (startId.Equals("IBG"))
-                {
-                    gatheringDatabase = DatabaseManager.Instance.GetBugItemList();
-                }
-                else if (startId.Equals("IFI"))
-                {
-                    gatheringDatabase = DatabaseManager.Instance.GetFishItemList();
-                }
-                else if (startId.Equals("IFR"))
-                {
-                    gatheringDatabase = DatabaseManager.Instance.GetFruitItemList();
-                }
-                for (int i = 0; i < gatheringDatabase.Count; i++)
-                {
-                    if (gatheringDatabase[i].Id.Equals(id))
-                    {
-                        Add(gatheringDatabase[i], count);
-                        if (gatheringDatabase[i].IsReceived != true)
-                        {
-                            gatheringDatabase[i].IsReceived = true;
-
-                            if(type == ItemAddEventType.AddChallengesCount)
-                                DatabaseManager.Instance.Challenges.UnlockingBook(startId); // 도전과제 달성 체크
-                        }
-                    }
-                }
-                break;
-            case InventoryItemField.Cook:
-                break;
-            case InventoryItemField.Tool:
-                List<ToolItem> toolDatabase = null;
-                if(startId.Equals("ITG"))
-                {
-                    toolDatabase = DatabaseManager.Instance.GetGatheringToolItemList();
-                }
-                for (int i = 0; i < toolDatabase.Count; i++)
-                {
-                    if (toolDatabase[i].Id.Equals(id))
-                    {
-                        Add(toolDatabase[i], count);
-                        toolDatabase[i].IsReceived = true;
-                    }
-                }
-                break;
-        }
-    }*/
 
    
     public void RemoveItem(Item item, int count = 1)

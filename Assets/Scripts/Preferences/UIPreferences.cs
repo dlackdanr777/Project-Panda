@@ -9,21 +9,26 @@ public class UIPreferences : MonoBehaviour
     [SerializeField] private Button _silentButton;
     [SerializeField] private Button _vibrateButton;
     [SerializeField] private Button _soundButton;
+    [SerializeField] private Slider _masterSlider;
     [SerializeField] private Slider _backgroundSlider;
     [SerializeField] private Slider _soundEffectSlider;
 
 
     public void Init()
     {
-        float backgroundVolume = SoundManager.Instance.GetVolume(AudioType.BackgroundAudio);
+        float masterVolume = GameManager.Instance.Option.GetVolume(AudioType.Master);
+        _masterSlider.value = masterVolume != -80 ? Mathf.Pow(10, masterVolume / 20) : 0;
+
+        float backgroundVolume = GameManager.Instance.Option.GetVolume(AudioType.BackgroundAudio);
         _backgroundSlider.value = backgroundVolume != -80 ? Mathf.Pow(10, backgroundVolume / 20) : 0;
 
-        float soundEffectVolume = SoundManager.Instance.GetVolume(AudioType.EffectAudio);
+        float soundEffectVolume = GameManager.Instance.Option.GetVolume(AudioType.EffectAudio);
         _soundEffectSlider.value = soundEffectVolume != -80 ? Mathf.Pow(10, soundEffectVolume / 20) : 0;
 
         _silentButton.onClick.AddListener(OnSilentButtonClicked);
         _vibrateButton.onClick.AddListener(OnVibrateButtonClicked);
         _soundButton.onClick.AddListener(OnSoundButtonClicked);
+        _masterSlider.onValueChanged.AddListener(OnMasterSliderValueChanged);
         _backgroundSlider.onValueChanged.AddListener(OnBackgroundSliderValueChanged);
         _soundEffectSlider.onValueChanged.AddListener(OnSoundEffectSliderValueChanged);
     }
@@ -60,6 +65,11 @@ public class UIPreferences : MonoBehaviour
 
         _backgroundSlider.value = 1;
         _soundEffectSlider.value = 1;
+    }
+
+    private void OnMasterSliderValueChanged(float value)
+    {
+        SoundManager.Instance.SetVolume(value, AudioType.Master);
     }
 
 

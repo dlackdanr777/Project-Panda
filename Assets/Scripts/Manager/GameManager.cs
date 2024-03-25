@@ -26,15 +26,17 @@ public class GameManager : SingletonHandler<GameManager>
     /// <summary> 참일 경우 상호작용을 막는다. </summary>
     public bool FirezeInteraction;
 
+
     public override void Awake()
     {
+        Application.targetFrameRate = 60;
         base.Awake();
         _option = new PreferencesData();
         _tmpCameraData = new TempCameraData();
-        Application.targetFrameRate = 60;
         Player = new Player();
         Player.Init();
     }
+
 
     public void OnApplicationPause(bool pause)
     {
@@ -44,7 +46,6 @@ public class GameManager : SingletonHandler<GameManager>
             DatabaseManager.Instance.UserInfo.SaveChallengesData(3);
             BambooFieldSystem.Instance.SaveBambooFieldData(3);
             Player.SaveBambooData(3);
-            Debug.Log("일시정지");
         }
     }
 

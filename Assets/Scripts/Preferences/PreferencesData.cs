@@ -9,18 +9,40 @@ public class PreferencesData
     private float _backgroundVolume;
     private float _soundEffectVolume;
 
-    public void SetMasterVolume(float value)
+
+    public float GetVolume(AudioType type)
     {
-        _masterVolume = value;
+        switch (type)
+        {
+            case AudioType.Master:
+                return _masterVolume;
+
+            case AudioType.BackgroundAudio:
+                return _backgroundVolume;
+
+            case AudioType.EffectAudio:
+                return _soundEffectVolume;
+        }
+
+        return -1;
     }
 
-    public void SetBackgroundVolume(float value)
-    {
-        _backgroundVolume = value;
-    }
 
-    public void SetSoundEffectVolume(float value)
+    public void SetVolume(AudioType type, float value)
     {
-        _soundEffectVolume = value;
+        switch (type)
+        {
+            case AudioType.Master:
+                _masterVolume = value;
+                break;
+
+            case AudioType.BackgroundAudio:
+                _backgroundVolume = value;
+                break;
+
+            case AudioType.EffectAudio:
+                _soundEffectVolume = value;
+                break;
+        }
     }
 }

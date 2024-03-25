@@ -802,6 +802,12 @@ public class UserInfo
             InventoryData data = CookInventoryDataArray[i];
             GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
         }
+
+        for (int i = 0, count = ToolInventoryDataArray.Count; i < count; i++)
+        {
+            InventoryData data = ToolInventoryDataArray[i];
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+        }
     }
 
 
