@@ -57,8 +57,8 @@ public class MainStoryController : MonoBehaviour
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
 
-        _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
-        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");//.transform.GetComponent<NPCAnimeControllCenter>();
+        _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
 
         Init();
     }
@@ -73,6 +73,7 @@ public class MainStoryController : MonoBehaviour
                     _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
                 {
                     _questMark.SetActive(true);
+                    Debug.Log("_npcID _questMarktrue" + _npcID);
 
                     if(_isStartStory == false)
                     {
@@ -336,6 +337,8 @@ public class MainStoryController : MonoBehaviour
                 }
 
                 // 지지와 포야 애니메이션 켜기
+                _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
+                _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
                 PoyaSetFalse();
                 JijiSetFalse();
                 break;
