@@ -131,7 +131,7 @@ namespace Muks.BackEnd
             BackendManager.Instance.GetMyData("BambooField", 10, BambooFieldSystem.Instance.LoadBambooFieldData);
             DatabaseManager.Instance.Challenges.LoadData();
             CostumeManager.Instance.LoadData();
-            DatabaseManager.Instance.NPCDatabase.LoadData();
+            //DatabaseManager.Instance.NPCDatabase.LoadData();
             DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
             DatabaseManager.Instance.AlbumDatabase.LoadData();

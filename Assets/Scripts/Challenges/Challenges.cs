@@ -351,7 +351,6 @@ public class Challenges
 
     public void MainStoryDone(string id)
     {
-        Debug.Log(id);
         //if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4)) // 메인 스토리 한 장이 끝나면
         //{
         //    Debug.Log("넘어옴");
@@ -628,7 +627,7 @@ public class Challenges
         // 대나무 획득
 
         // 아이템 획득 - 도구
-        if (string.IsNullOrEmpty(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item))
+        if (!string.IsNullOrWhiteSpace(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item))
         {
             GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
         }

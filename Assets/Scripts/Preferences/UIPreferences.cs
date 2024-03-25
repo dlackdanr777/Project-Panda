@@ -36,9 +36,11 @@ public class UIPreferences : MonoBehaviour
 
     private void OnSilentButtonClicked()
     {
+        SoundManager.Instance.SetVolume(0, AudioType.Master);
         SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
         SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
 
+        _masterSlider.value = 0;
         _backgroundSlider.value = 0;
         _soundEffectSlider.value = 0;
 
@@ -48,9 +50,11 @@ public class UIPreferences : MonoBehaviour
 
     private void OnVibrateButtonClicked()
     {
+        SoundManager.Instance.SetVolume(0, AudioType.Master);
         SoundManager.Instance.SetVolume(0, AudioType.BackgroundAudio);
         SoundManager.Instance.SetVolume(0, AudioType.EffectAudio);
 
+        _masterSlider.value = 0;
         _backgroundSlider.value = 0;
         _soundEffectSlider.value = 0;
 
@@ -60,9 +64,11 @@ public class UIPreferences : MonoBehaviour
 
     private void OnSoundButtonClicked()
     {
+        SoundManager.Instance.SetVolume(1, AudioType.Master);
         SoundManager.Instance.SetVolume(1, AudioType.BackgroundAudio);
         SoundManager.Instance.SetVolume(1, AudioType.EffectAudio);
 
+        _masterSlider.value = 1;
         _backgroundSlider.value = 1;
         _soundEffectSlider.value = 1;
     }

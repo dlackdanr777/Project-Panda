@@ -458,6 +458,7 @@ public class IntroScene : MonoBehaviour
 
     private void OnSkipButtonClicked()
     {
+        GameManager.Instance.Player.AddItemById("ITG05", 1, ItemAddEventType.None, false);
         GameManager.Instance.Player.AddItemById("IFR02", 5);
         DatabaseManager.Instance.UserInfo.IsExistingUser = true;
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);

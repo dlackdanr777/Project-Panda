@@ -95,6 +95,7 @@ public class UIIntroTitle : MonoBehaviour
         Tween.Stop(_touchText.gameObject);
         _touchText.color = new Color(_touchText.color.r, _touchText.color.g, _touchText.color.b, 1);
 
+        GameManager.Instance.Player.AddItemById("ITG05", 1, ItemAddEventType.None, false);
         GameManager.Instance.Player.AddItemById("IFR02", 5);
         DatabaseManager.Instance.UserInfo.IsExistingUser = true;
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);

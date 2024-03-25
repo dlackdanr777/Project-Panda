@@ -33,7 +33,6 @@ public class ChallengesDatabase
     {
         for (int i = 0; i < System.Enum.GetValues(typeof(EChallenges)).Length; i++)
         {
-            //ChallengesDic[i] = ChallengesParse(((EChallenges)i).ToString());
             ChallengesDic.AddRange(ChallengesParse(((EChallenges)i).ToString()));
         }
     }
@@ -49,7 +48,8 @@ public class ChallengesDatabase
         for (int i = 1; i < data.Length - 1; i++)
         {
             string[] row = data[i].Split(new char[] { ',' });
-            challengesDic.Add(row[0], new ChallengesData(row[0], row[1], row[2], int.Parse(row[3]), "ITG01", (EChallengesKategorie)Enum.Parse(typeof(EChallengesKategorie), row[5]), row[6], int.Parse(row[7]))); // 나중에 아이템 받아오는 것으로 수정
+            string itemId = !string.IsNullOrWhiteSpace(row[4].ToString()) ? row[4].ToString() : string.Empty;
+            challengesDic.Add(row[0], new ChallengesData(row[0], row[1], row[2], int.Parse(row[3]), itemId, (EChallengesKategorie)Enum.Parse(typeof(EChallengesKategorie), row[5]), row[6], int.Parse(row[7]))); // 나중에 아이템 받아오는 것으로 수정
         }
         return challengesDic;
     }
