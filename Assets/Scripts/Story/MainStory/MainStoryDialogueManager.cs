@@ -44,6 +44,8 @@ public class MainStoryDialogueManager : MonoBehaviour
                         GetMainEventType(_dataMainStory[i]["이벤트 타입"].ToString()),
                         _dataMainStory[i]["이벤트 타입 조건"].ToString(),
                         GetIntType(_dataMainStory[i]["이벤트 타입 수량"]),
+                        _dataMainStory[i]["스토리 스타트 포인트"].ToString(),
+                        _dataMainStory[i]["맵 ID"].ToString(),
                         GetContext(i),
                         GetMainEventType(_dataMainStory[i]["클리어 보상 타입"].ToString()),
                         _dataMainStory[i]["보상 아이템 ID"].ToString(),

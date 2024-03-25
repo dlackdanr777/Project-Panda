@@ -25,6 +25,8 @@ public class NPC02Story : MonoBehaviour
         // 스토리 종료 후
         else if (DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains("MS01C"))
         {
+            sr = gameObject.GetComponent<SpriteRenderer>();
+            sr.enabled = true;
             sr.sprite = _image;
             this.enabled = false;
             gameObject.GetComponent<Animator>().enabled = true;

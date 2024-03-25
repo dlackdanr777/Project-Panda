@@ -264,6 +264,9 @@ public class FieldSlot : MonoBehaviour, IInteraction
     public void SetRemainingTimeZero()
     {
         _remainingTime = "채집 가능!";
+
+        // 실제 채집 시간이 남았을 경우를 대비해 한 번 더 증가
+        IncreaseYields();
     }
 
 }

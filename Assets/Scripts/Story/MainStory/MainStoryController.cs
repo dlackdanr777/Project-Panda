@@ -1,7 +1,9 @@
 using BT;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainStoryController : MonoBehaviour
 {
@@ -20,10 +22,15 @@ public class MainStoryController : MonoBehaviour
     private bool _isInitialized = false;
     private bool _isStartStory = false;
 
+    public List<string> NextStory = new List<string>();
+
     private GameObject _poyaAnimControll;
     private GameObject _jijiAnimControll;
 
-    public List<string> NextStory = new List<string>();
+    private Dictionary<string, Transform> _poyaTransform = new Dictionary<string, Transform>();
+    private Dictionary<string, Transform> _jijiTransform = new Dictionary<string, Transform>();
+
+    private string _currentMap;
 
     private void Awake()
     {
@@ -57,7 +64,7 @@ public class MainStoryController : MonoBehaviour
     {
         foreach(string key in NextStory)
         {
-            if (_storyDatabase[key].DialogueData[0].TalkPandaID.Equals(_npcID) && _isStartStory == false && !_questMark.activeSelf)
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _isStartStory == false && !_questMark.activeSelf)
             {
                 if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
                     _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
@@ -66,9 +73,16 @@ public class MainStoryController : MonoBehaviour
                     // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
                     PoyaSetTrue();
                     JijiSetTrue();
+                    SetPosition();
                 }
             }
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _currentMap != TimeManager.Instance.CurrentMap)
+            {
+                _currentMap = TimeManager.Instance.CurrentMap;
+                SetPosition();
+            }
         }
+
 
     }
 
@@ -137,6 +151,9 @@ public class MainStoryController : MonoBehaviour
         }
 
         _isInitialized = true;
+        _currentMap = TimeManager.Instance.CurrentMap;
+        //PoyaSetTrue();
+        //JijiSetTrue();
     }
 
     private void StartMainStory()
@@ -276,8 +293,9 @@ public class MainStoryController : MonoBehaviour
             if(key == id)
             {
                 _storyDatabase[key].IsSuccess = true;
-                if (string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == key)))
+                if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
                 {
+                    Debug.Log("스토리 완료: " + key);
                     DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
                 }
                 NextStory.Remove(key);
@@ -311,7 +329,6 @@ public class MainStoryController : MonoBehaviour
                     }
                 }
 
-
                 // 지지와 포야 애니메이션 켜기
                 PoyaSetFalse();
                 JijiSetFalse();
@@ -326,21 +343,25 @@ public class MainStoryController : MonoBehaviour
     // 애니메이션 끄고 포야 켜기
     private void PoyaSetTrue()
     {
+        _poyaTransform.Clear();
         // 다음 스토리에 포야가 포함되어 있다면
-        foreach(string key in NextStory)
+        foreach (string key in NextStory)
         {
             if (DatabaseManager.Instance.MainDialogueDatabase.PoyaStoryList.Contains(key))
             {
                 foreach (Transform child in _poyaAnimControll.transform)
                 {
-                    child.gameObject.SetActive(false);
+                    if(child.name == _storyDatabase[key].MapID)
+                    {
+                        child.gameObject.SetActive(false);
+                        _poyaTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
+                        break;
+                    }
                 }
                 StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = true;
 
             }
-
         }
-
     }
 
     private void PoyaSetFalse()
@@ -352,15 +373,22 @@ public class MainStoryController : MonoBehaviour
         StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = false;
     }
 
+    // 애니메이션 끄고 지지 켜기
     private void JijiSetTrue()
     {
+        _jijiTransform.Clear();
         foreach (string key in NextStory)
         {
             if (DatabaseManager.Instance.MainDialogueDatabase.JijiStoryList.Contains(key))
             {
                 foreach (Transform child in _jijiAnimControll.transform)
                 {
-                    child.gameObject.SetActive(false);
+                    if (child.name == _storyDatabase[key].MapID)
+                    {
+                        child.gameObject.SetActive(false);
+                        _jijiTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
+                        break;
+                    }
                 }
             }
             GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = true;
@@ -375,4 +403,29 @@ public class MainStoryController : MonoBehaviour
         GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = false;
     }
 
+    private void SetPosition()
+    {
+        GameObject poya = StarterPanda.Instance.gameObject;
+        GameObject jiji = GameObject.Find("NPC01");
+        foreach (string key in _poyaTransform.Keys)
+        {
+            if (key == _currentMap)
+            {
+                poya.transform.position = _poyaTransform[key].position;
+
+                break;
+            }
+            poya.transform.position = _poyaTransform[key].position;
+        }
+
+        foreach (string key in _jijiTransform.Keys)
+        {
+            if (key == _currentMap)
+            {
+                jiji.transform.position = _jijiTransform[key].position;
+                break;
+            }
+            jiji.transform.position = _jijiTransform[key].position;
+        }
+    }
 }

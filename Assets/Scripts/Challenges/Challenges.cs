@@ -28,6 +28,8 @@ public class Challenges
     //private List<string> _doneChallenges = new List<string>();
 
     #region 개수
+    private Dictionary<string, int> _mainStoryCount = new Dictionary<string, int>(); // 메인스토리 완료체크
+
     // 채집 성공할 때마다 저장
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
 
@@ -120,16 +122,31 @@ public class Challenges
 
 
         // 메인스토리
-        for (int i = 0; i < StoryManager.Instance.StoryCompletedList.Count - 1; i++)
+        Dictionary<string, MainStoryDialogue> msDic = DatabaseManager.Instance.MainDialogueDatabase.MSDic;
+        foreach(string key in msDic.Keys)
         {
-            string id = StoryManager.Instance.StoryCompletedList[i];
-            if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4))
+            if (_mainStoryCount.Count == 0)
             {
-                challengesId = "RW" + id.Substring(0, 4);
+                _mainStoryCount.Add("RW" + key.Substring(0, 4), 1);
+            }
+            else if (!_mainStoryCount.Keys.Contains("RW" + key.Substring(0, 4)))
+            {
+                _mainStoryCount.Add("RW" + key.Substring(0, 4), 1);
+            }
+            else
+            {
+                _mainStoryCount["RW" + key.Substring(0, 4)]++;
+            }
+            
+        }
+        foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
+        {
+            if (key.Substring(0, 4) != DatabaseManager.Instance.MainDialogueDatabase.MSDic[key].NextStoryID.Substring(0, 4))
+            {
+                challengesId = "RW" + key.Substring(0, 4);
                 DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
             }
         }
-
 
         // 채집
         for (int i = 0; i < _challengesDatas[(int)EChallengesKategorie.gathering].Count; i++)

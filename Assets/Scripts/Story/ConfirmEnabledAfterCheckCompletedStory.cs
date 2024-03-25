@@ -41,6 +41,7 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
                 continue;
 
             _target.SetActive(true);
+            return;
         }
 
         _target.SetActive(false);

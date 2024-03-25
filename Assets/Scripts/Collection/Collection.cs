@@ -30,6 +30,9 @@ public class Collection : MonoBehaviour
     private Sprite _pandaImage;
     private Animator _pandaCollectionAnim;
     private SpriteRenderer _pandaSpriteRenderer;
+    private NPCAnimeControllCenter _poyaAnimeCenter;
+    private bool _isPoyaActive; // 현재 포야가 켜져 있는지 확인
+    private bool _isPoyaSpriteActive; // 현재 포야가 켜져 있는지 확인
     #endregion
 
     #region 위치 지정
@@ -126,6 +129,7 @@ public class Collection : MonoBehaviour
         }
         DataBind.SetButtonValue(_map + starButton, ClickStarButton);
 
+        _poyaAnimeCenter = GameObject.Find("Poya Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
     }
     //private void OnDestroy()
     //{
@@ -171,7 +175,7 @@ public class Collection : MonoBehaviour
 
             _isExit = false;
 
-            _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
+            //_pandaCollectionAnim.SetBool("IsCollectionLatency", false);
             Invoke("ExitCollection", _fadeTime);
             OnExitCollection?.Invoke();
         }
@@ -241,10 +245,30 @@ public class Collection : MonoBehaviour
         // 화면 켜지는 시간에 맞추어 채집 시작
         Invoke("StartCollection", _fadeTime);
 
-        // 진행 중이던 애니메이션 종료
+        foreach(Transform child in _poyaAnimeCenter.transform)
+        {
+            if(child.name == _map && child.gameObject.activeSelf == true)
+            {
+                child.gameObject.SetActive(false);
+                break;
+            }
+            else if(child.name == _map)
+            {
+                _isPoyaActive = true;
+                break;
+            }
+            
+        }
+        if (_pandaSpriteRenderer.gameObject.activeSelf == true)
+        {
+            _isPoyaSpriteActive = true;
+        }
+
+        // 판다 채집 준비
         _pandaCollectionAnim.SetInteger("Num", -1);
         _pandaCollectionAnim.Play("Idle");
-        _pandaCollectionAnim.enabled = false;
+        //_pandaCollectionAnim.enabled = false;
+        _pandaSpriteRenderer.enabled = true;
     }
 
     /// <summary>
@@ -341,16 +365,36 @@ public class Collection : MonoBehaviour
 
     private void ExitCollection()
     {
-        _pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
-        //_pandaCollectionAnim.enabled = false;
+        _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
+        // 포야 원래 상태로 설정
+        //_pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
+        _pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.sprite = _pandaImage;
+        if(!_isPoyaActive)
+        {
+            foreach (Transform child in _poyaAnimeCenter.transform)
+            {
+                if (child.name == _map)
+                {
+                    child.gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+        if (!_isPoyaSpriteActive)
+        {
+            _pandaSpriteRenderer.enabled = false;
+
+        }
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
 
         DataBind.GetAction("ShowMainUIButton")?.Invoke();
         CameraSet(false);
-        _targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-        Camera.main.gameObject.transform.position = _targetPos;
+
+        // 끝나고 판다 쪽으로 카메라 이동
+        //_targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+        //Camera.main.gameObject.transform.position = _targetPos;
         _isClickStarButton = false;
     }
 
