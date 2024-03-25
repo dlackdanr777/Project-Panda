@@ -3,6 +3,7 @@ using Muks.DataBind;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class MainStoryCollection : MonoBehaviour
@@ -100,7 +101,7 @@ public class MainStoryCollection : MonoBehaviour
 
     public string CollectionID { get; set; } // 채집해야 할 아이템 ID;
     public string MainStoryID { get; set; } // 이 메인스토리가 끝났을 경우 채집 실행
-    public string NextMainStoryID { get; set; } // 이 메인스토리가 끝났을 경우 채집 종료
+    public string PriorMainStoryID { get; set; } // 이 메인스토리가 끝났을 경우 채집 종료
 
     private void Start()
     {
@@ -120,8 +121,9 @@ public class MainStoryCollection : MonoBehaviour
         }
         DataBind.SetButtonValue(_starButton.name, ClickStarButton);
 
-        MainStoryID = gameObject.name.Substring(0, 5);
-        NextMainStoryID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].NextStoryID;
+        MainStoryID = gameObject.name.Substring(0, gameObject.name.Length - 10);
+        Debug.Log("MainStoryID" + MainStoryID);
+        PriorMainStoryID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].PriorStoryID;
 
     }
 
@@ -134,18 +136,19 @@ public class MainStoryCollection : MonoBehaviour
         }
 
         // 다음 메인스토리가 종료되었을 경우 스크립트 종료하기
-        if (!string.IsNullOrEmpty(NextMainStoryID) && !string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == NextMainStoryID)))
+        if (!string.IsNullOrEmpty(MainStoryID) && !string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == MainStoryID)))
         {
             gameObject.SetActive(false);
         }
-
         // 채집 대기시간 체크
         if (_waitTime < _spawnTime && !_isCollection && !_isExit)
         {
             _waitTime += Time.deltaTime;
         }
-        else if (_waitTime >= _spawnTime && !string.IsNullOrEmpty(CollectionID) && (_gatheringType == GatheringItemType.Fruit || GameManager.Instance.Player.FindItemById(toolId)))
+        else if (_waitTime >= _spawnTime && DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(PriorMainStoryID) && (_gatheringType == GatheringItemType.Fruit || GameManager.Instance.Player.FindItemById(toolId)))
         {
+            CollectionID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].EventTypeCondition;
+            Debug.Log("toolid??" + toolId);
             _waitTime = 0;
 
             // 채집 위치 설정

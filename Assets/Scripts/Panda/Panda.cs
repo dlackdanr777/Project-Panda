@@ -109,10 +109,10 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        if(_uiPanda != null)
-        {
-            ToggleUIPandaButton();
-        }
+        //if(_uiPanda != null)
+        //{
+        //    ToggleUIPandaButton();
+        //}
     }
 
     public void UpdateInteraction()

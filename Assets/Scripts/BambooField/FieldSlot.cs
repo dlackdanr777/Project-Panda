@@ -81,10 +81,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
         //}
 
-        if (_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
-        {
-            ShowHavestItem();
-        }
+        //if (_isShowHavestItemDescription == true && Input.GetMouseButtonDown(0))
+        //{
+        //    ShowHavestItem();
+        //}
     }
 
     public void Init(BambooFieldSystem bambooFieldSystem, string growingCropID)
@@ -95,10 +95,10 @@ public class FieldSlot : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        if (_isShowHavestItemDescriptionTrue == false)
-        {
-            ShowHavestItem();
-        }
+        //if (_isShowHavestItemDescriptionTrue == false)
+        //{
+        //    ShowHavestItem();
+        //}
 
     }
 

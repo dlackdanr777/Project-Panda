@@ -132,10 +132,6 @@ public class MainStoryController : MonoBehaviour
             if(!string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i]))){
                 _storyDatabase[_storyKey[i]].IsSuccess = true;
             }
-            else
-            {
-                break;
-            }
         }
 
         for (int j = 1; j < _storyKey.Count; j++)
@@ -144,6 +140,7 @@ public class MainStoryController : MonoBehaviour
             {
                 if (!NextStory.Contains(_storyKey[j]))
                 {
+                    Debug.Log("NextStory" + _storyKey[j]);
                     NextStory.Add(_storyKey[j]);
                 }
             }
@@ -333,8 +330,7 @@ public class MainStoryController : MonoBehaviour
                     {
                         MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
                         msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
-                        msCollection.NextMainStoryID = _storyDatabase[nextStoryId].StoryID;
-
+                        Debug.Log("CollectionID" + msCollection.CollectionID);
                     }
                 }
 

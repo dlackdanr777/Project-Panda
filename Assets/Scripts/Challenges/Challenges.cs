@@ -628,7 +628,10 @@ public class Challenges
         // ´ë³ª¹« È¹µæ
 
         // ¾ÆÀÌÅÛ È¹µæ - µµ±¸
-        GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
+        if (string.IsNullOrEmpty(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item))
+        {
+            GameManager.Instance.Player.AddItemById(DatabaseManager.Instance.GetChallengesDic()[challengesId].Item);
+        }
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
         DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
