@@ -29,6 +29,7 @@ public class Challenges
 
     #region 개수
     private Dictionary<string, int> _mainStoryCount = new Dictionary<string, int>(); // 메인스토리 완료체크
+    private List<string> _checkStoryCompleteList = new List<string>(); // 메인스토리 완료체크
 
     // 채집 성공할 때마다 저장
     public int[] GatheringSuccessCount = new int[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; // 채집 성공 횟수
@@ -127,24 +128,29 @@ public class Challenges
         {
             if (_mainStoryCount.Count == 0)
             {
-                _mainStoryCount.Add("RW" + key.Substring(0, 4), 1);
+                _mainStoryCount.Add(key.Substring(0, 4), 1);
             }
-            else if (!_mainStoryCount.Keys.Contains("RW" + key.Substring(0, 4)))
+            else if (!_mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
-                _mainStoryCount.Add("RW" + key.Substring(0, 4), 1);
+                _mainStoryCount.Add(key.Substring(0, 4), 1);
             }
             else
             {
-                _mainStoryCount["RW" + key.Substring(0, 4)]++;
+                _mainStoryCount[ key.Substring(0, 4)]++;
             }
             
         }
         foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
         {
-            if (key.Substring(0, 4) != DatabaseManager.Instance.MainDialogueDatabase.MSDic[key].NextStoryID.Substring(0, 4))
+            if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
-                challengesId = "RW" + key.Substring(0, 4);
-                DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                _checkStoryCompleteList.Add(key);
+                _mainStoryCount[key.Substring(0, 4)]--;
+                if (_mainStoryCount[key.Substring(0, 4)] == 0)
+                {
+                    challengesId = "RW" + key.Substring(0, 4);
+                    DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
+                }
             }
         }
 
@@ -346,11 +352,25 @@ public class Challenges
     public void MainStoryDone(string id)
     {
         Debug.Log(id);
-        if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4)) // 메인 스토리 한 장이 끝나면
+        //if (id.Substring(0, 4) != DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(id).NextStoryID.Substring(0, 4)) // 메인 스토리 한 장이 끝나면
+        //{
+        //    Debug.Log("넘어옴");
+        //    string storyChallengeId = "RW" + id.Substring(0, 4);
+        //    SuccessChallenge(storyChallengeId); // 도전과제 달성
+        //}
+        foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
         {
-            Debug.Log("넘어옴");
-            string storyChallengeId = "RW" + id.Substring(0, 4);
-            SuccessChallenge(storyChallengeId); // 도전과제 달성
+            if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
+            {
+                Debug.Log("넘어옴");
+                _checkStoryCompleteList.Add(key);
+                _mainStoryCount[key.Substring(0, 4)]--;
+                if (_mainStoryCount[key.Substring(0, 4)] == 0)
+                {
+                    string storyChallengeId = "RW" + key.Substring(0, 4);
+                    SuccessChallenge(storyChallengeId); // 도전과제 달성
+                }
+            }
         }
     }
 

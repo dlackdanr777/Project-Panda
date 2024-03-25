@@ -1,5 +1,6 @@
 using UnityEngine;
 using Muks.Tween;
+using UnityEngine.UI;
 
 public class SettingButton : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class SettingButton : MonoBehaviour
     [SerializeField] private Transform _targetTransform;
     [SerializeField] private Vector2 _minSize = new Vector2(0, 0);
     [SerializeField] string _targetTransformName; // 비워놓기 가능
+    private Image _image;
     private Vector2 _size;
     private bool _isRunningTween;
     private Camera _camera;
@@ -22,13 +24,27 @@ public class SettingButton : MonoBehaviour
         {
             _targetTransform = GameObject.Find(_targetTransformName).transform.GetComponent<Transform>();
         }
+        if (GetComponent<Image>() != null)
+        {
+            _image = GetComponent<Image>();
+        }
     }
 
     private void Update()
     {
+
         if (_targetTransform == null && string.IsNullOrEmpty(_targetTransformName) == false)
         {
             _targetTransform = GameObject.Find(_targetTransformName).transform.GetComponent<Transform>();
+        }
+
+        if (_image != null && _targetTransform.gameObject.activeSelf == false)
+        {
+            _image.enabled = false;
+        }
+        else if(_image != null)
+        {
+            _image.enabled = true;
         }
 
         transform.position = _camera.WorldToScreenPoint(_targetTransform.position);

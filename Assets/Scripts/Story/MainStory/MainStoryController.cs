@@ -40,7 +40,7 @@ public class MainStoryController : MonoBehaviour
     private void OnDestroy()
     {
         UIMainDialogue.OnAddRewardHandler -= AddReward;
-        UIMainDialogue.OnFinishStoryHandler -= FinishStory;
+        UIMainDialogue.OnFinishStoryHandler += FinishStory;
     }
 
     private void Start()
@@ -70,12 +70,17 @@ public class MainStoryController : MonoBehaviour
                     _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
                 {
                     _questMark.SetActive(true);
-                    // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
-                    PoyaSetTrue();
-                    JijiSetTrue();
-                    SetPosition();
+
+                    if(_isStartStory == false)
+                    {
+                        // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
+                        PoyaSetTrue();
+                        JijiSetTrue();
+                        SetPosition();
+                    }
                 }
             }
+
             if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _currentMap != TimeManager.Instance.CurrentMap)
             {
                 _currentMap = TimeManager.Instance.CurrentMap;
@@ -89,7 +94,6 @@ public class MainStoryController : MonoBehaviour
     // NPC 버튼 클릭했을 때
     public void OnClickStartButton()
     {
-        _questMark.SetActive(false);
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
         foreach(string key in NextStory)
         {
@@ -292,11 +296,16 @@ public class MainStoryController : MonoBehaviour
         {
             if(key == id)
             {
+                if(_questMark != null)
+                {
+                    _questMark.SetActive(false);
+                }
                 _storyDatabase[key].IsSuccess = true;
                 if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
                 {
                     Debug.Log("스토리 완료: " + key);
                     DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
+                    DatabaseManager.Instance.Challenges.MainStoryDone(id);
                 }
                 NextStory.Remove(key);
 
