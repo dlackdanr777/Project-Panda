@@ -45,6 +45,8 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     public MainStoryDialogueManager MainDialogueDatabase => _mainStoryDialogueDatabase; 
 
     private ChallengesDatabase _challengesDatabase;
+    public ChallengesDatabase ChallengesDatabase => _challengesDatabase;
+
     private Challenges _challenges;
     public Challenges Challenges => _challenges;
 

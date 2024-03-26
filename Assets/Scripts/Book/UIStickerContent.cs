@@ -99,11 +99,9 @@ public class UIStickerContent : MonoBehaviour
         {
             if (GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id.Equals(id))
             {
-                Debug.LogFormat("{0} 이미지 찾음", id);
                 return GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Image;
             }
         }
-        Debug.LogFormat("{0} 이미지 못찾음", id);
         return null;
     }
 }

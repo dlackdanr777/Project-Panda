@@ -227,13 +227,13 @@ namespace Muks.BackEnd
         /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝에서 ChartData를 받아오는 함수 </summary>
         public void GetChartData(string selectedProbabilityFileId, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
-            if (!Backend.IsLogin)
+/*            if (!Backend.IsLogin)
             {
                 string errorName = "로그인 실패";
                 string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
                 _popup.Show(errorName, errorDescription, ExitApp);
                 return;
-            }
+            }*/
 
             if (maxRepeatCount <= 0)
             {

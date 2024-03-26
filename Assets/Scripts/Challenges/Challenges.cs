@@ -66,10 +66,10 @@ public class Challenges
 
     public void Register()
     {
-        LoadData();
+        LoadMyData();
     }
 
-    public void LoadData()
+    public void LoadMyData()
     {
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
 
