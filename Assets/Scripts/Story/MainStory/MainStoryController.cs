@@ -67,6 +67,10 @@ public class MainStoryController : MonoBehaviour
             rendererSize.x *= 1.5f;
             rendererSize.y *= 1.5f;
         }
+        if(rendererSize.x > 500)
+        {
+            rendererSize.x /= 1.5f;
+        }
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
