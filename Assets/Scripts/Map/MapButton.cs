@@ -65,6 +65,10 @@ public class MapButton : MonoBehaviour
         {
             CurrentMap = tmpCenterIndex;
             _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
+            if(CurrentMap == 5)
+            {
+                _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
+            }
         }
 
         if(tmpCameraPos != Vector3.zero)
