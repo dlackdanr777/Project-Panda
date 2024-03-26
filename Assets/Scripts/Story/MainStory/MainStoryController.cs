@@ -53,6 +53,20 @@ public class MainStoryController : MonoBehaviour
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
         Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
+        if(rendererSize.x < 0)
+        {
+            rendererSize.x = -rendererSize.x;
+        }
+        if(rendererSize.x < 200)
+        {
+            rendererSize.x *= 2;
+            rendererSize.y *= 2;
+        }
+        if (rendererSize.x < 300)
+        {
+            rendererSize.x *= 1.5f;
+            rendererSize.y *= 1.5f;
+        }
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
