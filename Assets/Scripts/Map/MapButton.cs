@@ -242,7 +242,10 @@ public class MapButton : MonoBehaviour
 
     private void MoveOtherWorldlyForest()
     {
-        if(CurrentMap == 3)
+        SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
+        if (CurrentMap == 3)
         {
             CurrentMap = 8;
             MoveOtherWorld();
@@ -260,6 +263,9 @@ public class MapButton : MonoBehaviour
 
     private void MoveOtherWorldlyForestEntrance()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         CheckDirection();
 
         CurrentMap = 9;

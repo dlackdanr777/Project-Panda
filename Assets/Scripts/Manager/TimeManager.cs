@@ -14,7 +14,7 @@ public enum ETime
 
 public class TimeManager : SingletonHandler<TimeManager>
 {
-    public DateTime TODAY => DatabaseManager.Instance.UserInfo.TODAY;
+    public DateTime TODAY => DateTime.Today;
     public int GameHour;
     public string GameHourId;
     public string GameWeatherId;

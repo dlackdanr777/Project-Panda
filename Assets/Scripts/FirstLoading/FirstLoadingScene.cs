@@ -7,7 +7,8 @@ public class FirstLoadingScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Invoke("LoadLoginScene", 1);
+        Invoke("LoadLoginScene", 0.5f);
+
     }
 
 
