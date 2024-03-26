@@ -79,6 +79,7 @@ public class ConfirmEnabledAfterCompletedOutro : MonoBehaviour
                 continue;
 
             _target.SetActive(true);
+            return;
         }
 
         _target.SetActive(false);

@@ -82,7 +82,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
         {
             _time[i] += Time.deltaTime;
             _second[i] += Time.deltaTime;
-            if (_timeDifference[i] != TimeSpan.Zero)
+            if (_timeDifference[i] > TimeSpan.Zero)
             {
                 _timeDifference[i] = _timeDifference[i] - TimeSpan.FromSeconds(Mathf.FloorToInt(_second[i]));
                 _second[i] -= Mathf.FloorToInt(_second[i]);
@@ -237,7 +237,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
         for (int i = 0; i <= _fieldIndex; i++)
         {
             //현재 접속 시간과 마지막 접속 시간을 비교
-            if ((_today - _database.UserInfo.LastAccessDay).Minutes + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
+            if ((_today - _database.UserInfo.LastAccessDay).Seconds + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
             {
 
                 // 작물 성장 시간 최대 
@@ -247,8 +247,8 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             else
             {
                 // 밖에 있던 시간 _time에 추가
-                _time[i] += (_today - _database.UserInfo.LastAccessDay).Minutes;
-                _timeDifference[i] -= _today - _database.UserInfo.LastAccessDay;
+                _time[i] += (_today - _database.UserInfo.LastAccessDay).Seconds;
+                _timeDifference[i] -= (_today - _database.UserInfo.LastAccessDay);
             }
         }
     }

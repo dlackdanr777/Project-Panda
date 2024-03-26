@@ -19,6 +19,11 @@ public class NPCAnimeContollor : MonoBehaviour
 
     private Vector3 _tmpPos;
 
+    private void OnEnable()
+    {
+        _animator.SetInteger(_parametorName, _animeNum);
+    }
+
     public void Init()
     {
         _tmpPos = transform.position;
