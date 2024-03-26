@@ -49,16 +49,19 @@ public class UIChallengeSlot : MonoBehaviour
     }
 
 
-    public void Done()
+    public void Done(bool isServerUploaded = true)
     {
         _clearButton.gameObject.SetActive(true);
         _backgroundImage.sprite = _doneSprite;
 
         _rectTransform.SetAsFirstSibling();
+
+        if (isServerUploaded)
+            DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
     }
 
 
-    public void Clear()
+    public void Clear(bool isServerUploaded = true)
     {
         _clearButton.gameObject.SetActive(true);
         _clearButton.interactable = false;
@@ -68,12 +71,13 @@ public class UIChallengeSlot : MonoBehaviour
         _backgroundImage.sprite = _doneSprite;
         _backgroundImage.color = _clearBackgroundColor;
 
-        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
+        if (isServerUploaded)
+            DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
     }
 
     public void CloseSlot()
     {
-        Clear();
+        Clear(false);
         _rectTransform.SetAsLastSibling();
     }
 }

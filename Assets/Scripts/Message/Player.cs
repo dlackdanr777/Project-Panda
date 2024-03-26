@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEditor.PackageManager;
 
 public class Player
 {
@@ -393,15 +393,12 @@ public class Player
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveBambooData(maxRepeatCount - 1);
                 break;
 
@@ -560,15 +557,12 @@ public class Player
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveMailData(maxRepeatCount - 1);
                 break;
 

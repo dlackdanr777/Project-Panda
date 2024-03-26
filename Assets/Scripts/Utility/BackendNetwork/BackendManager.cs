@@ -2,7 +2,7 @@ using BackEnd;
 using LitJson;
 using System;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 namespace Muks.BackEnd
 {
@@ -17,14 +17,17 @@ namespace Muks.BackEnd
 
     public class BackendManager : SingletonHandler<BackendManager>
     {
-        /// <summary>
-        /// 이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)
-        /// </summary>
+        [Header("Components")]
+        [SerializeField] private UIBackendPopup _popup;
+
+
+        /// <summary>이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)</summary> 
         public bool Login;
 
         public override void Awake()
         {
             base.Awake();
+            _popup.Init();
             BackendInit(10);
         }
 
@@ -36,6 +39,9 @@ namespace Muks.BackEnd
             if (maxRepeatCount <= 0)
             {
                 Debug.LogError("뒤끝을 초기화하지 못했습니다. 다시 실행");
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => BackendInit(3));
                 return;
             }
 
@@ -48,20 +54,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("초기화 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     BackendInit(maxRepeatCount - 1);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("초기화 성공");
                     break;
             }
         }
@@ -81,11 +83,11 @@ namespace Muks.BackEnd
         /// <summary> id, pw, 서버 연결 실패시 반복횟수, 완료 시 실행할 함수를 받아 로그인을 진행하는 함수 </summary>
         public void CustomLogin(string id, string pw, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
-            Debug.Log("로그인을 요청합니다.");
-
             if (maxRepeatCount <= 0)
             {
-                Debug.LogError("로그인 실패");
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => CustomLogin(id, pw, 3, onCompleted));
                 return;
             }
 
@@ -94,20 +96,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("로그인 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     CustomLogin(id, pw, maxRepeatCount - 1, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("로그인 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -117,11 +115,11 @@ namespace Muks.BackEnd
         /// <summary>게스트 로그인을 진행하는 함수 </summary>
         public void GuestLogin(int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
-            Debug.Log("로그인을 요청합니다.");
-
             if (maxRepeatCount <= 0)
             {
-                Debug.LogError("로그인 실패");
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => GuestLogin(3, onCompleted));
                 return;
             }
 
@@ -130,20 +128,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("로그인 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     GuestLogin(maxRepeatCount - 1, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("로그인 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -155,11 +149,12 @@ namespace Muks.BackEnd
         /// <summary> id, pw, 서버 연결 실패시 반복횟수, 완료 시 실행할 함수를 받아 회원가입을 진행하는 함수 </summary>
         public void CustomSignup(string id, string pw, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
-            Debug.Log("회원 가입을 요청합니다.");
-
             if (maxRepeatCount <= 0)
             {
                 Debug.LogError("회원 가입 실패");
+                string errorName = "회원 가입 실패";
+                string errorDescription = "다시 회원가입을 시도해주세요.";
+                _popup.Show(errorName, errorDescription);
                 return;
             }
 
@@ -168,20 +163,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("회원 가입 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     CustomSignup(id, pw, maxRepeatCount - 1, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("회원가입 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -198,13 +189,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
@@ -213,20 +208,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("연결 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     GetMyData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("내 정보 받아오기 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -238,13 +229,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogError("연결 실패");
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => GetChartData(selectedProbabilityFileId, 3, onCompleted));
                 return;
             }
 
@@ -253,20 +248,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("연결 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     GetChartData(selectedProbabilityFileId, maxRepeatCount - 1, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("차트 정보 받기 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -278,13 +269,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin || !Login)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogErrorFormat("{0} 게임 정보를 추가하지 못했습니다.", selectedProbabilityFileId);
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => GameDataInsert(selectedProbabilityFileId, 3, param, onCompleted));
                 return;
             }
 
@@ -293,20 +288,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("연결 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     GameDataInsert(selectedProbabilityFileId, maxRepeatCount - 1, param, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("정보 추가 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -318,13 +309,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin || !Login)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogErrorFormat("{0} 게임 정보를 추가하지 못했습니다.", selectedProbabilityFileId);
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => AsyncGameDataInsert(selectedProbabilityFileId, 3, param, onCompleted));
                 return;
             }
 
@@ -333,20 +328,16 @@ namespace Muks.BackEnd
                 switch (ErrorCheck(bro))
                 {
                     case BackendState.Failure:
-                        Debug.LogError("연결 실패");
                         break;
 
                     case BackendState.Maintainance:
-                        Debug.LogError("서버 점검 중");
                         break;
 
                     case BackendState.Retry:
-                        Debug.LogWarning("연결 재시도");
                         GameDataInsert(selectedProbabilityFileId, maxRepeatCount - 1, param, onCompleted);
                         break;
 
                     case BackendState.Success:
-                        Debug.Log("정보 추가 성공");
                         onCompleted?.Invoke(bro);
                         break;
                 }
@@ -359,13 +350,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin || !Login)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogErrorFormat("{0} 게임 정보를 수정하지 못했습니다.", selectedProbabilityFileId);
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => GameDataUpdate(selectedProbabilityFileId, inDate, 3, param, onCompleted));
                 return;
             }
 
@@ -374,20 +369,16 @@ namespace Muks.BackEnd
             switch (ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("연결 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     GameDataUpdate(selectedProbabilityFileId, inDate, maxRepeatCount - 1, param, onCompleted);
                     break;
 
                 case BackendState.Success:
-                    Debug.Log("정보 수정 성공");
                     onCompleted?.Invoke(bro);
                     break;
             }
@@ -399,13 +390,17 @@ namespace Muks.BackEnd
         {
             if (!Backend.IsLogin || !Login)
             {
-                Debug.LogError("서버에 로그인 되어있지 않습니다.");
+                string errorName = "로그인 실패";
+                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
+                _popup.Show(errorName, errorDescription, ExitApp);
                 return;
             }
 
             if (maxRepeatCount <= 0)
             {
-                Debug.LogErrorFormat("{0} 게임 정보를 수정하지 못했습니다.", selectedProbabilityFileId);
+                string errorName = "서버 접속 오류";
+                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                _popup.Show(errorName, errorDescription, () => AsyncGameDataUpdate(selectedProbabilityFileId, inDate, 3, param, onCompleted));
                 return;
             }
 
@@ -414,20 +409,16 @@ namespace Muks.BackEnd
                 switch (ErrorCheck(bro))
                 {
                     case BackendState.Failure:
-                        Debug.LogError("연결 실패");
                         break;
 
                     case BackendState.Maintainance:
-                        Debug.LogError("서버 점검 중");
                         break;
 
                     case BackendState.Retry:
-                        Debug.LogWarning("연결 재시도");
                         GameDataUpdate(selectedProbabilityFileId, inDate, maxRepeatCount - 1, param, onCompleted);
                         break;
 
                     case BackendState.Success:
-                        Debug.Log("정보 수정 성공");
                         onCompleted?.Invoke(bro);
                         break;
                 }
@@ -460,12 +451,21 @@ namespace Muks.BackEnd
                 {
                     //점검 팝업창 + 로그인 화면으로 보내기
                     Debug.Log("게임 점검중");
+
+                    string errorName = "서버 점검중";
+                    string errorDescription = "서버 점검 중입니다. \n점검이 완료된 후 접속해 주세요.";
+                    _popup.Show(errorName, errorDescription, ExitApp);
+
                     return BackendState.Maintainance;
                 }
                 else if (bro.IsTooManyRequestError()) // 단기간에 많은 요청을 보낼 경우 발생하는 403 Forbbiden 발생 시
                 {
                     //단기간에 많은 요청을 보내면 발생합니다. 5분동안 뒤끝의 함수 요청을 중지해야합니다.  
                     Debug.LogError("단기간에 많은 요청을 보냈습니다. 5분간 사용 불가");
+                    string errorName = "서버 요청 오류";
+                    string errorDescription = "단기간 많은 요청을 보냈습니다. \n5분뒤 다시 접속을 시도하세요.";
+                    _popup.Show(errorName, errorDescription, ExitApp);
+
                     return BackendState.Failure;
                 }
                 else if (bro.IsBadAccessTokenError())
@@ -480,6 +480,10 @@ namespace Muks.BackEnd
                     else
                     {
                         Debug.LogError("토큰을 발급 받지 못했습니다.");
+
+                        string errorName = "토큰 오류";
+                        string errorDescription = "토큰을 발급 받지 못했습니다. \n다시 접속해 주세요.";
+                        _popup.Show(errorName, errorDescription, ExitApp);
                         return BackendState.Failure;
                     }
                 }
@@ -542,10 +546,22 @@ namespace Muks.BackEnd
                     //재시도를 해도 액세스토큰 재발급이 불가능한 경우
                     //커스텀 로그인 혹은 페데레이션 로그인을 통해 수동 로그인을 진행해야합니다.  
                     //중복 로그인일 경우 401 bad refreshToken 에러와 함께 발생할 수 있습니다.  
-                    Debug.Log("게임 접속에 문제가 발생했습니다. 로그인 화면으로 돌아갑니다\n" + callback.ToString());
                     return false;
                 }
             }
+        }
+
+
+        /// <summary>서버 오류 팝업을 띄워주는 함수</summary>
+        public void ShowRetryPopup(string errorName, string errorDescription, UnityAction onButtonClicked = null)
+        {
+            _popup.Show(errorName, errorDescription, onButtonClicked);
+        }
+
+
+        private void ExitApp()
+        {
+            Application.Quit();
         }
     }
 }
