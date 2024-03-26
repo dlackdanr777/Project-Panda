@@ -20,6 +20,11 @@ public class UIDiary : UIView
     [SerializeField] private Button _backgroundButton;
 
 
+    [Space]
+    [Header("Audio Clip")]
+    [SerializeField] private AudioClip _bookOpenAudio;
+
+
     private CanvasGroup _canvasGroup;
     private Vector3 _showPos;
     private Vector3 _hidePos;
@@ -43,6 +48,7 @@ public class UIDiary : UIView
 
     public override void Hide()
     {
+        SoundManager.Instance.PlayEffectAudio(_bookOpenAudio, 0.03f);
 
         VisibleState = VisibleState.Disappearing;
         _canvasGroup.blocksRaycasts = false;
@@ -71,6 +77,7 @@ public class UIDiary : UIView
 
         Tween.RectTransfromAnchoredPosition(_book.gameObject, _showPos, _animeDuration, _tweenMode, () => 
         {
+            SoundManager.Instance.PlayEffectAudio(_bookOpenAudio, 0.05f);
             _coverAnimator.SetTrigger("open");
             _book.anchoredPosition = _showPos;
 

@@ -18,11 +18,17 @@ public class UIAttendance : UIView
     [SerializeField] private Sprite _todayBackroundImage;
     [SerializeField] private Button _backgroundButton;
 
+    [Space]
     [Header("ShowUI Animation Setting")]
     [SerializeField] private GameObject _target;
     [SerializeField] private float _showDuration;
     [SerializeField] private float _hideDuration;
 
+    [Space]
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _attendanceSound;
+
+    
 
 
     private AttendanceDatabase _attendanceDatabase => DatabaseManager.Instance.AttendanceDatabase;
@@ -133,6 +139,7 @@ public class UIAttendance : UIView
 
     private void OnAttendanceButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(_attendanceSound, 0.2f);
         _attendanceButton.gameObject.SetActive(true);
         _attendanceCheckIamge.gameObject.SetActive(true);
         _canvasGroup.blocksRaycasts = false;

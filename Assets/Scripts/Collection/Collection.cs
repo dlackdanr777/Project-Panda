@@ -106,6 +106,13 @@ public class Collection : MonoBehaviour
     }
     #endregion
 
+
+    [Space]
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _fishAnimeStartSound;
+    [SerializeField] private AudioClip _fishAnimeMiddleSound;
+    [SerializeField] private AudioClip _fishAnimeEndSound;
+
     private void Start()
     {
         _waitTime = _spawnTime -1;
@@ -187,6 +194,9 @@ public class Collection : MonoBehaviour
         {
             return;
         }
+
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+
         _isClickStarButton = true;
         OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType, _map); // 화면 FadeOut
         ClickCollectionButton();
@@ -285,6 +295,20 @@ public class Collection : MonoBehaviour
     /// 채집 시작할 때 실행 </summary>
     private void StartCollection()
     {
+        switch (_gatheringType)
+        {
+            case GatheringItemType.Bug:
+                break;
+
+            case GatheringItemType.Fish:
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeStartSound);
+                break;
+
+            case GatheringItemType.Fruit:
+                break;
+        }
+
+
         StarterPanda starterPanda = StarterPanda.Instance;
         // 말풍선 위치 고정
         gameObject.transform.position = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y + 3, gameObject.transform.position.z);
@@ -301,6 +325,21 @@ public class Collection : MonoBehaviour
     /// 채집 완료 후 결과 나오기 전 지연 시간동안 실행 </summary>
     public void CollectionLatency()
     {
+        switch (_gatheringType)
+        {
+            case GatheringItemType.Bug:
+                break;
+
+            case GatheringItemType.Fish:
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeMiddleSound);
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeEndSound, 1.3f);
+                break;
+
+            case GatheringItemType.Fruit:
+                break;
+        }
+
+
         Debug.Log("_map" + _map);
         _pandaCollectionAnim.SetBool("IsCollectionLatency", true); // 채집 결과 나오기 전 애니메이션
         _checkTime = 0;

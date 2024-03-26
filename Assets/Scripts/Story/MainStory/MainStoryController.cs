@@ -109,8 +109,6 @@ public class MainStoryController : MonoBehaviour
                 SetPosition();
             }
         }
-
-
     }
 
     // NPC 버튼 클릭했을 때

@@ -136,10 +136,9 @@ namespace Cooking
                 }
             }
 
-
+            //2구 일 경우
             else if (_uiCook.MaterialSlotCount == 2 && (_materialItemSlots[0].CurrentItem == null || _materialItemSlots[1].CurrentItem == null))
             {
-                Debug.Log("2구 짜리에선 1구 요리 불가능");
                 _uiCook.CookStepSlot.DisableRightButton();
             }
 

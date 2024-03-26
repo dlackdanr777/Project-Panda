@@ -52,9 +52,8 @@ public class SoundManager : SingletonHandler<SoundManager>
 
     //배경 음악 변경시 볼륨 업, 다운 기능을 위한 변수
     private Coroutine _changeAudioRoutine;
-
+    private Coroutine _delayPlayEffectAudioRoutine;
     private Coroutine _stopBackgroundAudioRoutine;
-
     private Coroutine _stopEffectAudioRoutine;
 
 
@@ -143,10 +142,21 @@ public class SoundManager : SingletonHandler<SoundManager>
     }
 
 
-    public void PlayEffectAudio(AudioClip clip)
+    public void PlayEffectAudio(AudioClip clip, float waitTime = 0)
     {
-        _audios[(int)AudioType.EffectAudio].volume = _effectVolume;
-        _audios[(int)AudioType.EffectAudio].PlayOneShot(clip);
+        if (_delayPlayEffectAudioRoutine != null)
+            StopCoroutine(_delayPlayEffectAudioRoutine);
+
+        if(waitTime == 0)
+        {
+            _audios[(int)AudioType.EffectAudio].volume = _effectVolume;
+            _audios[(int)AudioType.EffectAudio].PlayOneShot(clip);
+        }
+
+        else
+        {
+            _delayPlayEffectAudioRoutine = StartCoroutine(IEDelayPlayEffectAudio(clip, waitTime));   
+        }
     }
 
 
@@ -284,6 +294,12 @@ public class SoundManager : SingletonHandler<SoundManager>
         }
     }
 
+
+    private IEnumerator IEDelayPlayEffectAudio(AudioClip clip, float waitTime)
+    {
+        yield return YieldCache.WaitForSeconds(waitTime);
+        _audios[(int)AudioType.EffectAudio].PlayOneShot(clip);
+    }
 
     private IEnumerator IEStopEffectAudio(float duration)
     {
