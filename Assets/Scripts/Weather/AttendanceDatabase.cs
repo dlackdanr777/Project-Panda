@@ -17,6 +17,7 @@ public class AttendanceDatabase
 
     //===========================================================
 
+    public bool IsAttendanced{get; private set;}
 
     public void Register()
     {
@@ -42,10 +43,10 @@ public class AttendanceDatabase
 
         if (nowDay.Month != lastLoginDate.Month || nowDay.Day != lastLoginDate.Day)
         {
-            Debug.Log("출석체크 아직 안함");
+            IsAttendanced = false;
             return false;
         }
-        Debug.Log("출석체크 함");
+        IsAttendanced = true;
         return true;
     }
 

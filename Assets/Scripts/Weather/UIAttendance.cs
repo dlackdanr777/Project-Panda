@@ -54,8 +54,8 @@ public class UIAttendance : UIView
 
     public override void Init(UINavigation uiNav)
     {
-        base.Init(uiNav);
         SlotInit();
+        base.Init(uiNav);
         _canvasGroup = GetComponent<CanvasGroup>();
 
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
@@ -63,7 +63,7 @@ public class UIAttendance : UIView
 
         _tmpSize = gameObject.transform.localScale;
 
-        if (!_attendanceDatabase.CheckTodayAttendance())
+        if (!_attendanceDatabase.IsAttendanced)
         {
             _attendanceButton.EnableButtonClick(OnAttendanceButtonClicked);
         }

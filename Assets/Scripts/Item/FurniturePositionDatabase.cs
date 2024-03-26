@@ -86,15 +86,12 @@ public class FurniturePositionDatabase
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveFurnitureData(maxRepeatCount - 1);
                 break;
 

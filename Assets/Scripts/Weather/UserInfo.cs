@@ -184,15 +184,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveUserInfoData(maxRepeatCount - 1);
                 break;
 
@@ -333,15 +330,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveUserInfoData(maxRepeatCount - 1);
                 break;
 
@@ -483,15 +477,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveInventoryData(maxRepeatCount - 1);
                 break;
 
@@ -541,15 +532,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 AsyncSaveInventoryData(maxRepeatCount - 1);
                 break;
 
@@ -706,15 +694,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveInventoryData(maxRepeatCount - 1);
                 break;
 
@@ -1065,15 +1050,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveBookData(maxRepeatCount - 1);
                 break;
 
@@ -1316,15 +1298,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveUserInfoData(maxRepeatCount - 1);
                 break;
 
@@ -1375,15 +1354,12 @@ public class UserInfo
             switch (BackendManager.Instance.ErrorCheck(bro))
             {
                 case BackendState.Failure:
-                    Debug.LogError("초기화 실패");
                     break;
 
                 case BackendState.Maintainance:
-                    Debug.LogError("서버 점검 중");
                     break;
 
                 case BackendState.Retry:
-                    Debug.LogWarning("연결 재시도");
                     SaveUserInfoData(maxRepeatCount - 1);
                     break;
 
@@ -1550,15 +1526,12 @@ public class UserInfo
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveUserInfoData(maxRepeatCount - 1);
                 break;
 

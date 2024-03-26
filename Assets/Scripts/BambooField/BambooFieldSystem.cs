@@ -49,10 +49,12 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     private List<float> _second = new List<float>(); // 저장 x
     private List<TimeSpan> _timeDifference = new List<TimeSpan>();
 
+    private DateTime _today;
 
     public override void Awake()
     {
         base.Awake();
+        _today = DatabaseManager.Instance.UserInfo.TODAY;
         SceneManager.sceneLoaded += LoadedSceneEvent;
         Init();
     }
@@ -232,23 +234,24 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>
     private void FirstCheckGrowth()
     {
-        Debug.Log(_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay);
         for (int i = 0; i <= _fieldIndex; i++)
         {
             //현재 접속 시간과 마지막 접속 시간을 비교
-            if ((_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay).Minutes + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
+            if ((_today - _database.UserInfo.LastAccessDay).Minutes + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
             {
                 //_fieldSlots[i].GrowingCrops(2);
 
                 // 작물 성장 시간 최대 
                 _time[i] = _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime;
+                _timeDifference[i] = TimeSpan.Zero;
             }
             else
             {
                 // _fieldSlots[i].GrowingCrops(1);
 
                 // 밖에 있던 시간 _time에 추가
-                _time[i] += (_database.UserInfo.TODAY - _database.UserInfo.LastAccessDay).Minutes;
+                _time[i] += (_today - _database.UserInfo.LastAccessDay).Minutes;
+                _timeDifference[i] -= _today - _database.UserInfo.LastAccessDay;
             }
         }
     }
@@ -291,9 +294,8 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
                 _timeDifference.Add(timeDifference);
             }
 
-            if((_fieldIndex - json[0]["Yield"].Count) < 0)
+            if(0 < (_fieldIndex - json[0]["Yield"].Count))
             {
-                Debug.Log(_fieldIndex - json[0]["Yield"].Count);
                 for (int i = 0, count = _fieldIndex - json[0]["Yield"].Count; i < count; i++)
                 {
                     _yield.Add(0);
@@ -330,15 +332,12 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
         switch (BackendManager.Instance.ErrorCheck(bro))
         {
             case BackendState.Failure:
-                Debug.LogError("초기화 실패");
                 break;
 
             case BackendState.Maintainance:
-                Debug.LogError("서버 점검 중");
                 break;
 
             case BackendState.Retry:
-                Debug.LogWarning("연결 재시도");
                 SaveBambooFieldData(maxRepeatCount - 1);
                 break;
 

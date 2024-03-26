@@ -45,8 +45,6 @@ public class UIChallenges : UIView
         _tmpPos = _targetRect.anchoredPosition;
 
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
-
-        DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
         Dictionary<string, ChallengesData> challengesDic = DatabaseManager.Instance.GetChallengesDic();
 
         _slotDic.Clear();
@@ -61,22 +59,18 @@ public class UIChallenges : UIView
             // 성공한 도전 과제라면 완료 이미지로 변경
             if (challengesDic[key].IsDone == true)
             {
-                slot.Done();
+                slot.Done(false);
                 if (challengesDic[key].IsClear == true)
                 {
-                    slot.Clear();
+                    slot.Clear(false);
                     _clearChallenges.Add(key);
                 }
             }
         }
         CloseChallenges();
-
+        DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
+        LoadingSceneManager.OnLoadSceneHandler += ChangeSceneEvent;
         gameObject.SetActive(false);
-    }
-
-    private void OnDestroy()
-    {
-            DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
     }
 
 
@@ -170,5 +164,12 @@ public class UIChallenges : UIView
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
         _uiNav.Pop("Challenges");
+    }
+
+
+    private void ChangeSceneEvent()
+    {
+        DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
+        LoadingSceneManager.OnLoadSceneHandler -= ChangeSceneEvent;
     }
 }
