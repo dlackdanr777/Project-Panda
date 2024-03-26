@@ -7,7 +7,7 @@ public class CollectionAnimHandler : MonoBehaviour
 
     private void SplashStart()
     {
-        _splashObject.SetActive(false);
+        _splashObject.SetActive(true);
     }
 
     private void SplashEnd()

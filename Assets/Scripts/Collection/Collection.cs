@@ -314,16 +314,26 @@ public class Collection : MonoBehaviour
 
         CheckSuccessRate();
 
+
+
         if (_successRate < random)
         {
             Debug.Log("실패 애니메이션");
             _pandaCollectionAnim.SetTrigger("IsCollectionFail");
             IsSuccessCollection = false;
+            if (_gatheringType == GatheringItemType.Fish)
+            {
+                StarterPanda.Instance.gameObject.transform.position += new Vector3(0, -0.5f, 0);
+            }
             return;
         }
         Debug.Log("성공 애니메이션");
 
         _pandaCollectionAnim.SetTrigger("IsCollectionSuccess");
+        if (_gatheringType == GatheringItemType.Fish)
+        {
+            StarterPanda.Instance.gameObject.transform.position += new Vector3(0, -0.5f, 0);
+        }
         IsSuccessCollection = true;
     }
 
@@ -431,7 +441,6 @@ public class Collection : MonoBehaviour
 
             foreach (GatheringItem item in getItemList)
             {
-                Debug.Log("item name all: " + item.Name);
                 // 현재 시간에 채집 가능하다면(1, 2 체크)
                 if (Array.Exists(_timeIds, time => time == item.Time) && Array.Exists(_seasonIds, season => season == item.Season) && item.Map == _map)
                 {

@@ -36,7 +36,6 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
 
         for (int i = 0, count = completeStoryList.Count; i < count; i++)
         {
-            Debug.Log(completeStoryList[i]);
             if (completeStoryList[i] != _storyId)
                 continue;
 

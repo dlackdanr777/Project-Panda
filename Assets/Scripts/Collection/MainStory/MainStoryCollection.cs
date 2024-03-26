@@ -31,6 +31,9 @@ public class MainStoryCollection : MonoBehaviour
     private Sprite _pandaImage;
     private Animator _pandaCollectionAnim;
     private SpriteRenderer _pandaSpriteRenderer;
+    private NPCAnimeControllCenter _poyaAnimeCenter;
+    private bool _isPoyaActive; // 현재 포야가 켜져 있는지 확인
+    private bool _isPoyaSpriteActive; // 현재 포야가 켜져 있는지 확인
     #endregion
 
     #region 위치 지정
@@ -124,6 +127,7 @@ public class MainStoryCollection : MonoBehaviour
         MainStoryID = gameObject.name.Substring(0, gameObject.name.Length - 10);
         PriorMainStoryID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].PriorStoryID;
 
+        _poyaAnimeCenter = GameObject.Find("Poya Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
     }
 
     private void Update()
@@ -246,10 +250,30 @@ public class MainStoryCollection : MonoBehaviour
         // 화면 켜지는 시간에 맞추어 채집 시작
         Invoke("StartCollection", _fadeTime);
 
-        // 진행 중이던 애니메이션 종료
+        foreach (Transform child in _poyaAnimeCenter.transform)
+        {
+            if (child.name == _map && child.gameObject.activeSelf == true)
+            {
+                child.gameObject.SetActive(false);
+                break;
+            }
+            else if (child.name == _map)
+            {
+                _isPoyaActive = true;
+                break;
+            }
+
+        }
+        if (_pandaSpriteRenderer.gameObject.activeSelf == true)
+        {
+            _isPoyaSpriteActive = true;
+        }
+
+        // 판다 채집 준비
         _pandaCollectionAnim.SetInteger("Num", -1);
         _pandaCollectionAnim.Play("Idle");
-        _pandaCollectionAnim.enabled = false;
+        //_pandaCollectionAnim.enabled = false;
+        _pandaSpriteRenderer.enabled = true;
     }
 
     /// <summary>
@@ -330,9 +354,28 @@ public class MainStoryCollection : MonoBehaviour
 
     private void ExitCollection()
     {
-        _pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
-
+        _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
+        // 포야 원래 상태로 설정
+        //_pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
+        _pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.sprite = _pandaImage;
+        if (!_isPoyaActive)
+        {
+            foreach (Transform child in _poyaAnimeCenter.transform)
+            {
+                if (child.name == _map)
+                {
+                    child.gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+        if (!_isPoyaSpriteActive)
+        {
+            _pandaSpriteRenderer.enabled = false;
+
+        }
+
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
 

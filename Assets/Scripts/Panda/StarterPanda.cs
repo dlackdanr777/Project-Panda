@@ -15,24 +15,30 @@ namespace BT
         private float _feelingTimer;
         private string StarterStateImage = "StarterStateImage"; //스타터 판다 상태이미지ID
 
-        [Tooltip("애니메이션 개수")]
-        [SerializeField] private int _animationCount = 1;
+        //[Tooltip("애니메이션 개수")]
+        //[SerializeField] private int _animationCount = 1;
+
+        [Tooltip("판다 크기 키울 맵 ID")]
+        [SerializeField] private List<string> _largeMapID = new List<string>();
+        private Vector3 _pandaScale;
+        private Vector3 _pandaLargeScale;
+
 
         private string _map;
         private Animator _animator;
         public int Num;
-        private float _time;
+        //private float _time;
 
-        [System.Serializable]
-        public struct MapAnimationData
-        {
-            public string key;
-            public int[] values;
-            public Transform PandaTransform;
-        }
+        //[System.Serializable]
+        //public struct MapAnimationData
+        //{
+        //    public string key;
+        //    public int[] values;
+        //    public Transform PandaTransform;
+        //}
 
-        public List<MapAnimationData> _mapAnimationDic;
-        [SerializeField] private bool _isConversation; // 대화 중인지 확인
+        //public List<MapAnimationData> _mapAnimationDic;
+        private bool _isConversation; // 대화 중인지 확인
 
 
         private void Awake()
@@ -77,14 +83,17 @@ namespace BT
             StateHandler?.Invoke(StarterStateImage, 0); //판다의 처음 상태 이미지 설정
 
 
-            _time = 0f;
+            //_time = 0f;
             _map = TimeManager.Instance.CurrentMap;
             _isConversation = false;
             _animator = GetComponent<Animator>();
-            if (_animationCount > 1)
-            {
-                ChangeAnimation();
-            }
+            //if (_animationCount > 1)
+            //{
+            //    ChangeAnimation();
+            //}
+
+            _pandaScale = gameObject.transform.localScale;
+            _pandaLargeScale = gameObject.transform.localScale * 2f;
         }
 
 
@@ -114,23 +123,29 @@ namespace BT
             if(_uiPanda != null)
             {
                 //PandaMouseClick();
-                ShowStateImage();
+                //ShowStateImage();
                 //GiveAGift();
             }
 
-            _time += Time.deltaTime;
-            if (_isConversation) // 대화 중인 경우 애니메이션 중지
+            //_time += Time.deltaTime;
+            //if (_isConversation) // 대화 중인 경우 애니메이션 중지
+            //{
+            //    StopAnimation();
+            //}
+            //else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
+            //{
+            //    _animator.speed = 1f;
+            //    if (_map != TimeManager.Instance.CurrentMap)
+            //    {
+            //        _map = TimeManager.Instance.CurrentMap;
+            //        ChangeAnimation();
+            //    }
+            //}
+
+            if (_map != TimeManager.Instance.CurrentMap)
             {
-                StopAnimation();
-            }
-            else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
-            {
-                _animator.speed = 1f;
-                if (_map != TimeManager.Instance.CurrentMap)
-                {
-                    _map = TimeManager.Instance.CurrentMap;
-                    ChangeAnimation();
-                }
+                _map = TimeManager.Instance.CurrentMap;
+                SetPandaSize();
             }
 
             // 판다 행복도 지속적으로 감소
@@ -314,31 +329,43 @@ namespace BT
             }
         }
 
-        private void ChangeAnimation()
-        {
-            _animator.speed = 1f;
-            _animator.Play("Idle");
+        //private void ChangeAnimation()
+        //{
+        //    _animator.speed = 1f;
+        //    _animator.Play("Idle");
 
-            // 현재 맵의 애니메이션 번호 찾기
-            int[] nums = _mapAnimationDic.Find(x => x.key == _map).values;
+        //    // 현재 맵의 애니메이션 번호 찾기
+        //    int[] nums = _mapAnimationDic.Find(x => x.key == _map).values;
 
-            // 애니메이션 중 랜덤 선택
-            Num = UnityEngine.Random.Range(0, nums.Length);
+        //    // 애니메이션 중 랜덤 선택
+        //    Num = UnityEngine.Random.Range(0, nums.Length);
 
-            // 애니메이션에 맞는 위치 설정
-            SetPosition();
+        //    // 애니메이션에 맞는 위치 설정
+        //    //SetPosition();
 
-            _animator.SetInteger("Num", nums[Num]); // 현재 맵의 _num번째 애니메이션 실행
-        }
+        //    _animator.SetInteger("Num", nums[Num]); // 현재 맵의 _num번째 애니메이션 실행
+        //}
 
         private void StopAnimation()
         {
             _animator.speed = 0f;
         }
 
-        private void SetPosition()
+        //private void SetPosition()
+        //{
+        //    gameObject.transform.position = _mapAnimationDic.Find(x => x.key == _map).PandaTransform.position;
+        //}
+
+        private void SetPandaSize()
         {
-            gameObject.transform.position = _mapAnimationDic.Find(x => x.key == _map).PandaTransform.position;
+            if (_largeMapID.Contains(_map))
+            {
+                gameObject.transform.localScale = _pandaLargeScale;
+            }
+            else
+            {
+                gameObject.transform.localScale = _pandaScale;
+            }
         }
     }
 }

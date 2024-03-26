@@ -12,14 +12,19 @@ public class JijiSetting : MonoBehaviour
     public int[] _treeMapAnimations;
     public int[] _elseMapAnimations;
 
-    [System.Serializable]
-    public struct MapAnimationData
-    {
-        public string key;
-        public Transform PandaTransform;
-    }
+    //[System.Serializable]
+    //public struct MapAnimationData
+    //{
+    //    public string key;
+    //    public Transform PandaTransform;
+    //}
 
-    public List<MapAnimationData> _mapAnimationDic;
+    //public List<MapAnimationData> _mapAnimationDic;
+
+    [Tooltip("판다 크기 키울 맵 ID")]
+    [SerializeField] private List<string> _largeMapID = new List<string>();
+    private Vector3 _pandaScale;
+    private Vector3 _pandaLargeScale;
 
     [SerializeField] private bool _isConversation; // 대화 중인지 확인
 
@@ -28,7 +33,11 @@ public class JijiSetting : MonoBehaviour
     {
         _isConversation = false;
         _animator = GetComponent<Animator>();
+        _map = TimeManager.Instance.CurrentMap;
         //ChangeAnimation();
+
+        _pandaScale = gameObject.transform.localScale;
+        _pandaLargeScale = gameObject.transform.localScale * 2f;
 
     }
 
@@ -47,6 +56,12 @@ public class JijiSetting : MonoBehaviour
         //        ChangeAnimation();
         //    }
         //}
+
+        if (_map != TimeManager.Instance.CurrentMap)
+        {
+            _map = TimeManager.Instance.CurrentMap;
+            SetPandaSize();
+        }
     }
 
     //private void ChangeAnimation()
@@ -83,4 +98,16 @@ public class JijiSetting : MonoBehaviour
     //{
     //    gameObject.transform.position = _mapAnimationDic.Find(x => x.key == _map).PandaTransform.position;
     //}
+
+    private void SetPandaSize()
+    {
+        if (_largeMapID.Contains(_map))
+        {
+            gameObject.transform.localScale = _pandaLargeScale;
+        }
+        else
+        {
+            gameObject.transform.localScale = _pandaScale;
+        }
+    }
 }
