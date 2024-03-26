@@ -167,7 +167,7 @@ public class MainStoryController : MonoBehaviour
             }
         }
 
-        if(NextStory.Count ==0 ) 
+        if(NextStory.Count ==0 && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[0])) 
         {
             NextStory.Add(_storyKey[0]);
         }
@@ -186,10 +186,9 @@ public class MainStoryController : MonoBehaviour
         {
             //이전 스토리 다음 스토리 비교
             bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
-            int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
+            //int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
 
-            if (priorCheck && //이전 스토리 성공했는지 비교
-                StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
+            if (priorCheck) //이전 스토리 성공했는지 비교 && StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
             {
                 if (currentStory.EventType != MainEventType.None)// 이벤트 조건이 있으면
                 {

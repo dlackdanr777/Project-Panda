@@ -381,8 +381,8 @@ public class MainStoryCollection : MonoBehaviour
 
         DataBind.GetAction("ShowMainUIButton")?.Invoke();
         CameraSet(false);
-        _targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-        Camera.main.gameObject.transform.position = _targetPos;
+        //_targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+        //Camera.main.gameObject.transform.position = _targetPos;
         _isClickStarButton = false;
     }
 }

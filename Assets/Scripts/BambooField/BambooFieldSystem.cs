@@ -82,7 +82,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
         {
             _time[i] += Time.deltaTime;
             _second[i] += Time.deltaTime;
-            if (_timeDifference[i] != TimeSpan.Zero)
+            if (_timeDifference[i] > TimeSpan.Zero)
             {
                 _timeDifference[i] = _timeDifference[i] - TimeSpan.FromSeconds(Mathf.FloorToInt(_second[i]));
                 _second[i] -= Mathf.FloorToInt(_second[i]);
@@ -248,7 +248,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             {
                 // 밖에 있던 시간 _time에 추가
                 _time[i] += (_today - _database.UserInfo.LastAccessDay).Minutes;
-                _timeDifference[i] -= _today - _database.UserInfo.LastAccessDay;
+                _timeDifference[i] -= (_today - _database.UserInfo.LastAccessDay);
             }
         }
     }
