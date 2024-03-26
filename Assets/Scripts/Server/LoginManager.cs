@@ -72,7 +72,7 @@ namespace Muks.BackEnd
             BackendManager.Instance.CustomLogin(id, pw, 10, (bro) =>
             {
                 HideLoginUI();
-                LoadData();
+                LoadMyData();
                 LoadNextScene(bro);
 
             });
@@ -94,7 +94,7 @@ namespace Muks.BackEnd
             BackendManager.Instance.GuestLogin(10, (bro) =>
             {
                 HideLoginUI();
-                LoadData();
+                LoadMyData();
                 LoadNextScene(bro);
             });
         }
@@ -113,10 +113,18 @@ namespace Muks.BackEnd
 
 
         //전체 데이터를 서버에서 불러오는 씬
-        private void LoadData()
+        private void LoadMyData()
         {
-            //LoadingSceneManager.LoadScene("NewUserSceneMuksTest", LoadingType.FirstLoading);
             DatabaseManager.Instance.ItemDatabase.LoadData();
+            DatabaseManager.Instance.DialogueDatabase.LoadData();
+            DatabaseManager.Instance.RecipeDatabase.LoadData();
+            //DatabaseManager.Instance.AlbumDatabase.LoadData(); //로컬로 변경
+            DatabaseManager.Instance.AttendanceDatabase.LoadData();
+            DatabaseManager.Instance.MessageDatabase.LoadData();
+            DatabaseManager.Instance.ChallengesDatabase.LoadData();
+            //DatabaseManager.Instance.NPCDatabase.LoadData(); //로컬로 변경
+            //CostumeManager.Instance.LoadData(); //코스튬 기능은 일단 제외
+
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
             BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.LoadChallengesData);
             BackendManager.Instance.GetMyData("Story", 10, DatabaseManager.Instance.UserInfo.LoadStoryData);
@@ -129,15 +137,6 @@ namespace Muks.BackEnd
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);
             BackendManager.Instance.GetMyData("BambooField", 10, BambooFieldSystem.Instance.LoadBambooFieldData);
-            DatabaseManager.Instance.Challenges.LoadData();
-            CostumeManager.Instance.LoadData();
-            //DatabaseManager.Instance.NPCDatabase.LoadData();
-            DatabaseManager.Instance.DialogueDatabase.LoadData();
-            DatabaseManager.Instance.RecipeDatabase.LoadData();
-            DatabaseManager.Instance.AlbumDatabase.LoadData();
-            DatabaseManager.Instance.AttendanceDatabase.LoadData();
-            DatabaseManager.Instance.MessageDatabase.LoadData();
-
             BackendManager.Instance.Login = true;
         }
 

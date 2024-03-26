@@ -1,3 +1,6 @@
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,19 +29,36 @@ public enum EChallengesKategorie
 public class ChallengesDatabase
 {
     //private Dictionary<string, ChallengesData>[] ChallengesDic = new Dictionary<string, ChallengesData>[System.Enum.GetValues(typeof(EChallenges)).Length];
-    private Dictionary<string, ChallengesData> ChallengesDic = new Dictionary<string, ChallengesData>();
+    private Dictionary<string, ChallengesData> _challengesDic = new Dictionary<string, ChallengesData>();
 
 
     public void Register()
     {
         for (int i = 0; i < System.Enum.GetValues(typeof(EChallenges)).Length; i++)
         {
-            ChallengesDic.AddRange(ChallengesParse(((EChallenges)i).ToString()));
+            _challengesDic.AddRange(ChallengesParseByLocal(((EChallenges)i).ToString()));
         }
     }
 
 
-    private Dictionary<string, ChallengesData> ChallengesParse(string CSVFileName)
+    public Dictionary<string, ChallengesData> GetChallengesDic()
+    {
+        return _challengesDic;
+    }
+
+
+    #region LoadChallengesData
+
+    public void LoadData()
+    {
+        _challengesDic.Clear();
+        BackendManager.Instance.GetChartData("114027", 10, LoadChallengesByServer);
+        BackendManager.Instance.GetChartData("114028", 10, LoadChallengesByServer);
+        BackendManager.Instance.GetChartData("114029", 10, LoadChallengesByServer);
+    }
+
+
+    private Dictionary<string, ChallengesData> ChallengesParseByLocal(string CSVFileName)
     {
         Dictionary<string, ChallengesData> challengesDic = new Dictionary<string, ChallengesData>();
 
@@ -54,8 +74,27 @@ public class ChallengesDatabase
         return challengesDic;
     }
 
-    public Dictionary<string, ChallengesData> GetChallengesDic()
+
+    private void LoadChallengesByServer(BackendReturnObject callback)
     {
-        return ChallengesDic;
+        JsonData json = callback.FlattenRows();
+
+        for(int i = 0, count = json.Count; i < count; i++)
+        {
+            string challengeId = json[i]["ChallengeID"].ToString();
+            string name = json[i]["Name"].ToString();
+            string description = json[i]["Description"].ToString();
+            int rewardBamboo = int.Parse(json[i]["RewardBamboo"].ToString());
+            string rewardItemId = !string.IsNullOrWhiteSpace(json[i]["RewardItem"].ToString()) ? json[i]["RewardItem"].ToString() : string.Empty;
+            EChallengesKategorie category = (EChallengesKategorie)Enum.Parse(typeof(EChallengesKategorie), json[i]["Category"].ToString());
+            string type = json[i]["Type"].ToString();
+            int rewardCount = int.Parse(json[i]["Count"].ToString());
+
+            _challengesDic.Add(challengeId, new ChallengesData(challengeId, name, description, rewardBamboo, rewardItemId, category, type, rewardCount)); 
+        }
+
+        Debug.Log("도전과제 데이터 받아오기 성공!");
     }
+    #endregion
+
 }

@@ -8,7 +8,6 @@ public class FirstLoadingScene : MonoBehaviour
     void Start()
     {
         Invoke("LoadLoginScene", 0.5f);
-
     }
 
 
