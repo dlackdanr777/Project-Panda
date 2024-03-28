@@ -18,6 +18,7 @@ public class UIDiary : UIView
     [Tooltip("StartCover의 animator을 불러와야한다.")]
     [SerializeField] private Animator _coverAnimator;
     [SerializeField] private Button _backgroundButton;
+    [SerializeField] private UIDetailView _detailView;
 
 
     [Space]
@@ -50,6 +51,7 @@ public class UIDiary : UIView
     {
         SoundManager.Instance.PlayEffectAudio(_bookOpenAudio, 0.03f);
 
+        _detailView.gameObject.SetActive(false);
         VisibleState = VisibleState.Disappearing;
         _canvasGroup.blocksRaycasts = false;
 
