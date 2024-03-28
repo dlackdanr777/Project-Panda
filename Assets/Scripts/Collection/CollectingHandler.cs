@@ -10,7 +10,6 @@ public class CollectingHandler : MonoBehaviour
 
     private void EndAnimation()
     {
-        Debug.Log("애니메이션 종료");
         GetComponent<Animator>().enabled = false;
 
         // 애니메이션 완료되면 느낌표 표시

@@ -100,7 +100,6 @@ public class TimeManager : SingletonHandler<TimeManager>
         }
 
         GameHourId = "GTS" + (21 + GameHour);
-        OnChangedTimeHandler?.Invoke();
     }
 
     /// <summary>
@@ -147,6 +146,8 @@ public class TimeManager : SingletonHandler<TimeManager>
                 //_mapDic[key].BackGround[(int)_eTime].SetActive(true);
             }
         //}
+
+        OnChangedTimeHandler?.Invoke();
     }
 
 

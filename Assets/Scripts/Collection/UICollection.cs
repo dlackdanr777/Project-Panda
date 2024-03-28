@@ -160,7 +160,6 @@ public class UICollection : MonoBehaviour
         // 아이템 이미지 받아와서 띄우기
         _collectionItemImage.sprite = gatheringItem.Image;
         _collectionItemText.text = gatheringItem.Name;
-        Debug.Log("채집한 아이템 이미지 띄움"+id);
 
         _fadeInOut.gameObject.SetActive(true);
         Tween.IamgeAlpha(_fadeInOut.gameObject, _resultAlpha, 0.1f, TweenMode.Quadratic);

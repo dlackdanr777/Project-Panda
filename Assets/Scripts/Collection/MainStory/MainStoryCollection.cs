@@ -180,7 +180,6 @@ public class MainStoryCollection : MonoBehaviour
 
             _isExit = false;
 
-            _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
             Invoke("ExitCollection", _fadeTime);
             OnExitCollection?.Invoke();
         }

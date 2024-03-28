@@ -9,6 +9,7 @@ public class UIMainDialogue : UIView
 {
     public static event Action<string, string> OnAddRewardHandler;
     public static event Action<string> OnFinishStoryHandler;
+    public static event Action<string> OnCheckConditionHandler;
 
     [SerializeField] private Image _pandaImage;
     [SerializeField] private Sprite _starterImage;
@@ -29,6 +30,8 @@ public class UIMainDialogue : UIView
 
     private bool _isStoryStart;
     private bool _isSkipEnabled;
+    private bool _isConditionTrue;
+    private bool _isCheckCondition;
     private Coroutine _contextAnimeRoutine;
     private Coroutine _skipDisableRoutine;
     private Coroutine _itemRewardRoutine;
@@ -47,6 +50,7 @@ public class UIMainDialogue : UIView
         _tempPos = RectTransform.anchoredPosition;
 
         MainStoryController.OnStartInteractionHandler += StartStory;
+        MainStoryController.OnCheckConditionHandler += CheckCondition;
         DataBind.SetTextValue("MainDialogueName", " ");
         DataBind.SetTextValue("MainDialogueContexts", " ");
 
@@ -62,6 +66,7 @@ public class UIMainDialogue : UIView
     public void OnDestroy()
     {
         MainStoryController.OnStartInteractionHandler -= StartStory;
+        MainStoryController.OnCheckConditionHandler -= CheckCondition;
     }
 
     public override void Hide()
@@ -109,7 +114,9 @@ public class UIMainDialogue : UIView
         }
 
         gameObject.SetActive(true);
-        _isSkipEnabled = true;
+        _isCheckCondition = false;
+        _isConditionTrue = true;
+        
         _uiNav.HideMainUI();
 
         DataBind.SetTextValue("MainDialogueName", " ");
@@ -122,6 +129,7 @@ public class UIMainDialogue : UIView
         VisibleState = VisibleState.Appearing;
         Tween.RectTransfromAnchoredPosition(transform.gameObject, new Vector2(0, 10), 1f, TweenMode.EaseInOutBack, () =>
         {
+            _isSkipEnabled = true;
             VisibleState = VisibleState.Appeared;
             OnNextButtonClicked();
         });
@@ -166,7 +174,11 @@ public class UIMainDialogue : UIView
             case DialogueState.Event: return;
         }
 
-        if (_currentIndex < _dialogue.DialogueData.Count)
+        if (!_isConditionTrue)
+        {
+            _uiNav.Pop();
+        }
+        else if (_currentIndex < _dialogue.DialogueData.Count)
         {
             if (_contextAnimeRoutine != null)
                 StopCoroutine(_contextAnimeRoutine);
@@ -204,7 +216,11 @@ public class UIMainDialogue : UIView
                 DatabaseManager.Instance.UserInfo.SaveStoryData(3);
             }
         }
-
+        if (!_isCheckCondition)
+        {
+            _isCheckCondition = true;
+            OnCheckConditionHandler?.Invoke(_dialogue.StoryID); // 조건 체크
+        }
     }
 
     private IEnumerator ContextAnime(MainDialogueData data)
@@ -261,7 +277,6 @@ public class UIMainDialogue : UIView
             _leftButton.ShowButton(data.ChoiceContextA, () => { _leftButton.Button.onClick.AddListener(() => OnButtonClicked(data.ChoiceAID)); });
             _rightButton.ShowButton(data.ChoiceContextB, () => { _rightButton.Button.onClick.AddListener(() => OnButtonClicked(data.ChoiceBID)); });
         }
-
         else
         {
             _state = DialogueState.None;
@@ -372,12 +387,17 @@ public class UIMainDialogue : UIView
     {
         DataBind.SetSpriteValue("MSRewardDetailImage", image);
         DataBind.SetTextValue("MSRewardDetailName", name);
-        DataBind.SetTextValue("MSRewardDetailCount", count);
+        //DataBind.SetTextValue("MSRewardDetailCount", count);
 
         if (_itemRewardRoutine != null)
         {
             StopCoroutine(_itemRewardRoutine);
         }
         _itemRewardRoutine = StartCoroutine(ItemRewardRoutine());
+    }
+
+    private void CheckCondition()
+    {
+        _isConditionTrue = false;
     }
 }

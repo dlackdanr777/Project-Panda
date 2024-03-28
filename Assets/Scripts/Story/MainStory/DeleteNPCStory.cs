@@ -6,13 +6,14 @@ public class DeleteNPCStory : MonoBehaviour
 {
     private MainStoryController _mainStoryController;
     [SerializeField] private string _storyId;
+    [Tooltip("게임 처음 시작할 때 보이면 true")]
+    [SerializeField] private bool _setActive;
 
-    SpriteRenderer sr;
     private void Awake()
     {
-        _mainStoryController = gameObject.transform.GetComponent<MainStoryController>();
-
         MainStoryController.OnFinishStoryHandler += CheckDelete;
+        _mainStoryController = gameObject.transform.GetComponent<MainStoryController>();
+        gameObject.SetActive(_setActive);
     }
 
     private void OnDestroy()

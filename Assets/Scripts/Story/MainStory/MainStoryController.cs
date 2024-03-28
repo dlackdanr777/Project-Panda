@@ -10,6 +10,7 @@ public class MainStoryController : MonoBehaviour
     public static event Action<MainStoryDialogue> OnStartInteractionHandler;
 
     public static event Action OnFinishStoryHandler;
+    public static event Action OnCheckConditionHandler;
 
     [SerializeField] private SpriteRenderer _npcRenderer;
     [SerializeField] private string _npcID;
@@ -35,6 +36,7 @@ public class MainStoryController : MonoBehaviour
     {
         UIMainDialogue.OnAddRewardHandler += AddReward;
         UIMainDialogue.OnFinishStoryHandler += FinishStory;
+        UIMainDialogue.OnCheckConditionHandler += CheckCondition;
         OnFinishStoryHandler += CheckNectStory;
         SceneManager.sceneLoaded += ChangeScene;
         TimeManager.OnChangedTimeHandler += CheckMap;
@@ -46,6 +48,7 @@ public class MainStoryController : MonoBehaviour
         OnFinishStoryHandler -= CheckNectStory;
         SceneManager.sceneLoaded -= ChangeScene;
         TimeManager.OnChangedTimeHandler -= CheckMap;
+        UIMainDialogue.OnCheckConditionHandler += CheckCondition;
     }
 
     private void Start()
@@ -203,15 +206,14 @@ public class MainStoryController : MonoBehaviour
     {
         foreach (string key in NextStory)
         {
-            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && !_questMark.activeSelf)
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && !_questMark.activeSelf && _storyDatabase[key].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
             {
-                if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
-                    _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
-                {
+                //if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
+                //    _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
+                //{
                     _questMark.SetActive(true);
-                    Debug.Log("_npcID _questMarktrue" + _npcID);
  
-                }
+                //}
             }
         }
         // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
@@ -232,16 +234,7 @@ public class MainStoryController : MonoBehaviour
 
             if (priorCheck) //이전 스토리 성공했는지 비교 && StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
             {
-                if (currentStory.EventType != MainEventType.None)// 이벤트 조건이 있으면
-                {
-                    //조건 비교
-                    if (!CheckCondition(currentStory.EventType, currentStory.EventTypeCondition, currentStory.EventTypeAmount))
-                    {
-                        //i--;
-                        //currentStory = _storyDatabase[key];
-                        return;
-                    }
-                }
+
                 if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
                 {
                     ShowContext(currentStory);
@@ -283,21 +276,45 @@ public class MainStoryController : MonoBehaviour
         return int.MaxValue;
     }
 
-    private bool CheckCondition(MainEventType type, string condition, int count)
+    private void CheckCondition(string storyId)
     {
-        //조건 비교
-        switch (type)
+        if(_storyDatabase == null)
         {
-            case MainEventType.HOLDITEM:
-                return GameManager.Instance.Player.FindItemById(condition, count);
-            case MainEventType.GIVEITEM:
-                return GameManager.Instance.Player.RemoveItemById(condition, count);
-            case MainEventType.LOVEMOUNT:
-                return DatabaseManager.Instance.GetNPC(condition).Intimacy >= count;
-            default:
-                return false;
+            _storyDatabase = DatabaseManager.Instance.MainDialogueDatabase.MSDic;
         }
-    }
+        MainStoryDialogue currentStory = _storyDatabase[storyId];
+        if(currentStory.StoryStartPanda.Equals(_npcID))
+        {
+            bool isTrue;
+            if (currentStory.EventType != MainEventType.None)// 이벤트 조건이 있으면
+            {
+                //조건 비교
+                switch (currentStory.EventType)
+                {
+                    case MainEventType.HOLDITEM:
+                        isTrue = GameManager.Instance.Player.FindItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
+                        break;
+                    case MainEventType.GIVEITEM:
+                        isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
+                        break;
+                    case MainEventType.LOVEMOUNT:
+                        isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
+                        break;
+                    default:
+                        isTrue = false;
+                        break;
+                }
+            }
+            else
+            {
+                isTrue = true;
+            }
+            if(isTrue == false)
+            {
+                OnCheckConditionHandler?.Invoke();
+            }
+        }
+}
 
     private void ShowContext(MainStoryDialogue data)
     {
@@ -420,8 +437,11 @@ public class MainStoryController : MonoBehaviour
                     if(child.name == _storyDatabase[key].MapID)
                     {
                         child.gameObject.SetActive(false);
-                        _poyaTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
-                        break;
+                        if (!_poyaTransform.Keys.Contains(_storyDatabase[key].MapID))
+                        {
+                            _poyaTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
+                            break;
+                        }
                     }
                 }
                 StarterPanda.Instance.GetComponent<SpriteRenderer>().enabled = true;
@@ -452,8 +472,11 @@ public class MainStoryController : MonoBehaviour
                     if (child.name == _storyDatabase[key].MapID)
                     {
                         child.gameObject.SetActive(false);
-                        _jijiTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
-                        break;
+                        if (!_jijiTransform.Keys.Contains(_storyDatabase[key].MapID))
+                        {
+                            _jijiTransform.Add(_storyDatabase[key].MapID, child.GetChild(0));
+                            break;
+                        }
                     }
                 }
             }

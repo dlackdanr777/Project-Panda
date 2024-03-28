@@ -46,26 +46,28 @@ public class NPCSetting : MonoBehaviour
 
     private void CheckTime()
     {
-        if (_eTime != TimeManager.Instance.ETime) // 시간이 변경된 경우
-        {
-            _eTime = TimeManager.Instance.ETime;
-            SetNPC();
-        }
+        _eTime = TimeManager.Instance.ETime;
+        SetNPC();
     }
 
     private void CheckSetting()
     {
-        if (_isConversation) // 대화 중인 경우 애니메이션 중지
+        if (_animator != null)
         {
-            StopAnimation();
-        }
-        else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
-        {
-            _animator.speed = 1f;
-            if (_map != TimeManager.Instance.CurrentMap) // 맵이 바뀔 때 애니메이션 변경
+            if (_isConversation) // 대화 중인 경우 애니메이션 중지
             {
-                _map = TimeManager.Instance.CurrentMap;
-                ChangeAnimation();
+                StopAnimation();
+            }
+            else// 애니메이션이 여러 개인 경우 랜덤 변경
+            {
+                _animator.speed = 1f;
+                if (_animationCount > 1 && _map != TimeManager.Instance.CurrentMap)
+                {
+                    // 맵이 바뀔 때 애니메이션 변경
+                    _map = TimeManager.Instance.CurrentMap;
+                    ChangeAnimation();
+                }
+
             }
         }
     }

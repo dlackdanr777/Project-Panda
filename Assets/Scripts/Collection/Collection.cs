@@ -227,7 +227,6 @@ public class Collection : MonoBehaviour
         if (_pandaCollectionAnim == null)
         {
             _pandaCollectionAnim = starterPanda.GetComponent<Animator>();
-            Debug.Log("_pandaCollectionAnim" + _pandaCollectionAnim);
         }
 
         // 캐릭터가 채집 포인트로 이동
@@ -339,8 +338,6 @@ public class Collection : MonoBehaviour
                 break;
         }
 
-
-        Debug.Log("_map" + _map);
         _pandaCollectionAnim.SetBool("IsCollectionLatency", true); // 채집 결과 나오기 전 애니메이션
         _checkTime = 0;
     }
@@ -366,7 +363,6 @@ public class Collection : MonoBehaviour
             }
             return;
         }
-        Debug.Log("성공 애니메이션");
 
         _pandaCollectionAnim.SetTrigger("IsCollectionSuccess");
         if (_gatheringType == GatheringItemType.Fish)
@@ -483,7 +479,6 @@ public class Collection : MonoBehaviour
                 // 현재 시간에 채집 가능하다면(1, 2 체크)
                 if (Array.Exists(_timeIds, time => time == item.Time) && Array.Exists(_seasonIds, season => season == item.Season) && item.Map == _map)
                 {
-                    Debug.Log("item name: " + item.Name);
                     if (item.Rank == "스페셜")
                     {
                         specialIDList.Add(item.Id);
