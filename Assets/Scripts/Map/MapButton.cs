@@ -381,9 +381,6 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
-            //Vector3 pandaPosition = new Vector3(_targetTransform[CurrentMap].position.x + Random.Range(-_width + 1, _width - 1), _targetTransform[CurrentMap].position.y - 12, StarterPanda.Instance.gameObject.transform.position.z);
-            //StarterPanda.Instance.gameObject.transform.position = pandaPosition;
-
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         }));
     }
@@ -399,9 +396,6 @@ public class MapButton : MonoBehaviour
             _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
 
             Camera.main.transform.position = targetPos;
-
-            //Vector3 pandaPosition = new Vector3(_targetTransform[CurrentMap].position.x + Random.Range(-_width + 1, _width - 1), _targetTransform[CurrentMap].position.y - 12, StarterPanda.Instance.gameObject.transform.position.z);
-            //StarterPanda.Instance.gameObject.transform.position = pandaPosition;
 
             FadeInOutManager.Instance.FadeOut(_fadeTime);
         }));

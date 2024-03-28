@@ -8,18 +8,24 @@ public class DeleteNPCStory : MonoBehaviour
     [SerializeField] private string _storyId;
 
     SpriteRenderer sr;
-    void Start()
+    private void Awake()
     {
         _mainStoryController = gameObject.transform.GetComponent<MainStoryController>();
+
+        MainStoryController.OnFinishStoryHandler += CheckDelete;
     }
 
-    void Update()
+    private void OnDestroy()
+    {
+        MainStoryController.OnFinishStoryHandler -= CheckDelete;
+    }
+
+    private void CheckDelete()
     {
         // 다음 스토리에 판다 나올 때
         if (_mainStoryController.NextStory.Contains(_storyId))
         {
-            sr = gameObject.GetComponent<SpriteRenderer>();
-            sr.enabled = true;
+            gameObject.SetActive(true);
 
         }
         // 스토리 종료 후
@@ -28,6 +34,5 @@ public class DeleteNPCStory : MonoBehaviour
             gameObject.SetActive(false);
 
         }
-
     }
 }

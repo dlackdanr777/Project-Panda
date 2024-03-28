@@ -361,7 +361,6 @@ public class Challenges
         {
             if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
-                Debug.Log("³Ñ¾î¿È");
                 _checkStoryCompleteList.Add(key);
                 _mainStoryCount[key.Substring(0, 4)]--;
                 if (_mainStoryCount[key.Substring(0, 4)] == 0)

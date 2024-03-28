@@ -14,6 +14,8 @@ public enum ETime
 
 public class TimeManager : SingletonHandler<TimeManager>
 {
+    public static event Action OnChangedTimeHandler;
+
     public DateTime TODAY => DateTime.Today;
     public int GameHour;
     public string GameHourId;
@@ -65,9 +67,7 @@ public class TimeManager : SingletonHandler<TimeManager>
         if (_mapDatabase.IsMapExists)
         {
             ChangedBackGround();
-            Debug.Log("맵이 존재합니다.");
         }
-
         else
         {
             Debug.LogError("맵이 존재하지 않는 씬 입니다.");
@@ -100,8 +100,7 @@ public class TimeManager : SingletonHandler<TimeManager>
         }
 
         GameHourId = "GTS" + (21 + GameHour);
-        Debug.Log("게임 시간 변경 GameHour: " + GameHour + "GameWeatherId: " + GameWeatherId);
-
+        OnChangedTimeHandler?.Invoke();
     }
 
     /// <summary>
@@ -120,10 +119,6 @@ public class TimeManager : SingletonHandler<TimeManager>
                 _eTime = ETime.Day;
                 _light.intensity = 1f;
                 break;
-            //case int hour when hour < EveningEndTime: // 저녁
-            //    _eTime = ETime.Evening;
-            //    _light.intensity = 0.5f;
-            //    break;
             default: // 밤
                 _eTime = ETime.Night;
                 _light.intensity = 0.26f;
@@ -150,8 +145,8 @@ public class TimeManager : SingletonHandler<TimeManager>
                     child.gameObject.SetActive(true);
                 }
                 //_mapDic[key].BackGround[(int)_eTime].SetActive(true);
-            //}
-        }
+            }
+        //}
     }
 
 

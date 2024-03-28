@@ -222,7 +222,6 @@ public class MainStoryCollection : MonoBehaviour
         if (_pandaCollectionAnim == null)
         {
             _pandaCollectionAnim = starterPanda.GetComponent<Animator>();
-            Debug.Log("_pandaCollectionAnim" + _pandaCollectionAnim);
         }
 
         // 캐릭터가 채집 포인트로 이동
@@ -306,7 +305,6 @@ public class MainStoryCollection : MonoBehaviour
     /// 채집 완료 후 결과 나오기 전 지연 시간동안 실행 </summary>
     public void CollectionLatency()
     {
-        Debug.Log("_map" + _map);
         _pandaCollectionAnim.SetBool("IsCollectionLatency", true); // 채집 결과 나오기 전 애니메이션
         _checkTime = 0;
     }
@@ -316,9 +314,11 @@ public class MainStoryCollection : MonoBehaviour
     public void IsSuccess()
     {
         // 퀘스트 아이템은 무조건 성공
-        Debug.Log("성공 애니메이션");
-
         _pandaCollectionAnim.SetTrigger("IsCollectionSuccess");
+        if (_gatheringType == GatheringItemType.Fish)
+        {
+            StarterPanda.Instance.gameObject.transform.position += new Vector3(0, -0.5f, 0);
+        }
         IsSuccessCollection = true;
     }
 

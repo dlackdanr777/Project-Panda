@@ -10,7 +10,6 @@ public class NPCSetting : MonoBehaviour
     [SerializeField] private bool _night;
 
     private ETime _eTime;
-    private float _time;
 
     [Tooltip("애니메이션 개수")]
     [SerializeField] private int _animationCount = 1;
@@ -21,10 +20,13 @@ public class NPCSetting : MonoBehaviour
 
     [SerializeField] private bool _isConversation; // 대화 중인지 확인
 
-
-    void Start()
+    private void Awake()
     {
-        _time = 0f;
+        MainStoryController.OnFinishStoryHandler += CheckSetting;
+        TimeManager.OnChangedTimeHandler += CheckTime;
+    }
+    private void Start()
+    {
         _isConversation = false;
         _eTime = TimeManager.Instance.ETime;
         SetNPC();
@@ -36,29 +38,36 @@ public class NPCSetting : MonoBehaviour
         }
     }
 
-    void Update()
+    private void OnDestroy()
     {
-        _time += Time.deltaTime;
+        MainStoryController.OnFinishStoryHandler -= CheckSetting;
+        TimeManager.OnChangedTimeHandler -= CheckTime;
+    }
+
+    private void CheckTime()
+    {
         if (_eTime != TimeManager.Instance.ETime) // 시간이 변경된 경우
         {
             _eTime = TimeManager.Instance.ETime;
             SetNPC();
         }
-        else if (_isConversation) // 대화 중인 경우 애니메이션 중지
+    }
+
+    private void CheckSetting()
+    {
+        if (_isConversation) // 대화 중인 경우 애니메이션 중지
         {
             StopAnimation();
         }
         else if (_animationCount > 1) // 애니메이션이 여러 개인 경우 랜덤 변경
         {
             _animator.speed = 1f;
-            if(_map != TimeManager.Instance.CurrentMap)
+            if (_map != TimeManager.Instance.CurrentMap) // 맵이 바뀔 때 애니메이션 변경
             {
                 _map = TimeManager.Instance.CurrentMap;
                 ChangeAnimation();
             }
-            
         }
-
     }
 
     private void SetNPC()
@@ -67,10 +76,6 @@ public class NPCSetting : MonoBehaviour
         {
             gameObject.SetActive(_day);
         }
-        //else if (_eTime == ETime.Evening)
-        //{
-        //    gameObject.SetActive(_evening);
-        //}
         else if (_eTime == ETime.Night)
         {
             gameObject.SetActive(_night);

@@ -191,7 +191,6 @@ namespace BT
         /// <summary> 감정 표현을 실행하는 노드 </summary>
         private INode FeelingsNode()
         {
-            Debug.Log("감정표현 실행");
             List<INode> nodes = new List<INode>()
         {
             //노드를 순서대로 입력한다.
