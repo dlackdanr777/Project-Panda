@@ -44,7 +44,7 @@ public class PandaStoryController : MonoBehaviour
 
     private void Start()
     {
-        StoryDialogue = DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(_storyID);
+        //StoryDialogue = DatabaseManager.Instance.DialogueDatabase.GetStoryDialogue(_storyID);
         OnStartHandler?.Invoke(_storyID, this);
 
         Transform parent = GameObject.Find("Follow Button Parent").transform;

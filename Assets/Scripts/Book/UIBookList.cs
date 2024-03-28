@@ -20,8 +20,7 @@ public class UIBookList : MonoBehaviour
     [SerializeField] private BookField _bookField;
     [SerializeField] private InventoryItemField _itemField; //현재 어떤 필드의 아이템들인지
     [SerializeField] private int _typeField; //해당 필드의 몇번째 아이템들인지
-    [SerializeField] private GameObject _detailView;
-    [SerializeField] private Button _closeButton;
+    [SerializeField] private UIDetailView _detailView;
     [SerializeField] private Button _leftButton;
     [SerializeField] private Button _rightButton;
     [SerializeField] private Sprite[] _cardImage; //봄,여름 / 가을,겨울 / 혼합
@@ -34,8 +33,9 @@ public class UIBookList : MonoBehaviour
 
     private void Awake()
     {
+        _detailView.Init();
         //현재 어떤 필드의 몇 번째 아이템인지 데이터 연결
-        if(_bookField == BookField.Item)
+        if (_bookField == BookField.Item)
         {
             switch (_itemField)
             {
@@ -92,9 +92,9 @@ public class UIBookList : MonoBehaviour
             Button button = transform.GetChild(i).GetComponent<Button>();
             button.onClick.AddListener(()=> OnClickDetailView(index));
         }
-        _closeButton.onClick.AddListener(OnClickCloseButton);
         _leftButton.onClick.AddListener(()=>OnClickPageButton(0));
         _rightButton.onClick.AddListener(()=>OnClickPageButton(1));
+
     }
 
     private void OnEnable()
@@ -105,10 +105,7 @@ public class UIBookList : MonoBehaviour
 
     private void OnDisable()
     {
-        if (_detailView.activeSelf)
-        {
-            _detailView.SetActive(false);
-        }
+        _detailView.gameObject.SetActive(false);
     }
 
     private void UpdateContents()
@@ -191,29 +188,9 @@ public class UIBookList : MonoBehaviour
 
     private void OnClickDetailView(int index)
     {
-        GetContent(index);
-        _detailView.SetActive(true);
+        _detailView.Show(_database[(_current * 9) + index]);
     }
 
-    private void OnClickCloseButton()
-    {
-        _detailView.SetActive(false);
-        ClearContent();
-    }
-
-    private void ClearContent()
-    {
-        DataBind.SetTextValue("BookItemDetailName", "");
-        DataBind.SetTextValue("BookItemDetailDescription", "");
-        DataBind.SetSpriteValue("BookItemDetailImage", null);
-    }
-
-    private void GetContent(int index)
-    {
-        DataBind.SetTextValue("BookItemDetailName", _database[(_current * 9) + index].Name);
-        DataBind.SetTextValue("BookItemDetailDescription", _database[(_current * 9) + index].Description);
-        DataBind.SetSpriteValue("BookItemDetailImage", _database[(_current * 9) + index].Image);
-    }
 
     private List<Item> GetDatabase(List<GatheringItem> gatheringItemList)
     {

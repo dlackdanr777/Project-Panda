@@ -116,7 +116,6 @@ namespace Muks.BackEnd
         private void LoadMyData()
         {
             DatabaseManager.Instance.ItemDatabase.LoadData();
-            DatabaseManager.Instance.DialogueDatabase.LoadData();
             DatabaseManager.Instance.RecipeDatabase.LoadData();
             //DatabaseManager.Instance.AlbumDatabase.LoadData(); //로컬로 변경
             DatabaseManager.Instance.AttendanceDatabase.LoadData();
