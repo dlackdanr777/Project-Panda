@@ -16,9 +16,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
 
-    private DialogueManager _dialogueDatabase;
-    public DialogueManager DialogueDatabase => _dialogueDatabase;
-
     private AttendanceDatabase _weatherDatabase;
     public AttendanceDatabase AttendanceDatabase => _weatherDatabase;
 
@@ -118,7 +115,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
         _userInfo = new UserInfo();
         _startPandaInfo = new StarterPandaInfo();
-        _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
         _weatherDatabase = new AttendanceDatabase();
@@ -138,7 +134,6 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _itemDatabase.Register();
         _userInfo.Register();
         _startPandaInfo.Register();
-        _dialogueDatabase.Register();
         _photoDatabase.Register();
         _pandaDatabase.Register();
         _recipeDatabase.Register();

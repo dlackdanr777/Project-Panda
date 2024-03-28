@@ -191,41 +191,42 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     /// 대나무 수확 </summary>
     public void HarvestBamboo(int currentCount, int totalCount, Transform fieldSlotTransform)
     {
-            int count = _bambooPrefabCount;
-            _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
-            _bambooPrefabs[count].transform.position = fieldSlotTransform.position;
-            _bambooPrefabs[count].SetActive(true);
-            Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
-            _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
+        int count = _bambooPrefabCount;
+        _bambooPrefabCount = (_bambooPrefabCount + 1) % _bambooPrefabs.Length;
+        _bambooPrefabs[count].transform.position = fieldSlotTransform.position;
+        _bambooPrefabs[count].SetActive(true);
+        Vector3 addPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0);
+        _bambooPrefabs[count].GetComponent<Animator>().enabled = true;
 
 
-            Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
+        Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
+        {
+            if (totalCount - currentCount > 10)
             {
-                if (totalCount - currentCount > 10)
-                {
-                    HarvestBamboo(currentCount + 10, totalCount, fieldSlotTransform);
-                }
-            });
+                HarvestBamboo(currentCount + 10, totalCount, fieldSlotTransform);
+            }
+        });
 
-            Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
+        Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
+        {
+            if (totalCount - currentCount <= 10)
             {
-                if(totalCount - currentCount <= 10) 
+                for (int i = currentCount; i <= totalCount; i++)
                 {
-                    for (int i = currentCount; i <= totalCount; i++)
-                    {
-                        _player.GainBamboo(1);
-                    }
+                    _player.GainBamboo(1);
                 }
-                else
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        _player.GainBamboo(1);
-                    }
+                    _player.GainBamboo(1);
                 }
-                _bambooPrefabs[count].SetActive(false);
-            });
+            }
+            _bambooPrefabs[count].SetActive(false);
+        });
 
+        SaveBambooFieldData(3);
     }
 
 
