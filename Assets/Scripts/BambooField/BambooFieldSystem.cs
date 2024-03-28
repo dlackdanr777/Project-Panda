@@ -205,6 +205,11 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             {
                 HarvestBamboo(currentCount + 10, totalCount, fieldSlotTransform);
             }
+            else
+            {
+                //여기에 서버저장
+                SaveBambooFieldData(3);
+            }
         });
 
         Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
@@ -226,7 +231,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             _bambooPrefabs[count].SetActive(false);
         });
 
-        SaveBambooFieldData(3);
+
     }
 
 

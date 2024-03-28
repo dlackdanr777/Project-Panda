@@ -9,24 +9,21 @@ using UnityEngine.UI;
 /// <summary>도전과제 슬롯 클래스</summary>
 public class UIChallengeSlot : MonoBehaviour
 {
+    [Header("Components")]
     [SerializeField] private Image _backgroundImage;
-
     [SerializeField] private TextMeshProUGUI _nameText;
-
     [SerializeField] private TextMeshProUGUI _descriptionText;
-
     [SerializeField] private Button _clearButton;
-
     [SerializeField] private Image _clearImage;
-
     [SerializeField] private Sprite _doneSprite;
 
+    [Space]
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip _buttonClickSound;
+
     private ChallengesData _data;
-
     private Color _clearBackgroundColor;
-
     private RectTransform _rectTransform;
-
     public Transform GetBambooTransform => _clearButton.transform;
 
 
@@ -42,6 +39,7 @@ public class UIChallengeSlot : MonoBehaviour
         {
             onButtonClicked?.Invoke(_data.Id);
             Clear();
+            SoundManager.Instance.PlayEffectAudio(_buttonClickSound);
         });
 
         _clearButton.gameObject.SetActive(false);
