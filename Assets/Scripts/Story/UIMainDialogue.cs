@@ -238,6 +238,7 @@ public class UIMainDialogue : UIView
         if (data.TalkPandaID.Equals("POYA00"))
         {
             DataBind.SetSpriteValue("MainDialoguePandaImage", _starterImage);
+            DataBind.SetTextValue("MainDialogueName", "Æ÷¾ß");
             _intimacyobj.SetActive(false);
         }
         else if (data.TalkPandaID.Equals("SYSTEM"))
