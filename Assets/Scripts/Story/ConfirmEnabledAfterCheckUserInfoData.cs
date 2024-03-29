@@ -73,11 +73,8 @@ public class ConfirmEnabledAfterCompletedOutro : MonoBehaviour
 
         List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
 
-        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        if (completeStoryList.Contains(_storyId))
         {
-            if (completeStoryList[i] != _storyId)
-                continue;
-
             _target.SetActive(true);
             return;
         }

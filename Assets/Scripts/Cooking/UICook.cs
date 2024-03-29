@@ -88,7 +88,7 @@ namespace Cooking
             }
 
             HideCookware();
-            ChangeCookStep(0, true);
+            ChangeCookStep(0, false);
         }
 
 
@@ -136,7 +136,7 @@ namespace Cooking
             Tween.TransformMove(_targetObj, _step1Target.position, _animeDuration, _tweenMode,() =>
             {
                 _cookStepSlot.gameObject.SetActive(true);
-
+                ChangeCookStep(0, false);
                 _uiStep1.StartStep();
             });
         }
@@ -155,7 +155,7 @@ namespace Cooking
             Tween.TransformMove(_targetObj, _step2Target.position, _animeDuration, _tweenMode, () =>
             {
                 _cookStepSlot.gameObject.SetActive(true);
-
+                ChangeCookStep(0, false);
                 _uiStep2.StartStep();
             });
         }
@@ -212,7 +212,7 @@ namespace Cooking
         }
 
 
-        private void ChangeCookStep(int dir, bool isFirstStart = false)
+        private void ChangeCookStep(int dir, bool startStepEvent = true)
         {
             int currentCookStep = _cookSystem.ChangeCookStep(dir);
 
@@ -226,7 +226,7 @@ namespace Cooking
             else
                 _cookStepSlot.EnableRightButton();
 
-            if(!isFirstStart)
+            if(startStepEvent)
                 ChangeStepEvent(currentCookStep);
         }
     }
