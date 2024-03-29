@@ -12,6 +12,7 @@ public class SideStoryController : MonoBehaviour
 
     [SerializeField] private string NPCID;
     [SerializeField] private SpriteRenderer _npcRenderer;
+    [SerializeField] private Transform _transform;
 
     private NPCButton _npcButton;
     private Dictionary<string, SideStoryDialogue> _storyDatabase;
@@ -36,7 +37,7 @@ public class SideStoryController : MonoBehaviour
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
         Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
-        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton());
+        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(NPCID), () => OnClickStartButton(), _transform);
         _npcButton.gameObject.SetActive(gameObject.activeSelf);
     }
 
