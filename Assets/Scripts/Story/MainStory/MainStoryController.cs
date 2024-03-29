@@ -12,9 +12,10 @@ public class MainStoryController : MonoBehaviour
     public static event Action OnFinishStoryHandler;
     public static event Action OnCheckConditionHandler;
 
-    [SerializeField] private SpriteRenderer _npcRenderer;
+    //[SerializeField] private SpriteRenderer _npcRenderer;
     [SerializeField] private string _npcID;
     [SerializeField] private GameObject _questMark;
+    [SerializeField] private Transform _transform;
 
     private NPCButton _npcButton;
     private Dictionary<string, MainStoryDialogue> _storyDatabase;
@@ -155,14 +156,20 @@ public class MainStoryController : MonoBehaviour
         {
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }
-        Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size * (new Vector3(0.1f, 0.1f, 0.1f) + transform.localScale/2f);
+        Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size;
+        if(rendererSize.x > 1000)
+        {
+            rendererSize *= 0.5f;
+        }
+        rendererSize *= transform.localScale;
+        //rendererSize *= (new Vector3(0.1f, 0.1f, 0.1f) + transform.localScale / 2f);
         if (rendererSize.y > 700)
         {
-            rendererSize.x /= 1.5f;
-            rendererSize.y /= 1.5f;
+            rendererSize.x /= 1.7f;
+            rendererSize.y /= 1.7f;
         }
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
-        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
+        _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton(), _transform);
         _npcButton.gameObject.SetActive(true);
     }
 

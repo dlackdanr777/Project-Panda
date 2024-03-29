@@ -11,13 +11,20 @@ public class NPCButton : MonoBehaviour
     private Transform _targetTransform;
 
 
-    public void Init(Transform target, Vector2 size, Sprite sprite, UnityAction onClicked)
+    public void Init(Transform target, Vector2 size, Sprite sprite, UnityAction onClicked, Transform transform)
     {
         name = "[" + target.name + "] NPC Button";
         _button = GetComponent<Button>();
         _button.GetComponent<RectTransform>().sizeDelta = size;
         _button.onClick.AddListener(onClicked);
-        _targetTransform = target;
+        if(transform != null)
+        {
+            _targetTransform = transform;
+        }
+        else
+        {
+            _targetTransform = target;
+        }
     }
 
     private void Update()
