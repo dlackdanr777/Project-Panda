@@ -37,6 +37,7 @@ public class UIMainDialogue : UIView
     private Coroutine _itemRewardRoutine;
     private Coroutine _moneyRewardRoutine;
     private bool _isFail;
+    private bool _isEnd;
     private string _isReward;
 
     private string _currentNPC;
@@ -147,6 +148,7 @@ public class UIMainDialogue : UIView
         _currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
         _uiNav.Push("MainDialogue");
         _isStoryStart = true;
+        _isEnd = false;
         _isFail = false;
         _isReward = null;
     }
@@ -202,7 +204,8 @@ public class UIMainDialogue : UIView
 
                 if (!_isFail) //실패가 아닐 때만 보상
                 {
-                    OnAddRewardHandler.Invoke(_dialogue.StoryID, _dialogue.StoryStartPanda);
+                    _isEnd = true;
+                    //OnAddRewardHandler.Invoke(_dialogue.StoryID, _dialogue.StoryStartPanda);
                 }
             }
             _currentIndex++;
@@ -210,6 +213,10 @@ public class UIMainDialogue : UIView
         else
         {
             _uiNav.Pop();
+            if (_isEnd == true)
+            {
+                OnAddRewardHandler.Invoke(_dialogue.StoryID, _dialogue.StoryStartPanda);
+            }
             if (!_isFail) //실패가 아닐 때만
             {
                 OnFinishStoryHandler?.Invoke(_dialogue.StoryID);
