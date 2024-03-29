@@ -19,6 +19,7 @@ public class ChangeSceneButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         LoadingSceneManager.LoadScene(_changeSceneName);
     }
 }

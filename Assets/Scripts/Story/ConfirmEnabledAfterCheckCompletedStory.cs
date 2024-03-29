@@ -13,7 +13,12 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
     [Header("Options")]
     [Tooltip("해당 스토리ID가 완료 상태일 경우 활성(공백일 경우 무조건 활성)")]
     [SerializeField] private string _storyId;
+    [Tooltip("해당 스토리ID가 완료 상태일 경우 비 활성(공백일 경우 해당없음)")]
+    [SerializeField] private string _disableStoryId;
 
+
+    private bool _isStoryIdCompleted;
+    private bool _isDisableStoryIdCompleted;
 
     private void Start()
     {
@@ -27,23 +32,57 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
     /// <summary>인스펙터창에 적힌 스토리id가 완료된 상태면 아이콘을 활성화, 아닐경우 비활성화 하는 함수</summary>
     private void CheckCompletedStory(string id)
     {
-        if (string.IsNullOrWhiteSpace(_storyId))
-        {
-            gameObject.SetActive(true);
-            return;
-        }
         List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
 
-        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        //이미 확인을 마친 상태인데도 List를 순회하며 찾는 경우 리소스낭비가 될 수 있기에 막는다.
+        if(!_isStoryIdCompleted)
         {
-            if (completeStoryList[i] != _storyId)
-                continue;
-
-            _target.SetActive(true);
-            return;
+            if (completeStoryList.Contains(_storyId))
+            {
+                _isStoryIdCompleted = true;
+            }
         }
 
-        _target.SetActive(false);
+        if (!_isDisableStoryIdCompleted)
+        {
+            if (completeStoryList.Contains(_disableStoryId))
+            {
+                _isDisableStoryIdCompleted = true;
+            }
+        }
+
+        if (_isStoryIdCompleted)
+        {
+            if(string.IsNullOrWhiteSpace(_disableStoryId) || !_isDisableStoryIdCompleted)
+            {
+                _target.SetActive(true);
+                return;
+            }
+
+            else if (_isDisableStoryIdCompleted)
+            {
+                _target.SetActive(false);
+                return;
+            }
+        }
+
+        else
+        {
+            if (_isDisableStoryIdCompleted)
+            {
+                _target.SetActive(false);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_storyId))
+            {
+                gameObject.SetActive(true);
+                return;
+            }
+
+            _target.SetActive(false);
+        }
+ 
     }
 
 

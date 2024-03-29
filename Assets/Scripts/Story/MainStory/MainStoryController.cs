@@ -40,6 +40,7 @@ public class MainStoryController : MonoBehaviour
         OnFinishStoryHandler += CheckNectStory;
         SceneManager.sceneLoaded += ChangeScene;
         TimeManager.OnChangedTimeHandler += CheckMap;
+        FadeInOutManager.Instance.OnFadeOutHandler += NpcButtonSetSibling;
     }
     private void OnDestroy()
     {
@@ -48,7 +49,19 @@ public class MainStoryController : MonoBehaviour
         OnFinishStoryHandler -= CheckNectStory;
         SceneManager.sceneLoaded -= ChangeScene;
         TimeManager.OnChangedTimeHandler -= CheckMap;
-        UIMainDialogue.OnCheckConditionHandler += CheckCondition;
+        UIMainDialogue.OnCheckConditionHandler -= CheckCondition;
+        FadeInOutManager.Instance.OnFadeOutHandler -= NpcButtonSetSibling;
+    }
+
+    private void OnEnable()
+    {
+        _npcButton?.gameObject.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        _npcButton?.gameObject.SetActive(false);
+        NpcButtonSetSibling();
     }
 
     private void Start()
@@ -59,9 +72,10 @@ public class MainStoryController : MonoBehaviour
         _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
 
         Init();
-        Invoke("SetNPCButton", 1f);
-
+        //Invoke("SetNPCButton", 1f);
         CheckNectStory();
+        SetNPCButton();
+        NpcButtonSetSibling();
     }
 
 
@@ -83,8 +97,8 @@ public class MainStoryController : MonoBehaviour
                 break;
             }
         }
-
     }
+
 
     // 초기 설정
     private void Init()
@@ -379,7 +393,22 @@ public class MainStoryController : MonoBehaviour
                 break;
             }
         }
+        NpcButtonSetSibling();
         OnFinishStoryHandler?.Invoke();
+    }
+
+
+    private void NpcButtonSetSibling()
+    {
+        foreach (string key in NextStory)
+        {
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID))
+            {
+                Debug.LogFormat("{0}존재", _npcID);
+                _npcButton?.transform.SetAsLastSibling();
+                return;
+            }
+        }
     }
 
     // 애니메이션 끄고 포야 켜기
