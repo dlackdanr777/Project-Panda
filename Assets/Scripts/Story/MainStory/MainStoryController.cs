@@ -54,48 +54,15 @@ public class MainStoryController : MonoBehaviour
     private void Start()
     {
         _npcID = gameObject.name;
-        SetNPCButton();
 
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
         _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
 
         Init();
+        Invoke("SetNPCButton", 1f);
 
         CheckNectStory();
     }
-
-
-    //private void Update()
-    //{
-    //    foreach(string key in NextStory)
-    //    {
-    //        if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && !_questMark.activeSelf)
-    //        {
-    //            if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
-    //                _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
-    //            {
-    //                _questMark.SetActive(true);
-    //                Debug.Log("_npcID _questMarktrue" + _npcID);
-
-    //                if(_isStartStory == false)
-    //                {
-    //                    // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
-    //                    PoyaSetTrue();
-    //                    JijiSetTrue();
-    //                    SetPosition();
-    //                }
-    //            }
-    //        }
-
-    //        if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _currentMap != TimeManager.Instance.CurrentMap)
-    //        {
-    //            _currentMap = TimeManager.Instance.CurrentMap;
-    //            SetPosition();
-    //        }
-    //    }
-
-
-    //}
 
 
     // NPC 버튼 클릭했을 때
@@ -166,29 +133,21 @@ public class MainStoryController : MonoBehaviour
     {
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
-        Vector2 rendererSize = _npcRenderer.sprite.rect.size * transform.localScale;
-        if (rendererSize.x < 0)
+        if(transform.localScale.x < 0)
         {
-            rendererSize.x = -rendererSize.x;
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }
-        if (rendererSize.x < 200)
-        {
-            rendererSize.x *= 2;
-            rendererSize.y *= 2;
-        }
-        if (rendererSize.x < 300)
-        {
-            rendererSize.x *= 1.5f;
-            rendererSize.y *= 1.5f;
-        }
-        if (rendererSize.x > 500)
+        Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size * (new Vector3(0.1f, 0.1f, 0.1f) + transform.localScale/2f);
+        if (rendererSize.y > 700)
         {
             rendererSize.x /= 1.5f;
+            rendererSize.y /= 1.5f;
         }
         _npcButton = Instantiate(npcButton, transform.position, Quaternion.identity, parent);
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton());
         _npcButton.gameObject.SetActive(true);
     }
+
 
     private void CheckMap()
     {
