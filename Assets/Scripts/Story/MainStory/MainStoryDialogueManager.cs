@@ -30,7 +30,7 @@ public class MainStoryDialogueManager : MonoBehaviour
 
     public void Register()
     {
-        _dataMainStory = CSVReader.Read("01__TEST_1"); // 이름 나중에 수정
+        _dataMainStory = CSVReader.Read("01__TEST_1_1"); // 이름 나중에 수정
         for(int i = 0; i< _dataMainStory.Count; i++)
         {
             _isExistPoya = false;
