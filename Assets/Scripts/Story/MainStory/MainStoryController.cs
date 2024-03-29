@@ -55,13 +55,17 @@ public class MainStoryController : MonoBehaviour
 
     private void OnEnable()
     {
-        _npcButton?.gameObject.SetActive(true);
+        if(_npcButton != null)
+        {
+            _npcButton.gameObject.SetActive(true);
+            NpcButtonSetSibling();
+        }
     }
 
     private void OnDisable()
     {
-        _npcButton?.gameObject.SetActive(false);
-        NpcButtonSetSibling();
+        if(_npcButton != null) { _npcButton.gameObject.SetActive(false); }
+
     }
 
     private void Start()
@@ -467,8 +471,10 @@ public class MainStoryController : MonoBehaviour
                         }
                     }
                 }
+
+                GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = true;
             }
-            GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>().enabled = true;
+
         }
     }
     private void JijiSetFalse()
