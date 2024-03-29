@@ -152,11 +152,11 @@ public class MainStoryController : MonoBehaviour
     {
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
-        if(transform.localScale.x < 0)
-        {
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
         Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size;
+        if(rendererSize.x < 0)
+        {
+            rendererSize.x  = -rendererSize.x;
+        }
         if(rendererSize.x > 1000)
         {
             rendererSize *= 0.5f;
