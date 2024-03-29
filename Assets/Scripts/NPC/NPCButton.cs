@@ -22,11 +22,11 @@ public class NPCButton : MonoBehaviour
 
     private void Update()
     {
-        if (!_targetTransform.gameObject.activeSelf)
+/*        if (!_targetTransform.gameObject.activeSelf)
         {
             gameObject.SetActive(false);
         }
-
+*/
         transform.position = Camera.main.WorldToScreenPoint(_targetTransform.position);
     }
 
