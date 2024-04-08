@@ -40,12 +40,12 @@ namespace Muks.BackEnd
             _loginText.gameObject.SetActive(false);
 
             //버튼 클릭 이벤트 추가
-            _loginButton.onClick.AddListener(Login);
+            _loginButton.onClick.AddListener(CustomLogin);
             _signupButton.onClick.AddListener(SignUp);
 
             _hashButton.onClick.AddListener(GetGoogleHash);
 
-            Invoke("GuestLogin", 1f);
+            Invoke("LoginAfterCheck", 2f);
         }
 
 
@@ -64,7 +64,7 @@ namespace Muks.BackEnd
 
 
         /// <summary>로그인 함수</summary>
-        private void Login()
+        private void CustomLogin()
         {
             string id = _idInput.text;
             string pw = _passwordInput.text;
@@ -89,6 +89,23 @@ namespace Muks.BackEnd
         }
 
 
+        private void LoginAfterCheck()
+        {
+            using (VersionManagement version = new VersionManagement())
+            {
+                if (!version.UpdateCheck())
+                    return;
+            }
+
+            //공지사항이 있다면 버튼 클릭 후 넘어가게
+            NoticeManagement notice = new NoticeManagement();
+            if (notice.TmpNoticeCheck(() =>{ Invoke("GuestLogin", 1f); }))
+                return;
+
+            GuestLogin();
+        }
+
+
         private void GuestLogin()
         {
             BackendManager.Instance.GuestLogin(10, (bro) =>
@@ -108,7 +125,7 @@ namespace Muks.BackEnd
             _loginButton.gameObject.SetActive(false);
             _signupButton.gameObject.SetActive(false);
 
-            _loginText.gameObject.SetActive(true);
+            //_loginText.gameObject.SetActive(true);
         }
 
 
@@ -123,6 +140,7 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.ChallengesDatabase.LoadData();
             //DatabaseManager.Instance.NPCDatabase.LoadData(); //로컬로 변경
             //CostumeManager.Instance.LoadData(); //코스튬 기능은 일단 제외
+            DatabaseManager.Instance.NoticeDatabase.LoadData();
 
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
             BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.LoadChallengesData);
@@ -144,7 +162,7 @@ namespace Muks.BackEnd
         /// 차후 첫 로그인 이면 NewUser씬, 아니면 기존유저 씬으로 넘어가게 해야함
         private void LoadNextScene(BackendReturnObject bro)
         {
-            Muks.Tween.Tween.TransformMove(gameObject, transform.position, 3, TweenMode.Constant, () =>
+            Muks.Tween.Tween.TransformMove(gameObject, transform.position, 0.5f, TweenMode.Constant, () =>
             {
                 if (!BackendManager.Instance.Login)
                 {

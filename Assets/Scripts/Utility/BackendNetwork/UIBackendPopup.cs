@@ -47,7 +47,7 @@ public class UIBackendPopup : MonoBehaviour
             _okButton.onClick.AddListener(onButtonClicked);
 
         _target.transform.localScale = _startScale;
-        Tween.TransformScale(_target, _targetScale, 0.5f, TweenMode.EaseOutBack, () =>
+        Tween.TransformScale(_target, _targetScale, 0.3f, TweenMode.EaseOutBack, () =>
         {
             _canvasGroup.blocksRaycasts = true;
         });

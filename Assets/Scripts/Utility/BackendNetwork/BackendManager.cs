@@ -553,9 +553,9 @@ namespace Muks.BackEnd
 
 
         /// <summary>서버 오류 팝업을 띄워주는 함수</summary>
-        public void ShowRetryPopup(string errorName, string errorDescription, UnityAction onButtonClicked = null)
+        public void ShowPopup(string title, string description, UnityAction onButtonClicked = null)
         {
-            _popup.Show(errorName, errorDescription, onButtonClicked);
+            _popup.Show(title, description, onButtonClicked);
         }
 
 

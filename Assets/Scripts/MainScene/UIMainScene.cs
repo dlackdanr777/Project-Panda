@@ -45,6 +45,13 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
     }
 
+
+    private void Start()
+    {
+        _uiNav.Push("UINotice");
+    }
+
+
     private void OnCameraButtonClicked()
     {
         _uiNav.Push("Camera");
