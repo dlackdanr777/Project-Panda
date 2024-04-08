@@ -30,34 +30,39 @@ public class MainStoryDialogueManager : MonoBehaviour
 
     public void Register()
     {
-        _dataMainStory = CSVReader.Read("01__TEST_1_1"); // 이름 나중에 수정
-        for(int i = 0; i< _dataMainStory.Count; i++)
+        ReadCSV("01__TEST_1_1");
+    }
+
+    private void ReadCSV(string csv)
+    {
+        _dataMainStory = CSVReader.Read(csv); // 이름 나중에 수정
+        for (int i = 0; i < _dataMainStory.Count; i++)
         {
             _isExistPoya = false;
             _isExistJiji = false;
-            MSDic.Add(_dataMainStory[i]["스토리ID"].ToString(),
-                        new MainStoryDialogue(_dataMainStory[i]["스토리ID"].ToString(),
-                        _dataMainStory[i]["스토리 이름"].ToString(),
-                        _dataMainStory[i]["이전 스토리ID"].ToString(),
-                        _dataMainStory[i]["다음 스토리ID"].ToString(),
-                        GetIntType(_dataMainStory[i]["친밀도"]),
-                        GetMainEventType(_dataMainStory[i]["이벤트 타입"].ToString()),
-                        _dataMainStory[i]["이벤트 타입 조건"].ToString(),
-                        GetIntType(_dataMainStory[i]["이벤트 타입 수량"]),
-                        _dataMainStory[i]["스토리 스타트 포인트"].ToString(),
-                        _dataMainStory[i]["맵 ID"].ToString(),
+            MSDic.Add(_dataMainStory[i]["StoryID"].ToString(),
+                        new MainStoryDialogue(_dataMainStory[i]["StoryID"].ToString(),
+                        _dataMainStory[i]["StoryName"].ToString(),
+                        _dataMainStory[i]["PreviousStoryID"].ToString(),
+                        _dataMainStory[i]["NextStoryID"].ToString(),
+                        GetIntType(_dataMainStory[i]["Intimacy"]),
+                        GetMainEventType(_dataMainStory[i]["EventType"].ToString()),
+                        _dataMainStory[i]["EventTypeCondition"].ToString(),
+                        GetIntType(_dataMainStory[i]["EventTypeQuantity"]),
+                        _dataMainStory[i]["StoryStartPoint"].ToString(),
+                        _dataMainStory[i]["MapID"].ToString(),
                         GetContext(i),
-                        GetMainEventType(_dataMainStory[i]["클리어 보상 타입"].ToString()),
-                        _dataMainStory[i]["보상 아이템 ID"].ToString(),
-                        GetIntType(_dataMainStory[i]["보상 수량"]),
-                        GetIntType(_dataMainStory[i]["클리어 보상 친밀도"])));
-            if(_isExistPoya)
+                        GetMainEventType(_dataMainStory[i]["ClearRewardType"].ToString()),
+                        _dataMainStory[i]["RewardItemID"].ToString(),
+                        GetIntType(_dataMainStory[i]["RewardQuantity"]),
+                        GetIntType(_dataMainStory[i]["ClearRewardIntimacy"])));
+            if (_isExistPoya)
             {
-                PoyaStoryList.Add(_dataMainStory[i]["스토리ID"].ToString());
+                PoyaStoryList.Add(_dataMainStory[i]["StoryID"].ToString());
             }
-            if(_isExistJiji)
+            if (_isExistJiji)
             {
-                JijiStoryList.Add(_dataMainStory[i]["스토리ID"].ToString());
+                JijiStoryList.Add(_dataMainStory[i]["StoryID"].ToString());
             }
             i = _goTo; //대화 뛰어 넘기
         }
@@ -66,31 +71,31 @@ public class MainStoryDialogueManager : MonoBehaviour
     private List<MainDialogueData> GetContext(int i)
     {
         List<MainDialogueData> dialogue = new List<MainDialogueData>();
-        string current = _dataMainStory[i]["스토리ID"].ToString();
+        string current = _dataMainStory[i]["StoryID"].ToString();
 
         while (true)
         {
-            if (i == _dataMainStory.Count || !_dataMainStory[i]["스토리ID"].ToString().Equals(current))
+            if (i == _dataMainStory.Count || !_dataMainStory[i]["StoryID"].ToString().Equals(current))
             {
                 _goTo = i - 1;
                 break;
             }
-            dialogue.Add(new MainDialogueData(_dataMainStory[i]["talkPandaID"].ToString(),
-            _dataMainStory[i]["일반 대화"].ToString(),
-            _dataMainStory[i]["스토리 성공 실패 체크"].ToString(),
-            _dataMainStory[i]["대화 선택지 ID"].ToString(),
-            _dataMainStory[i]["선택A_텍스트"].ToString(),
-            _dataMainStory[i]["선택지A_대화 이동 ID"].ToString(),
-            _dataMainStory[i]["선택B_텍스트"].ToString(),
-            _dataMainStory[i]["선택지B_대화 이동 ID"].ToString(),
-            GetMainEventType(_dataMainStory[i]["이벤트 타입"].ToString()),
-            _dataMainStory[i]["이벤트 타입 조건"].ToString(),
-            GetIntType(_dataMainStory[i]["이벤트 타입 수량"])));
+            dialogue.Add(new MainDialogueData(_dataMainStory[i]["TalkPandaID"].ToString(),
+            _dataMainStory[i]["Conversation"].ToString(),
+            _dataMainStory[i]["CheckStorySuccessOrFailure"].ToString(),
+            _dataMainStory[i]["ConversationOptionID"].ToString(),
+            _dataMainStory[i]["OptionA_Text"].ToString(),
+            _dataMainStory[i]["OptionA_ConversationOptionID"].ToString(),
+            _dataMainStory[i]["OptionB_Text"].ToString(),
+            _dataMainStory[i]["OptionB_ConversationOptionID"].ToString(),
+            GetMainEventType(_dataMainStory[i]["EventType"].ToString()),
+            _dataMainStory[i]["EventTypeCondition"].ToString(),
+            GetIntType(_dataMainStory[i]["EventTypeQuantity"])));
 
-            if(_dataMainStory[i]["talkPandaID"].ToString() == "POYA00"){
+            if(_dataMainStory[i]["TalkPandaID"].ToString() == "POYA00"){
                 _isExistPoya = true;
             }
-            else if(_dataMainStory[i]["talkPandaID"].ToString() == "NPC01")
+            else if(_dataMainStory[i]["TalkPandaID"].ToString() == "NPC01")
             {
                 _isExistJiji = true;
             }
