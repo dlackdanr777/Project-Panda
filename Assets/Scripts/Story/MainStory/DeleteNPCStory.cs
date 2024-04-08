@@ -24,7 +24,7 @@ public class DeleteNPCStory : MonoBehaviour
     private void CheckDelete()
     {
         // 다음 스토리에 판다 나올 때
-        if (_mainStoryController.NextStory.Contains(_storyId))
+        if (MainStoryController.NextStory.Contains(_storyId))
         {
             gameObject.SetActive(true);
 

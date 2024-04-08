@@ -36,7 +36,7 @@ public class ShowNPCStory : MonoBehaviour
     private void CheckShow()
     {
         // 다음 스토리에 판다 나올 때
-        if (_mainStoryController.NextStory.Contains(_storyId))
+        if (MainStoryController.NextStory.Contains(_storyId))
         {
             sr.enabled = true;
 

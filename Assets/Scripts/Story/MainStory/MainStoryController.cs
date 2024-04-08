@@ -23,7 +23,7 @@ public class MainStoryController : MonoBehaviour
     private string _storyIndex;
     private bool _isInitialized = false;
 
-    public List<string> NextStory = new List<string>();
+    public static List<string> NextStory = new List<string>();
 
     private GameObject _poyaAnimControll;
     private GameObject _jijiAnimControll;
@@ -125,19 +125,20 @@ public class MainStoryController : MonoBehaviour
                 _storyDatabase[_storyKey[i]].IsSuccess = true;
             }
         }
-
-        for (int j = 1; j < _storyKey.Count; j++)
+        if(NextStory.Count == 0)
         {
-            if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+            for (int j = 1; j < _storyKey.Count; j++)
             {
-                if (!NextStory.Contains(_storyKey[j]))
+                if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
                 {
-                    NextStory.Add(_storyKey[j]);
+                    if (!NextStory.Contains(_storyKey[j]))
+                    {
+                        NextStory.Add(_storyKey[j]);
+                    }
                 }
             }
         }
-
-        if(NextStory.Count ==0 && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[0])) 
+        if(NextStory.Count == 0 && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[0])) 
         {
             NextStory.Add(_storyKey[0]);
         }
@@ -352,56 +353,59 @@ public class MainStoryController : MonoBehaviour
 
     private void FinishStory(string id)
     {
-        foreach(string key in NextStory)
+        if (_storyDatabase[id].StoryStartPanda == _npcID)
         {
-            if(key == id)
+            foreach (string key in NextStory)
             {
-                if(_questMark != null)
+                if (key == id)
                 {
-                    _questMark.SetActive(false);
-                }
-                _storyDatabase[key].IsSuccess = true;
-                if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
-                {
-                    Debug.Log("스토리 완료: " + key);
-                    DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
-                    DatabaseManager.Instance.Challenges.MainStoryDone(id);
-                }
-                NextStory.Remove(key);
-
-
-                _storyIndex = key;
-                DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
-
-                for(int j = 0;  j < _storyKey.Count; j++)
-                {
-                    if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+                    if (_questMark != null)
                     {
-                        if (!NextStory.Contains(_storyKey[j]))
+                        _questMark.SetActive(false);
+                    }
+                    _storyDatabase[key].IsSuccess = true;
+                    if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
+                    {
+                        Debug.Log("스토리 완료: " + key);
+                        DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
+                        DatabaseManager.Instance.Challenges.MainStoryDone(id);
+                    }
+                    NextStory.Remove(key);
+
+
+                    _storyIndex = key;
+                    DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
+
+                    for (int j = 0; j < _storyKey.Count; j++)
+                    {
+                        if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
                         {
-                            NextStory.Add(_storyKey[j]);
+                            if (!NextStory.Contains(_storyKey[j]))
+                            {
+                                NextStory.Add(_storyKey[j]);
+                            }
                         }
                     }
-                }
 
-                // 채집이 있다면 채집 활성화
-                foreach(string nextStoryId in NextStory)
-                {
-                    string name = nextStoryId + "Collection";
-                    GameObject gameObject = GameObject.Find(name);
-                    if (gameObject != null)
+                    // 채집이 있다면 채집 활성화
+                    foreach (string nextStoryId in NextStory)
                     {
-                        MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
-                        msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
+                        string name = nextStoryId + "Collection";
+                        GameObject gameObject = GameObject.Find(name);
+                        if (gameObject != null)
+                        {
+                            MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
+                            msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
+                        }
                     }
-                }
 
-                // 지지와 포야 애니메이션 켜기
-                _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
-                _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
-                PoyaSetFalse();
-                JijiSetFalse();
-                break;
+                    // 지지와 포야 애니메이션 켜기
+                    _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
+                    _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
+                    PoyaSetFalse();
+                    JijiSetFalse();
+                    break;
+                }
             }
         }
         NpcButtonSetSibling();
