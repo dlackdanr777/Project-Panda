@@ -333,7 +333,7 @@ public class MainStoryCollection : MonoBehaviour
 
             // 인벤토리로 아이템 이동
             GameManager.Instance.Player.AddItemById(collectionID, 1);
-
+            MainStoryController.SortingNextStory(); // 조건 충족되었는지 확인해서 정렬
 
             // 도감 업데이트
 
