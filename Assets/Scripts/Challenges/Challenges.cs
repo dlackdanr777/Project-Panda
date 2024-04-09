@@ -126,6 +126,10 @@ public class Challenges
         Dictionary<string, MainStoryDialogue> msDic = DatabaseManager.Instance.MainDialogueDatabase.MSDic;
         foreach(string key in msDic.Keys)
         {
+            if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
+            {
+                break;
+            }
             if (_mainStoryCount.Count == 0)
             {
                 _mainStoryCount.Add(key.Substring(0, 4), 1);
@@ -136,12 +140,16 @@ public class Challenges
             }
             else
             {
-                _mainStoryCount[ key.Substring(0, 4)]++;
+                _mainStoryCount[key.Substring(0, 4)]++;
             }
             
         }
         foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
         {
+            if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
+            {
+                break;
+            }
             if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
                 _checkStoryCompleteList.Add(key);
@@ -359,6 +367,10 @@ public class Challenges
         //}
         foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
         {
+            if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
+            {
+                break;
+            }
             if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
                 _checkStoryCompleteList.Add(key);
