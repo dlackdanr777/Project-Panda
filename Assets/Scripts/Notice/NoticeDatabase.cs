@@ -1,8 +1,11 @@
 using BackEnd;
 using LitJson;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public class NoticeDatabase
 {
@@ -72,14 +75,40 @@ public class NoticeDatabase
 
                 Notice notice = new Notice(title, contents, postingDate, imageKey, inDate, uuid, linkUrl, isPublic, lunkButtonName, author);
 
+                LoadImage(notice);
                 _noticeList.Add(notice);
+
             }
 
             _repeatCount = _maxRepeatCount;
             UnityEngine.Debug.Log("공지사항 불러오기 성공");
         });
+    }
 
+    private void LoadImage(Notice notice)
+    {
+        if (notice.Sprite != null || string.IsNullOrEmpty(notice.ImageKey))
+            return;
 
+        UnityWebRequest webRequest = new UnityWebRequest(notice.ImageKey);
+        webRequest.useHttpContinue = false;
+        DownloadHandlerTexture dlTex = new DownloadHandlerTexture(true);
+        webRequest.downloadHandler = dlTex;
+
+        webRequest.SendWebRequest().completed += (asyncOperation) =>
+        {
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                UnityEngine.Debug.LogError("Failed to download image: " + webRequest.error);
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(webRequest);
+                notice.Sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+            }
+
+            UnityEngine.Debug.Log("이미지 로드 완료");
+        };
     }
 
 }

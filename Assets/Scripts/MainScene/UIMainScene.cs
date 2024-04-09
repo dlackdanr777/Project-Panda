@@ -20,9 +20,6 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetButtonValue("ShowDiaryButton", OnShowDiaryButtonClicked);
         DataBind.SetButtonValue("HideDiaryButton", OnHideDiaryButtonClicked);
 
-        DataBind.SetButtonValue("ShowPhotoButton", OnShowPhotoButtonClicked);
-        DataBind.SetButtonValue("HidePhotoButton", OnHidePhotoButtonClicked);
-
         DataBind.SetButtonValue("ShowAttendanceButton", OnShowAttendanceButtonClicked);
         DataBind.SetButtonValue("HideAttendanceButton", OnHideAttendanceButtonClicked);
 
@@ -43,28 +40,15 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetButtonValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
         DataBind.SetButtonValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
-    }
 
-
-    private void Start()
-    {
-        _uiNav.Push("UINotice");
+        DataBind.SetButtonValue("ShowNoticeButton", OnShowNoticeButtonClicked);
+        DataBind.SetButtonValue("HideNoticeButton", OnHideNoticeButtonClicked);
     }
 
 
     private void OnCameraButtonClicked()
     {
         _uiNav.Push("Camera");
-    }
-
-    private void OnShowDialogue()
-    {
-        _uiNav.Push("Dialogue");
-    }
-
-    private void OnHideDialogue()
-    {
-        _uiNav.Pop("Dialogue");
     }
 
     private void OnShowMailButtonClicked()
@@ -96,16 +80,6 @@ public class UIMainScene : MonoBehaviour
     {
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Diary");
-    }
-
-    private void OnShowPhotoButtonClicked()
-    {
-        _uiNav.Push("Photo");
-    }
-
-    private void OnHidePhotoButtonClicked()
-    {
-        _uiNav.Pop("Photo");
     }
 
     private void OnShowAttendanceButtonClicked()
@@ -207,6 +181,18 @@ public class UIMainScene : MonoBehaviour
     {
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
+    }
+
+    public void OnShowNoticeButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("UINotice");
+    }
+
+    public void OnHideNoticeButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("UINotice");
     }
 
 }
