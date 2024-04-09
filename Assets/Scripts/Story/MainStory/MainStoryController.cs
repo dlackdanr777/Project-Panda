@@ -334,8 +334,14 @@ public class MainStoryController : MonoBehaviour
         MainStoryDialogue currentStory = _storyDatabase[id];
 
         int nextStoryInti = CheckNext(currentStory.NextStoryID);
-
-        StarterPanda.Instance.Intimacy += currentStory.RewardIntimacy; // 보상 친밀도
+        if(id.Substring(0, 2) == "MS")
+        {
+            StarterPanda.Instance.Intimacy += currentStory.RewardIntimacy; // 보상 친밀도
+        }
+        else
+        {
+            currentNPC.Intimacy += currentStory.RewardIntimacy;
+        }
 
         //보상
         RewardItem(currentStory.RewardType, currentStory.RewardID, currentStory.RewardCount);
