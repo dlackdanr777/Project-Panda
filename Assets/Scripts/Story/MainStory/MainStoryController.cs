@@ -74,7 +74,8 @@ public class MainStoryController : MonoBehaviour
     private void Start()
     {
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
-        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter");
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter"); if (_jiji == null)
+        _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
 
         Init();
         //Invoke("SetNPCButton", 1f);
@@ -129,9 +130,11 @@ public class MainStoryController : MonoBehaviour
         }
         if(NextStory.Count == 0) //NextStory가 비어있을 경우에만 추가
         {
-            for (int j = 1; j < _storyKey.Count; j++)
+            for (int j = 0; j < _storyKey.Count; j++)
             {
-                if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+                // 현재 스토리 미완료 && 이전 스토리가 없거나 이미 완료한 경우
+                if (_storyDatabase[_storyKey[j]].IsSuccess == false && 
+                    (!_storyDatabase.ContainsKey(_storyDatabase[_storyKey[j]].PriorStoryID) || _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess))
                 {
                     if (!NextStory.Contains(_storyKey[j]))
                     {
@@ -141,10 +144,10 @@ public class MainStoryController : MonoBehaviour
             }
             SortingNextStory();
         }
-        if(NextStory.Count == 0 && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[0])) 
-        {
-            NextStory.Add(_storyKey[0]);
-        }
+        //if(NextStory.Count == 0 && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[0])) 
+        //{
+        //    NextStory.Add(_storyKey[0]);
+        //}
 
         _isInitialized = true;
         _currentMap = TimeManager.Instance.CurrentMap;
@@ -202,14 +205,10 @@ public class MainStoryController : MonoBehaviour
         }
         foreach (string key in NextStory)
         {
-            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && !_questMark.activeSelf && _storyDatabase[key].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
+            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _storyDatabase[key].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
             {
-                //if (_storyDatabase[key].EventType == MainEventType.None || CheckCondition(_storyDatabase[key].EventType,
-                //    _storyDatabase[key].EventTypeCondition, _storyDatabase[key].EventTypeAmount))
-                //{
-                    _questMark.SetActive(true);
- 
-                //}
+                _questMark.SetActive(true);
+
             }
         }
         // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
@@ -294,7 +293,8 @@ public class MainStoryController : MonoBehaviour
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
                     case MainEventType.LOVEMOUNT:
-                        isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
+                        //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
+                        isTrue = true; // 현재 친밀도 체크 안함
                         break;
                     default:
                         isTrue = false;
@@ -389,7 +389,8 @@ public class MainStoryController : MonoBehaviour
 
                     for (int j = 0; j < _storyKey.Count; j++)
                     {
-                        if (_storyDatabase[_storyKey[j]].IsSuccess == false && _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess)
+                        if (_storyDatabase[_storyKey[j]].IsSuccess == false &&
+                            (!_storyDatabase.ContainsKey(_storyDatabase[_storyKey[j]].PriorStoryID) || _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess))
                         {
                             if (!NextStory.Contains(_storyKey[j]))
                             {
@@ -434,7 +435,7 @@ public class MainStoryController : MonoBehaviour
         {
             if (_storyDatabase[key].StoryStartPanda.Equals(_npcID))
             {
-                Debug.LogFormat("{0}존재", _npcID);
+                //Debug.LogFormat("{0}존재", _npcID);
                 _npcButton?.transform.SetAsLastSibling();
                 return;
             }
@@ -581,7 +582,8 @@ public class MainStoryController : MonoBehaviour
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
                     case MainEventType.LOVEMOUNT:
-                        isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
+                        //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
+                        isTrue = true; // 현재 친밀도 체크 안함
                         break;
                     default:
                         isTrue = false;
@@ -606,6 +608,6 @@ public class MainStoryController : MonoBehaviour
         conditionIncompleteStory = conditionIncompleteStory.OrderBy(x => x).ToList();
         NextStory.AddRange(conditionIncompleteStory);
 
-        //Debug.Log(string.Join(", ", NextStory));
+        Debug.Log(string.Join(", ", NextStory));
     }
 }

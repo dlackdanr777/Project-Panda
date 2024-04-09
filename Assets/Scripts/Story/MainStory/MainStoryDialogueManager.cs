@@ -30,8 +30,24 @@ public class MainStoryDialogueManager : MonoBehaviour
 
     public void Register()
     {
+        string csv;
         ReadCSV("01__TEST_1_1");
-        ReadCSV("NPC02_판다 멜로");
+        for (int i = 2; i < 36; i++)
+        {
+            if (i == 4 || i == 22 || i == 23) // 현재 없는 파일
+            {
+                continue;
+            }
+            if (i < 10)
+            {
+                csv = "NPCSideStory/NPC0" + i;
+            }
+            else
+            {
+                csv = "NPCSideStory/NPC" + i;
+            }
+            ReadCSV(csv);
+        }
     }
 
     private void ReadCSV(string csv)
