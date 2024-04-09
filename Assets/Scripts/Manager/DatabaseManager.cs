@@ -53,6 +53,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private HarvestItemManager _harvestItemDatabase;
     public HarvestItemManager HarvestItemDatabase => _harvestItemDatabase;
 
+    private NoticeDatabase _noticeDatabase;
+    public NoticeDatabase NoticeDatabase => _noticeDatabase;
+
 
     //이미지들
     //Panda
@@ -130,6 +133,7 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         _albumDatabase = new AlbumDatabase();
         _challengesDatabase = new ChallengesDatabase();
         _challenges = new Challenges();
+        _noticeDatabase = new NoticeDatabase();
 
         _itemDatabase.Register();
         _userInfo.Register();
