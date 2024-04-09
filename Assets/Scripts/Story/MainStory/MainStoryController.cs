@@ -120,6 +120,7 @@ public class MainStoryController : MonoBehaviour
         }
 
         _storyIndex = _storyKey[0];
+
         // 저장된 값 불러오기
         for(int i = 0; i < _storyDatabase.Count; i++)
         {
@@ -207,7 +208,10 @@ public class MainStoryController : MonoBehaviour
         {
             if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _storyDatabase[key].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
             {
-                _questMark.SetActive(true);
+                if(key.Substring(0,2) == "MS") // 메인스토리일 경우에만 느낌표 표시
+                {
+                    _questMark.SetActive(true);
+                }
 
             }
         }
@@ -370,34 +374,26 @@ public class MainStoryController : MonoBehaviour
             {
                 if (key == id)
                 {
-                    if (_questMark != null)
+                    if (_questMark != null && key.Substring(0, 2) == "MS")
                     {
                         _questMark.SetActive(false);
-                    }
-                    _storyDatabase[key].IsSuccess = true;
-                    if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
-                    {
-                        Debug.Log("스토리 완료: " + key);
-                        DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
-                        DatabaseManager.Instance.Challenges.MainStoryDone(id);
-                    }
-                    NextStory.Remove(key);
-
-
-                    _storyIndex = key;
-                    DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
-
-                    for (int j = 0; j < _storyKey.Count; j++)
-                    {
-                        if (_storyDatabase[_storyKey[j]].IsSuccess == false &&
-                            (!_storyDatabase.ContainsKey(_storyDatabase[_storyKey[j]].PriorStoryID) || _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess))
+                    
+                        _storyDatabase[key].IsSuccess = true;
+                        if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
                         {
-                            if (!NextStory.Contains(_storyKey[j]))
-                            {
-                                NextStory.Add(_storyKey[j]);
-                            }
+                            Debug.Log("스토리 완료: " + key);
+                            DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
+                            DatabaseManager.Instance.Challenges.MainStoryDone(id);
                         }
+                        NextStory.Remove(key);
+
+
+                        _storyIndex = key;
+                        DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
                     }
+
+                    // NextStory 추가
+                    AddNextStory(key, id);
 
                     // 채집이 있다면 채집 활성화
                     foreach (string nextStoryId in NextStory)
@@ -558,6 +554,49 @@ public class MainStoryController : MonoBehaviour
     private void ChangeScene(Scene scene, LoadSceneMode loadscene)
     {
         SetAnimControll();
+    }
+
+    private void AddNextStory(string key, string id)
+    {
+        for (int j = 0; j < _storyKey.Count; j++)
+        {
+            if (_storyDatabase[_storyKey[j]].IsSuccess == false &&
+                (!_storyDatabase.ContainsKey(_storyDatabase[_storyKey[j]].PriorStoryID) || _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess))
+            {
+                // 메인스토리 && 친밀도 충족
+                if (key.Substring(0, 2) == "MS" && _storyDatabase[_storyKey[j]].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
+                {
+                    if (!NextStory.Contains(_storyKey[j]))
+                    {
+                        NextStory.Add(_storyKey[j]);
+                    }
+                }
+                // 서브스토리 && 친밀도 충족
+                else if (key.Substring(0, 2) == "SS" && _storyDatabase[_storyKey[j]].RequiredIntimacy <= DatabaseManager.Instance.GetNPC("NPC" + _storyKey[j].Substring(2, 2)).Intimacy)
+                {
+                    // 전 서브스토리 삭제
+                    foreach (string k in NextStory)
+                    {
+                        if (k.StartsWith(_storyKey[j].Substring(0, 4)) && !k.Equals(_storyKey[j]))
+                        {
+                            _storyDatabase[k].IsSuccess = true;
+                            if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(k))
+                            {
+                                Debug.Log("스토리 완료: " + k);
+                                DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(k);
+                                DatabaseManager.Instance.Challenges.MainStoryDone(id);
+                            }
+                            NextStory.Remove(k);
+                            break;
+                        }
+                    }
+                    if (!NextStory.Contains(_storyKey[j]))
+                    {
+                        NextStory.Add(_storyKey[j]);
+                    }
+                }
+            }
+        }
     }
 
     public static void SortingNextStory()
