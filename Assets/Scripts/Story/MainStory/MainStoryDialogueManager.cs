@@ -31,6 +31,7 @@ public class MainStoryDialogueManager : MonoBehaviour
     public void Register()
     {
         ReadCSV("01__TEST_1_1");
+        ReadCSV("NPC02_ÆÇ´Ù ¸á·Î");
     }
 
     private void ReadCSV(string csv)

@@ -1,0 +1,20 @@
+﻿StoryID,StoryName,PreviousStoryID,NextStoryID,Intimacy,EventType,EventTypeCondition,EventTypeQuantity,StoryStartPoint,MapID,TalkPandaID,Conversation,CheckStorySuccessOrFailure,ConversationOptionID,OptionA_Text,OptionA_ConversationOptionID,OptionB_Text,OptionB_ConversationOptionID,ClearRewardType,RewardItemID,RewardQuantity,ClearRewardIntimacy
+SS0901A,,SS0999Z,,0,,,,NPC09,MN06,NPC09,싱싱한 과일이라고! 한번 구경하고가!,END,,,,,,,,,1
+SS0902A,,SS0901A,,3,LOVE MOUNT,,,NPC09,MN06,NPC09,내가 판매하는 과일은 최고의 품질을 장담해!,END,,,,,,,,,1
+SS0903A,이국적 과일 러버,SS0902A,,5,LOVE MOUNT,,,NPC09,MN06,NPC09,싱싱한 과일 구경하고가!,,,,,,,,,,1
+SS0903A,,,,,,,,,,NPC09,내가 많은 과일을 판매해봤지만 새로운 과일을 알게되는 건 참 흥미로운 일이야,,,,,,,,,,
+SS0903A,,,,,,,,,,NPC09,조금 스페셜한 과일을 보게된다면 정말 기쁠 것 같아!,END,,,,,,,,,
+SS0903B,,SS0903A,,,HOLDITEM,IFR06,1,NPC09,MN06,NPC09,싱싱한 과일 구경하고가!,,,,,,,과일 아이템,IFR06,5,5
+SS0903B,,,,,,,,,,NPC09,",,,???",,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,가게에 폭탄을 가져오면 어떡하니! 조심해서 다뤄!,,,조심 조심 이거 터집니다!!,,"아,, 이건 폭탄이 아니라,,",,,,,
+SS0903B,,,,,,,,,,NPC09,"뭐? 이게 과일이라고? 먹을 수 있는 과일은 아닌거 같은데,, 내가 한번 봐도 괜찮겠니?",,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,",,흠 ,, 오! 우와,, 아 따가워!!",,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,얘들아 이거 한번 껍질을 까서 같이 열어볼까?,,,,,,,,,,
+SS0903B,,,,,,,,,,NPC01,좋아요!,,,,,,,,,,
+SS0903B,,,,,,,,,,POYA00,"진짜 터지면 어떡해요,,?",,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,자 열어볼게! 슥삭 슥삭 슥삭,,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,노랗고 과즙이 넘치는데? 같이 한번 먹어보자!,,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,??!!! 너무 맛있어!! 이국적이야! 너무 새로워!!,,,,,,,,,,
+SS0903B,,,,,,,,,,NPC09,고맙다 얘들아 또 스페셜한 과일을 갖게된다면 나한테 보여줘!,END,,,,,,,,,
+SS0904A,,SS0903B,,10,LOVE MOUNT,,,NPC09,MN06,NPC09,싱싱한 과일 구경하고가!,,,,,,,,,,1
+,,,,,,,,,,,"포야, 안녕!",END,,,,,,,,,
