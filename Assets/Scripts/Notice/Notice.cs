@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 
 /// <summary>뒤끝 공지사항 데이터</summary>
 public class Notice
@@ -32,6 +34,8 @@ public class Notice
 
     private string _author;
     public string Author => _author;
+
+    public Sprite Sprite;
 
 
     public Notice(string title, string contents, DateTime postingDate, string imageKey, string inDate, string uuid, string linkUrl, bool isPublic, string linkButtonName, string author)

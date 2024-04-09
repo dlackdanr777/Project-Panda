@@ -1,30 +1,22 @@
-using Muks.Tween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class UINotice : UIView
+public class UINotice : MonoBehaviour
 {
-    [Header("ShowUI Animation Setting")]
-    [SerializeField] private RectTransform _targetRect;
-    [SerializeField] private float _startAlpha = 0;
-    [SerializeField] private float _targetAlpha = 1;
-    [SerializeField] private float _duration;
-    [SerializeField] private TweenMode _tweenMode;
-
     [Space]
     [Header("Components")]
     [SerializeField] private Transform _slotParent;
     [SerializeField] private UINoticeSlot _slotPrefab;
-
-    private CanvasGroup _canvasGroup;
-    private Vector3 _tmpPos;
-    private Vector3 _movePos => new Vector3(0, 50, 0);
+    [SerializeField] private UINoticeDetailView _detailView;
 
 
-    public override void Init(UINavigation uiNav)
+    private List<UINoticeSlot> _slotList = new List<UINoticeSlot>();
+
+    public void Init()
     {
-        base.Init(uiNav);
+        _detailView.Init();
 
         List<Notice> noticeList = DatabaseManager.Instance.NoticeDatabase.GetNoticeList();
 
@@ -33,47 +25,29 @@ public class UINotice : UIView
             UINoticeSlot slot = Instantiate(_slotPrefab);
             slot.transform.parent = _slotParent;
 
-            slot.Init(noticeList[i]);
+            int index = i;
+            slot.Init(noticeList[i], () =>
+            {
+                SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+                _detailView.Show(noticeList[index]);
+            });
+            _slotList.Add(slot);
         }
 
-        gameObject.SetActive(false);
+    }
+
+    public void Show()
+    {
+        for(int i = 0, count =  _slotList.Count; i < count; i++)
+        {
+            _slotList[i].SetSprite();
+        }
     }
 
 
-    public override void Show()
+    public void Hide()
     {
-        VisibleState = VisibleState.Appearing;
-        gameObject.SetActive(true);
-
-        _targetRect.anchoredPosition = _tmpPos + _movePos;
-        _canvasGroup.alpha = _startAlpha;
-        _canvasGroup.blocksRaycasts = false;
-
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Appeared;
-            _canvasGroup.blocksRaycasts = true;
-        });
-    }
-
-
-    public override void Hide()
-    {
-        VisibleState = VisibleState.Disappearing;
-
-        _targetRect.anchoredPosition = _tmpPos;
-        _canvasGroup.alpha = _targetAlpha;
-        _canvasGroup.blocksRaycasts = false;
-
-        Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos - _movePos, _duration, _tweenMode);
-        Tween.CanvasGroupAlpha(gameObject, _startAlpha, _duration, _tweenMode, () =>
-        {
-            VisibleState = VisibleState.Disappeared;
-            _canvasGroup.blocksRaycasts = true;
-
-            gameObject.SetActive(false);
-        });
+        _detailView.Hide();
     }
 
 }
