@@ -14,16 +14,12 @@ public class UINoticeDetailView : MonoBehaviour
     [SerializeField] private Button _exitButton;
 
 
-    private float _tmpImageWidth;
-
-
     public void Init()
     {
         _exitButton.onClick.AddListener(Hide);
 
         _contentsText.transform.localScale = Vector3.one;
         _image.transform.localScale = Vector3.one;
-        _tmpImageWidth = _image.rectTransform.sizeDelta.x;
         gameObject.SetActive(false);
     }
 
@@ -45,13 +41,14 @@ public class UINoticeDetailView : MonoBehaviour
         //이미지 비율에 맞게 Image 컴포넌트의 사이즈를 조절한다.
         float heightMul = (float)notice.Sprite.textureRect.height / (float)notice.Sprite.textureRect.width;
         Vector2 sizeDelta = _image.rectTransform.sizeDelta;
-        _image.rectTransform.sizeDelta = new Vector2(sizeDelta.x, sizeDelta.y * heightMul);
+        _image.rectTransform.sizeDelta = new Vector2(sizeDelta.x, sizeDelta.x * heightMul);
         _image.sprite = notice.Sprite;
     }
 
 
     public void Hide()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         gameObject.SetActive(false);
     }
 }

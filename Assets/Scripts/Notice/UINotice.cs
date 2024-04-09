@@ -26,7 +26,11 @@ public class UINotice : MonoBehaviour
             slot.transform.parent = _slotParent;
 
             int index = i;
-            slot.Init(noticeList[i], () => _detailView.Show(noticeList[index]));
+            slot.Init(noticeList[i], () =>
+            {
+                SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+                _detailView.Show(noticeList[index]);
+            });
             _slotList.Add(slot);
         }
 
