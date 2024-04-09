@@ -647,6 +647,6 @@ public class MainStoryController : MonoBehaviour
         conditionIncompleteStory = conditionIncompleteStory.OrderBy(x => x).ToList();
         NextStory.AddRange(conditionIncompleteStory);
 
-        Debug.Log(string.Join(", ", NextStory));
+        //Debug.Log(string.Join(", ", NextStory));
     }
 }
