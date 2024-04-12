@@ -21,7 +21,7 @@ public class Inventory
     public event Action OnRemoveHandler;
 
     public int MaxInventoryItem { get; private set; } = 30; //inventory 최대 저장 개수
-    public int MaxInventoryItemCount { get; private set; } = 10;//한 아이템당 최대 개수
+    public int MaxInventoryItemCount { get; private set; } = 99;//한 아이템당 최대 개수
     public int ItemsCount => _items.Count;
 
     private List<InventoryItem> _items = new List<InventoryItem>();
@@ -111,6 +111,8 @@ public class Inventory
                 // 모든 아이템을 추가했으면 종료
                 if (remainCount == 0)
                 {
+                    //id별로 오름차순, 갯수로 내림차순으로 정렬
+                    _items = _items.OrderBy(x => x.Id).ThenByDescending(x => x.Count).ToList();
                     OnAddHandler?.Invoke();
                     return true;
                 }
@@ -168,6 +170,8 @@ public class Inventory
                 {
                     _items.Remove(item);
                 }
+                //id별로 오름차순, 갯수로 내림차순으로 정렬
+                _items = _items.OrderBy(x => x.Id).ThenByDescending(x => x.Count).ToList();
                 OnRemoveHandler?.Invoke();
                 DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
                 return true; // 아이템을 성공적으로 제거하였음을 반환
