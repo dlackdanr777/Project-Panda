@@ -43,7 +43,7 @@ namespace Muks.DataBind
             if (_isAddListenerClear)
                 return;
 
-            _data = DataBind.GetButtonValue(_dataID);
+            _data = DataBind.GetUnityActionBindData(_dataID);
 
             if(_data.Item == null)
             {

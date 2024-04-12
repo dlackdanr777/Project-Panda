@@ -36,7 +36,7 @@ public class VillageHouse : MonoBehaviour
         //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
-        DataBind.SetButtonValue("EnterVillageHouseButton", () => {
+        DataBind.SetUnityActionValue("EnterVillageHouseButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 EnterVillageHouse();
@@ -44,7 +44,7 @@ public class VillageHouse : MonoBehaviour
             });
         });
 
-        DataBind.SetButtonValue("ExitVillageHouseButton", () => {
+        DataBind.SetUnityActionValue("ExitVillageHouseButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 ExitVillageHouse();

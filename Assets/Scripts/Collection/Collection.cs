@@ -134,7 +134,7 @@ public class Collection : MonoBehaviour
                 starButton = "FruitStarButton";
                 break;
         }
-        DataBind.SetButtonValue(_map + starButton, ClickStarButton);
+        DataBind.SetUnityActionValue(_map + starButton, ClickStarButton);
 
         _poyaAnimeCenter = GameObject.Find("Poya Anime ControllCenter").transform.GetComponent<NPCAnimeControllCenter>();
     }
@@ -205,7 +205,7 @@ public class Collection : MonoBehaviour
         //_collectionButton.gameObject.SetActive(true);
         _starButton.SetActive(false);
 
-        DataBind.GetAction("HideMainUIButton")?.Invoke();
+        DataBind.GetUnityActionValue("HideMainUIButton")?.Invoke();
         CameraSet(true);
     }
 
@@ -434,7 +434,7 @@ public class Collection : MonoBehaviour
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
 
-        DataBind.GetAction("ShowMainUIButton")?.Invoke();
+        DataBind.GetUnityActionValue("ShowMainUIButton")?.Invoke();
         CameraSet(false);
 
         // 끝나고 판다 쪽으로 카메라 이동

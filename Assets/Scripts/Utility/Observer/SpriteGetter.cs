@@ -69,7 +69,7 @@ namespace Muks.DataBind
 
         private void Enabled()
         {
-            _data = DataBind.GetSpriteValue(_dataID);
+            _data = DataBind.GetSpriteBindData(_dataID);
             _data.CallBack += UpdateImage;
 
             if (_type == GetterType.Image)

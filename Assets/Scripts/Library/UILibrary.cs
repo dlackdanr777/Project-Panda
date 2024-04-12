@@ -16,7 +16,7 @@ public class UILibrary : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        DataBind.SetButtonValue("ExitAlbumButton", OnAlbumButtonClicked);
+        DataBind.SetUnityActionValue("ExitAlbumButton", OnAlbumButtonClicked);
         
         _uiAlbum.Init();
         gameObject.SetActive(false);

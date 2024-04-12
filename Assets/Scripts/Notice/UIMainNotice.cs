@@ -1,8 +1,8 @@
 using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(CanvasGroup))]
 public class UIMainNotice : UIView
 {
     [Header("ShowUI Animation Setting")]
@@ -24,8 +24,8 @@ public class UIMainNotice : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
+        _canvasGroup = GetComponent<CanvasGroup>();
         _uiNotice.Init();
-
         gameObject.SetActive(false);
     }
 

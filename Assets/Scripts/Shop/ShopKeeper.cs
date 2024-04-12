@@ -8,7 +8,7 @@ public class ShopKeeper : MonoBehaviour
 
     void Start()
     {
-        DataBind.SetButtonValue("ShopButton", OnShopButtonClicked);
+        DataBind.SetUnityActionValue("ShopButton", OnShopButtonClicked);
     }
     
 

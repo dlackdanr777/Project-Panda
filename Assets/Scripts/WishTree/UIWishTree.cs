@@ -13,8 +13,8 @@ public class UIWishTree : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation_origin>();
 
-        DataBind.SetButtonValue("WoodButton", OnInsideWoodButtonClicked);
-        DataBind.SetButtonValue("WishTreeBorderButton", OnBorderButtonClicked);
+        DataBind.SetUnityActionValue("WoodButton", OnInsideWoodButtonClicked);
+        DataBind.SetUnityActionValue("WishTreeBorderButton", OnBorderButtonClicked);
     }
 
     private void OnInsideWoodButtonClicked()

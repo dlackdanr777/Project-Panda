@@ -16,7 +16,7 @@ public class UIStickerContent : MonoBehaviour
 
     private void Awake()
     {
-        DataBind.SetButtonValue("StickerSaveButton", Save);
+        DataBind.SetUnityActionValue("StickerSaveButton", Save);
         _userSticker = GameManager.Instance.Player.StickerInventory;
         _clearButton.onClick.AddListener(OnClickClearButton);
 

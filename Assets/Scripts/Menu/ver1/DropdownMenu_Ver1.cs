@@ -60,8 +60,8 @@ public class DropdownMenu_Ver1 : MonoBehaviour
         _layoutGroupTmpPos = _layoutGroup.GetComponent<RectTransform>().anchoredPosition;
         _menuButtons.HideButtons();
 
-        DataBind.SetButtonValue("ShowDropdownMenu", () => ShowAnime());
-        DataBind.SetButtonValue("HideDropdownMenu", () => _menuButtons.HideAnime(HideAnime));
+        DataBind.SetUnityActionValue("ShowDropdownMenu", () => ShowAnime());
+        DataBind.SetUnityActionValue("HideDropdownMenu", () => _menuButtons.HideAnime(HideAnime));
     }
 
 

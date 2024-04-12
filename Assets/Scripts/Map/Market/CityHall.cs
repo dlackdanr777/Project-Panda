@@ -42,7 +42,7 @@ public class CityHall : MonoBehaviour
         //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
-        DataBind.SetButtonValue("EnterCityHallButton", () => {
+        DataBind.SetUnityActionValue("EnterCityHallButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 EnterCityHall();
@@ -50,7 +50,7 @@ public class CityHall : MonoBehaviour
             });
         });
 
-        DataBind.SetButtonValue("ExitCityHallButton", () => {
+        DataBind.SetUnityActionValue("ExitCityHallButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 ExitCityHall();
@@ -58,7 +58,7 @@ public class CityHall : MonoBehaviour
             });
         });
 
-        DataBind.SetButtonValue("EnterCityHallOfficeButton", () => {
+        DataBind.SetUnityActionValue("EnterCityHallOfficeButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 EnterCityHallOffice();
@@ -66,7 +66,7 @@ public class CityHall : MonoBehaviour
             });
         });
 
-        DataBind.SetButtonValue("ExitCityHallOfficeButton", () => {
+        DataBind.SetUnityActionValue("ExitCityHallOfficeButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 ExitCityHallOffice();

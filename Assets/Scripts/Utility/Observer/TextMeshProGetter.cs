@@ -48,7 +48,7 @@ namespace Muks.DataBind
 
         private void Enabled()
         {
-            _data = DataBind.GetTextValue(_dataID);
+            _data = DataBind.GetTextBindData(_dataID);
             _text.text = _data.Item;
             _data.CallBack += UpdateText;
         }

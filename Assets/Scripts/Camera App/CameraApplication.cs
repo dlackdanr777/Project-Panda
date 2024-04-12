@@ -34,7 +34,7 @@ public class CameraApplication : MonoBehaviour
 
     private void Awake()
     {
-        DataBind.SetButtonValue("PhotoSaveButton", SavePhoto);
+        DataBind.SetUnityActionValue("PhotoSaveButton", SavePhoto);
     }
 
 

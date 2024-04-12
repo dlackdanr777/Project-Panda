@@ -24,7 +24,7 @@ public class UIMain : UIView
     public void OnEnable()
     {
 
-        DataBind.SetButtonValue("Show Camera Button", () => _uiNav.Push("Camera"));
-        DataBind.SetButtonValue("ShowAlbumButton", () => _uiNav.Push("Library"));
+        DataBind.SetUnityActionValue("Show Camera Button", () => _uiNav.Push("Camera"));
+        DataBind.SetUnityActionValue("ShowAlbumButton", () => _uiNav.Push("Library"));
     }
 }

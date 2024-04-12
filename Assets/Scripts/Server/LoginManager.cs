@@ -102,7 +102,6 @@ namespace Muks.BackEnd
         {
             BackendManager.Instance.GuestLogin(10, (bro) =>
             {
-                Debug.Log("로그인중");
                 //HideLoginUI();
                 LoadMyData();
                 LoadNextScene(bro);

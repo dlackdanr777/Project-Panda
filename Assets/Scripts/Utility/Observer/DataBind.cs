@@ -37,7 +37,7 @@ namespace Muks.DataBind
         /// <summary>
         /// 저장된 텍스트 데이터의 연결장소를 불러와 연결하는 함수
         /// </summary>
-        public static BindData<string> GetTextValue(string dataID)
+        public static BindData<string> GetTextBindData(string dataID)
         {
             if (_dataBindingText == null)
                 _dataBindingText = new Dictionary<string, BindData<string>>();
@@ -54,7 +54,7 @@ namespace Muks.DataBind
         /// <summary>
         /// 버튼 데이터의 연결장소와 보낼값을 지정해두는 함수(action값이 변할 경우 GetButtonValue로 연결된 곳의 값도 변함)
         /// </summary>
-        public static void SetButtonValue(string dataID, UnityAction action)
+        public static void SetUnityActionValue(string dataID, UnityAction action)
         {
             if (_dataBindingUnityAction == null)
                 _dataBindingUnityAction = new Dictionary<string, BindData<UnityAction>>();
@@ -72,7 +72,7 @@ namespace Muks.DataBind
         /// <summary>
         /// 버튼 텍스트 데이터의 연결장소를 불러오는 함수
         /// </summary>
-        public static BindData<UnityAction> GetButtonValue(string dataID)
+        public static BindData<UnityAction> GetUnityActionBindData(string dataID)
         {
             if (_dataBindingUnityAction == null)
                 _dataBindingUnityAction = new Dictionary<string, BindData<UnityAction>>();
@@ -104,7 +104,7 @@ namespace Muks.DataBind
 
 
         /// <summary>dataID를 통해 이미지 데이터의 연결 장소를 불러오는 함수 </summary>
-        public static BindData<Sprite> GetSpriteValue(string dataID)
+        public static BindData<Sprite> GetSpriteBindData(string dataID)
         {
             if (_dataBindingSprite == null)
                 _dataBindingSprite = new Dictionary<string, BindData<Sprite>>();
@@ -119,7 +119,7 @@ namespace Muks.DataBind
 
 
         /// <summary>dataID를 통해 UnityAction 함수를 반환하는 함수 </summary>
-        public static UnityAction GetAction(string dataID)
+        public static UnityAction GetUnityActionValue(string dataID)
         {
             if (_dataBindingUnityAction == null)
                 _dataBindingUnityAction = new Dictionary<string, BindData<UnityAction>>();
