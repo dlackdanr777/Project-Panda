@@ -12,11 +12,13 @@ public class UINoticeDetailView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _contentsText;
     [SerializeField] private Image _image;
     [SerializeField] private Button _exitButton;
+    [SerializeField] private Button _backgroundButton;
 
 
     public void Init()
     {
         _exitButton.onClick.AddListener(Hide);
+        _backgroundButton.onClick.AddListener(Hide);
 
         _contentsText.transform.localScale = Vector3.one;
         _image.transform.localScale = Vector3.one;
