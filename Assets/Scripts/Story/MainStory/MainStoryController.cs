@@ -377,56 +377,60 @@ public class MainStoryController : MonoBehaviour
     {
         if (_storyDatabase[id].StoryStartPanda == _npcID) // 한 번만 실행
         {
-            foreach (string key in NextStory)
+            //foreach (string key in NextStory)
+            //{
+            //    if (key == id)
+            //    {
+            if (NextStory.Contains(id))
             {
-                if (key == id)
+                string key = id;
+                // 메인 스토리
+                if (_questMark != null && key.Substring(0, 2) == "MS")
                 {
-                    // 메인 스토리
-                    if (_questMark != null && key.Substring(0, 2) == "MS")
+                    _questMark.SetActive(false);
+
+                    _storyDatabase[key].IsSuccess = true;
+                    if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
                     {
-                        _questMark.SetActive(false);
-                    
-                        _storyDatabase[key].IsSuccess = true;
-                        if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(key))
-                        {
-                            Debug.Log("스토리 완료: " + key);
-                            DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
-                            DatabaseManager.Instance.Challenges.MainStoryDone(id);
-                        }
-                        NextStory.Remove(key);
-
-
-                        _storyIndex = key;
-                        DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
+                        Debug.Log("스토리 완료: " + key);
+                        DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(key);
+                        DatabaseManager.Instance.Challenges.MainStoryDone(id);
                     }
-                    // 서브 스토리
-                    else if(key.Substring(0, 2) == "SS")
-                    {
-                        _storyDatabase[key].IsSuccess = true;
-                    }
+                    NextStory.Remove(key);
 
-                    // NextStory 추가
-                    AddNextStory(key, id);
 
-                    // 채집이 있다면 채집 활성화
-                    foreach (string nextStoryId in NextStory)
-                    {
-                        string name = nextStoryId + "Collection";
-                        GameObject gameObject = GameObject.Find(name);
-                        if (gameObject != null)
-                        {
-                            MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
-                            msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
-                        }
-                    }
-
-                    // 지지와 포야 애니메이션 켜기
-                    SetAnimControll();
-                    PoyaSetFalse();
-                    JijiSetFalse();
-                    break;
+                    _storyIndex = key;
+                    DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
                 }
+                // 서브 스토리
+                else if (key.Substring(0, 2) == "SS")
+                {
+                    _storyDatabase[key].IsSuccess = true;
+                }
+
+                // NextStory 추가
+                AddNextStory(key, id);
+
+                // 채집이 있다면 채집 활성화
+                foreach (string nextStoryId in NextStory)
+                {
+                    string name = nextStoryId + "Collection";
+                    GameObject gameObject = GameObject.Find(name);
+                    if (gameObject != null)
+                    {
+                        MainStoryCollection msCollection = gameObject.transform.GetComponent<MainStoryCollection>();
+                        msCollection.CollectionID = _storyDatabase[nextStoryId].EventTypeCondition;
+                    }
+                }
+
+                // 지지와 포야 애니메이션 켜기
+                SetAnimControll();
+                PoyaSetFalse();
+                JijiSetFalse();
+                //break;
             }
+            //    }   
+            //}
             SortingNextStory();
         }
         NpcButtonSetSibling();
