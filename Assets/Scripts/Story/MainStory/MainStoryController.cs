@@ -88,9 +88,11 @@ public class MainStoryController : MonoBehaviour
     // NPC 버튼 클릭했을 때
     public void OnClickStartButton()
     {
+
         // 현재 메인스토리의 시작 NPC를 클릭했다면 스토리 진행
-        foreach(string key in NextStory)
+        foreach (string key in NextStory)
         {
+            //DatabaseManager.Instance.GetNPC(_storyDatabase[key].StoryStartPanda).Intimacy = 0;
             if (_storyDatabase[key].StoryStartPanda.Equals(_npcID))
             {
                 if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
@@ -121,9 +123,12 @@ public class MainStoryController : MonoBehaviour
 
         _storyIndex = _storyKey[0];
 
+        //DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
         // 저장된 값 불러오기
         for(int i = 0; i < _storyDatabase.Count; i++)
         {
+            //_storyDatabase[_storyKey[i]].IsSuccess = false;
+
             // 완료된 id일 경우
             if (!string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i]))){
                 _storyDatabase[_storyKey[i]].IsSuccess = true;
@@ -225,7 +230,7 @@ public class MainStoryController : MonoBehaviour
     {
         MainStoryDialogue currentStory = _storyDatabase[_storyIndex];
 
-        if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
+        if (!currentStory.IsSuccess || currentStory.StoryID.Substring(0, 2) == "SS") // 스토리를 완료하지 않았다면 || 서브스토리
         {
             //이전 스토리 다음 스토리 비교
             bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
@@ -233,11 +238,7 @@ public class MainStoryController : MonoBehaviour
 
             if (priorCheck) //이전 스토리 성공했는지 비교 && StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
             {
-
-                if (!currentStory.IsSuccess) // 스토리를 완료하지 않았다면
-                {
-                    ShowContext(currentStory);
-                }
+                ShowContext(currentStory);
             }
             //다음 스토리와 친밀도가 같으면 다음 스토리로 넘어감
         }
@@ -380,6 +381,7 @@ public class MainStoryController : MonoBehaviour
             {
                 if (key == id)
                 {
+                    // 메인 스토리
                     if (_questMark != null && key.Substring(0, 2) == "MS")
                     {
                         _questMark.SetActive(false);
@@ -396,6 +398,11 @@ public class MainStoryController : MonoBehaviour
 
                         _storyIndex = key;
                         DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = key;
+                    }
+                    // 서브 스토리
+                    else if(key.Substring(0, 2) == "SS")
+                    {
+                        _storyDatabase[key].IsSuccess = true;
                     }
 
                     // NextStory 추가
@@ -564,21 +571,25 @@ public class MainStoryController : MonoBehaviour
 
     private void AddNextStory(string key, string id)
     {
+        Debug.Log(string.Join(", ", DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList));
         for (int j = 0; j < _storyKey.Count; j++)
         {
-            if (_storyDatabase[_storyKey[j]].IsSuccess == false &&
+            // 이전 스토리 완료 체크
+            if (_storyDatabase[_storyKey[j]].IsSuccess == false && 
                 (!_storyDatabase.ContainsKey(_storyDatabase[_storyKey[j]].PriorStoryID) || _storyDatabase[_storyDatabase[_storyKey[j]].PriorStoryID].IsSuccess))
             {
-                // 메인스토리 && 친밀도 충족
-                if (key.Substring(0, 2) == "MS" && _storyDatabase[_storyKey[j]].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
+                // 메인스토리는 한 번만 실행 && 친밀도 충족 체크
+                if (_storyKey[j].Substring(0, 2) == "MS" 
+                    && _storyDatabase[_storyKey[j]].RequiredIntimacy <= StarterPanda.Instance.Intimacy)
                 {
                     if (!NextStory.Contains(_storyKey[j]))
                     {
                         NextStory.Add(_storyKey[j]);
                     }
                 }
-                // 서브스토리 && 친밀도 충족
-                else if (key.Substring(0, 2) == "SS" && _storyDatabase[_storyKey[j]].RequiredIntimacy <= DatabaseManager.Instance.GetNPC("NPC" + _storyKey[j].Substring(2, 2)).Intimacy)
+                // 서브스토리 && 완료 체크 && 친밀도 충족 체크
+                else if (_storyKey[j].Substring(0, 2) == "SS" && !DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(_storyKey[j]) 
+                    && _storyDatabase[_storyKey[j]].RequiredIntimacy <= DatabaseManager.Instance.GetNPC("NPC" + _storyKey[j].Substring(2, 2)).Intimacy)
                 {
                     // 전 서브스토리 삭제
                     foreach (string k in NextStory)
@@ -653,6 +664,6 @@ public class MainStoryController : MonoBehaviour
         conditionIncompleteStory = conditionIncompleteStory.OrderBy(x => x).ToList();
         NextStory.AddRange(conditionIncompleteStory);
 
-        //Debug.Log(string.Join(", ", NextStory));
+        Debug.Log(string.Join(", ", NextStory));
     }
 }
