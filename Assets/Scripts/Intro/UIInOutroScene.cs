@@ -6,22 +6,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class UIIntroScene : MonoBehaviour
+public class UIInOutroScene : MonoBehaviour
 {
-    [SerializeField] private RectTransform _introDialogue;
+    [SerializeField] private CanvasGroup _dialogue;
     [SerializeField] private TextMeshProUGUI _dialogueContext;
     [SerializeField] private TextMeshProUGUI _dialogueNameText;
     [SerializeField] private TextMeshProUGUI _nextText;
     [SerializeField] private Image _pandaImage;
     [SerializeField] private Button _dialogueSkipButton;
 
-    private CanvasGroup _canvasGroup;
     private bool _isSkipButtonClicked;
 
-    public void Init()
+    public virtual void Init()
     {
-        _canvasGroup = _introDialogue.GetComponent<CanvasGroup>();
-        _canvasGroup.alpha = 0;
+        _dialogue.alpha = 0;
 
         _dialogueSkipButton.onClick.AddListener(OnSkipButtonClicked);
 
@@ -41,7 +39,7 @@ public class UIIntroScene : MonoBehaviour
         _dialogueContext.text = string.Empty;
         _dialogueNameText.text= string.Empty;
         _isSkipButtonClicked = false;
-        Tween.CanvasGroupAlpha(_canvasGroup.gameObject, 1, 0.3f, TweenMode.Constant, onCompleted);
+        Tween.CanvasGroupAlpha(_dialogue.gameObject, 1, 0.3f, TweenMode.Constant, onCompleted);
     }
 
 
@@ -91,7 +89,7 @@ public class UIIntroScene : MonoBehaviour
         _isSkipButtonClicked = false;
         _dialogueSkipButton.gameObject.SetActive(false);
         _nextText.gameObject.SetActive(false);
-        Tween.CanvasGroupAlpha(_canvasGroup.gameObject, 0, 0.3f, TweenMode.Constant, onCompleted);
+        Tween.CanvasGroupAlpha(_dialogue.gameObject, 0, 0.3f, TweenMode.Constant, onCompleted);
     }
 
 
@@ -123,24 +121,24 @@ public class UIIntroScene : MonoBehaviour
     {
         float duration = totalDuration / 14f;
 
-        Vector2 tmpPos = _introDialogue.anchoredPosition;
+        Vector2 tmpPos = _dialogue.GetComponent<RectTransform>().anchoredPosition;
         Vector2 targetPos1 = tmpPos + new Vector2(5, 0);
         Vector2 targetPos2 = tmpPos + new Vector2(-5, 0);
 
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos2, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, targetPos1, duration, TweenMode.Constant);
-        Tween.RectTransfromAnchoredPosition(_introDialogue.gameObject, tmpPos, duration, TweenMode.EaseOutBack);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos2, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, targetPos1, duration, TweenMode.Constant);
+        Tween.RectTransfromAnchoredPosition(_dialogue.gameObject, tmpPos, duration, TweenMode.EaseOutBack);
     }
 
 

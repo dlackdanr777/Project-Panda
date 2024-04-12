@@ -9,7 +9,7 @@ public class IntroScene : MonoBehaviour
 {
 
     [Header("Components")]
-    [SerializeField] private UIIntroScene _uiIntroScene;
+    [SerializeField] private UIInOutroScene _uiIntroScene;
     [SerializeField] private Button _skipButton;
 
     [Space]
