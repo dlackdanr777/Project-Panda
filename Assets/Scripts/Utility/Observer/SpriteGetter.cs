@@ -23,75 +23,67 @@ namespace Muks.DataBind
 
         private void Awake()
         {
-            if(_type == GetterType.Image)
-            {
-                if (!TryGetComponent(out _image))
-                {
-                    Debug.LogErrorFormat("{0}에 연결될 컴포넌트가 존재하지 않습니다.", gameObject.name);
-                    return;
-                }
-            }
-
-            else if(_type == GetterType.SpriteRenderer)
-            {
-                if (!TryGetComponent(out _spriteRenderer))
-                {
-                    Debug.LogErrorFormat("{0}에 연결될 컴포넌트가 존재하지 않습니다.", gameObject.name);
-                    return;
-                }
-            }
-
             if (string.IsNullOrEmpty(_dataID))
             {
-                Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
-                _dataID = gameObject.name;
+                Debug.LogErrorFormat("Invalid text data ID. {0}", gameObject.name);
+                enabled = false;
             }
+
+            switch (_type)
+            {
+                case GetterType.Image:
+                    _image = GetComponent<Image>();
+                    break;
+
+                case GetterType.SpriteRenderer:
+                    _spriteRenderer = GetComponent<SpriteRenderer>();
+                    break;
+            }
+
+            _data = DataBind.GetSpriteBindData(_dataID);
+            _data.CallBack += UpdateSprite;  
         }
 
         private void OnEnable()
         {
-            Invoke("Enabled", 0.02f);
-        }
+            switch (_type)
+            {
+                case GetterType.Image:
+                    _image.sprite = _data.Item;
+                    break;
 
-        private void OnDisable()
-        {
-            Invoke("Disabled", 0.02f);
-        }
+                case GetterType.SpriteRenderer:
+                    _spriteRenderer.sprite = _data.Item;
+                    break;
+            }
 
-        public void UpdateImage(Sprite sprite)
-        {
-            if (_type == GetterType.Image)
-                _image.sprite = sprite;
-
-            else if (_type == GetterType.SpriteRenderer)
-                _spriteRenderer.sprite = sprite;
-        }
-
-        private void Enabled()
-        {
-            _data = DataBind.GetSpriteBindData(_dataID);
-            _data.CallBack += UpdateImage;
-
-            if (_type == GetterType.Image)
-                _image.sprite = _data.Item;
-
-            else if(_type == GetterType.SpriteRenderer)
-                _spriteRenderer.sprite = _data.Item;
-        }
-
-
-        private void Disabled()
-        {
-            _data.CallBack -= UpdateImage;
         }
 
 
         private void OnDestroy()
         {
-            if (_data == null)
+            _data.CallBack -= UpdateSprite;
+            _spriteRenderer = null;
+            _image = null;
+            _data = null;
+        }
+
+
+        private void UpdateSprite(Sprite sprite)
+        {
+            if (!enabled)
                 return;
 
-            _data.CallBack -= UpdateImage;
+            switch (_type)
+            {
+                case GetterType.Image:
+                    _image.sprite = sprite;
+                    break;
+
+                case GetterType.SpriteRenderer:
+                    _spriteRenderer.sprite = sprite;
+                    break;
+            }
         }
     }
 }

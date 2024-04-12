@@ -14,51 +14,37 @@ namespace Muks.DataBind
 
         private void Awake()
         {
-            if (!TryGetComponent(out _text))
-            {
-                Debug.LogErrorFormat("{0}에 연결될 컴포넌트가 존재하지 않습니다.", gameObject.name);
-                return;
-            }
-
             if (string.IsNullOrEmpty(_dataID))
             {
-                Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
-                _dataID = gameObject.name;
+                Debug.LogErrorFormat("Invalid text data ID. {0}", gameObject.name);
+                enabled = false;
             }
-        }
-        private void OnEnable()
-        {
-            Invoke("Enabled", 0.02f);
+
+            _text = GetComponent<TextMeshProUGUI>();
+            _data = DataBind.GetTextBindData(_dataID);
+            _data.CallBack += UpdateText;
+
         }
 
-        private void OnDisable()
+
+        private void OnEnable()
         {
-            Invoke("Disabled", 0.02f);
+            _text.text = _data.Item;
         }
+
+
+        private void UpdateText(string text)
+        {
+            if (enabled)
+                _text.text = text;
+        }
+
 
         private void OnDestroy()
         {
-            Disabled();
-        }
-
-        public void UpdateText(string text)
-        {
-            _text.text = text;
-        }
-
-        private void Enabled()
-        {
-            _data = DataBind.GetTextBindData(_dataID);
-            _text.text = _data.Item;
-            _data.CallBack += UpdateText;
-        }
-
-        private void Disabled()
-        {
-            if (_data == null)
-                return;
-
             _data.CallBack -= UpdateText;
+            _data = null;
+            _text = null;
         }
     }
 }
