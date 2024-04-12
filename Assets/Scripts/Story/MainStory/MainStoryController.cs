@@ -571,7 +571,7 @@ public class MainStoryController : MonoBehaviour
 
     private void AddNextStory(string key, string id)
     {
-        Debug.Log(string.Join(", ", DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList));
+        //Debug.Log(string.Join(", ", DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList));
         for (int j = 0; j < _storyKey.Count; j++)
         {
             // 이전 스토리 완료 체크
@@ -664,6 +664,6 @@ public class MainStoryController : MonoBehaviour
         conditionIncompleteStory = conditionIncompleteStory.OrderBy(x => x).ToList();
         NextStory.AddRange(conditionIncompleteStory);
 
-        Debug.Log(string.Join(", ", NextStory));
+        //Debug.Log(string.Join(", ", NextStory));
     }
 }
