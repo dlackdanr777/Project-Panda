@@ -56,7 +56,7 @@ public class UIStoryCollection : MonoBehaviour
             _collectionDic[key].OnExitCollection += ExitUICollection;
         }
 
-        DataBind.SetButtonValue("CheckStoryResultButton", OnCheckResultButton);
+        DataBind.SetUnityActionValue("CheckStoryResultButton", OnCheckResultButton);
     }
 
     private void OnDestroy()

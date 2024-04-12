@@ -47,7 +47,7 @@ public class UIDialogue : UIView
         PandaStoryController.OnStartInteractionHandler += StartStory;
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
-        DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
+        DataBind.SetUnityActionValue("DialogueNextButton", OnNextButtonClicked);
 
         _leftButton.Init();
         _rightButton.Init();

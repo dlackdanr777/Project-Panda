@@ -8,8 +8,8 @@ public class UIExit : UIView
     {
         base.Init(uiNav);
 
-        DataBind.SetButtonValue("AppExitOkButton", AppExitOkButtonClicked);
-        DataBind.SetButtonValue("AppExitCancelButton", AppExitCancelButtonClicked);
+        DataBind.SetUnityActionValue("AppExitOkButton", AppExitOkButtonClicked);
+        DataBind.SetUnityActionValue("AppExitCancelButton", AppExitCancelButtonClicked);
 
         gameObject.SetActive(false);
     }

@@ -8,7 +8,7 @@ public class Cooker : MonoBehaviour
 
     private void Awake()
     {
-        DataBind.SetButtonValue("ShowCookButton", OnCookButtonClicked);
+        DataBind.SetUnityActionValue("ShowCookButton", OnCookButtonClicked);
     }
 
     private void OnCookButtonClicked()

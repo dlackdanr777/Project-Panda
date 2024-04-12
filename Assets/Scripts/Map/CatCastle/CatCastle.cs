@@ -38,7 +38,7 @@ public class CatCastle : MonoBehaviour
         //_eveningEndTime = TimeManager.Instance.EveningEndTime;
         _nightEndTime = TimeManager.Instance.NightEndTime;
 
-        DataBind.SetButtonValue("EnterCatCastleButton", () => {
+        DataBind.SetUnityActionValue("EnterCatCastleButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 EnterCatCastle();
@@ -46,7 +46,7 @@ public class CatCastle : MonoBehaviour
             });
         });
 
-        DataBind.SetButtonValue("ExitCatCastleButton", () => {
+        DataBind.SetUnityActionValue("ExitCatCastleButton", () => {
 
             FadeInOutManager.Instance.FadeIn(_fadeTime, () => {
                 ExitCatCastle();

@@ -25,7 +25,7 @@ public class UIShopContent : MonoBehaviour
 
     private void Awake()
     {
-        DataBind.SetButtonValue("ShopExitButton", OnExitButtonClicked);
+        DataBind.SetUnityActionValue("ShopExitButton", OnExitButtonClicked);
         _buyDetailView.Init(() => SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit));
         _buyDetailView.gameObject.SetActive(false);
 

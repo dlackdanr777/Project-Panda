@@ -13,6 +13,10 @@ public class FirstLoadingScene : MonoBehaviour
 
     private void LoadLoginScene()
     {
+        TmpNoticeManagement notice = new TmpNoticeManagement();
+        if (notice.TmpNoticeCheck(() => LoadingSceneManager.LoadScene("LoginScene")))
+            return;
+
         LoadingSceneManager.LoadScene("LoginScene");
     }
 }

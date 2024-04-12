@@ -138,8 +138,8 @@ public class FurnitureView : MonoBehaviour
         //BindRoomFurniture();
 
         //버튼 리스너
-        DataBind.SetButtonValue("LeftRoomButton", () => ChangeRoom(true));
-        DataBind.SetButtonValue("RightRoomButton", () => ChangeRoom(false));
+        DataBind.SetUnityActionValue("LeftRoomButton", () => ChangeRoom(true));
+        DataBind.SetUnityActionValue("RightRoomButton", () => ChangeRoom(false));
 
         foreach (Toggle toggle in _field.GetComponentsInChildren<Toggle>())
         {

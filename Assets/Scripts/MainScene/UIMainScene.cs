@@ -12,37 +12,37 @@ public class UIMainScene : MonoBehaviour
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
-        DataBind.SetButtonValue("Camera Button", OnCameraButtonClicked);
-        DataBind.SetButtonValue("ShowMailButton", OnShowMailButtonClicked);
-        DataBind.SetButtonValue("HideMailButton", OnHideMailButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetUnityActionValue("Camera Button", OnCameraButtonClicked);
+        DataBind.SetUnityActionValue("ShowMailButton", OnShowMailButtonClicked);
+        DataBind.SetUnityActionValue("HideMailButton", OnHideMailButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnInventoryButtonClicked);
 
-        DataBind.SetButtonValue("ShowDiaryButton", OnShowDiaryButtonClicked);
-        DataBind.SetButtonValue("HideDiaryButton", OnHideDiaryButtonClicked);
+        DataBind.SetUnityActionValue("ShowDiaryButton", OnShowDiaryButtonClicked);
+        DataBind.SetUnityActionValue("HideDiaryButton", OnHideDiaryButtonClicked);
 
-        DataBind.SetButtonValue("ShowAttendanceButton", OnShowAttendanceButtonClicked);
-        DataBind.SetButtonValue("HideAttendanceButton", OnHideAttendanceButtonClicked);
+        DataBind.SetUnityActionValue("ShowAttendanceButton", OnShowAttendanceButtonClicked);
+        DataBind.SetUnityActionValue("HideAttendanceButton", OnHideAttendanceButtonClicked);
 
-        DataBind.SetButtonValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
-        DataBind.SetButtonValue("HideInventoryButton", OnHideInventoryButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
+        DataBind.SetUnityActionValue("HideInventoryButton", OnHideInventoryButtonClicked);
 
-        DataBind.SetButtonValue("ShowPictureButton", OnShowPictureButtonClicked);
-        DataBind.SetButtonValue("HidePictureButton", OnHidePictureButtonClicked);
+        DataBind.SetUnityActionValue("ShowPictureButton", OnShowPictureButtonClicked);
+        DataBind.SetUnityActionValue("HidePictureButton", OnHidePictureButtonClicked);
 
-        DataBind.SetButtonValue("ShowMainUIButton", OnShowMainUIButtonClicked);
-        DataBind.SetButtonValue("HideMainUIButton", OnHideMainUIButtonClicked);
+        DataBind.SetUnityActionValue("ShowMainUIButton", OnShowMainUIButtonClicked);
+        DataBind.SetUnityActionValue("HideMainUIButton", OnHideMainUIButtonClicked);
 
-        DataBind.SetButtonValue("ShowChallengesButton", OnShowChallengesButtonClicked);
-        DataBind.SetButtonValue("CloseChallengesButton", OnHideChallengesButtonClicked);
+        DataBind.SetUnityActionValue("ShowChallengesButton", OnShowChallengesButtonClicked);
+        DataBind.SetUnityActionValue("CloseChallengesButton", OnHideChallengesButtonClicked);
 
-        DataBind.SetButtonValue("ShowPreferencesButton", OnShowPreferencesButtonClicked);
-        DataBind.SetButtonValue("ClosePreferencesButton", OnHidePreferencesButtonClicked);
+        DataBind.SetUnityActionValue("ShowPreferencesButton", OnShowPreferencesButtonClicked);
+        DataBind.SetUnityActionValue("ClosePreferencesButton", OnHidePreferencesButtonClicked);
 
-        DataBind.SetButtonValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
-        DataBind.SetButtonValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
+        DataBind.SetUnityActionValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
+        DataBind.SetUnityActionValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
 
-        DataBind.SetButtonValue("ShowNoticeButton", OnShowNoticeButtonClicked);
-        DataBind.SetButtonValue("HideNoticeButton", OnHideNoticeButtonClicked);
+        DataBind.SetUnityActionValue("ShowNoticeButton", OnShowNoticeButtonClicked);
+        DataBind.SetUnityActionValue("HideNoticeButton", OnHideNoticeButtonClicked);
     }
 
 

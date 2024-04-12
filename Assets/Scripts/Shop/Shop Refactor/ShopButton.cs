@@ -41,7 +41,7 @@ public class ShopButton : MonoBehaviour
         {
             if (GameManager.Instance.Player.SpendBamboo(int.Parse(_price.text)))
             {
-                GameManager.Instance.Player.AddItemById(DataBind.GetTextValue("ShopBuyItemDetailID").Item, int.Parse(_count.text));
+                GameManager.Instance.Player.AddItemById(DataBind.GetTextBindData("ShopBuyItemDetailID").Item, int.Parse(_count.text));
                 _checkView.SetActive(false);
                 _detailView.SetActive(false);
                 ShopItemHandler?.Invoke(); //SoldOut
@@ -58,7 +58,7 @@ public class ShopButton : MonoBehaviour
         }
         else
         {
-            if(RemoveItem(DataBind.GetTextValue("InventoryDetailID").Item, int.Parse(_count.text)))
+            if(RemoveItem(DataBind.GetTextBindData("InventoryDetailID").Item, int.Parse(_count.text)))
             {
                 GameManager.Instance.Player.GainBamboo(int.Parse(_price.text));
                 _checkView.SetActive(false);

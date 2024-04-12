@@ -107,7 +107,7 @@ public class UIMailList : MonoBehaviour
         DataBind.SetTextValue("MailDetailContent", _mailList.GetMessageList()[index].Content);
         DataBind.SetTextValue("MailDetailFrom", "From. " + GetNPCName(_mailList.GetMessageList()[index].From));
         DataBind.SetSpriteValue("MailDetailImage", _mailList.GetMessageList()[index].PaperImage);
-        DataBind.SetButtonValue("MailDetailGiftButton", OnClickGiftButton);
+        DataBind.SetUnityActionValue("MailDetailGiftButton", OnClickGiftButton);
 
         if (!_mailList.GetMessageList()[index].IsCheck)
         {

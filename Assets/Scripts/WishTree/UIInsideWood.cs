@@ -29,8 +29,8 @@ public class UIInsideWood : UIView
         base.Init(uiNav);
 
        _inSideWood.gameObject.SetActive(false);
-        DataBind.SetButtonValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
-        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
+        DataBind.SetUnityActionValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
+        DataBind.SetUnityActionValue("DiaryButton", OnDiaryButtonClicked);
 
         gameObject.SetActive(false);
     }

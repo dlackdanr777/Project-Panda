@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class NoticeManagement : IDisposable
+public class TmpNoticeManagement : IDisposable
 {
     private int _maxRepeatCount;
 
-    public NoticeManagement() 
+    public TmpNoticeManagement() 
     {
         _maxRepeatCount = 10;
     }

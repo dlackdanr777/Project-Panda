@@ -122,7 +122,7 @@ public class MainStoryCollection : MonoBehaviour
             case GatheringItemType.Fruit:
                 break;
         }
-        DataBind.SetButtonValue(_starButton.name, ClickStarButton);
+        DataBind.SetUnityActionValue(_starButton.name, ClickStarButton);
 
         MainStoryID = gameObject.name.Substring(0, gameObject.name.Length - 10);
         PriorMainStoryID = DatabaseManager.Instance.MainDialogueDatabase.MSDic[MainStoryID].PriorStoryID;
@@ -199,7 +199,7 @@ public class MainStoryCollection : MonoBehaviour
         //_collectionButton.gameObject.SetActive(true);
         _starButton.SetActive(false);
 
-        DataBind.GetAction("HideMainUIButton")?.Invoke();
+        DataBind.GetUnityActionValue("HideMainUIButton")?.Invoke();
         CameraSet(true);
     }
 
@@ -378,7 +378,7 @@ public class MainStoryCollection : MonoBehaviour
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
 
-        DataBind.GetAction("ShowMainUIButton")?.Invoke();
+        DataBind.GetUnityActionValue("ShowMainUIButton")?.Invoke();
         CameraSet(false);
         //_targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
         //Camera.main.gameObject.transform.position = _targetPos;

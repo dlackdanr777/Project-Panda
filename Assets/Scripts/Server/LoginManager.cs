@@ -1,11 +1,8 @@
 using BackEnd;
-using LitJson;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+
 
 
 namespace Muks.BackEnd
@@ -97,11 +94,6 @@ namespace Muks.BackEnd
                     return;
             }
 
-            //공지사항이 있다면 버튼 클릭 후 넘어가게
-            NoticeManagement notice = new NoticeManagement();
-            if (notice.TmpNoticeCheck(() =>{ Invoke("GuestLogin", 1f); }))
-                return;
-
             GuestLogin();
         }
 
@@ -110,7 +102,7 @@ namespace Muks.BackEnd
         {
             BackendManager.Instance.GuestLogin(10, (bro) =>
             {
-                HideLoginUI();
+                //HideLoginUI();
                 LoadMyData();
                 LoadNextScene(bro);
             });

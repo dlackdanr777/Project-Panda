@@ -55,7 +55,7 @@ public class UICooking : UIView
         }
 
 
-        DataBind.SetButtonValue("CookingExitButton", () => LoadingSceneManager.LoadScene("24_01_09_Integrated"));
+        DataBind.SetUnityActionValue("CookingExitButton", () => LoadingSceneManager.LoadScene("24_01_09_Integrated"));
         _cookButton.onClick.AddListener(StartCooking);
         _hideButtonImage.SetActive(true);
     }

@@ -13,11 +13,11 @@ public class UIPhone_Ssun : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation>();
 
-        DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
-        DataBind.SetButtonValue("ShopButton", OnShopButtonClicked);
-        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
+        DataBind.SetUnityActionValue("PhoneButton", OnPhoneButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetUnityActionValue("ItemButton", OnItemButtonClicked);
+        DataBind.SetUnityActionValue("ShopButton", OnShopButtonClicked);
+        DataBind.SetUnityActionValue("BorderButton", OnBorderButtonClicked);
     }
 
     private void Start()

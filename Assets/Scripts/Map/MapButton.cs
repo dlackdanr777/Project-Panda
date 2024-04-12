@@ -75,21 +75,21 @@ public class MapButton : MonoBehaviour
             _cameraController.transform.position = tmpCameraPos;
 
 
-        DataBind.SetButtonValue("WishTreeButton", MoveWishTree);
-        DataBind.SetButtonValue("FishingGroundButton", MoveFishingGround);
-        DataBind.SetButtonValue("ForestEntranceButton", MoveForestEntrance);
-        DataBind.SetButtonValue("ForestButton", MoveForest);
-        DataBind.SetButtonValue("VillageButton", MoveVillage);
-        DataBind.SetButtonValue("MarketButton", MoveMarket);
-        DataBind.SetButtonValue("CatWorldButton", MoveCatWorld);
-        DataBind.SetButtonValue("MermaidForestButton", MoveMermaidForest);
-        DataBind.SetButtonValue("OtherWorldlyForestButton", MoveOtherWorldlyForest);
-        DataBind.SetButtonValue("OtherWorldlyForestEntranceButton", MoveOtherWorldlyForestEntrance);
-        DataBind.SetButtonValue("VillageHouseButton", MoveVillageHouse);
-        DataBind.SetButtonValue("CityHallButton", MoveCityHall);
-        DataBind.SetButtonValue("CityHallOfficeButton", MoveCityHallOffice);
-        DataBind.SetButtonValue("CatCastleButton", MoveCatCastle);
-        DataBind.SetButtonValue("InsideWishTreeButton", MoveInsideWishTree);
+        DataBind.SetUnityActionValue("WishTreeButton", MoveWishTree);
+        DataBind.SetUnityActionValue("FishingGroundButton", MoveFishingGround);
+        DataBind.SetUnityActionValue("ForestEntranceButton", MoveForestEntrance);
+        DataBind.SetUnityActionValue("ForestButton", MoveForest);
+        DataBind.SetUnityActionValue("VillageButton", MoveVillage);
+        DataBind.SetUnityActionValue("MarketButton", MoveMarket);
+        DataBind.SetUnityActionValue("CatWorldButton", MoveCatWorld);
+        DataBind.SetUnityActionValue("MermaidForestButton", MoveMermaidForest);
+        DataBind.SetUnityActionValue("OtherWorldlyForestButton", MoveOtherWorldlyForest);
+        DataBind.SetUnityActionValue("OtherWorldlyForestEntranceButton", MoveOtherWorldlyForestEntrance);
+        DataBind.SetUnityActionValue("VillageHouseButton", MoveVillageHouse);
+        DataBind.SetUnityActionValue("CityHallButton", MoveCityHall);
+        DataBind.SetUnityActionValue("CityHallOfficeButton", MoveCityHallOffice);
+        DataBind.SetUnityActionValue("CatCastleButton", MoveCatCastle);
+        DataBind.SetUnityActionValue("InsideWishTreeButton", MoveInsideWishTree);
     }
 
     /// <summary>

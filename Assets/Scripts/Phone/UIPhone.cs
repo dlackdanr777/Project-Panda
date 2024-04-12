@@ -10,12 +10,12 @@ public class UIPhone : MonoBehaviour
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
-        DataBind.SetButtonValue("PhoneButton", OnPhoneButtonClicked);
-        DataBind.SetButtonValue("BorderButton", OnBorderButtonClicked);
-        DataBind.SetButtonValue("CameraButton", OnCameraButtonClicked);
-        DataBind.SetButtonValue("LibaryButton", OnLibaryButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("ItemButton", OnItemButtonClicked);
+        DataBind.SetUnityActionValue("PhoneButton", OnPhoneButtonClicked);
+        DataBind.SetUnityActionValue("BorderButton", OnBorderButtonClicked);
+        DataBind.SetUnityActionValue("CameraButton", OnCameraButtonClicked);
+        DataBind.SetUnityActionValue("LibaryButton", OnLibaryButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetUnityActionValue("ItemButton", OnItemButtonClicked);
     }
 
     private void Start()

@@ -44,13 +44,13 @@ public class UICameraApp : UIView
 
     private void OnEnable()
     {
-        DataBind.SetButtonValue("ShootingButton", () => {
+        DataBind.SetUnityActionValue("ShootingButton", () => {
             _angleImage.SetActive(false);
             _cameraApp.Screenshot();
             Invoke("PopCamera", 0.1f);
         });
 
-        DataBind.SetButtonValue("HideCameraButton", () =>_uiNav.Pop("Camera"));
+        DataBind.SetUnityActionValue("HideCameraButton", () =>_uiNav.Pop("Camera"));
     }
 
     private void PopCamera()

@@ -21,13 +21,13 @@ public class CountButton : MonoBehaviour
 
         if (_isBuy)
         {
-            itemName = GetToolItemIdByTName(DataBind.GetTextValue("ShopBuyItemDetailID").Item);
-            _price = int.Parse(DataBind.GetTextValue("ShopBuyItemDetailPrice").Item);
+            itemName = GetToolItemIdByTName(DataBind.GetTextBindData("ShopBuyItemDetailID").Item);
+            _price = int.Parse(DataBind.GetTextBindData("ShopBuyItemDetailPrice").Item);
         }
         else
         {
-            itemName = GetToolItemIdByTName(DataBind.GetTextValue("InventoryDetailID").Item);
-            _price = int.Parse(DataBind.GetTextValue("InventoryDetailPrice").Item);
+            itemName = GetToolItemIdByTName(DataBind.GetTextBindData("InventoryDetailID").Item);
+            _price = int.Parse(DataBind.GetTextBindData("InventoryDetailPrice").Item);
         }
 
         if (itemName != null) //도구면 1개만 구매 가능
@@ -36,7 +36,7 @@ public class CountButton : MonoBehaviour
         }
         else
         {
-            _maxCount = int.Parse(DataBind.GetTextValue("InventoryDetailCount").Item);
+            _maxCount = int.Parse(DataBind.GetTextBindData("InventoryDetailCount").Item);
         }
     }
 

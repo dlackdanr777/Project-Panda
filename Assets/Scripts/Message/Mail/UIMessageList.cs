@@ -108,7 +108,7 @@ public class UIMessageList : UIList<Message, MessageField>
 
             //_spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
             //DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
-            DataBind.SetButtonValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
+            DataBind.SetUnityActionValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
         }
     }
 
