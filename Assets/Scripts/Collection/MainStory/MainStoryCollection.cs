@@ -42,6 +42,7 @@ public class MainStoryCollection : MonoBehaviour
     [Tooltip("채집과 판다 사이의 세부 위치 조정")]
     [SerializeField] private Transform _pandaTransform; // 채집과 판다 위치 차이
     private Vector3 _lastPandaPosition; // 판다의 마지막 위치
+    private Vector3 _lastPandaScale; // 판다의 마지막 크기
 
     [Tooltip("채집 위치 지정")]
     [SerializeField] private Transform _collectionPosition;
@@ -226,8 +227,14 @@ public class MainStoryCollection : MonoBehaviour
         // 캐릭터가 채집 포인트로 이동
         _lastPandaPosition = starterPanda.gameObject.transform.position;
         //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
+        _lastPandaScale = starterPanda.gameObject.transform.localScale;
+        //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
         if (_gatheringType == GatheringItemType.Fish)
         {
+            if (starterPanda.gameObject.transform.localScale.x < 0)
+            {
+                starterPanda.gameObject.transform.localScale = new Vector3(-starterPanda.gameObject.transform.localScale.x, starterPanda.gameObject.transform.localScale.y, starterPanda.gameObject.transform.localScale.z);
+            }
             starterPanda.gameObject.transform.position = new Vector3(_pandaTransform.position.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
         }
         else
@@ -377,6 +384,7 @@ public class MainStoryCollection : MonoBehaviour
 
 
         StarterPanda.Instance.gameObject.transform.position = _lastPandaPosition;
+        StarterPanda.Instance.gameObject.transform.localScale = _lastPandaScale;
 
         DataBind.GetUnityActionValue("ShowMainUIButton")?.Invoke();
         CameraSet(false);
