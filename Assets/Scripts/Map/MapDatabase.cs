@@ -55,8 +55,6 @@ public class MapDatabase
 
         for (int i = 0; i < _dataMap.Count; i++)
         {
-
-
             id = _dataMap[i]["MapID"].ToString();
             string name = _dataMap[i]["Name"].ToString();
             GameObject[] backGround = new GameObject[System.Enum.GetValues(typeof(ETime)).Length];

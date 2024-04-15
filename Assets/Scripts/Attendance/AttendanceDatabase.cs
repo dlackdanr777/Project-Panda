@@ -26,12 +26,13 @@ public class AttendanceDatabase
 
 
     /// <summary>출석 체크 함수</summary> 
-    public void ChecktAttendance()
+    public void AttendanceCheck()
     {
-        UserInfo.AttendanceDayCount++;
-        UserInfo.LastAttendanceDay = UserInfo.TODAY.ToString();
-        GiveReward(_attendanceDataDic[UserInfo.AttendanceDayCount].Item, _attendanceDataDic[UserInfo.AttendanceDayCount].Amount);
-        DatabaseManager.Instance.UserInfo.SaveAttendanceData(10);
+        UserInfo.AttendanceUserData.AttendanceCheck();
+
+        int attendanceDayCount = UserInfo.AttendanceUserData.AttendanceDayCount;
+        GiveReward(_attendanceDataDic[attendanceDayCount].Item, _attendanceDataDic[attendanceDayCount].Amount);
+        DatabaseManager.Instance.UserInfo.AttendanceUserData.AsyncSaveAttendanceData(10);
     }
 
 
@@ -39,7 +40,7 @@ public class AttendanceDatabase
     public bool CheckTodayAttendance()
     {
         DateTime nowDay = UserInfo.TODAY;
-        DateTime lastLoginDate = DateTime.Parse(UserInfo.LastAttendanceDay);
+        DateTime lastLoginDate = DateTime.Parse(UserInfo.AttendanceUserData.LastAttendanceDay);
 
         if (nowDay.Month != lastLoginDate.Month || nowDay.Day != lastLoginDate.Day)
         {
@@ -54,7 +55,6 @@ public class AttendanceDatabase
     //보상지급 함수
     private void GiveReward(Item item, int value)
     {
-
         GameManager.Instance.Player.AddItemById(item.Id, value);
         Debug.Log("보상이 지급됬습니다.");
     }
@@ -67,11 +67,11 @@ public class AttendanceDatabase
 
         if(!CheckTodayAttendance())
         {
-            count = UserInfo.AttendanceDayCount + 1;
+            count = UserInfo.AttendanceUserData.AttendanceDayCount + 1;
         }
         else
         {
-            count = UserInfo.AttendanceDayCount;
+            count = UserInfo.AttendanceUserData.AttendanceDayCount;
         }
         
         List<AttendanceRewardData> list = new List<AttendanceRewardData>();

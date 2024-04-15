@@ -148,7 +148,7 @@ public class UIAttendance : UIView
         _attendanceCheckIamge.transform.localScale = new Vector3(2f, 2f, 2f);
         Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.35f, TweenMode.EaseInQuint, () => _canvasGroup.blocksRaycasts = true);
 
-        _attendanceDatabase.ChecktAttendance();
+        _attendanceDatabase.AttendanceCheck();
         SoundManager.Instance.PlayEffectAudio(_attendanceSound, 0.22f);
     }
 

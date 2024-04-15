@@ -91,17 +91,6 @@ public class Challenges
             }
         }
 
-        // 저장된 정보 불러오기
-        ChallengesNum = DatabaseManager.Instance.UserInfo.ChallengesNum;
-        GatheringSuccessCount = DatabaseManager.Instance.UserInfo.GatheringSuccessCount;
-        _stackedBambooCount = DatabaseManager.Instance.UserInfo.ChallengesCount[0];
-        PurchaseCount = DatabaseManager.Instance.UserInfo.ChallengesCount[1];
-        SalesCount = DatabaseManager.Instance.UserInfo.ChallengesCount[2];
-        FurnitureCount = DatabaseManager.Instance.UserInfo.ChallengesCount[3];
-        CookingCount = DatabaseManager.Instance.UserInfo.ChallengesCount[4];
-        TakePhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[5];
-        SharingPhotoCount = DatabaseManager.Instance.UserInfo.ChallengesCount[6];
-
         // 도감 Count 초기화
         _unlockingBookCount[(int)EUnlockingBook.NPC] = DatabaseManager.Instance.GetNPCList().Where(n => n.IsReceived == true).Count();
         _unlockingBookCount[(int)EUnlockingBook.Bug] = DatabaseManager.Instance.ItemDatabase.ItemBugList.Where(n => n.IsReceived == true).Count();
@@ -389,7 +378,6 @@ public class Challenges
     public void GatheringSuccess(int gatheringType) // 채집 성공할 때마다 불러오기
     {
         GatheringSuccessCount[gatheringType]++;
-        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
 
         // 몇 번 성공해야 하는지
         int successNum = _challengesDatas[(int)EChallengesKategorie.gathering][ChallengesNum[(int)EChallengesKategorie.gathering]].Count;
@@ -620,17 +608,10 @@ public class Challenges
     {
         Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
-        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
-        // 현재 메인 씬이면 바로 도전과제 UI에 반영
-        //if (SceneManager.GetActiveScene().name == "ChallengesTest") // 메인 씬 이름으로 변경
-        //{
+
+
         ChallengeDone?.Invoke(challengesId);
-        //}
-        //else // 아니라면 완료한 도전과제 저장 후 메인씬으로 돌아왔을 때 UI에 반영
-        //{
-            //_doneChallenges.Add(challengesId);
-            //EarningRewards(challengesId);
-        //}
+        DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
     }
 
     public void EarningRewards(string challengesId)
@@ -644,6 +625,6 @@ public class Challenges
         }
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
-        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
+        DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
     }
 }

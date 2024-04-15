@@ -66,7 +66,7 @@ public class Inventory
                 item.IsReceived = true;
 
                 if(isServerUploaded)
-                    DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+                    DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
 
                 return true;
             }
@@ -173,7 +173,7 @@ public class Inventory
                 //id별로 오름차순, 갯수로 내림차순으로 정렬
                 _items = _items.OrderBy(x => x.Id).ThenByDescending(x => x.Count).ToList();
                 OnRemoveHandler?.Invoke();
-                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+                DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
                 return true; // 아이템을 성공적으로 제거하였음을 반환
             }
             else
@@ -181,7 +181,7 @@ public class Inventory
                 _items.Remove(item);
                 itemCountToRemove -= item.Count;
                 OnRemoveHandler?.Invoke();
-                DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+                DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
             }
         }
         return false; // 아이템을 제거하지 못했을 때
