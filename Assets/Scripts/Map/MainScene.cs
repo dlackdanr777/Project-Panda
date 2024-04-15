@@ -1,6 +1,5 @@
-using UnityEngine;
 using BT;
-using Muks.DataBind;
+using UnityEngine;
 
 public class MainScene : MonoBehaviour
 {
@@ -8,10 +7,8 @@ public class MainScene : MonoBehaviour
 
     void Start()
     {
-        DataBind.SetTextValue("BambooCount", GameManager.Instance.Player.Bamboo.ToString());
         DatabaseManager.Instance.Challenges.CheckIsDone();
         StarterPanda.Instance.SwitchingScene();
-
         SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 1);
     }
 }

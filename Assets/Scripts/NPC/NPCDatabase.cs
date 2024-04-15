@@ -75,7 +75,7 @@ public class NPCDatabase
             NpcDic.Add(id, npc);
         }
 
-        DatabaseManager.Instance.UserInfo.LoadNPCReceived();
+        DatabaseManager.Instance.UserInfo.NpcUserData.LoadNPCReceived();
         Debug.Log("NPC 받아오기 성공!");
     }
 
@@ -103,7 +103,7 @@ public class NPCDatabase
             NpcDic.Add(id, npc);
         }
 
-        DatabaseManager.Instance.UserInfo.LoadNPCReceived();
+        DatabaseManager.Instance.UserInfo.NpcUserData.LoadNPCReceived();
         Debug.Log("NPC 받아오기 성공!");
     }
 

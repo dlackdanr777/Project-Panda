@@ -1,9 +1,8 @@
-using System.Collections;
+using Muks.DataBind;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Muks.DataBind;
 
 public class UIStickerContent : MonoBehaviour
 {
@@ -22,7 +21,7 @@ public class UIStickerContent : MonoBehaviour
 
         CreateSlots();
 
-        List<StickerData> stickerList = DatabaseManager.Instance.UserInfo.GetStickerList();
+        List<ServerStickerData> stickerList = DatabaseManager.Instance.UserInfo.BookUserData.GetStickerList();
 
         for (int i = 0; i < stickerList.Count; i++)
         {
@@ -45,15 +44,19 @@ public class UIStickerContent : MonoBehaviour
 
     public void Save()
     {
-        List<StickerData> stickerList = DatabaseManager.Instance.UserInfo.GetStickerList();
+        List<ServerStickerData> stickerList = DatabaseManager.Instance.UserInfo.BookUserData.GetStickerList();
+
         stickerList.Clear();
-        for (int i = 0; i < _stickerZone.transform.childCount; i++)
+        for (int i = 0, count = _stickerZone.transform.childCount; i < count; i++)
         {
-            stickerList.Add(new StickerData(
-                _stickerZone.transform.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text,
-                _stickerZone.transform.GetChild(i).localPosition,
-                _stickerZone.transform.GetChild(i).localRotation,
-                _stickerZone.transform.GetChild(i).localScale));
+            Transform child = _stickerZone.transform.GetChild(i);
+            string id = child.GetChild(1).GetComponent<TextMeshProUGUI>().text;
+            Vector3 pos = child.localPosition;
+            Quaternion rot = child.localRotation;
+            Vector3 scale = child.localScale;
+
+            ServerStickerData data = new ServerStickerData(id, pos, rot, scale);
+            stickerList.Add(data);
         }
     }
 
@@ -72,15 +75,16 @@ public class UIStickerContent : MonoBehaviour
     {
         for(int i = 0; i < GameManager.Instance.Player.StickerInventory.MaxStickerCount; i++)
         {
-            if(i < GameManager.Instance.Player.StickerInventory.Count)
+            Transform child = _spawnPoint.GetChild(i);
+            if (i < GameManager.Instance.Player.StickerInventory.Count)
             {
-                _spawnPoint.GetChild(i).GetChild(0).gameObject.SetActive(true);
-                _spawnPoint.GetChild(i).GetChild(0).GetComponent<Image>().sprite = GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Image;
-                _spawnPoint.GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id;
+                child.GetChild(0).gameObject.SetActive(true);
+                child.GetChild(0).GetComponent<Image>().sprite = GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Image;
+                child.GetChild(1).GetComponent<TextMeshProUGUI>().text = GameManager.Instance.Player.StickerInventory.GetStickerList()[i].Id;
             }
             else
             {
-                _spawnPoint.GetChild(i).GetChild(0).gameObject.SetActive(false);
+                child.GetChild(0).gameObject.SetActive(false);
             }
         }
     }

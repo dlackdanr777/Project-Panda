@@ -1,10 +1,8 @@
-using BackEnd.MultiCharacter;
 using BackEnd;
 using LitJson;
 using Muks.BackEnd;
 using Muks.DataBind;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,14 +22,13 @@ public class Player
 
     [Header("Sticker")]
     public StickerList StickerInventory = new StickerList();
-    public List<StickerData> StickerPosList = new List<StickerData>();
+    public List<ServerStickerData> StickerPosList = new List<ServerStickerData>();
 
     public int Bamboo { get; private set; }
     public int MaxBamboo => 10000;
 
     public void Init()
     {
-        MailInit();
         //Inventory
         GatheringItemInventory = new Inventory[System.Enum.GetValues(typeof(GatheringItemType)).Length - 1]; //0:Bug, 1:Fish, 2:Fruit
         CookItemInventory = new Inventory[System.Enum.GetValues(typeof(CookItemType)).Length - 1];
@@ -60,10 +57,6 @@ public class Player
    
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
-
-        DataBind.SetTextValue("BambooCount", Bamboo.ToString());
-
-
     }
 
 
@@ -322,37 +315,39 @@ public class Player
         return false;
     }
 
-   /* public void AddIVGI(string id, int count)
-    {
-        int index = 0;
-        string code = id.Substring(0, 3);
+    /* public void AddIVGI(string id, int count)
+     {
+         int index = 0;
+         string code = id.Substring(0, 3);
 
-        switch (code)
-        {
-            case "IBG":
-                index = 0;
-                break;
-            case "IFI":
-                index = 1;
-                break;
-            case "IFR":
-                index = 2;
-                break;
-        }
+         switch (code)
+         {
+             case "IBG":
+                 index = 0;
+                 break;
+             case "IFI":
+                 index = 1;
+                 break;
+             case "IFR":
+                 index = 2;
+                 break;
+         }
 
-        if (count < 0)
-        {
-            GatheringItemInventory[index].RemoveById(id, -count);
-        }
-        else
-        {
-            GatheringItemInventory[index].AddById(InventoryItemField.GatheringItem, id, count);
-        }
-    }*/
+         if (count < 0)
+         {
+             GatheringItemInventory[index].RemoveById(id, -count);
+         }
+         else
+         {
+             GatheringItemInventory[index].AddById(InventoryItemField.GatheringItem, id, count);
+         }
+     }*/
     #endregion
 
 
-    #region SaveAndLoadBamboo
+    #region Save&LoadBamboo
+
+    /// <summary> 동기적으로 서버 유저 재화 정보 불러오기 </summary>
     public void LoadBambooData(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
@@ -372,6 +367,7 @@ public class Player
     }
 
 
+    /// <summary> 동기적으로 서버 유저 재화 정보 저장 </summary>
     public void SaveBambooData(int maxRepeatCount)
     {
         string selectedProbabilityFileId = "Bamboo";
@@ -426,119 +422,10 @@ public class Player
     }
 
 
-    public void InsertBambooData(string selectedProbabilityFileId)
+    /// <summary> 비동기적으로 서버 유저 재화 정보 저장 </summary>
+    public void AsyncSaveBambooData(int maxRepeatCount)
     {
-        string paser = DateTime.Now.ToString();
-        Param param = GetBambooParam();
-
-        Debug.LogFormat("재화 데이터 삽입을 요청합니다.");
-
-        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
-    }
-
-
-    public void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
-    {
-        string paser = DateTime.Now.ToString();
-        Param param = GetBambooParam();
-
-        Debug.LogFormat("재화 데이터 수정을 요청합니다.");
-
-        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
-    }
-
-
-    /// <summary> 서버에 저장할 재화 데이터를 반환하는 클래스 </summary>
-    public Param GetBambooParam()
-    {
-        Param param = new Param();
-
-        param.Add("Bamboo", Bamboo);
-        return param;
-    }
-
-    #endregion
-
-
-    #region Mail
-
-    private MessageList[] _mailLists = new MessageList[Enum.GetValues(typeof(MessageField)).Length - 1];
-    private List<string> _mailRecivedList = new List<string>();
-
-    private List<MessageData> MessageDataArray = new List<MessageData>(); //저장할 메시지 데이터
-
-
-    public class MessageData
-    {
-        public string Id;
-        public bool IsCheck;
-        public bool IsReceived;
-        public MessageData(string id, bool isCheck, bool isReceived)
-        {
-            Id = id;
-            IsCheck = isCheck;
-            IsReceived = isReceived;
-        }
-    }
-
-    public enum MailType
-    {
-        Mail,
-        Wish
-    }
-
-
-    public MessageList GetMailList(MailType mailType)
-    {
-        return _mailLists[(int)mailType];
-    }
-
-
-    private void MailInit()
-    {
-        //Message
-        for (int i = 0; i < _mailLists.Length - 1; i++)
-        {
-            _mailLists[i] = new MessageList();
-        }
-    }
-
-
-    public void LoadMailData(BackendReturnObject callback)
-    {
-        JsonData json = callback.FlattenRows();
-
-        if (json.Count <= 0)
-        {
-            Debug.LogWarning("데이터가 존재하지 않습니다.");
-            return;
-        }
-
-        else
-        {
-
-            for (int i = 0, count = json[0]["MessageDataArray"].Count; i < count; i++)
-            {
-                MessageData item = JsonUtility.FromJson<MessageData>(json[0]["MessageDataArray"][i].ToJson());
-                MessageDataArray.Add(item);
-            }
-            LoadUserMailData();
-
-            for (int i = 0, count = json[0]["MailRecivedList"].Count; i < count; i++)
-            {
-                string id = json[0]["MailRecivedList"].ToString();
-                _mailRecivedList.Add(id);
-            }
-
-
-            Debug.Log("Mail Load성공");
-        }
-    }
-
-
-    public void SaveMailData(int maxRepeatCount)
-    {
-        string selectedProbabilityFileId = "Mail";
+        string selectedProbabilityFileId = "Bamboo";
 
         if (!Backend.IsLogin)
         {
@@ -552,157 +439,103 @@ public class Player
             return;
         }
 
-        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
-
-        switch (BackendManager.Instance.ErrorCheck(bro))
+        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
         {
-            case BackendState.Failure:
-                break;
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    break;
 
-            case BackendState.Maintainance:
-                break;
+                case BackendState.Maintainance:
+                    break;
 
-            case BackendState.Retry:
-                SaveMailData(maxRepeatCount - 1);
-                break;
+                case BackendState.Retry:
+                    AsyncSaveBambooData(maxRepeatCount - 1);
+                    break;
 
-            case BackendState.Success:
+                case BackendState.Success:
 
-                if (bro.GetReturnValuetoJSON() != null)
-                {
-                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    if (bro.GetReturnValuetoJSON() != null)
                     {
-                        InsertMailData(selectedProbabilityFileId);
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            AsyncInsertBambooData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            AsyncUpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                        }
                     }
                     else
                     {
-                        UpdateMailData(selectedProbabilityFileId, bro.GetInDate());
+                        AsyncInsertBambooData(selectedProbabilityFileId);
                     }
-                }
-                else
-                {
-                    InsertMailData(selectedProbabilityFileId);
-                }
 
-                Debug.LogFormat("{0} 정보를 저장했습니다..", selectedProbabilityFileId);
-                break;
-        }
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        });    
     }
 
 
-    public void InsertMailData(string selectedProbabilityFileId)
+    /// <summary> 동기적으로 서버 유저 재화 정보 삽입 </summary>
+    private void InsertBambooData(string selectedProbabilityFileId)
     {
-        SaveUserMailData();
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
 
-        Param param = GetMailParam();
-
-        Debug.LogFormat("{0} 데이터 삽입을 요청합니다.",  selectedProbabilityFileId);
+        Debug.LogFormat("재화 데이터 삽입을 요청합니다.");
 
         BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
     }
 
 
-    public void UpdateMailData(string selectedProbabilityFileId, string inDate)
+    /// <summary> 동기적으로 서버 유저 재화 정보 수정 </summary>
+    private void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
     {
-        SaveUserMailData();
-        SaveMailReceived();
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
 
-        Param param = GetMailParam();
-
-        Debug.LogFormat("{0} 데이터 수정을 요청합니다.", selectedProbabilityFileId);
+        Debug.LogFormat("재화 데이터 수정을 요청합니다.");
 
         BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
     }
 
 
+    /// <summary> 비동기적으로 서버 유저 재화 정보 삽입 </summary>
+    private void AsyncInsertBambooData(string selectedProbabilityFileId)
+    {
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
 
-    /// <summary> 서버에 저장할 메일 데이터를 모아 반환하는 클래스 </summary>
-    public Param GetMailParam()
+        Debug.LogFormat("재화 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 비동기적으로 서버 유저 재화 정보 수정 </summary>
+    private void AsyncUpdateUserInfoData(string selectedProbabilityFileId, string inDate)
+    {
+        string paser = DateTime.Now.ToString();
+        Param param = GetBambooParam();
+
+        Debug.LogFormat("재화 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
+    /// <summary> 서버에 저장할 재화 데이터를 반환하는 클래스 </summary>
+    private Param GetBambooParam()
     {
         Param param = new Param();
-        param.Add("MessageDataArray", MessageDataArray);
-        param.Add("MailRecivedList", _mailRecivedList);
+
+        param.Add("Bamboo", Bamboo);
         return param;
     }
 
-
-    public void SaveUserMailData()
-    {
-        MessageDataArray.Clear();
-
-        for (int i = 0; i < _mailLists.Length; i++)
-        {
-            if (_mailLists[i] == null)
-                continue;
-
-            List<Message> mailList = _mailLists[i].GetMessageList();
-            for (int j = 0; j < _mailLists[i].MessagesCount; j++)
-            {
-                string id = mailList[j].Id;
-                bool isCheck = mailList[j].IsCheck;
-                bool isReceived = mailList[j].IsReceived;
-
-                MessageDataArray.Add(new MessageData(id, isCheck, isReceived));
-            }
-
-        }
-    }
-
-
-    public void LoadUserMailData()
-    {
-        for (int i = 0; i < MessageDataArray.Count; i++)
-        {
-            if (MessageDataArray[i].Id.StartsWith("ML"))
-            {
-                _mailLists[0].AddById(MessageDataArray[i].Id, MessageField.Mail, false);
-                _mailLists[0].GetMessageList()[i].IsCheck = MessageDataArray[i].IsCheck;
-                _mailLists[0].GetMessageList()[i].IsReceived = MessageDataArray[i].IsReceived;
-            }
-        }
-    }
-
-
-    public bool FindMailReceivedById(string id)
-    {
-        for(int i = 0, count = _mailRecivedList.Count; i < count; i++)
-        {
-            if (_mailRecivedList[i] == id)
-                return true;
-        }
-
-        return false;
-    }
-
-
-    public void SaveMailReceived()
-    {
-        List<Message> mailList = new List<Message>();
-        mailList.AddRange(_mailLists[(int)MailType.Mail].GetMessageList());
-        for (int i = 0, count = mailList.Count; i < count; i++)
-        {
-            if (_mailRecivedList.Find((x) => x == mailList[i].Id) != null)
-                continue;
-
-            _mailRecivedList.Add(mailList[i].Id);
-        }
-    }
-
-
-    public void AddMailReceived(string id)
-    {
-        UnityEngine.Debug.Log(id);
-
-        if (_mailRecivedList.Find((x) => x == id) != null)
-        {
-            Debug.Log("이미 존재하는 메일 입니다.");
-            return;
-        }
-            
-        _mailRecivedList.Add(id);
-    }
-
-
     #endregion
+
 }
 

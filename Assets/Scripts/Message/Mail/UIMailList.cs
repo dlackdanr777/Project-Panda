@@ -30,9 +30,10 @@ public class UIMailList : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0, count = GameManager.Instance.Player.GetMailList(Player.MailType.Mail).MaxMessageCount; i < count; i++) //미리 slot 생성
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
+        for (int i = 0, count = data.GetMailList(MailType.Mail).MaxMessageCount; i < count; i++) //미리 slot 생성
         {
-            int index = GameManager.Instance.Player.GetMailList(Player.MailType.Mail).MaxMessageCount - 1 - i;
+            int index = data.GetMailList(MailType.Mail).MaxMessageCount - 1 - i;
             UIMailSlot mailSlot = Instantiate(_mailSlotPrefab, _spawnPoint);
             mailSlot.Init(() => OnClickMessageSlot(index));
 
@@ -58,7 +59,8 @@ public class UIMailList : MonoBehaviour
 
     private void UpdateList()
     {
-        _mailList = GameManager.Instance.Player.GetMailList(Player.MailType.Mail); //메시지리스트 받아옴
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
+        _mailList = data.GetMailList(MailType.Mail); //메시지리스트 받아옴
 
         NoticeHandler?.Invoke();
         for (int i = 0, count = _slotList.Count; i < count; i++)
@@ -111,7 +113,7 @@ public class UIMailList : MonoBehaviour
 
         if (!_mailList.GetMessageList()[index].IsCheck)
         {
-            GameManager.Instance.Player.SaveMailData(3);
+            DatabaseManager.Instance.UserInfo.MailUserData.AsyncSaveMailData(3);
             _mailList.GetMessageList()[index].IsCheck = true;
         }
 
@@ -155,7 +157,7 @@ public class UIMailList : MonoBehaviour
         string giftId = _mailList.GetMessageList()[index].Gift.Id;
         GameManager.Instance.Player.AddItemById(_mailList.GetMessageList()[index].Gift.Id);
         _mailList.GetMessageList()[index].IsReceived = true;
-        GameManager.Instance.Player.SaveMailData(3);
+        DatabaseManager.Instance.UserInfo.MailUserData.AsyncSaveMailData(3);
     }
 
     private void SetDetail(int index)
