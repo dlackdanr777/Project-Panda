@@ -1,6 +1,4 @@
 using Muks.DataBind;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopScene : MonoBehaviour
@@ -18,7 +16,6 @@ public class ShopScene : MonoBehaviour
     void Start()
     {
         SoundManager.Instance.PlayBackgroundAudio(_backgroundSound, 1);
-
     }
 
 }

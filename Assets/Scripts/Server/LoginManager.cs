@@ -136,7 +136,7 @@ namespace Muks.BackEnd
 
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
             BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.ChallengesUserData.LoadChallengesData);
-            BackendManager.Instance.GetMyData("Story", 10, DatabaseManager.Instance.UserInfo.LoadStoryData);
+            BackendManager.Instance.GetMyData("Story", 10, DatabaseManager.Instance.UserInfo.StoryUserData.LoadStoryData);
             BackendManager.Instance.GetMyData("Attendance", 10, DatabaseManager.Instance.UserInfo.AttendanceUserData.LoadAttendanceData);
             BackendManager.Instance.GetMyData("NPC", 10, DatabaseManager.Instance.UserInfo.LoadNPCData);
             BackendManager.Instance.GetMyData("Bamboo", 10, GameManager.Instance.Player.LoadBambooData);

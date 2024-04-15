@@ -58,6 +58,9 @@ public class UserInfo
     private ChallengesUserData _challengesUserData;
     public ChallengesUserData ChallengesUserData => _challengesUserData;
 
+    private StoryUserData _storyUserData;
+    public StoryUserData StoryUserData => _storyUserData;
+
 
     public List<string> AlbumReceived = new List<string>();
 
@@ -69,10 +72,6 @@ public class UserInfo
     public List<string> StickerReceived = new List<string>();
     public List<StickerData> StickerDataList = new List<StickerData>();
 
-    //Storys
-    private List<string> _storyCompletedList = new List<string>();
-    public List<string> StoryCompletedList => _storyCompletedList;
-
 
     //==========================================================================================================
     //유저 데이터 저장 경로 (추후 DB에 업로드해야함)
@@ -83,14 +82,13 @@ public class UserInfo
     //쿼터니언 값을 서버에 올릴 수 없으므로 중간에 관리해 줄 Class List
     private List<SaveStickerData> _saveStickerDataList = new List<SaveStickerData>();
 
-    private Dictionary<string, Item> _allItemDic => DatabaseManager.Instance.ItemDatabase.AllItemDic;
-
     public void Register()
     {
         CreateUserInfoData();
         _attendanceUserData = new AttendanceUserData(TODAY.AddDays(-1).ToString());
         _inventoryUserData = new InventoryUserData();
         _challengesUserData = new ChallengesUserData();
+        _storyUserData = new StoryUserData();
     }
 
 
@@ -656,117 +654,6 @@ public class UserInfo
         }
         Debug.LogErrorFormat("{0}Id가 존재하지 않습니다.");
         return null;
-    }
-
-    #endregion
-
-    #region Story
-    public void LoadStoryData(BackendReturnObject callback)
-    {
-        JsonData json = callback.FlattenRows();
-
-        if (json.Count <= 0)
-        {
-            Debug.LogWarning("데이터가 존재하지 않습니다.");
-            return;
-        }
-
-        else
-        {
-            for (int i = 0, count = json[0]["StoryCompletedList"].Count; i < count; i++)
-            {
-                string item = json[0]["StoryCompletedList"][i].ToString();
-                _storyCompletedList.Add(item);
-            }
-            DatabaseManager.Instance.MainDialogueDatabase.SetCompletedStoryList(_storyCompletedList);
-            Debug.Log("StoryData Load성공");
-        }
-    }
-
-
-    public void SaveStoryData(int maxRepeatCount)
-    {
-        string selectedProbabilityFileId = "Story";
-
-        if (!Backend.IsLogin)
-        {
-            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
-            return;
-        }
-
-        if (maxRepeatCount <= 0)
-        {
-            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
-            return;
-        }
-
-        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
-
-        switch (BackendManager.Instance.ErrorCheck(bro))
-        {
-            case BackendState.Failure:
-                break;
-
-            case BackendState.Maintainance:
-                break;
-
-            case BackendState.Retry:
-                SaveUserInfoData(maxRepeatCount - 1);
-                break;
-
-            case BackendState.Success:
-
-                if (bro.GetReturnValuetoJSON() != null)
-                {
-                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
-                    {
-                        InsertStoryData(selectedProbabilityFileId);
-                    }
-                    else
-                    {
-                        UpdateStoryData(selectedProbabilityFileId, bro.GetInDate());
-                    }
-                }
-                else
-                {
-                    InsertStoryData(selectedProbabilityFileId);
-                }
-
-                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-                break;
-        }
-    }
-
-
-    public void InsertStoryData(string selectedProbabilityFileId)
-    {
-
-        Param param = GetStoryParam();
-
-        Debug.LogFormat("스토리 데이터 삽입을 요청합니다.");
-
-        BackendManager.Instance.GameDataInsert(selectedProbabilityFileId, 10, param);
-    }
-
-
-    public void UpdateStoryData(string selectedProbabilityFileId, string inDate)
-    {
-        Param param = GetStoryParam();
-
-        Debug.LogFormat("스토리 데이터 수정을 요청합니다.");
-
-        BackendManager.Instance.GameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
-    }
-
-
-    /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
-    public Param GetStoryParam()
-    {
-        Param param = new Param();
-        _storyCompletedList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
-        param.Add("StoryCompletedList", _storyCompletedList);
-
-        return param;
     }
 
     #endregion

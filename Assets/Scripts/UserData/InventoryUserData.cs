@@ -157,41 +157,42 @@ public class InventoryUserData
             return;
         }
 
-        BackendReturnObject bro = Backend.GameData.Get(selectedProbabilityFileId, new Where());
-
-        switch (BackendManager.Instance.ErrorCheck(bro))
+        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
         {
-            case BackendState.Failure:
-                break;
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    break;
 
-            case BackendState.Maintainance:
-                break;
+                case BackendState.Maintainance:
+                    break;
 
-            case BackendState.Retry:
-                AsyncSaveInventoryData(maxRepeatCount - 1);
-                break;
+                case BackendState.Retry:
+                    AsyncSaveInventoryData(maxRepeatCount - 1);
+                    break;
 
-            case BackendState.Success:
+                case BackendState.Success:
 
-                if (bro.GetReturnValuetoJSON() != null)
-                {
-                    if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                    if (bro.GetReturnValuetoJSON() != null)
                     {
-                        AsyncInsertInventoryData(selectedProbabilityFileId);
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            AsyncInsertInventoryData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            AsyncUpdateInventoryData(selectedProbabilityFileId, bro.GetInDate());
+                        }
                     }
                     else
                     {
-                        AsyncUpdateInventoryData(selectedProbabilityFileId, bro.GetInDate());
+                        AsyncInsertInventoryData(selectedProbabilityFileId);
                     }
-                }
-                else
-                {
-                    AsyncInsertInventoryData(selectedProbabilityFileId);
-                }
 
-                Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
-                break;
-        }
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        }); 
     }
 
 

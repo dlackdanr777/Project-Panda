@@ -22,7 +22,7 @@ public class StoryManager : SingletonHandler<StoryManager>
     private void Init()
     {
         _storyCompletedList.Clear();
-        _storyCompletedList = DatabaseManager.Instance.UserInfo.StoryCompletedList;
+        //_storyCompletedList = DatabaseManager.Instance.UserInfo.StoryCompletedList;
 
         UIDialogue.OnComplateHandler = AddComplatedStory;
         PandaStoryController.OnStartHandler = SetStroyDic;
@@ -73,7 +73,7 @@ public class StoryManager : SingletonHandler<StoryManager>
 
         OnAddCompletedStoryHandler?.Invoke();
 
-        DatabaseManager.Instance.UserInfo.SaveStoryData(10);
+        DatabaseManager.Instance.UserInfo.StoryUserData.AsyncSaveStoryData(10);
     }
 
 

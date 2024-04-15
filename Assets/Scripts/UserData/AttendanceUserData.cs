@@ -131,7 +131,7 @@ public class AttendanceUserData
                     break;
 
                 case BackendState.Retry:
-                    SaveAttendanceData(maxRepeatCount - 1);
+                    AsyncSaveAttendanceData(maxRepeatCount - 1);
                     break;
 
                 case BackendState.Success:
