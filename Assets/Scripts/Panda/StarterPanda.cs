@@ -18,9 +18,12 @@ namespace BT
         //[Tooltip("애니메이션 개수")]
         //[SerializeField] private int _animationCount = 1;
 
-        [Tooltip("판다 크기 키울 맵 ID")]
+        [Tooltip("판다 크기 1.5배로 키울 맵 ID")]
+        [SerializeField] private List<string> _MediumMapID = new List<string>();
+        [Tooltip("판다 크기 2배로 키울 맵 ID")]
         [SerializeField] private List<string> _largeMapID = new List<string>();
         private Vector3 _pandaScale;
+        private Vector3 _pandaMediumScale;
         private Vector3 _pandaLargeScale;
 
 
@@ -93,6 +96,7 @@ namespace BT
             //}
 
             _pandaScale = gameObject.transform.localScale;
+            _pandaMediumScale = gameObject.transform.localScale * 1.5f;
             _pandaLargeScale = gameObject.transform.localScale * 2f;
         }
 
@@ -360,6 +364,10 @@ namespace BT
             if (_largeMapID.Contains(_map))
             {
                 gameObject.transform.localScale = _pandaLargeScale;
+            }
+            else if (_MediumMapID.Contains(_map))
+            {
+                gameObject.transform.localScale = _pandaMediumScale;
             }
             else
             {

@@ -16,7 +16,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 {
     public static event Action OnChangedTimeHandler;
 
-    public DateTime TODAY => DateTime.Today;
+    public DateTime TODAY => DatabaseManager.Instance.UserInfo.TODAY;
     public int GameHour;
     public string GameHourId;
     public string GameWeatherId;
