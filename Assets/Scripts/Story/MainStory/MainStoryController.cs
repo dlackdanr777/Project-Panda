@@ -166,15 +166,15 @@ public class MainStoryController : MonoBehaviour
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
         UnityEngine.Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size;
-        if(rendererSize.x < 0)
-        {
-            rendererSize.x  = -rendererSize.x;
-        }
-        if(rendererSize.x > 1000)
+        if (rendererSize.x > 1000 || rendererSize.x < 1000)
         {
             rendererSize *= 0.5f;
         }
         rendererSize *= transform.localScale;
+        if (rendererSize.x < 0)
+        {
+            rendererSize.x = -rendererSize.x;
+        }
         //rendererSize *= (new Vector3(0.1f, 0.1f, 0.1f) + transform.localScale / 2f);
         if (rendererSize.y > 700)
         {
@@ -509,6 +509,7 @@ public class MainStoryController : MonoBehaviour
         _jijiTransform.Clear();
         foreach (string key in NextStory)
         {
+            // 다음 스토리에 지지가 있는 경우
             if (DatabaseManager.Instance.MainDialogueDatabase.JijiStoryList.Contains(key))
             {
                 foreach (Transform child in _jijiAnimControll.transform)
@@ -624,8 +625,10 @@ public class MainStoryController : MonoBehaviour
     {
         MainStoryDialogue currentStory;
         bool isTrue;
-        List<string> conditionCompleteStory = new List<string>();
-        List<string> conditionIncompleteStory = new List<string>();
+        List<string> conditionCompleteMainStory = new List<string>();
+        List<string> conditionCompleteSideStory = new List<string>();
+        List<string> conditionIncompleteMainStory = new List<string>();
+        List<string> conditionIncompleteSideStory = new List<string>();
 
         foreach (string key in NextStory)
         {
@@ -649,25 +652,45 @@ public class MainStoryController : MonoBehaviour
                         isTrue = false;
                         break;
                 }
-                if (isTrue) // 조건 충족한 경우
+                // 조건 충족한 경우
+                if (isTrue && key.Substring(0,2) == "MS")
                 {
-                    conditionCompleteStory.Add(key);
+                    conditionCompleteMainStory.Add(key);
                 }
-                else // 조건 미 충족한 경우
+                else if(isTrue)
                 {
-                    conditionIncompleteStory.Add(key);
+                    conditionCompleteSideStory.Add(key);
+                }
+                // 조건 미 충족한 경우
+                else if(key.Substring(0, 2) == "MS")
+                {
+                    conditionIncompleteMainStory.Add(key);
+                }
+                else
+                {
+                    conditionIncompleteSideStory.Add(key);
                 }
             }
-            else // 조건이 없을 경우
+            // 조건이 없을 경우
+            else if(key.Substring(0, 2) == "MS")
             {
-                conditionCompleteStory.Add(key);
+                conditionCompleteMainStory.Add(key);
+            }
+            else
+            {
+                conditionCompleteSideStory.Add(key);
             }
         }
 
-        NextStory = conditionCompleteStory.OrderBy(x => x).ToList();
-        conditionIncompleteStory = conditionIncompleteStory.OrderBy(x => x).ToList();
-        NextStory.AddRange(conditionIncompleteStory);
+        // 메인 스토리가 사이드 스토리보다 먼저 수행
+        NextStory = conditionCompleteMainStory.OrderBy(x => x).ToList();
+        conditionCompleteSideStory = conditionCompleteSideStory.OrderBy(x => x).ToList();
+        conditionIncompleteMainStory = conditionIncompleteMainStory.OrderBy(x => x).ToList();
+        conditionIncompleteSideStory = conditionIncompleteSideStory.OrderBy(x => x).ToList();
+        NextStory.AddRange(conditionIncompleteMainStory);
+        NextStory.AddRange(conditionCompleteSideStory);
+        NextStory.AddRange(conditionIncompleteSideStory);
 
-        //Debug.Log(string.Join(", ", NextStory));
+        Debug.Log(string.Join(", ", NextStory));
     }
 }
