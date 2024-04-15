@@ -56,11 +56,11 @@ public class GameManager : SingletonHandler<GameManager>
         DatabaseManager.Instance.UserInfo.ChallengesUserData.SaveChallengesData(10);
         DatabaseManager.Instance.UserInfo.StoryUserData.SaveStoryData(10);
         DatabaseManager.Instance.UserInfo.AttendanceUserData.SaveAttendanceData(10);
-        DatabaseManager.Instance.UserInfo.SaveNPCData(10);
+        DatabaseManager.Instance.UserInfo.NpcUserData.SaveNPCData(10);
         Player.SaveBambooData(10);
-        Player.SaveMailData(10);
+        DatabaseManager.Instance.UserInfo.MailUserData.SaveMailData(10);
         DatabaseManager.Instance.UserInfo.InventoryUserData.SaveInventoryData(10);
-        DatabaseManager.Instance.UserInfo.SaveBookData(10);
+        DatabaseManager.Instance.UserInfo.BookUserData.SaveBookData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);
         DatabaseManager.Instance.StartPandaInfo.SavePandaInfoData(10);
         BambooFieldSystem.Instance.SaveBambooFieldData(10);

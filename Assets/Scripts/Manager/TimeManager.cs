@@ -18,7 +18,7 @@ public class TimeManager : SingletonHandler<TimeManager>
 
     //서버 시간에서 로컬 시간으로 변경
     // 서버 시간으로 할 경우 서버 비용이 많이 증가하는 것으로 파악
-    public DateTime TODAY => DateTime.Today;
+    public DateTime TODAY => DateTime.Now;
     public int GameHour;
     public string GameHourId;
     public string GameWeatherId;

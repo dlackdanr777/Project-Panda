@@ -1,15 +1,11 @@
-using BackEnd.MultiCharacter;
 using BackEnd;
 using LitJson;
 using Muks.BackEnd;
-using Muks.DataBind;
 using Muks.Tween;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UserInfo;
 
 public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 {
@@ -48,13 +44,11 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     private List<float> _time = new List<float>();
     private List<float> _second = new List<float>(); // 저장 x
     private List<TimeSpan> _timeDifference = new List<TimeSpan>();
-
-    private DateTime _today;
+    private List<string> _timeDifferenceToStr = new List<string>();
 
     public override void Awake()
     {
         base.Awake();
-        _today = DatabaseManager.Instance.UserInfo.TODAY;
         SceneManager.sceneLoaded += LoadedSceneEvent;
         Init();
     }
@@ -208,7 +202,8 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             else
             {
                 //여기에 서버저장
-                SaveBambooFieldData(3);
+                AsyncSaveBambooFieldData(3);
+                GameManager.Instance.Player.AsyncSaveBambooData(3);
             }
         });
 
@@ -240,10 +235,12 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     /// 접속 했을때 이전 접속시간과 시간 차이를 확인 후 작물 성장 </summary>
     private void FirstCheckGrowth()
     {
+        DateTime today = DatabaseManager.Instance.UserInfo.TODAY;
+
         for (int i = 0; i <= _fieldIndex; i++)
         {
             //현재 접속 시간과 마지막 접속 시간을 비교
-            if ((_today - _database.UserInfo.LastAccessDay).Seconds + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
+            if ((today - _database.UserInfo.LastAccessDay).Seconds + _time[i] >= _fieldSlots[i].GrowthTime * 2 * _fieldSlots[i].HarvestItem.HarvestTime)
             {
 
                 // 작물 성장 시간 최대 
@@ -253,15 +250,16 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             else
             {
                 // 밖에 있던 시간 _time에 추가
-                _time[i] += (_today - _database.UserInfo.LastAccessDay).Seconds;
-                _timeDifference[i] -= (_today - _database.UserInfo.LastAccessDay);
+                _time[i] += (today - _database.UserInfo.LastAccessDay).Seconds;
+                _timeDifference[i] -= (today - _database.UserInfo.LastAccessDay);
             }
         }
     }
 
 
-    #region SaveAndLoadBamboo
+    #region Save&LoadBamboo
 
+    /// <summary> 동기적으로 서버 유저 밭 정보를 불러옴 </summary>
     public void LoadBambooFieldData(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
@@ -274,7 +272,6 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 
         else
         {
-
             _yield.Clear();
             _time.Clear();
             _timeDifference.Clear();
@@ -314,6 +311,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     }
 
 
+    /// <summary> 동기적으로 서버 유저 밭 정보 저장 </summary>
     public void SaveBambooFieldData(int maxRepeatCount)
     {
         string selectedProbabilityFileId = "BambooField";
@@ -368,6 +366,63 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     }
 
 
+    /// <summary> 비동기적으로 서버 유저 밭 정보 저장 </summary>
+    public void AsyncSaveBambooFieldData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "BambooField";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
+        {
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    break;
+
+                case BackendState.Maintainance:
+                    break;
+
+                case BackendState.Retry:
+                    AsyncSaveBambooFieldData(maxRepeatCount - 1);
+                    break;
+
+                case BackendState.Success:
+
+                    if (bro.GetReturnValuetoJSON() != null)
+                    {
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            AsyncInsertBambooFieldData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            AsyncUpdateBambooFieldData(selectedProbabilityFileId, bro.GetInDate());
+                        }
+                    }
+                    else
+                    {
+                        AsyncInsertBambooFieldData(selectedProbabilityFileId);
+                    }
+
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        });    
+    }
+
+
+    /// <summary> 동기적으로 서버 유저 밭 정보 삽입 </summary>
     public void InsertBambooFieldData(string selectedProbabilityFileId)
     {
 
@@ -379,6 +434,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     }
 
 
+    /// <summary> 동기적으로 서버 유저 밭 정보 수정 </summary>
     public void UpdateBambooFieldData(string selectedProbabilityFileId, string inDate)
     {
 
@@ -390,7 +446,29 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
     }
 
 
-    private List<string> _timeDifferenceToStr = new List<string>();
+    /// <summary> 비동기적으로 서버 유저 밭 정보 삽입 </summary>
+    public void AsyncInsertBambooFieldData(string selectedProbabilityFileId)
+    {
+
+        Param param = GetBambooFieldParam();
+
+        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 비동기적으로 서버 유저 밭 정보 수정 </summary>
+    public void AsyncUpdateBambooFieldData(string selectedProbabilityFileId, string inDate)
+    {
+
+        Param param = GetBambooFieldParam();
+
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
 
     /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
     public Param GetBambooFieldParam()

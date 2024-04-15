@@ -1,8 +1,5 @@
-using Muks.DataBind;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public class MessageList
 {
@@ -10,7 +7,7 @@ public class MessageList
     public int MaxMessageCount { get; private set; } = 20;
     public int MessagesCount => _messageList.Count;
     private List<Message> _messageList = new List<Message>();
-
+    private MailUserData _mailData => DatabaseManager.Instance.UserInfo.MailUserData;
 
     public int CurrentNotCheckedMessage
     {
@@ -58,7 +55,7 @@ public class MessageList
                 {
                     if (DatabaseManager.Instance.GetMailList()[i].Id.Equals(id))
                     {
-                        if (GameManager.Instance.Player.FindMailReceivedById(id))
+                        if (_mailData.FindMailReceivedById(id))
                         {
                             UnityEngine.Debug.Log("이미 있는 메일입니다.");
                             return;
@@ -68,8 +65,8 @@ public class MessageList
 
                         if (isServerSaved)
                         {
-                            GameManager.Instance.Player.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
-                            GameManager.Instance.Player.SaveMailData(3);
+                            _mailData.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
+                            _mailData.SaveMailData(3);
                         }
                     }
                 }
@@ -91,7 +88,7 @@ public class MessageList
                 {
                     if (DatabaseManager.Instance.GetMailList()[i].StoryStep.Equals(id))
                     {
-                        if (GameManager.Instance.Player.FindMailReceivedById(DatabaseManager.Instance.GetMailList()[i].Id))
+                        if (_mailData.FindMailReceivedById(DatabaseManager.Instance.GetMailList()[i].Id))
                         {
                             UnityEngine.Debug.Log("이미 있는 메일입니다.");
                             return;
@@ -100,8 +97,8 @@ public class MessageList
                         Add(DatabaseManager.Instance.GetMailList()[i]);
                         if (isServerSaved)
                         {
-                            GameManager.Instance.Player.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
-                            GameManager.Instance.Player.SaveMailData(3);
+                            _mailData.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
+                            _mailData.SaveMailData(3);
                         }
                         UnityEngine.Debug.Log("메일 추가됨");
                         return;
@@ -121,7 +118,8 @@ public class MessageList
         {
             _messageList.RemoveAt(index);
         }
-        GameManager.Instance.Player.SaveMailData(3);
+
+        DatabaseManager.Instance.UserInfo.MailUserData.AsyncSaveMailData(3);
     }
 
     private bool IsAlreadyHave(string id)
