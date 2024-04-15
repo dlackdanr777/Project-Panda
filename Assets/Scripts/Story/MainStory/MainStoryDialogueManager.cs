@@ -48,6 +48,8 @@ public class MainStoryDialogueManager : MonoBehaviour
             }
             ReadCSV(csv);
         }
+        ReadCSV("NPCSideStory/NPC46");
+
     }
 
     private void ReadCSV(string csv)
