@@ -74,8 +74,8 @@ namespace Shop
                 _notBuyImageCanvasGroup.alpha = 0.1f;
                 Tween.CanvasGroupAlpha(_notBuyImage, 1, 0.1f, TweenMode.Constant, () =>
                 {
-                    //2초 대기 후 닫기
-                    Tween.TransformMove(_notBuyImage, _notBuyImage.transform.position, 2, TweenMode.Constant, () =>
+                    //1초 대기 후 닫기
+                    Tween.TransformMove(_notBuyImage, _notBuyImage.transform.position, 1, TweenMode.Constant, () =>
                     {
                         _notBuyImage.gameObject.SetActive(false);
                         gameObject.SetActive(false);
@@ -96,8 +96,8 @@ namespace Shop
             _completeImageCanvasGroup.alpha = 0.1f;
             Tween.CanvasGroupAlpha(_completeImage, 1, 0.1f, TweenMode.Constant, () =>
             {
-                //2초 대기 후 닫기
-                Tween.TransformMove(_completeImage, _completeImage.transform.position, 2, TweenMode.Constant, () =>
+                //1초 대기 후 닫기
+                Tween.TransformMove(_completeImage, _completeImage.transform.position, 1, TweenMode.Constant, () =>
                 {
                     _completeImage.gameObject.SetActive(false);
                     gameObject.SetActive(false);

@@ -173,8 +173,6 @@ public class UIMainScene : MonoBehaviour
     {
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("DropdownMenuButton");
-        GameManager.Instance.FriezeCameraMove = false;
-        GameManager.Instance.FirezeInteraction = false;
     }
 
     public void OnHideDropDownMenuButtonClicked()

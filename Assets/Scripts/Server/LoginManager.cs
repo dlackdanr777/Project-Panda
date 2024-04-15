@@ -135,13 +135,13 @@ namespace Muks.BackEnd
             DatabaseManager.Instance.NoticeDatabase.LoadData();
 
             BackendManager.Instance.GetMyData("UserInfo", 10, DatabaseManager.Instance.UserInfo.LoadUserInfoData);
-            BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.LoadChallengesData);
+            BackendManager.Instance.GetMyData("Challenges", 10, DatabaseManager.Instance.UserInfo.ChallengesUserData.LoadChallengesData);
             BackendManager.Instance.GetMyData("Story", 10, DatabaseManager.Instance.UserInfo.LoadStoryData);
-            BackendManager.Instance.GetMyData("Attendance", 10, DatabaseManager.Instance.UserInfo.LoadAttendanceData);
+            BackendManager.Instance.GetMyData("Attendance", 10, DatabaseManager.Instance.UserInfo.AttendanceUserData.LoadAttendanceData);
             BackendManager.Instance.GetMyData("NPC", 10, DatabaseManager.Instance.UserInfo.LoadNPCData);
             BackendManager.Instance.GetMyData("Bamboo", 10, GameManager.Instance.Player.LoadBambooData);
             BackendManager.Instance.GetMyData("Mail", 10, GameManager.Instance.Player.LoadMailData);
-            BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.LoadInventoryData);
+            BackendManager.Instance.GetMyData("Inventory", 10, DatabaseManager.Instance.UserInfo.InventoryUserData.LoadInventoryData);
             BackendManager.Instance.GetMyData("Book", 10, DatabaseManager.Instance.UserInfo.LoadBookData);
             BackendManager.Instance.GetMyData("Furniture", 10, DatabaseManager.Instance.FurniturePosDatabase.LoadFurnitureData);
             BackendManager.Instance.GetMyData("StarterPandaInfo", 10, DatabaseManager.Instance.StartPandaInfo.LoadPandaInfoData);

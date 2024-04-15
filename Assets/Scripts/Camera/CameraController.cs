@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -335,7 +333,7 @@ public class CameraController : MonoBehaviour
         if (_velocity.sqrMagnitude == 0)
             return;
 
-        //감속 속도를 현재 속도 * Time * 감속 비율 로 구한다.
+        //감속 속도를 현재 (속도 * Time.deltaTime * 감속)으로 구한다.
         Vector3 _deceleration = _velocity * (Time.deltaTime * _decelerationRate);
         _velocity -= _deceleration;
 

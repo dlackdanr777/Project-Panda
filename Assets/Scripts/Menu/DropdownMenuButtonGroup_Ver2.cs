@@ -66,7 +66,7 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
         _exitButton.Init();
     }
 
-    public void ShowAnime()
+    public void ShowAnime(Action onCompleted = null)
     {
         _showButton.SetActive(false);
 
@@ -84,13 +84,13 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
         Tween.RectTransfromAnchoredPosition(_exitButton.gameObject, _startExitButtonPos, _groupAnimeDuration, _groupAnimeTweenMode, () =>
         {
             Tween.RectTransfromAnchoredPosition(_exitButton.gameObject, _targetExitButtonPos, _exitButtonAnimeDuration, _exitButtonAnimeTweenMode);
-            _exitButton.ShowAnime(_buttonAnimeDuration, _buttonAnimeTweenMode);
+            _exitButton.ShowAnime(_buttonAnimeDuration, _buttonAnimeTweenMode, onCompleted);
         });
 
     }
 
 
-    public void HideAnime()
+    public void HideAnime(Action onCompleted = null)
     {
         _exitButton.DontTouchArea.SetActive(true);
 
@@ -110,6 +110,7 @@ public class DropdownMenuButtonGroup_Ver2 : MonoBehaviour
             Tween.RectTransfromAnchoredPosition(_exitButton.gameObject, _tmpExitButtonPos, _groupAnimeDuration, _groupAnimeTweenMode, () =>
             {
                 _showButton.SetActive(true);
+                onCompleted?.Invoke();
             });
         });
     }

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class UINotice : MonoBehaviour
 {
@@ -36,6 +34,7 @@ public class UINotice : MonoBehaviour
 
     }
 
+
     public void Show()
     {
         for(int i = 0, count =  _slotList.Count; i < count; i++)
@@ -47,7 +46,7 @@ public class UINotice : MonoBehaviour
 
     public void Hide()
     {
-        _detailView.Hide();
+        _detailView.gameObject.SetActive(false);
     }
 
 }

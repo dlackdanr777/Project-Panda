@@ -55,7 +55,7 @@ public class UIChallengeSlot : MonoBehaviour
         _rectTransform.SetAsFirstSibling();
 
         if (isServerUploaded)
-            DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
+            DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
     }
 
 
@@ -70,7 +70,7 @@ public class UIChallengeSlot : MonoBehaviour
         _backgroundImage.color = _clearBackgroundColor;
 
         if (isServerUploaded)
-            DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
+            DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
     }
 
     public void CloseSlot()

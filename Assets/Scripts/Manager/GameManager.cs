@@ -43,7 +43,7 @@ public class GameManager : SingletonHandler<GameManager>
         if(pause)
         {
             DatabaseManager.Instance.UserInfo.SaveUserInfoData(3);
-            DatabaseManager.Instance.UserInfo.SaveChallengesData(3);
+            DatabaseManager.Instance.UserInfo.ChallengesUserData.SaveChallengesData(3);
             BambooFieldSystem.Instance.SaveBambooFieldData(3);
             Player.SaveBambooData(3);
         }
@@ -53,13 +53,13 @@ public class GameManager : SingletonHandler<GameManager>
     public void OnApplicationQuit()
     {
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
-        DatabaseManager.Instance.UserInfo.SaveChallengesData(10);
+        DatabaseManager.Instance.UserInfo.ChallengesUserData.SaveChallengesData(10);
         DatabaseManager.Instance.UserInfo.SaveStoryData(10);
-        DatabaseManager.Instance.UserInfo.SaveAttendanceData(10);
+        DatabaseManager.Instance.UserInfo.AttendanceUserData.SaveAttendanceData(10);
         DatabaseManager.Instance.UserInfo.SaveNPCData(10);
         Player.SaveBambooData(10);
         Player.SaveMailData(10);
-        DatabaseManager.Instance.UserInfo.SaveInventoryData(10);
+        DatabaseManager.Instance.UserInfo.InventoryUserData.SaveInventoryData(10);
         DatabaseManager.Instance.UserInfo.SaveBookData(10);
         DatabaseManager.Instance.FurniturePosDatabase.SaveFurnitureData(10);
         DatabaseManager.Instance.StartPandaInfo.SavePandaInfoData(10);
