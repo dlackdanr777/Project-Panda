@@ -74,8 +74,9 @@ public class MainStoryController : MonoBehaviour
     private void Start()
     {
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
-        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter"); if (_jiji == null)
-        _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter"); 
+        if (_jiji == null)
+            _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
 
         Init();
         //Invoke("SetNPCButton", 1f);
@@ -527,6 +528,16 @@ public class MainStoryController : MonoBehaviour
                 if(_jiji == null)
                 {
                     _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
+                }
+                UnityEngine.Vector3 jijiScale = _jiji.gameObject.transform.localScale;
+                // 지지 바라보는 방향 설정
+                if (key == "MS01A" && jijiScale.x < 0)
+                {
+                    _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
+                }
+                else if(jijiScale.x > 0)
+                {
+                    _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
                 }
                 _jiji.enabled = true;
             }

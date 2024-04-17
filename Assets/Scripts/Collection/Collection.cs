@@ -74,7 +74,8 @@ public class Collection : MonoBehaviour
 
     /// <summary> 현재 채집 종류 </summary>
     [SerializeField] private GatheringItemType _gatheringType;
-    private string[] _isCollecting = { "IsCollectingBug", "IsCollectingFish", "IsCollectingFruit" };
+    //private string[] _isCollecting = { "IsCollectingBug", "IsCollectingFish", "IsCollectingFruit" };
+    private string[] _collecting = { "CollectingBug", "CollectingFish", "CollectingFruit" };
 
     private string toolId; // 채집에 필요한 도구ID
 
@@ -234,13 +235,13 @@ public class Collection : MonoBehaviour
         _lastPandaPosition = starterPanda.gameObject.transform.position;
         _lastPandaScale = starterPanda.gameObject.transform.localScale;
         //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
-        if(_gatheringType == GatheringItemType.Fish)
+
+        if (_gatheringType == GatheringItemType.Fish)
         {
             if (starterPanda.gameObject.transform.localScale.x < 0)
             {
                 starterPanda.gameObject.transform.localScale = new Vector3(-starterPanda.gameObject.transform.localScale.x, starterPanda.gameObject.transform.localScale.y, starterPanda.gameObject.transform.localScale.z);
             }
-
             starterPanda.gameObject.transform.position = new Vector3(_pandaTransform.position.x, _pandaTransform.position.y, starterPanda.gameObject.transform.position.z);
 
         }
@@ -257,7 +258,7 @@ public class Collection : MonoBehaviour
 
         _isCollection = true;
 
-        _collectionAnim.enabled = false;
+        //_collectionAnim.enabled = false;
 
         // 화면 켜지는 시간에 맞추어 채집 시작
         Invoke("StartCollection", _fadeTime);
@@ -282,8 +283,8 @@ public class Collection : MonoBehaviour
         }
 
         // 판다 채집 준비
-        _pandaCollectionAnim.SetInteger("Num", -1);
-        _pandaCollectionAnim.Play("Idle");
+        //_pandaCollectionAnim.SetInteger("Num", -1);
+        //_pandaCollectionAnim.Play("Idle");
         //_pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.enabled = true;
     }
@@ -295,7 +296,6 @@ public class Collection : MonoBehaviour
         GameManager.Instance.FriezeCameraMove = set;
         GameManager.Instance.FriezeCameraZoom = set;
         GameManager.Instance.FirezeInteraction = set;
-        //Camera.main.gameObject.transform.position = _targetPos;
     }
 
     /// <summary>
@@ -322,7 +322,8 @@ public class Collection : MonoBehaviour
 
         // 채집 애니메이션 판다와 말풍선 실행
         _pandaCollectionAnim.enabled = true;
-        _pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
+        _pandaCollectionAnim.Play(_collecting[(int)_gatheringType]);
+        //_pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
 
         _speechBubble.gameObject.SetActive(true);
         _speechBubble.enabled = true;
@@ -365,6 +366,7 @@ public class Collection : MonoBehaviour
             Debug.Log("실패 애니메이션");
             _pandaCollectionAnim.SetTrigger("IsCollectionFail");
             IsSuccessCollection = false;
+            // 낚시 세부 위치 조정
             if (_gatheringType == GatheringItemType.Fish)
             {
                 StarterPanda.Instance.gameObject.transform.position += new Vector3(0, -0.5f, 0);
@@ -397,9 +399,6 @@ public class Collection : MonoBehaviour
 
             // 인벤토리로 아이템 이동
             GameManager.Instance.Player.AddItemById(collectionID, 1);
-
-
-            // 도감 업데이트
 
             // 도전 과제 달성
             DatabaseManager.Instance.Challenges.GatheringSuccess((int)_gatheringType);
