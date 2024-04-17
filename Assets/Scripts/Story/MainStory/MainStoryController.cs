@@ -298,7 +298,7 @@ public class MainStoryController : MonoBehaviour
                     case MainEventType.GIVEITEM:
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
-                    case MainEventType.LOVEMOUNT:
+                    case MainEventType.LOVEAMOUNT:
                         //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
                         isTrue = true; // 현재 친밀도 체크 안함
                         break;
@@ -655,7 +655,7 @@ public class MainStoryController : MonoBehaviour
                     case MainEventType.GIVEITEM:
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
-                    case MainEventType.LOVEMOUNT:
+                    case MainEventType.LOVEAMOUNT:
                         //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
                         isTrue = true; // 현재 친밀도 체크 안함
                         break;
@@ -702,6 +702,6 @@ public class MainStoryController : MonoBehaviour
         NextStory.AddRange(conditionCompleteSideStory);
         NextStory.AddRange(conditionIncompleteSideStory);
 
-        Debug.Log(string.Join(", ", NextStory));
+        //Debug.Log(string.Join(", ", NextStory));
     }
 }
