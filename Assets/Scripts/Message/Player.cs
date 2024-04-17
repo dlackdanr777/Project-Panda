@@ -54,7 +54,7 @@ public class Player
         {
             StickerInventory.AddById(stickerImages[i].Id, stickerImages[i].Image);
         }
-   
+        DataBind.SetTextValue("BambooCount", Bamboo.ToString());
         //DatabaseManager.Instance.UserInfo.LoadUserReceivedSticker(); //sticker inventory
         //DatabaseManager.Instance.UserInfo.LoadUserStickerData(); //sticker pos
     }
