@@ -1,5 +1,6 @@
 using UnityEngine;
 using Muks.Tween;
+using BT;
 
 public class CollectionAnimHandler : MonoBehaviour
 {
@@ -24,4 +25,5 @@ public class CollectionAnimHandler : MonoBehaviour
     {
         Tween.TransformMove(gameObject, gameObject.transform.position - Vector3.up * 3, 0.5f, TweenMode.Constant);
     }
+
 }

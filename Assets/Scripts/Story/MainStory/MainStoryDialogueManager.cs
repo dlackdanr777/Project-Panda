@@ -31,8 +31,8 @@ public class MainStoryDialogueManager : MonoBehaviour
     public void Register()
     {
         string csv;
-        ReadCSV("01__TEST_1_1");
-        for (int i = 2; i < 36; i++)
+        ReadCSV("01__TEST_1_1_2");
+        for (int i = 2; i <= 36; i++)
         {
             if (i == 4 || i == 22 || i == 23) // 현재 없는 파일
             {

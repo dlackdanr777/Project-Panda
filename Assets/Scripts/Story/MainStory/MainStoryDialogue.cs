@@ -8,7 +8,7 @@ public enum MainEventType
     HOLDITEM, // 아이템 소지 확인
     GIVEITEM, // 소지한 아이템 NPC에게 줌
     QUESTITEM, // 퀘스트 아이템 획득
-    LOVEMOUNT, // 친밀도가 일정량 이상일 때
+    LOVEAMOUNT, // 친밀도가 일정량 이상일 때
     MONEY
 
 }

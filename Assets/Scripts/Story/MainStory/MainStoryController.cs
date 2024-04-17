@@ -74,8 +74,9 @@ public class MainStoryController : MonoBehaviour
     private void Start()
     {
         _poyaAnimControll = GameObject.Find("Poya Anime ControllCenter");
-        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter"); if (_jiji == null)
-        _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
+        _jijiAnimControll = GameObject.Find("JiJi Anime ControllCenter"); 
+        if (_jiji == null)
+            _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
 
         Init();
         //Invoke("SetNPCButton", 1f);
@@ -297,7 +298,7 @@ public class MainStoryController : MonoBehaviour
                     case MainEventType.GIVEITEM:
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
-                    case MainEventType.LOVEMOUNT:
+                    case MainEventType.LOVEAMOUNT:
                         //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
                         isTrue = true; // 현재 친밀도 체크 안함
                         break;
@@ -528,6 +529,16 @@ public class MainStoryController : MonoBehaviour
                 {
                     _jiji = GameObject.Find("NPC01").transform.GetComponent<SpriteRenderer>();
                 }
+                UnityEngine.Vector3 jijiScale = _jiji.gameObject.transform.localScale;
+                // 지지 바라보는 방향 설정
+                if (key == "MS01A" && jijiScale.x < 0)
+                {
+                    _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
+                }
+                else if(jijiScale.x > 0)
+                {
+                    _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
+                }
                 _jiji.enabled = true;
             }
 
@@ -644,7 +655,7 @@ public class MainStoryController : MonoBehaviour
                     case MainEventType.GIVEITEM:
                         isTrue = GameManager.Instance.Player.RemoveItemById(currentStory.EventTypeCondition, currentStory.EventTypeAmount);
                         break;
-                    case MainEventType.LOVEMOUNT:
+                    case MainEventType.LOVEAMOUNT:
                         //isTrue = DatabaseManager.Instance.GetNPC(currentStory.EventTypeCondition).Intimacy >= currentStory.EventTypeAmount;
                         isTrue = true; // 현재 친밀도 체크 안함
                         break;
@@ -691,6 +702,6 @@ public class MainStoryController : MonoBehaviour
         NextStory.AddRange(conditionCompleteSideStory);
         NextStory.AddRange(conditionIncompleteSideStory);
 
-        Debug.Log(string.Join(", ", NextStory));
+        //Debug.Log(string.Join(", ", NextStory));
     }
 }
