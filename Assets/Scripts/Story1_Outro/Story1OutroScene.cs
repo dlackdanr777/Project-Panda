@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Story1OutroScene : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private UIStory1OutroScene _uiOutroScene;
+    [SerializeField] private UIOutroMiniDialogue _uiOutroScene;
     [SerializeField] private Light2D[] _ceilingLights;
     [SerializeField] private Light2D[] _floorLights;
     [SerializeField] private Light2D _gemLight;
