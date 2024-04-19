@@ -83,18 +83,18 @@ namespace Muks.OcclusionCulling2D
                 ObjectSettings objSet = new ObjectSettings();
                 objSet.SpriteRenderer = renderer;
 
-                objSet.Size = renderer.sprite.rect.size * renderer.transform.lossyScale * 1.1f * 0.01f;
+                objSet.Size = ((renderer.sprite.rect.size * renderer.transform.lossyScale) / renderer.sprite.pixelsPerUnit) * 1.1f;
                 objSet.Center = renderer.transform.position;
 
-                objSet.TopRight = new Vector2(objSet.Center.x + objSet.Size.x, objSet.Center.y + objSet.Size.y);
-                objSet.TopLeft = new Vector2(objSet.Center.x - objSet.Size.x, objSet.Center.y + objSet.Size.y);
-                objSet.BottomLeft = new Vector2(objSet.Center.x - objSet.Size.x, objSet.Center.y - objSet.Size.y);
-                objSet.BottomRight = new Vector2(objSet.Center.x + objSet.Size.x, objSet.Center.y - objSet.Size.y);
+                objSet.TopRight = new Vector2(objSet.Center.x + objSet.Size.x  * 0.5f, objSet.Center.y + objSet.Size.y * 0.5f);
+                objSet.TopLeft = new Vector2(objSet.Center.x - objSet.Size.x * 0.5f, objSet.Center.y + objSet.Size.y * 0.5f);
+                objSet.BottomLeft = new Vector2(objSet.Center.x - objSet.Size.x * 0.5f, objSet.Center.y - objSet.Size.y * 0.5f);
+                objSet.BottomRight = new Vector2(objSet.Center.x + objSet.Size.x * 0.5f, objSet.Center.y - objSet.Size.y * 0.5f);
 
-                objSet.Right = objSet.Center.x + objSet.Size.x;
-                objSet.Left = objSet.Center.x - objSet.Size.x;
-                objSet.Top = objSet.Center.y + objSet.Size.y;
-                objSet.Bottom = objSet.Center.y - objSet.Size.y;
+                objSet.Right = objSet.Center.x + objSet.Size.x * 0.5f;
+                objSet.Left = objSet.Center.x - objSet.Size.x * 0.5f;
+                objSet.Top = objSet.Center.y + objSet.Size.y * 0.5f;
+                objSet.Bottom = objSet.Center.y - objSet.Size.y * 0.5f;
 
                 _objectSettingList.Add(objSet);
             }
