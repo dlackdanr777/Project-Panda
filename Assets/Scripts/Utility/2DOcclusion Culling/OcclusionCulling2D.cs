@@ -107,7 +107,8 @@ namespace Muks.OcclusionCulling2D
         }
 
 
-        public void OnDrawGizmos()
+
+        private void OnDrawGizmosSelected()
         {
             if (_objectSettingList == null)
                 return;
