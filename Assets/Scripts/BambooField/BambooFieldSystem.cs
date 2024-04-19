@@ -195,9 +195,9 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 
         Tween.TransformMove(_bambooPrefabs[count], fieldSlotTransform.position + addPosition, 0.05f, TweenMode.Quadratic, () =>
         {
-            if (totalCount - currentCount > 10)
+            if (totalCount - currentCount > 20)
             {
-                HarvestBamboo(currentCount + 10, totalCount, fieldSlotTransform);
+                HarvestBamboo(currentCount + 20, totalCount, fieldSlotTransform);
             }
             else
             {
@@ -207,9 +207,9 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             }
         });
 
-        Tween.TransformMove(_bambooPrefabs[count], _targetPos, 1.5f, TweenMode.Quadratic, () =>
+        Tween.TransformMove(_bambooPrefabs[count], _targetPos, 0.7f, TweenMode.Quadratic, () =>
         {
-            if (totalCount - currentCount <= 10)
+            if (totalCount - currentCount <= 20)
             {
                 for (int i = currentCount; i <= totalCount; i++)
                 {
@@ -218,7 +218,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             }
             else
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     _player.GainBamboo(1);
                 }
