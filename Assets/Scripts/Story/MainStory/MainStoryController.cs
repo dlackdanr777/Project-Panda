@@ -166,6 +166,8 @@ public class MainStoryController : MonoBehaviour
     {
         Transform parent = GameObject.Find("NPC Button Parent").transform;
         NPCButton npcButton = Resources.Load<NPCButton>("Button/NPC Button");
+
+        // 버튼 크기 설정
         UnityEngine.Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size;
         if (rendererSize.x > 1000 || rendererSize.x < 1000)
         {
@@ -235,7 +237,6 @@ public class MainStoryController : MonoBehaviour
         {
             //이전 스토리 다음 스토리 비교
             bool priorCheck = CheckPrior(currentStory.PriorStoryID); //처음 시작이면 무조건 true로 넘어갈 수 있도록
-            //int nextCheck = CheckNext(currentStory.NextStoryID); //마지막이면 친밀도를 max로 해서 성공여부를 true로 할 수 없도록
 
             if (priorCheck) //이전 스토리 성공했는지 비교 && StarterPanda.Instance.Intimacy >= nextCheck) //다음 스토리와 친밀도 비교
             {
@@ -335,7 +336,7 @@ public class MainStoryController : MonoBehaviour
         NPC currentNPC = DatabaseManager.Instance.GetNPC(_npcID);
         MainStoryDialogue currentStory = _storyDatabase[id];
 
-        int nextStoryInti = CheckNext(currentStory.NextStoryID);
+        //int nextStoryInti = CheckNext(currentStory.NextStoryID);
         if(id.Substring(0, 2) == "MS")
         {
             StarterPanda.Instance.Intimacy += currentStory.RewardIntimacy; // 보상 친밀도
@@ -533,10 +534,13 @@ public class MainStoryController : MonoBehaviour
                 // 지지 바라보는 방향 설정
                 if (key == "MS01A" && jijiScale.x < 0)
                 {
+                    Debug.Log("MS01A");
                     _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
                 }
-                else if(jijiScale.x > 0)
+                else if(jijiScale.x > 0 && key != "MS01A")
                 {
+                    Debug.Log("jijiScale.x > 0");
+
                     _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
                 }
                 _jiji.enabled = true;

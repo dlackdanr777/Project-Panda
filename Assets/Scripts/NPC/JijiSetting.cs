@@ -28,6 +28,11 @@ public class JijiSetting : MonoBehaviour
 
     [SerializeField] private bool _isConversation; // 대화 중인지 확인
 
+    private void Awake()
+    {
+        _pandaScale = gameObject.transform.localScale;
+        _pandaLargeScale = gameObject.transform.localScale * 2f;
+    }
 
     void Start()
     {
@@ -35,10 +40,6 @@ public class JijiSetting : MonoBehaviour
         _animator = GetComponent<Animator>();
         _map = TimeManager.Instance.CurrentMap;
         //ChangeAnimation();
-
-        _pandaScale = gameObject.transform.localScale;
-        _pandaLargeScale = gameObject.transform.localScale * 2f;
-
     }
 
     void Update()

@@ -10,9 +10,10 @@ public class SettingButton : MonoBehaviour
     [SerializeField] private Vector2 _minSize = new Vector2(0, 0);
     [SerializeField] string _targetTransformName; // 비워놓기 가능
     private Vector2 _size;
-    private bool _isRunningTween;
     private Camera _camera;
+    private bool _isRunningTween;
     private bool _isDestroy;
+    private QuestMarkSetting _questMarkSetting;
 
     private void Awake()
     {
@@ -25,30 +26,23 @@ public class SettingButton : MonoBehaviour
         {
             _targetTransform = GameObject.Find(_targetTransformName).transform.GetComponent<Transform>();
         }
-    }
-
-    private void OnEnable()
-    {
         if (gameObject.name.StartsWith("NPC"))
         {
             gameObject.SetActive(false);
-            _targetTransform.gameObject.GetComponent<QuestMarkSetting>().OnEnableQuestMarkHandler += ButtonSetTure;
-            _targetTransform.gameObject.GetComponent<QuestMarkSetting>().OnDisableQuestMarkHandler += ButtonSetFalse;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (gameObject.name.StartsWith("NPC"))
-        {
-            _targetTransform.gameObject.GetComponent<QuestMarkSetting>().OnEnableQuestMarkHandler -= ButtonSetTure;
-            _targetTransform.gameObject.GetComponent<QuestMarkSetting>().OnDisableQuestMarkHandler -= ButtonSetFalse;
+            _questMarkSetting = _targetTransform.gameObject.GetComponent<QuestMarkSetting>();
+            _questMarkSetting.OnEnableQuestMarkHandler += ButtonSetTure;
+            _questMarkSetting.OnDisableQuestMarkHandler += ButtonSetFalse;
         }
     }
 
     private void OnDestroy()
     {
         _isDestroy = true;
+        if (gameObject.name.StartsWith("NPC"))
+        {
+            _questMarkSetting.OnEnableQuestMarkHandler -= ButtonSetTure;
+            _questMarkSetting.OnDisableQuestMarkHandler -= ButtonSetFalse;
+        }
     }
 
     private void Update()
