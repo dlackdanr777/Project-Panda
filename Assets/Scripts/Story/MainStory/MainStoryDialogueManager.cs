@@ -31,7 +31,7 @@ public class MainStoryDialogueManager : MonoBehaviour
     public void Register()
     {
         string csv;
-        ReadCSV("01__TEST_1_1_2 (1)");
+        ReadCSV("01__TEST_1_1_2 (2)");
         for (int i = 2; i <= 36; i++)
         {
             if (i == 4 || i == 22 || i == 23) // 현재 없는 파일
@@ -48,7 +48,11 @@ public class MainStoryDialogueManager : MonoBehaviour
             }
             ReadCSV(csv);
         }
-        ReadCSV("NPCSideStory/NPC46");
+        for (int i = 46; i <= 48; i++)
+        {
+            csv = "NPCSideStory/NPC" + i;
+            ReadCSV(csv);
+        }
 
     }
 
