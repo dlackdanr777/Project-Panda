@@ -8,6 +8,8 @@ public class ShopScene : MonoBehaviour
     void Start()
     {
         SoundManager.Instance.PlayBackgroundAudio(_backgroundSound, 1);
+
+        Muks.DataBind.DataBind.SetTextValue("BambooCount", GameManager.Instance.Player.Bamboo.ToString());
     }
 
 }

@@ -39,6 +39,7 @@ public class UserInfo
     public DateTime LastAccessDay => DateTime.Parse(_lastAccessDay); //마지막 접속일
     public int DayCount; //몇일 접속했나?
     public bool IsExistingUser; //기존 유저인가?
+    public bool IsCookTutorialClear; //요리씬 튜토리얼을 완료했는가?
     private bool _isExistingStory1Outro; //스토리1 아웃트로를 감상했는가?
 
     private AttendanceUserData _attendanceUserData;
@@ -84,6 +85,35 @@ public class UserInfo
         _lastAccessDay = paser;
     }
 
+
+    public void SetStoryOutro(StoryOutroType type)
+    {
+        switch (type)
+        {
+            case StoryOutroType.Story1:
+                _isExistingStory1Outro = true;
+                break;
+        }
+
+
+        OnSetOutroHandler?.Invoke();
+    }
+
+
+    public bool GetStoryOutroBool(StoryOutroType type)
+    {
+        switch (type)
+        {
+            case StoryOutroType.Story1:
+                return _isExistingStory1Outro;
+
+
+
+            default:
+                return false;
+        }
+    }
+
     #region UserInfoData
 
     public enum StoryOutroType
@@ -93,9 +123,10 @@ public class UserInfo
     }
 
 
+
     public event Action OnSetOutroHandler;
 
-
+    /// <summary>동기적으로 서버 유저 정보 불러옴</summary>
     public void LoadUserInfoData(BackendReturnObject callback)
     {
         JsonData json = callback.FlattenRows();
@@ -111,6 +142,9 @@ public class UserInfo
         _lastAccessDay = json[0]["LastAccessDay"].ToString();
         IsExistingUser = (bool)json[0]["IsExistingUser"];
 
+        if (json[0].ContainsKey("IsCookTutorialClear"))
+            IsCookTutorialClear = (bool)json[0]["IsCookTutorialClear"];
+
         if (json[0].ContainsKey("IsExistingStory1Outro"))
             _isExistingStory1Outro = (bool)json[0]["IsExistingStory1Outro"];
 
@@ -118,6 +152,7 @@ public class UserInfo
     }
 
 
+    /// <summary>동기적으로 서버 유저 정보 저장</summary>
     public void SaveUserInfoData(int maxRepeatCount)
     {
         string selectedProbabilityFileId = "UserInfo";
@@ -172,7 +207,64 @@ public class UserInfo
     }
 
 
-    public void InsertUserInfoData(string selectedProbabilityFileId)
+    /// <summary>비동기적으로 서버 유저 정보 저장</summary>
+    public void AsyncSaveUserInfoData(int maxRepeatCount)
+    {
+        string selectedProbabilityFileId = "UserInfo";
+
+        if (!Backend.IsLogin)
+        {
+            Debug.LogError("뒤끝에 로그인 되어있지 않습니다.");
+            return;
+        }
+
+        if (maxRepeatCount <= 0)
+        {
+            Debug.LogErrorFormat("{0} 차트의 정보를 받아오지 못했습니다.", selectedProbabilityFileId);
+            return;
+        }
+
+        Backend.GameData.Get(selectedProbabilityFileId, new Where(), bro =>
+        {
+            switch (BackendManager.Instance.ErrorCheck(bro))
+            {
+                case BackendState.Failure:
+                    break;
+
+                case BackendState.Maintainance:
+                    break;
+
+                case BackendState.Retry:
+                    AsyncSaveUserInfoData(maxRepeatCount - 1);
+                    break;
+
+                case BackendState.Success:
+
+                    if (bro.GetReturnValuetoJSON() != null)
+                    {
+                        if (bro.GetReturnValuetoJSON()["rows"].Count <= 0)
+                        {
+                            AsyncInsertUserInfoData(selectedProbabilityFileId);
+                        }
+                        else
+                        {
+                            AsyncUpdateUserInfoData(selectedProbabilityFileId, bro.GetInDate());
+                        }
+                    }
+                    else
+                    {
+                        AsyncInsertUserInfoData(selectedProbabilityFileId);
+                    }
+
+                    Debug.LogFormat("{0}정보를 저장했습니다..", selectedProbabilityFileId);
+                    break;
+            }
+        });   
+    }
+
+
+    /// <summary> 동기적으로 서버 유저 정보 삽입 </summary>
+    private void InsertUserInfoData(string selectedProbabilityFileId)
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
@@ -185,7 +277,8 @@ public class UserInfo
     }
 
 
-    public void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
+    /// <summary> 동기적으로 서버 유저 정보 수정 </summary>
+    private void UpdateUserInfoData(string selectedProbabilityFileId, string inDate)
     {
         string paser = DateTime.Now.ToString();
         _lastAccessDay = paser;
@@ -198,8 +291,36 @@ public class UserInfo
     }
 
 
+    /// <summary> 비동기적으로 서버 유저 정보 삽입 </summary>
+    private void AsyncInsertUserInfoData(string selectedProbabilityFileId)
+    {
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
+
+        Param param = GetUserInfoParam();
+
+        Debug.LogFormat("게임 정보 데이터 삽입을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataInsert(selectedProbabilityFileId, 10, param);
+    }
+
+
+    /// <summary> 비동기적으로 서버 유저 정보 수정 </summary>
+    private void AsyncUpdateUserInfoData(string selectedProbabilityFileId, string inDate)
+    {
+        string paser = DateTime.Now.ToString();
+        _lastAccessDay = paser;
+
+        Param param = GetUserInfoParam();
+
+        Debug.LogFormat("게임 정보 데이터 수정을 요청합니다.");
+
+        BackendManager.Instance.AsyncGameDataUpdate(selectedProbabilityFileId, inDate, 10, param);
+    }
+
+
     /// <summary> 서버에 저장할 유저 데이터를 모아 반환하는 클래스 </summary>
-    public Param GetUserInfoParam()
+    private Param GetUserInfoParam()
     {
         Param param = new Param();
 
@@ -207,39 +328,11 @@ public class UserInfo
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
+        param.Add("IsCookTutorialClear", IsCookTutorialClear);
         param.Add("IsExistingStory1Outro", _isExistingStory1Outro);
 
         return param;
     }
 
-
-    public void SetStoryOutro(StoryOutroType type)
-    {
-        switch (type)
-        {
-            case StoryOutroType.Story1:
-                _isExistingStory1Outro = true;
-                break;
-        }
-
-
-        OnSetOutroHandler?.Invoke();
-    }
-
-
-    public bool GetStoryOutroBool(StoryOutroType type)
-    {
-        switch (type)
-        {
-            case StoryOutroType.Story1:
-                return _isExistingStory1Outro;
-
-
-
-            default:
-                return false;
-        }
-    }
-
-    #endregion
+ #endregion
 }

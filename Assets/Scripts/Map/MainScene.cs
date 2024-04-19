@@ -10,5 +10,7 @@ public class MainScene : MonoBehaviour
         DatabaseManager.Instance.Challenges.CheckIsDone();
         StarterPanda.Instance.SwitchingScene();
         SoundManager.Instance.PlayBackgroundAudio(_backgroundAudioClip, 1);
+
+        Muks.DataBind.DataBind.SetTextValue("BambooCount", GameManager.Instance.Player.Bamboo.ToString());
     }
 }
