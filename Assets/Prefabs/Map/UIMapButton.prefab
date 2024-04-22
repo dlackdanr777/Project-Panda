@@ -477,6 +477,7 @@ GameObject:
   - component: {fileID: 2603259561425768700}
   - component: {fileID: 8500572426711429903}
   - component: {fileID: 2885345427296178284}
+  - component: {fileID: 3943205137478694782}
   m_Layer: 5
   m_Name: VillageButtonL
   m_TagString: Untagged
@@ -614,6 +615,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &3943205137478694782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444331138020155502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1444331138020155502}
+  _storyId: MS01E
+  _disableStoryId: 
 --- !u!1 &1648507781349904238
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +644,7 @@ GameObject:
   - component: {fileID: 1837494798831684535}
   - component: {fileID: 8314806467774394737}
   - component: {fileID: 2771771044909013086}
+  - component: {fileID: 7944900118537016443}
   m_Layer: 5
   m_Name: MarketButtonL
   m_TagString: Untagged
@@ -765,6 +782,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &7944900118537016443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648507781349904238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1648507781349904238}
+  _storyId: MS01G
+  _disableStoryId: 
 --- !u!1 &1715006638052749463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,6 +1410,140 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &2251723304368427419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5478896119430711037}
+  - component: {fileID: 2153036734138892334}
+  - component: {fileID: 1523296527923868328}
+  m_Layer: 5
+  m_Name: MapNameText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5478896119430711037
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251723304368427419}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9037123009851057125}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -259.62915, y: 535}
+  m_SizeDelta: {x: 719.2584, y: 152.2374}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2153036734138892334
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251723304368427419}
+  m_CullTransparentMesh: 1
+--- !u!114 &1523296527923868328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251723304368427419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\uB9F5 \uC774\uB984"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 687522e2502395e4d8b3925d06c8f622, type: 2}
+  m_sharedMaterial: {fileID: -8458389578604675477, guid: 687522e2502395e4d8b3925d06c8f622, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 80
+  m_fontSizeBase: 80
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &2357345418571096053
 GameObject:
   m_ObjectHideFlags: 0
@@ -2309,6 +2475,7 @@ GameObject:
   - component: {fileID: 8293151930810736277}
   - component: {fileID: 3977454196758079986}
   - component: {fileID: 8572246827936985199}
+  - component: {fileID: 2083277190597082339}
   m_Layer: 5
   m_Name: FishingGroundButtonL
   m_TagString: Untagged
@@ -2446,6 +2613,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &2083277190597082339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3103909819278754503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 3103909819278754503}
+  _storyId: MS01B
+  _disableStoryId: 
 --- !u!1 &3111756815144560838
 GameObject:
   m_ObjectHideFlags: 0
@@ -2650,6 +2832,7 @@ GameObject:
   - component: {fileID: 8696344785465470658}
   - component: {fileID: 5096939232761528615}
   - component: {fileID: 6512527493687194814}
+  - component: {fileID: 8432390739906822405}
   m_Layer: 5
   m_Name: CityHallButton
   m_TagString: Untagged
@@ -2990,6 +3173,7 @@ GameObject:
   - component: {fileID: 6372401213601084637}
   - component: {fileID: 3829783860871183126}
   - component: {fileID: 4829161153858299866}
+  - component: {fileID: 1036222309802567976}
   m_Layer: 5
   m_Name: InsideWishTreeButton
   m_TagString: Untagged
@@ -3127,6 +3311,22 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &1036222309802567976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3737087518783967094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aab2ee0714571da4d9633e2850fa2fc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 3737087518783967094}
+  _storyId: MS01O
+  _outroType: 0
+  _outroBoolCheck: 1
 --- !u!1 &3762866661716433491
 GameObject:
   m_ObjectHideFlags: 0
@@ -4126,6 +4326,7 @@ GameObject:
   - component: {fileID: 2548802259686360519}
   - component: {fileID: 2360096738129323813}
   - component: {fileID: 5014090652180118057}
+  - component: {fileID: 3637765260677028087}
   m_Layer: 5
   m_Name: VillageHouseButton
   m_TagString: Untagged
@@ -4263,6 +4464,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &3637765260677028087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4697909606255044223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 4697909606255044223}
+  _storyId: MS01E
+  _disableStoryId: 
 --- !u!1 &4755980148438787935
 GameObject:
   m_ObjectHideFlags: 0
@@ -4374,6 +4590,7 @@ GameObject:
   - component: {fileID: 5081771296377638295}
   - component: {fileID: 1867819703640852836}
   - component: {fileID: 2715012614762969473}
+  - component: {fileID: 4076153498665278247}
   m_Layer: 5
   m_Name: OtherworldlyForestButtonL
   m_TagString: Untagged
@@ -4511,6 +4728,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &4076153498665278247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4923532838453128362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 4923532838453128362}
+  _storyId: MS01L
+  _disableStoryId: 
 --- !u!1 &5084538335930083891
 GameObject:
   m_ObjectHideFlags: 0
@@ -4950,6 +5182,7 @@ GameObject:
   - component: {fileID: 4556341447368784543}
   - component: {fileID: 4204602749713221710}
   - component: {fileID: 7067828661375417511}
+  - component: {fileID: 9049012201805479015}
   m_Layer: 5
   m_Name: FishingGroundButtonR
   m_TagString: Untagged
@@ -5087,6 +5320,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &9049012201805479015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5203421075525954500}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 5203421075525954500}
+  _storyId: MS01B
+  _disableStoryId: 
 --- !u!1 &5369321510312904827
 GameObject:
   m_ObjectHideFlags: 0
@@ -5425,6 +5673,7 @@ GameObject:
   - component: {fileID: 6052977932732224684}
   - component: {fileID: 3422385317564808583}
   - component: {fileID: 7092383657276415872}
+  - component: {fileID: 3463892712554294487}
   m_Layer: 5
   m_Name: CityHallOfficeButton
   m_TagString: Untagged
@@ -5739,13 +5988,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5769703861939153096}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 136422539113300155}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 7, y: -122}
@@ -6925,6 +7174,7 @@ GameObject:
   - component: {fileID: 5041346631823538475}
   - component: {fileID: 1205829316029046791}
   - component: {fileID: 6606646515592871473}
+  - component: {fileID: 1474722004740899067}
   m_Layer: 5
   m_Name: CityHallButton
   m_TagString: Untagged
@@ -7076,6 +7326,7 @@ GameObject:
   - component: {fileID: 3415776772228217452}
   - component: {fileID: 7137646172470161867}
   - component: {fileID: 1713539657609436595}
+  - component: {fileID: 2539436016965907140}
   m_Layer: 5
   m_Name: MermaidButtonR
   m_TagString: Untagged
@@ -7213,6 +7464,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &2539436016965907140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7580713443700141998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 7580713443700141998}
+  _storyId: MS01B_1
+  _disableStoryId: 
 --- !u!1 &7612338861298865034
 GameObject:
   m_ObjectHideFlags: 0
@@ -7422,6 +7688,7 @@ RectTransform:
   m_Children:
   - {fileID: 3233912227851918297}
   - {fileID: 6748221744930508434}
+  - {fileID: 5478896119430711037}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7458,13 +7725,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _mapNameText: {fileID: 1523296527923868328}
   _treeAudioClip: {fileID: 8300000, guid: 361fc0ae2a24586429650306cf9ead3b, type: 3}
+  _mainTreeInsideAudioClip: {fileID: 0}
   _fishingGroundAudioClip: {fileID: 8300000, guid: 091f80d902cfd8242a308c6a4424f430, type: 3}
   _forestAudioClip: {fileID: 8300000, guid: dc490386216fcc544a48fb50c64e6ae3, type: 3}
   _crossRoadAudioClip: {fileID: 8300000, guid: b91bb3ed8bc8e9a408c9729c81de640b, type: 3}
-  _villageAudioClip: {fileID: 8300000, guid: d07363b149e31374b97a048c3cd8ef46, type: 3}
+  _villageAudioClip: {fileID: 8300000, guid: 9d14ea7cbecfa864aaab27817d81a418, type: 3}
   _marcketAudioClip: {fileID: 8300000, guid: 4e33cb4d7f3de42478344251bfc3cc38, type: 3}
+  _cityHallLobbyAudioClip: {fileID: 8300000, guid: e9cebe807ac586842a0cfbb5df71c622, type: 3}
+  _cityHallBossRoomAudioClip: {fileID: 8300000, guid: d07363b149e31374b97a048c3cd8ef46, type: 3}
   _catworldAudioClip: {fileID: 8300000, guid: e09f20c8e40c5a149a9bd44f4003135e, type: 3}
+  _castleNyangAudioClip: {fileID: 8300000, guid: ffbc9b956b736f946a5f797137831a3d, type: 3}
   _mermaidForestAudioClip: {fileID: 8300000, guid: 16889f5dd3e3c054cb84880a74305cd2, type: 3}
   _villageHouseAudioClip: {fileID: 8300000, guid: 8d26b3cb97af0104391d55cdd020f36c, type: 3}
 --- !u!1 &8431786537916845863
@@ -8303,6 +8575,7 @@ GameObject:
   - component: {fileID: 7393434285994278227}
   - component: {fileID: 4111222492175977412}
   - component: {fileID: 4512294450147662336}
+  - component: {fileID: 3796246383283316942}
   m_Layer: 5
   m_Name: VillageButton
   m_TagString: Untagged
@@ -8440,6 +8713,21 @@ MonoBehaviour:
   _targetTransform: {fileID: 0}
   _minSize: {x: 0, y: 0}
   _targetTransformName: 
+--- !u!114 &3796246383283316942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8925496219427845994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 8925496219427845994}
+  _storyId: MS01E
+  _disableStoryId: 
 --- !u!1001 &9094178068959208837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8536,15 +8824,24 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6181487276425596509, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8432390739906822405}
     - targetCorrespondingSourceObject: {fileID: 2929786314670375778, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1281396251653948378}
     - targetCorrespondingSourceObject: {fileID: 6250063790343099595, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 19567844249024266}
+    - targetCorrespondingSourceObject: {fileID: 3744338397427335579, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3463892712554294487}
     - targetCorrespondingSourceObject: {fileID: 3859885745981230938, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1664537462734386730}
+    - targetCorrespondingSourceObject: {fileID: 1791550256720523416, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1474722004740899067}
     - targetCorrespondingSourceObject: {fileID: 5418118744565692795, guid: f90088387e29d174da9bcb16f6cd0b01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8778574558757714139}
@@ -8570,6 +8867,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8432390739906822405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169424902277557208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 3169424902277557208}
+  _storyId: MS01G
+  _disableStoryId: 
 --- !u!95 &8778574558757714139
 Animator:
   serializedVersion: 5
@@ -8612,6 +8924,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3463892712554294487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5603477574751953950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 5603477574751953950}
+  _storyId: MS01G
+  _disableStoryId: 
 --- !u!95 &1281396251653948378
 Animator:
   serializedVersion: 5
@@ -8633,3 +8960,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1474722004740899067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7415704217666458909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e257b14bc05f54f80abfbe4ba06c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 7415704217666458909}
+  _storyId: MS01G
+  _disableStoryId: 
