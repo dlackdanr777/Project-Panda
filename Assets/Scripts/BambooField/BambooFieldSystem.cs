@@ -36,7 +36,7 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
 
     [SerializeField] private GameObject _harvestBamboos;
     [SerializeField] private GameObject _harvestBamboo;
-    private GameObject[] _bambooPrefabs = new GameObject[50];
+    private GameObject[] _bambooPrefabs = new GameObject[20];
     private int _bambooPrefabCount;
 
     // 저장할 값
@@ -201,28 +201,29 @@ public class BambooFieldSystem : SingletonHandler<BambooFieldSystem>
             }
             else
             {
+                _player.GainBamboo(totalCount);
                 //여기에 서버저장
                 AsyncSaveBambooFieldData(3);
                 GameManager.Instance.Player.AsyncSaveBambooData(3);
             }
         });
-
+        // 대나무 표시 창으로 이동 후 삭제
         Tween.TransformMove(_bambooPrefabs[count], _targetPos, 0.7f, TweenMode.Quadratic, () =>
         {
-            if (totalCount - currentCount <= 20)
-            {
-                for (int i = currentCount; i <= totalCount; i++)
-                {
-                    _player.GainBamboo(1);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 20; i++)
-                {
-                    _player.GainBamboo(1);
-                }
-            }
+            //if (totalCount - currentCount <= 20)
+            //{
+            //    for (int i = currentCount; i <= totalCount; i++)
+            //    {
+            //        _player.GainBamboo(1);
+            //    }
+            //}
+            //else
+            //{
+            //    for (int i = 0; i < 20; i++)
+            //    {
+            //        _player.GainBamboo(1);
+            //    }
+            //}
             _bambooPrefabs[count].SetActive(false);
         });
 

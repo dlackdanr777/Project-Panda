@@ -337,6 +337,7 @@ public class Collection : MonoBehaviour
         switch (_gatheringType)
         {
             case GatheringItemType.Bug:
+                StarterPanda.Instance.gameObject.transform.position += new Vector3(0, -0.5f, 0); // 곤충 채집 세부 위치 조정
                 break;
 
             case GatheringItemType.Fish:
