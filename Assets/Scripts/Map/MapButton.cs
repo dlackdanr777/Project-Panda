@@ -103,12 +103,10 @@ public class MapButton : MonoBehaviour
         {
             _currentMapID = "MN01";
             _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
-            Tween.TMPAlpha(_mapNameText.gameObject, 0, 2f, TweenMode.Constant, (System.Action)(() =>
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 3f, TweenMode.Constant, (System.Action)(() =>
             {
                 ShowMapName();
             }));
-            
-
         }
         // ¾À º¯°æµÉ ¶§
         else
