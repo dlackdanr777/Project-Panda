@@ -22,6 +22,7 @@ public class LoadingSceneManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(LoadScene());
+        GC.Collect();
     }
 
 
