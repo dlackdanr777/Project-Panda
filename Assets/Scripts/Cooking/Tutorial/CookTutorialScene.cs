@@ -97,7 +97,7 @@ namespace CookingTutorial
 
             _uiCookTutorial.Dialogue.EndDialogue();
             yield return YieldCache.WaitForSeconds(1);
-            LoadingSceneManager.LoadScene("24_01_09_Integrated");
+            LoadingSceneManager.LoadScene("CookingScene");
         }
 
     }
