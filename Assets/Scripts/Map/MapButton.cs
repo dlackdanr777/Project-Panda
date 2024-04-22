@@ -103,7 +103,7 @@ public class MapButton : MonoBehaviour
         {
             _currentMapID = "MN01";
             _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
-            Tween.TMPAlpha(_mapNameText.gameObject, 0, 3f, TweenMode.Constant, (System.Action)(() =>
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 4f, TweenMode.Constant, (System.Action)(() =>
             {
                 ShowMapName();
             }));
@@ -434,9 +434,9 @@ public class MapButton : MonoBehaviour
     private void ShowMapName()
     {
         _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
-        Tween.TMPAlpha(_mapNameText.gameObject, 1, 1f, TweenMode.Constant, (System.Action)(() =>
+        Tween.TMPAlpha(_mapNameText.gameObject, 1, 1.5f, TweenMode.EaseOutExpo, (System.Action)(() =>
         {
-            Tween.TMPAlpha(_mapNameText.gameObject, 0, 1.5f, TweenMode.Quadratic);
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 1.5f, TweenMode.EaseInExpo);
         }));
     }
 
