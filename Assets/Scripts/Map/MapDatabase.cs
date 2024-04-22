@@ -46,7 +46,7 @@ public class MapDatabase
         }
         string id = string.Empty;
 
-        id = _dataMap[0]["MapID"].ToString();
+        id = _dataMap[0]["ID"].ToString();
         if (GameObject.Find(id + "BackGround") == null)
         {
             _isMapExists = false;
@@ -55,7 +55,7 @@ public class MapDatabase
 
         for (int i = 0; i < _dataMap.Count; i++)
         {
-            id = _dataMap[i]["MapID"].ToString();
+            id = _dataMap[i]["ID"].ToString();
             string name = _dataMap[i]["Name"].ToString();
             GameObject[] backGround = new GameObject[System.Enum.GetValues(typeof(ETime)).Length];
 

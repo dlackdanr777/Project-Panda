@@ -4,12 +4,15 @@ using Muks.Tween;
 using Muks.DataBind;
 using UnityEngine.SceneManagement;
 using BT;
+using TMPro;
 
 public class MapButton : MonoBehaviour
 {
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private Transform[] _targetTransform;// = new Transform[DatabaseManager.Instance.GetMapDic().Count];
+
+    [SerializeField] private TextMeshProUGUI _mapNameText;
 
     [Space]
     [Header("AudioClips")]
@@ -31,13 +34,15 @@ public class MapButton : MonoBehaviour
 
     private float _fadeTime = 1f;
     private int _currentMap;
+    private string _currentMapID;
     public int CurrentMap
     {
         get { return _currentMap; }
         set
         {
             _currentMap = value;
-            TimeManager.Instance.CurrentMap = "MN" + ((_currentMap + 1 >= 10) ? _currentMap + 1 : "0" + (_currentMap + 1));
+            _currentMapID = "MN" + ((_currentMap + 1 >= 10) ? _currentMap + 1 : "0" + (_currentMap + 1));
+            TimeManager.Instance.CurrentMap = _currentMapID;
         }
     }
     //private Vector2 _forestMapSize; // 맵마다 크기가 다르다면 설정
@@ -74,7 +79,6 @@ public class MapButton : MonoBehaviour
         if(tmpCameraPos != Vector3.zero)
             _cameraController.transform.position = tmpCameraPos;
 
-
         DataBind.SetUnityActionValue("WishTreeButton", MoveWishTree);
         DataBind.SetUnityActionValue("FishingGroundButton", MoveFishingGround);
         DataBind.SetUnityActionValue("ForestEntranceButton", MoveForestEntrance);
@@ -90,6 +94,27 @@ public class MapButton : MonoBehaviour
         DataBind.SetUnityActionValue("CityHallOfficeButton", MoveCityHallOffice);
         DataBind.SetUnityActionValue("CatCastleButton", MoveCatCastle);
         DataBind.SetUnityActionValue("InsideWishTreeButton", MoveInsideWishTree);
+    }
+
+    private void Start()
+    {
+        // 처음 시작
+        if (_currentMapID == null)
+        {
+            _currentMapID = "MN01";
+            _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 2f, TweenMode.Constant, (System.Action)(() =>
+            {
+                ShowMapName();
+            }));
+            
+
+        }
+        // 씬 변경될 때
+        else
+        {
+            ShowMapName();
+        }
     }
 
     /// <summary>
@@ -359,10 +384,7 @@ public class MapButton : MonoBehaviour
                 Camera.main.transform.position = targetPos + new Vector3(-lx, 0, 0);
             }
 
-            //Vector3 pandaPosition = new Vector3(_targetTransform[CurrentMap].position.x + Random.Range(-_width + 1, _width - 1), _targetTransform[CurrentMap].position.y - 12, StarterPanda.Instance.gameObject.transform.position.z);
-            //StarterPanda.Instance.gameObject.transform.position = pandaPosition;
-
-            FadeInOutManager.Instance.FadeOut(_fadeTime);
+            FadeOut();
         }));
     }
 
@@ -381,7 +403,7 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
-            FadeInOutManager.Instance.FadeOut(_fadeTime);
+            FadeOut();
         }));
     }
 
@@ -397,10 +419,28 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos;
 
-            FadeInOutManager.Instance.FadeOut(_fadeTime);
+            FadeOut();
         }));
     }
 
+    private void FadeOut()
+    {
+        FadeInOutManager.Instance.FadeOut(_fadeTime, 0, (System.Action)(() =>
+        {
+            ShowMapName();
+        }));
+    }
+
+    /// <summary>
+    /// 맵 변경 후 일정시간 맵 이름 나타내는 함수</summary>
+    private void ShowMapName()
+    {
+        _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
+        Tween.TMPAlpha(_mapNameText.gameObject, 1, 1f, TweenMode.Constant, (System.Action)(() =>
+        {
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 1.5f, TweenMode.Quadratic);
+        }));
+    }
 
     /// <summary>메인 씬에서 다른 씬으로 변경될때 실행되는 함수</summary>
     private void OnSceneChanged()
