@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -140,6 +139,7 @@ namespace Cooking
 
         public RecipeData GetCurrentRecipe()
         {
+            Debug.Log(_currentRecipeData);
             return _currentRecipeData;
         }
 

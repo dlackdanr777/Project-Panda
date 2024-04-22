@@ -66,7 +66,7 @@ namespace Cooking
 
         public override void StopStep()
         {
-            _cookSystem.SetCurrentRecipe(_materialItemSlots[0].CurrentItem, _materialItemSlots[1].CurrentItem);
+            //_cookSystem.SetCurrentRecipe(_materialItemSlots[0].CurrentItem, _materialItemSlots[1].CurrentItem);
             gameObject.SetActive(false);
         }
 
@@ -112,8 +112,15 @@ namespace Cooking
 
         private void CheckMaterialItemSlot()
         {
-            bool enableCheck = _materialItemSlots[0].CurrentItem != null || _materialItemSlots[1].CurrentItem != null;
+            _cookSystem.SetCurrentRecipe(_materialItemSlots[0].CurrentItem, _materialItemSlots[1].CurrentItem);
 
+            if(_cookSystem.GetCurrentRecipe() == null)
+            {
+                _uiCook.CookStepSlot.DisableRightButton();
+                return;
+            }
+
+            bool enableCheck = _materialItemSlots[0].CurrentItem != null || _materialItemSlots[1].CurrentItem != null;
             if (_materialItemSlots[0].CurrentItem != null && _materialItemSlots[1].CurrentItem != null)
             {
                 //만약 2구가 같은 아이템이 들어가있고 아이템 카운트가 2 이상이면 활성화
