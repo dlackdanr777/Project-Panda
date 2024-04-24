@@ -69,7 +69,7 @@ public class MainStoryCollection : MonoBehaviour
 
     /// <summary> 현재 채집 종류 </summary>
     [SerializeField] private GatheringItemType _gatheringType;
-    private string[] _isCollecting = { "IsCollectingBug", "IsCollectingFish", "IsCollectingFruit" };
+    private string[] _collecting = { "CollectingBug", "CollectingFish", "CollectingFruit" };
 
     [SerializeField] private string toolId; // 나중에 플레이어 도구 정보로 수정
 
@@ -202,8 +202,6 @@ public class MainStoryCollection : MonoBehaviour
         OnCollectionButtonClicked?.Invoke(_fadeTime, _gatheringType, MainStoryID); // 화면 FadeOut
         ClickCollectionButton();
 
-        //// 채집 가능 아이콘 생성
-        //_collectionButton.gameObject.SetActive(true);
         _starButton.SetActive(false);
 
         DataBind.GetUnityActionValue("HideMainUIButton")?.Invoke();
@@ -212,7 +210,6 @@ public class MainStoryCollection : MonoBehaviour
 
     private void ClickCollectionButton()
     {
-        //_fadeTime = fadeTime;
         Invoke("ReadyCollection", _fadeTime);
     }
 
@@ -232,9 +229,8 @@ public class MainStoryCollection : MonoBehaviour
 
         // 캐릭터가 채집 포인트로 이동
         _lastPandaPosition = starterPanda.gameObject.transform.position;
-        //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
         _lastPandaScale = starterPanda.gameObject.transform.localScale;
-        //starterPanda.gameObject.transform.position = _currentCollectionPosition + _pandaTransform.position;
+
         if (_gatheringType == GatheringItemType.Fish)
         {
             if (starterPanda.gameObject.transform.localScale.x < 0)
@@ -281,9 +277,6 @@ public class MainStoryCollection : MonoBehaviour
         }
 
         // 판다 채집 준비
-        _pandaCollectionAnim.SetInteger("Num", -1);
-        _pandaCollectionAnim.Play("Idle");
-        //_pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.enabled = true;
     }
 
@@ -294,7 +287,6 @@ public class MainStoryCollection : MonoBehaviour
         GameManager.Instance.FriezeCameraMove = set;
         GameManager.Instance.FriezeCameraZoom = set;
         GameManager.Instance.FirezeInteraction = set;
-        //Camera.main.gameObject.transform.position = _targetPos;
     }
 
     /// <summary>
@@ -315,15 +307,13 @@ public class MainStoryCollection : MonoBehaviour
                 break;
         }
 
-
-
         StarterPanda starterPanda = StarterPanda.Instance;
         // 말풍선 위치 고정
         gameObject.transform.position = new Vector3(starterPanda.transform.position.x, starterPanda.transform.position.y + 3, gameObject.transform.position.z);
 
         // 채집 애니메이션 판다와 말풍선 실행
         _pandaCollectionAnim.enabled = true;
-        _pandaCollectionAnim.SetTrigger(_isCollecting[(int)_gatheringType]);
+        _pandaCollectionAnim.Play(_collecting[(int)_gatheringType]);
 
         _speechBubble.gameObject.SetActive(true);
         _speechBubble.enabled = true;
@@ -377,8 +367,6 @@ public class MainStoryCollection : MonoBehaviour
             GameManager.Instance.Player.AddItemById(collectionID, 1);
             MainStoryController.SortingNextStory(); // 조건 충족되었는지 확인해서 정렬
 
-            // 도감 업데이트
-
             // 도전 과제 달성
             //DatabaseManager.Instance.Challenges.GatheringSuccess((int)_gatheringType);
         }
@@ -396,8 +384,8 @@ public class MainStoryCollection : MonoBehaviour
     private void ExitCollection()
     {
         _pandaCollectionAnim.SetBool("IsCollectionLatency", false);
+
         // 포야 원래 상태로 설정
-        //_pandaCollectionAnim.SetInteger("Num", StarterPanda.Instance.Num);
         _pandaCollectionAnim.enabled = false;
         _pandaSpriteRenderer.sprite = _pandaImage;
         if (!_isPoyaActive)
@@ -423,8 +411,6 @@ public class MainStoryCollection : MonoBehaviour
 
         DataBind.GetUnityActionValue("ShowMainUIButton")?.Invoke();
         CameraSet(false);
-        //_targetPos = new Vector3(_lastPandaPosition.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-        //Camera.main.gameObject.transform.position = _targetPos;
         _isClickStarButton = false;
     }
 }

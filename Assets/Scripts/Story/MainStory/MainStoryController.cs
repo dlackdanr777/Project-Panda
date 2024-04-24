@@ -169,20 +169,14 @@ public class MainStoryController : MonoBehaviour
 
         // 버튼 크기 설정
         UnityEngine.Vector2 rendererSize = DatabaseManager.Instance.GetNPCImageById(_npcID).rect.size;
-        if (rendererSize.x > 1000 || rendererSize.x < 1000)
-        {
-            rendererSize *= 0.5f;
-        }
+        //if (rendererSize.x > 1000 || rendererSize.x < 1000)
+        //{
+        //    rendererSize *= 0.5f;
+        //}
         rendererSize *= transform.localScale;
         if (rendererSize.x < 0)
         {
             rendererSize.x = -rendererSize.x;
-        }
-        //rendererSize *= (new Vector3(0.1f, 0.1f, 0.1f) + transform.localScale / 2f);
-        if (rendererSize.y > 700)
-        {
-            rendererSize.x /= 1.7f;
-            rendererSize.y /= 1.7f;
         }
         _npcButton = Instantiate(npcButton, transform.position, UnityEngine.Quaternion.identity, parent);
         _npcButton.Init(transform, rendererSize, DatabaseManager.Instance.GetNPCIntimacyImageById(_npcID), () => OnClickStartButton(), _transform);

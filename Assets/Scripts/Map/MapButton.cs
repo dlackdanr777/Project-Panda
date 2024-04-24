@@ -434,9 +434,9 @@ public class MapButton : MonoBehaviour
     private void ShowMapName()
     {
         _mapNameText.text = TimeManager.Instance.MapDatabase.GetMapDic()[_currentMapID].Name;
-        Tween.TMPAlpha(_mapNameText.gameObject, 1, 1.5f, TweenMode.EaseOutExpo, (System.Action)(() =>
+        Tween.TMPAlpha(_mapNameText.gameObject, 1, 1f, TweenMode.EaseOutExpo, (System.Action)(() =>
         {
-            Tween.TMPAlpha(_mapNameText.gameObject, 0, 1.5f, TweenMode.EaseInExpo);
+            Tween.TMPAlpha(_mapNameText.gameObject, 0, 1f, TweenMode.EaseInExpo);
         }));
     }
 
