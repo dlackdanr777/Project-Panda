@@ -136,24 +136,30 @@ public class UICollection : MonoBehaviour
 
         _resultTextImage.gameObject.SetActive(true);
 
-        //string text;
-        //if (gatheringItemType == GatheringItemType.Fruit)
-        //{
-        //    text = "와!";
-        //}
-        //else
-        //{
-        //    text = "잡았다!";
-        //}
-
-        if (gatheringItem.Name.Length > 7)
+        // 과일이면 "찾았다" 출력
+        if (gatheringItemType == GatheringItemType.Fruit)
         {
-            _resultText.text = "잡았다!\n" + gatheringItem.Name + "!";
+            if (gatheringItem.Name.Length > 7)
+            {
+                _resultText.text = "찾았다!\n" + gatheringItem.Name + "!";
+            }
+            else
+            {
+                _resultText.text = "찾았다! " + gatheringItem.Name + "!";
+            }
         }
         else
         {
-            _resultText.text = "잡았다! " + gatheringItem.Name + "!";
+            if (gatheringItem.Name.Length > 7)
+            {
+                _resultText.text = "잡았다!\n" + gatheringItem.Name + "!";
+            }
+            else
+            {
+                _resultText.text = "잡았다! " + gatheringItem.Name + "!";
+            }
         }
+
 
         _successImage.gameObject.SetActive(true);
 
