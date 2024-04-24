@@ -444,6 +444,8 @@ namespace Muks.BackEnd
             }
             else
             {
+                LogUpload(bro);
+
                 if (bro.IsClientRequestFailError()) // 클라이언트의 일시적인 네트워크 끊김 시
                 {
                     Debug.LogError("일시적인 네트워크 끊김");
@@ -556,6 +558,17 @@ namespace Muks.BackEnd
                     return false;
                 }
             }
+        }
+
+
+        public void LogUpload(BackendReturnObject bro)
+        {
+            if (bro.IsSuccess())
+                return;
+            Param logParam = new Param();
+            logParam.Add("errorLog", bro.ToString());
+
+            Backend.GameLog.InsertLogV2("updateLog", logParam);
         }
 
 
