@@ -28,6 +28,17 @@ public class SingletonHandler<T> : MonoBehaviour where T : MonoBehaviour
 
     public virtual void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        GameObject obj = GameObject.Find(typeof(T).Name);
+
+        if (!obj || !instance)
+        {
+            instance = gameObject.GetComponent<T>();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 }

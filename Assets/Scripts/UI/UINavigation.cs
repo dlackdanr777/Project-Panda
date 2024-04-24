@@ -13,21 +13,26 @@ public struct ViewDicStruct
     public UIView UIView;
 }
 
+
 public class UINavigation : MonoBehaviour
 {
 
     [Tooltip("최상위 lootUIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct _rootUiView;
 
+    [Tooltip("최상위 종료 UI를 넣는 곳")]
+    [SerializeField] private ViewDicStruct _exitUiView;
+
     [Tooltip("이 클래스에서 관리할 UIView를 넣는 곳")]
     [SerializeField] private ViewDicStruct[] _uiViewList;
 
-    [SerializeField]  private List<UIView> _uiViews = new List<UIView>();
+    private List<UIView> _uiViews = new List<UIView>();
 
     private Dictionary<string, UIView> _viewDic = new Dictionary<string, UIView>();
 
-    public int Count => _uiViews.Count;
+    private int _hideMainUICount = 0;
 
+    public int Count => _uiViews.Count;
 
 
     private void Start()
@@ -35,17 +40,37 @@ public class UINavigation : MonoBehaviour
         Init();
     }
 
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Pop();
+            //만약 켜져있는 UI가 있을 경우엔 UI를 끈다
+            if(0 < Count)
+            {
+                Pop();
+            }
+
+            //아닐 경우엔 게임 종료 UI를 띄운다.
+            else
+            {
+                Push(_exitUiView.Name);
+            }
+
         }
     }
 
+
     private void Init()
     {
-        _rootUiView.UIView.Init(this);
+        _viewDic.Clear();
+        _rootUiView.UIView?.Init(this);
+
+        if(_exitUiView.UIView != null)
+        {
+            _exitUiView.UIView.Init(this);
+            _viewDic.Add(_exitUiView.Name, _exitUiView.UIView);
+        }
 
         for (int i = 0, count = _uiViewList.Length; i < count; i++)
         {
@@ -53,9 +78,9 @@ public class UINavigation : MonoBehaviour
             UIView uiView = _uiViewList[i].UIView;
             _viewDic.Add(name, uiView);
             uiView.Init(this);
-            uiView.gameObject.SetActive(false);
         }
     }
+
 
     public bool Check(string viewName)
     {
@@ -65,18 +90,14 @@ public class UINavigation : MonoBehaviour
                 return true;
         }
         return false;
-
     }
 
 
-    /// <summary>
-    /// 이름을 받아 현재 이름의 view를 열어주는 함수
-    /// </summary>
+    /// <summary>이름을 받아 현재 이름의 view를 열어주는 함수</summary>
     public void Push(string viewName)
     {
         if (_viewDic.TryGetValue(viewName, out UIView uiView))
         {
-
             foreach (UIView view in _viewDic.Values)
             {
                 if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
@@ -95,11 +116,11 @@ public class UINavigation : MonoBehaviour
             {
                 _uiViews.Remove(uiView);
                 _uiViews.Add(uiView);
+                uiView.gameObject.SetActive(true);
             }
 
-            uiView.gameObject.SetActive(true);
             uiView.RectTransform.SetAsLastSibling();
-            CheckViewListCount();
+            CheckViewListUnlockCamera();
         }
         else
         {
@@ -108,9 +129,7 @@ public class UINavigation : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 현재 ui 전에 열렸던 ui를 불러오는 함수
-    /// </summary>
+    /// <summary>현재 ui 전에 열렸던 ui를 불러오는 함수</summary> 
     public void Pop()
     {
 
@@ -126,24 +145,20 @@ public class UINavigation : MonoBehaviour
         if (_uiViews.Count <= 0)
             return;
 
-        //_currentView.Hide();
-        _uiViews.Last().Hide();
+        UIView selectView = _uiViews.Last();
+        selectView.Hide();
         _uiViews.RemoveAt(Count - 1);
 
         if (1 <= _uiViews.Count)
             _uiViews.Last().RectTransform.SetAsLastSibling();
 
-        CheckViewListCount();
-
+        StartCoroutine(CheckHideVisibleState(selectView));
     }
 
 
-    /// <summary>
-    /// viewName을 확인해 해당 UI 를 감추는 함수
-    /// </summary>
+    /// <summary> viewName을 확인해 해당 UI 를 감추는 함수</summary>
     public void Pop(string viewName)
     {
-
         foreach (UIView view in _viewDic.Values)
         {
             if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
@@ -163,19 +178,16 @@ public class UINavigation : MonoBehaviour
         selectView.Hide();
         _uiViews.Remove(selectView);
 
-        if (1 <= _uiViews.Count)
-            _uiViews.Last().RectTransform.SetAsLastSibling();
+        StartCoroutine(CheckHideVisibleState(selectView));
 
-        CheckViewListCount();
+/*        if (1 <= _uiViews.Count)
+            _uiViews.Last().RectTransform.SetAsLastSibling();*/
     }
 
 
-    /// <summary>
-    /// 맨 처음 열렸던 ui로 이동하는 함수
-    /// </summary>
+    /// <summary>맨 처음 열렸던 ui로 이동하는 함수</summary>
     public void Clear()
     {
-
         foreach (UIView view in _viewDic.Values)
         {
             if (view.VisibleState == VisibleState.Disappearing || view.VisibleState == VisibleState.Appearing)
@@ -185,13 +197,12 @@ public class UINavigation : MonoBehaviour
             }
         }
 
-
         while (_uiViews.Count > 0)
         {
             _uiViews.Last().Hide();
             _uiViews.Remove(_uiViews.Last());
         }
-        CheckViewListCount();
+        CheckViewListUnlockCamera();
     }
 
 
@@ -218,30 +229,75 @@ public class UINavigation : MonoBehaviour
         }
     }
 
+
     public void HideMainUI()
     {
+        _hideMainUICount += 1;
         _rootUiView.UIView.gameObject?.SetActive(false);
     }
 
+
     public void ShowMainUI()
     {
-        _rootUiView.UIView.gameObject?.SetActive(true);
+        _hideMainUICount = Mathf.Clamp(_hideMainUICount - 1, 0, 1000);
+
+        if(_hideMainUICount == 0)
+            _rootUiView.UIView.gameObject?.SetActive(true);
     }
 
 
-    public void CheckViewListCount()
+    public UIView GetUIView(string viewName)
     {
+        if(_viewDic.TryGetValue(viewName, out UIView view))
+        {
+            return view;
+        }
+
+        return view;
+    }
+
+
+    /// <summary>View들의 갯수, 카메라잠금 여부를 확인해 카메라 조작, 상호작용을 제한하는 함수 </summary>
+    public void CheckViewListUnlockCamera()
+    {
+
         if(0 < _uiViews.Count)
         {
-            GameManager.Instance.FriezeCameraMove = true;
-            GameManager.Instance.FriezeCameraZoom = true;
-            GameManager.Instance.FirezeInteraction = true;
+            if (_uiViews.Last().UnlockCamera)
+            {
+                GameManager.Instance.FriezeCameraMove = false;
+                GameManager.Instance.FriezeCameraZoom = false;
+                GameManager.Instance.FirezeInteraction = false;
+            }
+            else
+            {
+                GameManager.Instance.FriezeCameraMove = true;
+                GameManager.Instance.FriezeCameraZoom = true;
+                GameManager.Instance.FirezeInteraction = true;
+            }
+
         }
         else
         {
             GameManager.Instance.FriezeCameraMove = false;
             GameManager.Instance.FriezeCameraZoom = false;
             GameManager.Instance.FirezeInteraction = false;
+        }
+    }
+
+
+    /// <summary> UI가 완전히 닫혔을때를 체크하는 코루틴 </summary>
+    private IEnumerator CheckHideVisibleState(UIView hideView)
+    {
+        while(true)
+        {
+            if(hideView.VisibleState == VisibleState.Disappeared || hideView.VisibleState == VisibleState.Appeared)
+            {
+                CheckViewListUnlockCamera();
+                yield break;
+            }
+
+            yield return YieldCache.WaitForSeconds(0.02f);
         }
     }
 }

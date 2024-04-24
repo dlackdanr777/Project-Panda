@@ -6,7 +6,6 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 
-public class AddComplateStory : UnityEngine.Events.UnityEvent<int> { }
 
 public enum DialogueState
 {
@@ -19,6 +18,7 @@ public enum DialogueState
 public class UIDialogue : UIView
 {
     [SerializeField] private Image _pandaImage;
+    [SerializeField] private Sprite _starterImage;
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
 
@@ -33,8 +33,9 @@ public class UIDialogue : UIView
     private bool _isStoryStart;
     private bool _isSkipEnabled;
     private Coroutine _contextAnimeRoutine;
+    private Coroutine _skipDisableRoutine;
 
-    public static event Action<int> OnComplateHandler;
+    public static Action<string> OnComplateHandler;
 
 
     public override void Init(UINavigation uiNav)
@@ -46,10 +47,17 @@ public class UIDialogue : UIView
         PandaStoryController.OnStartInteractionHandler += StartStory;
         DataBind.SetTextValue("DialogueName", " ");
         DataBind.SetTextValue("DialogueContexts", " ");
-        DataBind.SetButtonValue("DialogueNextButton", OnNextButtonClicked);
+        DataBind.SetUnityActionValue("DialogueNextButton", OnNextButtonClicked);
 
         _leftButton.Init();
         _rightButton.Init();
+
+        gameObject.SetActive(false);
+    }
+
+    public void OnDestroy()
+    {
+        PandaStoryController.OnStartInteractionHandler -= StartStory;
     }
 
 
@@ -62,12 +70,13 @@ public class UIDialogue : UIView
         _rightButton.Disabled();
 
         _currentIndex = 0;
-        CancelInvoke("SkipDisable");
         _isSkipEnabled = false;
-
 
         if (_contextAnimeRoutine != null)
             StopCoroutine(_contextAnimeRoutine);
+
+        if (_skipDisableRoutine != null)
+            StopCoroutine(_skipDisableRoutine);
 
         Tween.RectTransfromAnchoredPosition(gameObject, _tempPos, 1f, TweenMode.EaseInOutBack, () => 
         {
@@ -80,7 +89,7 @@ public class UIDialogue : UIView
             _uiNav.ShowMainUI();
         });
 
-        if (!StoryManager.Instance._storyCompleteList.Contains(_dialogue.StoryID))
+        if (!StoryManager.Instance.CheckCompletedStoryById(_dialogue.StoryID))
         {
             foreach (StoryEventData data in _eventDatas)
             {
@@ -129,6 +138,10 @@ public class UIDialogue : UIView
         {
             case DialogueState.Context:
                 _state = DialogueState.None;
+
+                if (_skipDisableRoutine != null)
+                    StopCoroutine(_skipDisableRoutine);
+                _skipDisableRoutine = StartCoroutine(SkipDisable(0.3f));
                 return;
 
             case DialogueState.Choice: return;
@@ -186,7 +199,7 @@ public class UIDialogue : UIView
 
     private void StartStory(PandaStoryController stroyController, StoryDialogue storyDialogue, StoryEventData[] eventDatas)
     {
-        if (_isStoryStart || StoryManager.Instance._storyCompleteList.Contains(storyDialogue.StoryID))
+        if (_isStoryStart || StoryManager.Instance.CheckCompletedStoryById(storyDialogue.StoryID))
         {
             Debug.Log("이미 시작중이거나 완료된 퀘스트 입니다.");
             return;
@@ -198,20 +211,42 @@ public class UIDialogue : UIView
         _uiNav.Push("Dialogue");
         _isStoryStart = true;
 
-        Debug.Log(_eventDatas.Length);
+        //판다 도감에 추가
+        for(int i=0;i<DatabaseManager.Instance.GetNPCList().Count;i++)
+        {
+            if (storyDialogue.PandaID.Equals(DatabaseManager.Instance.GetNPCList()[i].Id) && !DatabaseManager.Instance.GetNPCList()[i].IsReceived)
+            {
+                Debug.Log(storyDialogue.PandaID + "를 만났다");
+                if(DatabaseManager.Instance.GetNPCList()[i].IsReceived != true)
+                {
+                    DatabaseManager.Instance.GetNPCList()[i].IsReceived = true;
+                    DatabaseManager.Instance.Challenges.UnlockingBook("NPC"); // 도전 과제 달성 체크
+                }
+            }
+        }
     }
 
 
     private IEnumerator ContextAnime(DialogData data)
     {
         _state = DialogueState.Context;
-        _isSkipEnabled = false;
+
+        if (_skipDisableRoutine != null)
+            StopCoroutine(_skipDisableRoutine);
+        _skipDisableRoutine = StartCoroutine(SkipDisable(0.2f));
 
         _pandaImage.sprite = DatabaseManager.Instance.GetPandaImage(1).NomalImage;
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 1);
 
-        Invoke("SkipDisable", 0.5f);
-        DataBind.SetTextValue("DialogueName", data.TalkPandaID.ToString());
+        DataBind.SetTextValue("DialogueName", DatabaseManager.Instance.GetNPCNameById(data.TalkPandaID));
+        if (data.TalkPandaID.Equals("스타터"))
+        {
+            DataBind.SetSpriteValue("DialoguePandaImage", _starterImage);
+        }
+        else
+        {
+            DataBind.SetSpriteValue("DialoguePandaImage", DatabaseManager.Instance.GetNPCImageById(data.TalkPandaID));
+        }
 
         char[] tempChars = data.Contexts.ToCharArray();
         string tempString = string.Empty;
@@ -257,10 +292,10 @@ public class UIDialogue : UIView
 
     }
 
-
-    private void SkipDisable()
+    private IEnumerator SkipDisable(float value)
     {
+        _isSkipEnabled = false;
+        yield return new WaitForSeconds(value);
         _isSkipEnabled = true;
     }
-
 }

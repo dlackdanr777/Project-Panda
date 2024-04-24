@@ -1928,9 +1928,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d352684d09f4b1743a69776c4822d267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
-  UiAlbum: {fileID: 1678869123}
-  UiIllustratedGuide: {fileID: 1279027147}
+  _library: {fileID: 0}
+  _uiAlbum: {fileID: 0}
 --- !u!1 &292975237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2548,6 +2549,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 997990210351032849, guid: 31d72a463d1ec52439f074e2d0cb5309, type: 3}
   _closeDetailViewButton: {fileID: 1637525633}
+  _firstToggleIndex: 0
+  _scrollrect: {fileID: 0}
   _field: {fileID: 425474213}
   _detailView: {fileID: 1179533173}
   _spawnPoint:
@@ -2568,6 +2571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551de5aeffcccf2438b5881d3768c71b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
 --- !u!114 &354224879
 MonoBehaviour:
@@ -3783,8 +3787,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8dd2a5031663a9489b36b29c685cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
   _cameraApp: {fileID: 718846874}
+  _screenshotCamera: {fileID: 0}
+  _angleImage: {fileID: 0}
 --- !u!224 &540921554 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5991903860922690620, guid: 40edb3968e9a404418f607a619b20964, type: 3}
@@ -4242,10 +4249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa20f33c99ae29442918f544fea15c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
+  VisibleState: 0
   _image: {fileID: 1826034040}
-  _transform: {fileID: 217814847}
-  _angle: 10
-  _duration: 1
+  _background: {fileID: 0}
 --- !u!222 &595920036
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5307,11 +5314,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiCameraApp: {fileID: 522625812}
-  _screenshotCamera: {fileID: 0}
   _photoPrinting: {fileID: 595920034}
   _isActive: 1
   _canvas: {fileID: 1359643630}
-  _areaImage: {fileID: 0}
+  _shootingRange: {fileID: 0}
 --- !u!1 &727991903
 GameObject:
   m_ObjectHideFlags: 0
@@ -6586,7 +6592,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dc853228495f9c4bb9a48a7d72e4fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 0}
   VisibleState: 0
+  _moveUI: {fileID: 0}
+  _showButton: {fileID: 0}
+  _hideButton: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
+  _duration: 0
 --- !u!114 &900117292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7273,8 +7285,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _csvFileName: MBTIChooice
-  _uiFirstChooice: {fileID: 0}
+  _uiMBTI: {fileID: 0}
   _uiLetter: {fileID: 1603706332}
+  _pandaPaper: {fileID: 0}
   _letterButton: {fileID: 1720450742}
   _contexts: {fileID: 1364690192}
   _leftButton: {fileID: 2115456946}
@@ -7347,8 +7360,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _selectedItem: {fileID: 1334677604}
   _dropPopup: {fileID: 1874140358}
-  _phone: {fileID: 1964717883}
+  _moveObject: {fileID: 0}
   _itemDropZone: {fileID: 1387229572}
+  _itemZone: {fileID: 0}
   _itemDropButton: {fileID: 897859792}
   _itemNoDropButton: {fileID: 1087396382}
 --- !u!114 &1082965289
@@ -8045,7 +8059,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8074,7 +8088,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1136897375
@@ -8865,7 +8879,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11057,12 +11071,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraApp: {fileID: 718846874}
-  _screenshotCamera: {fileID: 1495637548}
-  _defaultPos: {x: 0, y: 0, z: -10}
-  _areaImage: {fileID: 217814848}
-  _dragSpeed: 20
-  _clampSize: {x: 0, y: 0}
-  _clampCenter: {x: 0, y: 0}
+  _cameraController: {fileID: 0}
+  _shootingImage: {fileID: 0}
+  _renderTexture: {fileID: 0}
   _isMagnetEnable: 1
   _boxSize: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!1 &1523081734
@@ -11815,8 +11826,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStart: 0
-  Player: {fileID: 103337473}
-  MessageDatabase: {fileID: 0}
+  FriezeCameraMove: 0
+  FriezeCameraZoom: 0
+  FirezeInteraction: 0
 --- !u!4 &1622767824
 Transform:
   m_ObjectHideFlags: 0
@@ -12166,6 +12178,7 @@ MonoBehaviour:
   - {r: 0.7411765, g: 0.9254902, b: 0.7137255, a: 1}
   - {r: 0.9921569, g: 0.9921569, b: 0.5882353, a: 1}
   - {r: 1, g: 0.75294125, b: 0.8000001, a: 1}
+  _firstToggleIndex: 0
 --- !u!114 &1678225067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12356,7 +12369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58127044605ab543abf105145f7dc92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _library: {fileID: 1774044381}
   _layoutGroup: {fileID: 773455916}
   _slotPrefab: {fileID: 7692192115872891275, guid: 8e93ed7a39711d342adcf88f363b8b95, type: 3}
 --- !u!1 &1694847151
@@ -12821,6 +12833,7 @@ MonoBehaviour:
   _fieldColor:
   - {r: 0.99215686, g: 0.99215686, b: 0.5882353, a: 1}
   - {r: 1, g: 0.7529412, b: 0.8, a: 1}
+  _firstToggleIndex: 0
 --- !u!114 &1729622660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15606,13 +15619,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a73d58296f312d4a9bbbe82097fc2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weatherApp: {fileID: 759642864}
-  _layoutGroup: {fileID: 506585780}
-  _uiSlot: {fileID: 2862425127677744140, guid: 40edb3968e9a404418f607a619b20964, type: 3}
-  _uiTodaySlot: {fileID: 2862425127677744140, guid: bb3254634fd19a04296b66b0729ceb1a, type: 3}
-  _attendanceStamp: {fileID: 576449702}
-  _attendanceSprite: {fileID: 21300000, guid: e9c8e2478a78ee2448ae708b0a43229f, type: 3}
-  _slots: []
+  RectTransform: {fileID: 0}
+  VisibleState: 0
+  _backgroundButton: {fileID: 0}
+  _slotLayoutParent: {fileID: 0}
+  _slotPrefab: {fileID: 0}
+  _attendanceButton: {fileID: 0}
+  _attendanceCheckIamge: {fileID: 0}
+  _todayBackroundImage: {fileID: 0}
+  _dontTouchArea: {fileID: 0}
 --- !u!1 &2015409102
 GameObject:
   m_ObjectHideFlags: 0

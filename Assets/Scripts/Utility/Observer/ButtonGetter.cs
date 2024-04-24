@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -11,48 +10,58 @@ namespace Muks.DataBind
         [SerializeField] private string _dataID;
         private Button _button;
         private BindData<UnityAction> _data;
+        private UnityAction _action;
+
 
         private void Awake()
         {
-            _button = GetComponent<Button>();
-
             if (string.IsNullOrEmpty(_dataID))
             {
                 Debug.LogWarningFormat("Invalid text data ID. {0}", gameObject.name);
-                _dataID = gameObject.name;
+                enabled = false;
             }
+
+            _button = GetComponent<Button>();
+            _data = DataBind.GetUnityActionBindData(_dataID);
+            _data.CallBack += UpdateAction;
         }
+
 
         private void OnEnable()
         {
-            Invoke("Enabled", 0.02f);
-        }
-
-        private void OnDisable()
-        {
-            Invoke("Disabled", 0.02f);
-        }
-
-        private void UpdateButton(UnityAction action)
-        {
-            _data.Item = action;
-        }
-
-        private void Enabled()
-        {
-            _data = DataBind.GetButtonValue(_dataID);
-            _data.CallBack += UpdateButton;
-            _button.onClick?.AddListener(_data.Item);
-        }
-
-
-        private void Disabled()
-        {
-            if (_data == null)
+            if (_data.Item == null)
                 return;
 
-            _data.CallBack -= UpdateButton;
-            _button.onClick?.RemoveListener(_data.Item);
+            if (_action != null)
+                _button.onClick.RemoveListener(_action);
+
+            _action = _data.Item;
+            _button.onClick.AddListener(_action);
+        }
+
+
+        private void UpdateAction(UnityAction action)
+        {
+            if (!enabled)
+                return;
+
+            if (action == null)
+                return;
+
+            if (_action != null)
+                _button.onClick.RemoveListener(_action);
+
+            _action = action;
+            _button.onClick.AddListener(action);
+        }
+
+
+        private void OnDestroy()
+        {
+            _data.CallBack -= UpdateAction;
+            _data = null;
+            _action = null;
+            _button = null;
         }
     }
 }

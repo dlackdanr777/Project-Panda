@@ -2,42 +2,42 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
 public class FollowButton : MonoBehaviour
 {
-    [SerializeField] private Image _image;
+    public Image _image;
 
-    private Vector3 _targetPos;
+    private Vector3 _correctionPos;
 
     private Button _button;
 
-    private GameObject _targetGameObject;
+    private Transform _targetTransform;
 
 
-    public void Init(GameObject target, Vector3 targetPos, Vector2 size, Sprite sprite,  Action onClicked)
+    public void Init(Transform target, Vector3 correctionPos, Vector2 size, Sprite sprite,  UnityAction onClicked)
     {
+        name = name = "[" + target.name + "] Follow Button";
         _button = GetComponent<Button>();
-
         _button.GetComponent<RectTransform>().sizeDelta = size;
         _image.sprite = sprite;
-        _button.onClick.AddListener(() => onClicked?.Invoke());
-        _targetPos = targetPos;
-
-        _targetGameObject = target;
+        _button.onClick.AddListener(onClicked);
+        _correctionPos = correctionPos;
+        _targetTransform = target;
     }
 
     private void Update()
     {
-        if (!_targetGameObject.activeSelf)
+        if (!_targetTransform.gameObject.activeSelf)
         {
             gameObject.SetActive(false);
         }
 
-        if (_targetPos != null || _targetPos != Vector3.zero)
+        if (_correctionPos != null || _correctionPos != Vector3.zero)
         {
-            transform.position = Camera.main.WorldToScreenPoint(_targetPos);
+            transform.position = Camera.main.WorldToScreenPoint(_correctionPos + _targetTransform.position);
         }
     }
 

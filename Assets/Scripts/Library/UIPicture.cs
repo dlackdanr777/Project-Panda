@@ -45,6 +45,8 @@ public class UIPicture : UIView
         _background.color = new Color(_background.color.r, _background.color.g, _background.color.b, 0);
         _background.gameObject.SetActive(false);
         UIAlbumSlot.OnButtonClickHandler += OnAlbumButtonClicked;
+
+        gameObject.SetActive(false);
     }
 
 

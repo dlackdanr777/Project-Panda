@@ -1,25 +1,22 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-
-[Serializable]
 public class MessageList
 {
+    public Action NoticeHandler;
     public int MaxMessageCount { get; private set; } = 20;
-    public int MessagesCount => Messages.Count;
-    public List<Message> Messages = new List<Message>();
+    public int MessagesCount => _messageList.Count;
+    private List<Message> _messageList = new List<Message>();
+    private MailUserData _mailData => DatabaseManager.Instance.UserInfo.MailUserData;
 
-    public List<bool> IsCheckMessage = new List<bool>();
-    public List<bool> IsReceiveGift = new List<bool>();
     public int CurrentNotCheckedMessage
     {
         get
         {
             int count = 0;
-            for (int i = 0; i < IsCheckMessage.Count; i++)
+            for (int i = 0; i < _messageList.Count; i++)
             {
-                if (!IsCheckMessage[i])
+                if (!_messageList[i].IsCheck)
                     count++;
             }
             return count;
@@ -28,24 +25,113 @@ public class MessageList
 
     public List<Message> GetMessageList()
     {
-        return Messages;
+        return _messageList;
     }
-    public void Add(Message message)
+
+
+    private void Add(Message message)
     {
-        if (Messages.Count >= MaxMessageCount)
+        if (_messageList.Count >= MaxMessageCount)
         {
-            Messages.RemoveAt(0);
+            _messageList.RemoveAt(0);
         }
-        Messages.Add(message);
-        IsCheckMessage.Add(false);
-        IsReceiveGift.Add(false);
+        _messageList.Add(message);
+        NoticeHandler?.Invoke();
+
     }
+
+    /// <summary>
+    /// AddById
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="fieldIndex">0:Mail, 1:WishTree</param>
+    public void AddById(string id, MessageField field, bool isServerSaved = true)
+    {
+
+        switch (field)
+        {
+            case MessageField.Mail:
+                for (int i = 0; i < DatabaseManager.Instance.GetMailList().Count; i++)
+                {
+                    if (DatabaseManager.Instance.GetMailList()[i].Id.Equals(id))
+                    {
+                        if (_mailData.FindMailReceivedById(id))
+                        {
+                            UnityEngine.Debug.Log("이미 있는 메일입니다.");
+                            return;
+                        }
+
+                        Add(DatabaseManager.Instance.GetMailList()[i]);
+
+                        if (isServerSaved)
+                        {
+                            _mailData.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
+                            _mailData.SaveMailData(3);
+                        }
+                    }
+                }
+                break;
+            case MessageField.Wish:
+                break;
+        }
+
+
+    }
+
+    public void AddByStoryId(string id, MessageField field, bool isServerSaved = true)
+    {
+
+        switch (field)
+        {
+            case MessageField.Mail:
+                for (int i = 0; i < DatabaseManager.Instance.GetMailList().Count; i++)
+                {
+                    if (DatabaseManager.Instance.GetMailList()[i].StoryStep.Equals(id))
+                    {
+                        if (_mailData.FindMailReceivedById(DatabaseManager.Instance.GetMailList()[i].Id))
+                        {
+                            UnityEngine.Debug.Log("이미 있는 메일입니다.");
+                            return;
+                        }
+
+                        Add(DatabaseManager.Instance.GetMailList()[i]);
+                        if (isServerSaved)
+                        {
+                            _mailData.AddMailReceived(DatabaseManager.Instance.GetMailList()[i].Id);
+                            _mailData.SaveMailData(3);
+                        }
+                        UnityEngine.Debug.Log("메일 추가됨");
+                        return;
+                    }
+                }
+                break;
+            case MessageField.Wish:
+                break;
+        }
+
+    }
+
+
     public void RemoveByIndex(int index)
     {
-        if(Messages.Count > 0)
+        if(_messageList.Count > 0)
         {
-            Messages.RemoveAt(index);
-        } 
+            _messageList.RemoveAt(index);
+        }
+
+        DatabaseManager.Instance.UserInfo.MailUserData.AsyncSaveMailData(3);
+    }
+
+    private bool IsAlreadyHave(string id)
+    {
+        for(int i=0;i<_messageList.Count;i++)
+        {
+            if (_messageList[i].Id.Equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

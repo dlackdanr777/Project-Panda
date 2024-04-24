@@ -1,11 +1,14 @@
+using BackEnd;
+using LitJson;
+using Muks.BackEnd;
+using Muks.DataBind;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CostumeManager : SingletonHandler<CostumeManager>
 {
-    public Dictionary<string, CostumeData> CostumeDic;
+    public Dictionary<string, CostumeData> CostumeDic = new Dictionary<string, CostumeData>();
     [SerializeField] private CostumeImage _costumeImage;
     [SerializeField] private GameObject _costumeSlot;
     [SerializeField] private GameObject _pandaCostume;
@@ -23,7 +26,9 @@ public class CostumeManager : SingletonHandler<CostumeManager>
             return;
         }
 
-        CostumeDic = CostumeParse("Costume");
+        if(CostumeDic.Count <= 0)
+            CostumeDic = CostumeParserByLocal("Costume");
+
         int headCount = 0, leftHandCount = 0, rightHandCount = 0;
 
         foreach (string key in CostumeDic.Keys)
@@ -47,7 +52,15 @@ public class CostumeManager : SingletonHandler<CostumeManager>
         DatabaseManager.Instance.StartPandaInfo.LoadMyCostume();
     }
 
-    private Dictionary<string, CostumeData> CostumeParse(string CSVFileName)
+
+    public void LoadData()
+    {
+        BackendManager.Instance.GetChartData("105907", 10, CostumeParserByServer);
+    }
+
+
+    /// <summary>리소스 폴더에서 코스튬 정보를 받아와 딕셔너리에 넣는 함수</summary>
+    private Dictionary<string, CostumeData> CostumeParserByLocal(string CSVFileName)
     {
         Dictionary<string, CostumeData> costumeDic = new Dictionary<string, CostumeData>();
 
@@ -61,6 +74,29 @@ public class CostumeManager : SingletonHandler<CostumeManager>
         }
         return costumeDic;
     }
+
+
+    /// <summary>서버에서 코스튬 정보를 받아와 딕셔너리에 넣는 함수</summary>
+    private void CostumeParserByServer(BackendReturnObject callback)
+    {
+        CostumeDic.Clear();
+        JsonData json = callback.FlattenRows();
+
+        for (int i = 0, count = json.Count; i < count; i++)
+        {
+            string costumeID = json[i]["CostumeID"].ToString();
+            string bodyParts = json[i]["BodyParts"].ToString();
+            string costumeName = json[i]["CostumeName"].ToString();
+            float posX = float.Parse(json[i]["PosX"].ToString());
+            float posY = float.Parse(json[i]["PosY"].ToString());
+            float posZ = float.Parse(json[i]["PosZ"].ToString());
+
+            CostumeDic.Add(costumeID, new CostumeData(costumeID, (EBodyParts)Enum.Parse(typeof(EBodyParts), bodyParts), costumeName, posX, posY, posZ));
+        }
+
+        Debug.Log("코스튬 아이템 받아오기 성공");
+    }
+
 
     public CostumeData GetCostumeData(string costumeID) 
     {

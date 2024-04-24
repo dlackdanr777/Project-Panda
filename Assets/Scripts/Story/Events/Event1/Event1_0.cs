@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Event1_0 : StoryEvent
 {
-    Vector3 _tempObjPos;
+    [SerializeField] private CameraController _camera;
+    private Vector3 _tempObjPos;
 
     private void Start()
     {
@@ -15,9 +16,11 @@ public class Event1_0 : StoryEvent
 
     public override void EventStart(Action onComplate)
     {
-        Debug.Log("½ÃÀÛ");
-        Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + Camera.main.orthographicSize * 0.5f, Camera.main.transform.position.z);
+        float cameraTargetPosY = _camera.MapCenter.y - 1;
+        Vector3 targetPos = new Vector3(transform.position.x, cameraTargetPosY, Camera.main.transform.position.z);
         Vector3 tempObjPos = gameObject.transform.position;
+
+        Tween.CameraOrthographicSize(Camera.main.gameObject, 15f, 2f, TweenMode.Smoothstep);
 
         Tween.TransformMove(Camera.main.gameObject, targetPos, 2, TweenMode.Smootherstep, () =>
         {

@@ -15,11 +15,13 @@ public class NotificationUI : MonoBehaviour
     {
         if (_targetTrnsform == null)
             enabled = false;
+
     }
+
 
     private void Update()
     {
-        //Vector3 screenPointPos = Camera.main.WorldToScreenPoint(_targetTrnsform.position + _addPos);
         transform.position = Camera.main.WorldToScreenPoint(_targetTrnsform.position + _addPos);
     }
+
 }

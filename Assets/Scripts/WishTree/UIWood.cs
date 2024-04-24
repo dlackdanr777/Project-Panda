@@ -15,9 +15,9 @@ public class UIWood : MonoBehaviour
     {
         _uiNav = GetComponent<UINavigation_origin>();
 
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
-        DataBind.SetButtonValue("WoodBorderButton", OnBorderButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnInventoryButtonClicked);
+        DataBind.SetUnityActionValue("DiaryButton", OnDiaryButtonClicked);
+        DataBind.SetUnityActionValue("WoodBorderButton", OnBorderButtonClicked);
     }
 
     private void OnDiaryButtonClicked()

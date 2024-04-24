@@ -9,21 +9,19 @@ public class UIMessageList : UIList<Message, MessageField>
     [SerializeField] private Button _removeButton;
     [SerializeField] private GameObject _removePopup;
 
-    private Player _player;
     private int _currentItemIndex;
 
     public Action NoticeHandler;
 
     private void Awake()
     {
-        _player = GameManager.Instance.Player;
-        for (int i = 0; i < _player.Messages.Length; i++)
-        {
-            _maxCount[i] = _player.Messages[i].MaxMessageCount;
-        }
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
+        _maxCount[(int)MailType.Mail] = data.GetMailList(MailType.Mail).MaxMessageCount;
+        _maxCount[(int)MailType.Wish] = data.GetMailList(MailType.Wish).MaxMessageCount;
 
         Init();
     }
+
 
     private void Start()
     {
@@ -33,11 +31,9 @@ public class UIMessageList : UIList<Message, MessageField>
 
     private void UpdateList()
     {
-        for (int i = 0; i < _player.Messages.Length; i++)
-        {
-            _lists[i] = _player.Messages[i].GetMessageList();
-
-        }
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
+        _lists[(int)MailType.Mail] = data.GetMailList(MailType.Mail).GetMessageList();
+        _lists[(int)MailType.Wish] = data.GetMailList(MailType.Wish).GetMessageList();
     }
 
     private void OnAddInventoryItem(int index)
@@ -71,6 +67,7 @@ public class UIMessageList : UIList<Message, MessageField>
 
     private void OnRemoveMessage()
     {
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
         for (int i = 0; i < _maxCount[0]; i++)
         {
             GameObject message = _spawnPoint[0].GetChild(i).gameObject; //message, 위치
@@ -80,9 +77,9 @@ public class UIMessageList : UIList<Message, MessageField>
                 {
                     message.transform.Find("ClickMessage").GetComponent<Toggle>().isOn = false;
 
-                    _player.Messages[(int)_currentField].RemoveByIndex(i);
-                    _player.Messages[0].IsReceiveGift.RemoveAt(i);
-                    _player.Messages[0].IsCheckMessage.RemoveAt(i);
+                    data.GetMailList((MailType)_currentField).RemoveByIndex(i);
+                    //_player.Messages[0].IsReceiveGift.RemoveAt(i);
+                    //_player.Messages[0].IsCheckMessage.RemoveAt(i);
 
                 }
 
@@ -100,29 +97,30 @@ public class UIMessageList : UIList<Message, MessageField>
 
         //player 메시지 확인
         _spawnPoint[(int)_currentField].GetChild(index).GetChild(2).gameObject.SetActive(false);
-        _player.Messages[(int)_currentField].IsCheckMessage[index] = true;
+        //_player.Messages[(int)_currentField].IsCheckMessage[index] = true;
         NoticeHandler?.Invoke();
 
-        DataBind.SetTextValue("MessageDetailTo", _lists[(int)_currentField][index].To);
+        //DataBind.SetTextValue("MessageDetailTo", _lists[(int)_currentField][index].To);
         DataBind.SetTextValue("MessageDetailContent", _lists[(int)_currentField][index].Content);
         DataBind.SetTextValue("MessageDetailFrom", _lists[(int)_currentField][index].From);
 
         if (_currentField == MessageField.Mail)
         {
 
-            _spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
-            DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
-            DataBind.SetButtonValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
+            //_spawnPoint[(int)_currentField].GetChild(index).gameObject.SetActive(!_player.Messages[0].IsReceiveGift[index]);
+            //DataBind.SetSpriteValue("MessageDetailGift", _lists[(int)_currentField][index].Gift.Image);
+            DataBind.SetUnityActionValue("MessageDetailGiftButton", () => OnAddInventoryItem(index));
         }
     }
 
     protected override void UpdateListSlots()
     {
+        MailUserData data = DatabaseManager.Instance.UserInfo.MailUserData;
         UpdateList();
 
-        for (int j = 0; j < _maxCount[(int)_currentField]; j++) //현재 player의 message에 저장된 개수
+        for (int j = 0, count = _maxCount[(int)_currentField]; j < count; j++) //현재 player의 message에 저장된 개수
         {
-            if (j < _player.Messages[(int)_currentField].GetMessageList().Count)
+            if (j < data.GetMailList((MailType)_currentField).GetMessageList().Count)
             {
                 _spawnPoint[(int)_currentField].GetChild(j).gameObject.SetActive(true);
                 _spawnPoint[(int)_currentField].GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().text = _lists[(int)_currentField][j].From; //Text 변경
@@ -136,5 +134,9 @@ public class UIMessageList : UIList<Message, MessageField>
 
             }
         }
+    }
+
+    protected override void ClearContent()
+    {
     }
 }

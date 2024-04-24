@@ -4,21 +4,37 @@ using UnityEngine;
 [Serializable]
 public class Item
 {
-    public string Id;
-    public string Name;
-    public string Description;
-    public string Rank;
-    public int Price;
-    public Sprite Image;
+    protected string _id;
+    public string Id => _id;
+
+    protected string _name;
+    public string Name => _name;
+
+    protected string _description;
+    public string Description => _description;
+
+    protected string _rank;
+    public string Rank => _rank;
+
+    protected int _price;
+    public int Price => _price;
+
+    protected string _map;
+    public string Map => _map;
+
+    protected Sprite _image;
+    public Sprite Image => _image;
+
     public bool IsReceived;
 
-    public Item(string id, string name, string description, int price, string rank, Sprite image)
+    public Item(string id, string name, string description, int price, string rank, string map, Sprite image)
     {
-        Id = id;
-        Name = name;
-        Description = description;
-        Rank = rank;
-        Price = price;
-        Image = image;
+        _id = id;
+        _name = name;
+        _description = description;
+        _price = price;
+        _rank = rank;
+        _map = map;
+        _image = image;
     }
 }

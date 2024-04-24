@@ -8,11 +8,12 @@ public class PandaManager
     /// <summary>
     /// 모든 판다 데이터</summary>
     private Dictionary<int, PandaData> _pandaDic;
-    public PandaImage PandaImage { private get; set; }
+
+
     /// <summary>
     /// 모든 판다 이미지 데이터</summary>
     private Dictionary<int, PandaStateImage> _pandaImageDic;
-    private DialogueParser _parser = new DialogueParser();
+    private Parser _parser = new Parser();
 
     public void Register()
     {
@@ -22,7 +23,7 @@ public class PandaManager
         // 판다 이미지 저장
         for(int i = 0; i < _pandaDic.Count; i++)
         {
-            _pandaImageDic.Add(_pandaDic[i].PandaID, PandaImage.PandaImages[_pandaDic[i].PandaID]);
+            _pandaImageDic.Add(_pandaDic[i].PandaID, DatabaseManager.Instance.PandaImage.PandaImages[_pandaDic[i].PandaID]);
             _pandaDic[i].CurrrentImage = _pandaImageDic[i].NomalImage; // 판다 처음 이미지는 일반 상태로 설정
         }
     }

@@ -2,10 +2,11 @@ using Muks.DataBind;
 using UnityEngine;
 using UnityEngine.UI;  
 using UnityEngine.SceneManagement;
+using BT;
 
 public class Test : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         gameObject.GetComponent<Button>().onClick.AddListener(OnCostumeButtonClicked);
         //DataBind.SetButtonValue("CostumeButton", OnCostumeButtonClicked);
@@ -13,7 +14,9 @@ public class Test : MonoBehaviour
 
     private void OnCostumeButtonClicked()
     {
-        DatabaseManager.Instance.StartPandaInfo.StarterPanda.SetFalseUI();
-        SceneManager.LoadScene("CostumeTest");
+        if (StarterPanda.Instance.SetFalseUI())
+        {
+            SceneManager.LoadScene("CostumeTest");
+        }
     }
 }

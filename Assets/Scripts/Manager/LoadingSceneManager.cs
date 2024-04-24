@@ -1,25 +1,37 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
+
 
 public class LoadingSceneManager : MonoBehaviour
 {
-    public static string _nextScene;
 
-    [SerializeField] private Text _progressText;
 
-    void Start()
+    [Tooltip("로딩이 최소 몇 초가 걸리게 할지 설정")]
+    [SerializeField] private float _changeSceneTime;
+
+    private static string _nextScene;
+
+    private static LoadingType _loadingType;
+
+    public static event Action OnLoadSceneHandler;
+
+
+    private void Start()
     {
         StartCoroutine(LoadScene());
+        GC.Collect();
     }
 
 
-    public static void LoadScene(string sceneName)
+    public static void LoadScene(string sceneName, LoadingType type = LoadingType.SceneChange)
     {
         _nextScene = sceneName;
-        ChangeSceneManager.Instance.ChangeScene(() => SceneManager.LoadScene("LoadingScene"));
+        _loadingType = type;
+        OnLoadSceneHandler?.Invoke();
+        FadeInOutManager.Instance.FadeIn( onComplete: () => SceneManager.LoadScene("LoadingScene") );
     }
 
 
@@ -28,7 +40,7 @@ public class LoadingSceneManager : MonoBehaviour
         yield return null;
 
         AsyncOperation op = SceneManager.LoadSceneAsync(_nextScene);
-        ChangeSceneManager.Instance.HideFadeImage();
+
         op.allowSceneActivation = false;
         float timer = 0f;
         
@@ -37,18 +49,23 @@ public class LoadingSceneManager : MonoBehaviour
             yield return null;
             timer += Time.deltaTime;
 
-            if(op.progress < 0.9f)
+            if(0.9f <= op.progress)
             {
-                _progressText.text = Mathf.RoundToInt(op.progress * 100).ToString();
-            }
-            else
-            {
-                _progressText.text = Mathf.RoundToInt(Mathf.Lerp(int.Parse(_progressText.text), 100, timer * 0.5f)).ToString();
-
-                if(timer > 2)
+                if(_changeSceneTime < timer)
                 {
                     op.allowSceneActivation = true;
-                    ChangeSceneManager.Instance.ResetFadeImage();
+
+                    switch (_loadingType)
+                    {
+                        case LoadingType.FirstLoading:
+                            FadeInOutManager.Instance.FirstFadeInOut();
+                            break;
+
+                        case LoadingType.SceneChange:
+                            FadeInOutManager.Instance.FadeOut();
+                            break;
+                    }
+                    
                     yield break;
                 }
             }

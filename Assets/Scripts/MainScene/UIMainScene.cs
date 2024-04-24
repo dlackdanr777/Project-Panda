@@ -12,103 +12,113 @@ public class UIMainScene : MonoBehaviour
     private void Awake()
     {
         _uiNav = GetComponent<UINavigation>();
-        DataBind.SetButtonValue("Camera Button", OnCameraButtonClicked);
-        DataBind.SetButtonValue("ShowMailButton", OnShowMailButtonClicked);
-        DataBind.SetButtonValue("HideMailButton", OnHideMailButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
+        DataBind.SetUnityActionValue("Camera Button", OnCameraButtonClicked);
+        DataBind.SetUnityActionValue("ShowMailButton", OnShowMailButtonClicked);
+        DataBind.SetUnityActionValue("HideMailButton", OnHideMailButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnInventoryButtonClicked);
 
-        DataBind.SetButtonValue("ShowPhotoButton", OnShowPhotoButtonClicked);
-        DataBind.SetButtonValue("HidePhotoButton", OnHidePhotoButtonClicked);
+        DataBind.SetUnityActionValue("ShowDiaryButton", OnShowDiaryButtonClicked);
+        DataBind.SetUnityActionValue("HideDiaryButton", OnHideDiaryButtonClicked);
 
-        DataBind.SetButtonValue("ShowWeatherButton", OnShowWeatherButtonClicked);
-        DataBind.SetButtonValue("HideWeatherButton", OnHideWeatherButtonClicked);
+        DataBind.SetUnityActionValue("ShowAttendanceButton", OnShowAttendanceButtonClicked);
+        DataBind.SetUnityActionValue("HideAttendanceButton", OnHideAttendanceButtonClicked);
 
-        DataBind.SetButtonValue("ShowInventoryButton", OnShowInventoryButtonClicked);
-        DataBind.SetButtonValue("HideInventoryButton", OnHideInventoryButtonClicked);
+        DataBind.SetUnityActionValue("InventoryButton", OnShowAndHideInventoryButtonClicked);
+        DataBind.SetUnityActionValue("HideInventoryButton", OnHideInventoryButtonClicked);
 
-        DataBind.SetButtonValue("ShowWoodButton", OnShowWoodButtonClicked);
-        DataBind.SetButtonValue("HideWoodButton", OnHideWoodButtonClicked);
+        DataBind.SetUnityActionValue("ShowPictureButton", OnShowPictureButtonClicked);
+        DataBind.SetUnityActionValue("HidePictureButton", OnHidePictureButtonClicked);
 
-        DataBind.SetButtonValue("ShowPictureButton", OnShowPictureButtonClicked);
-        DataBind.SetButtonValue("HidePictureButton", OnHidePictureButtonClicked);
+        DataBind.SetUnityActionValue("ShowMainUIButton", OnShowMainUIButtonClicked);
+        DataBind.SetUnityActionValue("HideMainUIButton", OnHideMainUIButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowChallengesButton", OnShowChallengesButtonClicked);
+        DataBind.SetUnityActionValue("CloseChallengesButton", OnHideChallengesButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowPreferencesButton", OnShowPreferencesButtonClicked);
+        DataBind.SetUnityActionValue("ClosePreferencesButton", OnHidePreferencesButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowDropDownMenuButton", OnShowDropDownMenuButtonClicked);
+        DataBind.SetUnityActionValue("HideDropDownMenuButton", OnHideDropDownMenuButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowNoticeButton", OnShowNoticeButtonClicked);
+        DataBind.SetUnityActionValue("HideNoticeButton", OnHideNoticeButtonClicked);
     }
+
 
     private void OnCameraButtonClicked()
     {
         _uiNav.Push("Camera");
     }
 
-    private void OnShowDialogue()
-    {
-        _uiNav.Push("Dialogue");
-    }
-
-    private void OnHideDialogue()
-    {
-        _uiNav.Pop("Dialogue");
-    }
-
     private void OnShowMailButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Mail");
     }
 
     private void OnHideMailButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Mail");
     }
 
-    private void OnDiaryButtonClicked()
-    {
-        _uiNav.Push("Diary");
-    }
+
     private void OnInventoryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("Inventory");
     }
 
-
-    private void OnShowPhotoButtonClicked()
+    private void OnShowDiaryButtonClicked()
     {
-        _uiNav.Push("Photo");
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("Diary");
     }
 
-    private void OnHidePhotoButtonClicked()
+    private void OnHideDiaryButtonClicked()
     {
-        _uiNav.Pop("Photo");
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("Diary");
     }
 
-    private void OnShowWeatherButtonClicked()
+    private void OnShowAttendanceButtonClicked()
     {
-        _uiNav.Push("Weather");
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("Attendance");
     }
 
-    private void OnHideWeatherButtonClicked()
+    private void OnHideAttendanceButtonClicked()
     {
-        _uiNav.Pop("Weather");
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("Attendance");
     }
 
-    private void OnShowInventoryButtonClicked()
+    private void OnShowAndHideInventoryButtonClicked()
     {
-        _uiNav.Push("Inventory");
+        UIView UIInventory = _uiNav.GetUIView("Inventory");
+
+        //만약 인벤토리 UI가 닫혀있을 경우 연다
+        if (UIInventory.VisibleState == VisibleState.Disappeared)
+        {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+            _uiNav.Push("Inventory");
+/*            GameManager.Instance.FriezeCameraMove = false;
+            GameManager.Instance.FirezeInteraction = false;*/
+        }
+
+        //열려 있으면 닫는다.
+        else if (UIInventory.VisibleState == VisibleState.Appeared)
+        {
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+            _uiNav.Pop("Inventory");
+        }
     }
 
     private void OnHideInventoryButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("Inventory");
-    }
-
-
-    public void OnShowWoodButtonClicked()
-    {
-        _uiNav.Push("InsideWood");
-    }
-
-
-    public void OnHideWoodButtonClicked()
-    {
-        _uiNav.Pop("InsideWood");
     }
 
 
@@ -121,6 +131,66 @@ public class UIMainScene : MonoBehaviour
     public void OnHidePictureButtonClicked()
     {
         _uiNav.Pop("Picture");
+    }
+
+
+
+    public void OnHideMainUIButtonClicked()
+    {
+        _uiNav.HideMainUI();
+    }
+
+    public void OnShowMainUIButtonClicked()
+    {
+        _uiNav.ShowMainUI();
+    }
+
+    public void OnShowChallengesButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("Challenges");
+    }
+
+    public void OnHideChallengesButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("Challenges");
+    }
+
+    public void OnShowPreferencesButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("Preferences");
+    }
+
+    public void OnHidePreferencesButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("Preferences");
+    }
+
+    public void OnShowDropDownMenuButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("DropdownMenuButton");
+    }
+
+    public void OnHideDropDownMenuButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("DropdownMenuButton");
+    }
+
+    public void OnShowNoticeButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("UINotice");
+    }
+
+    public void OnHideNoticeButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("UINotice");
     }
 
 }

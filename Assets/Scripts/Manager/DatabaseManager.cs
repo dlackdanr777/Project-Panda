@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -15,93 +16,146 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     private PhotoDatabase _photoDatabase;
     public PhotoDatabase PhotoDatabase => _photoDatabase;
 
-    private DialogueManager _dialogueDatabase;
-    public DialogueManager DialogueDatabase => _dialogueDatabase;
-
-    private WeatherApp _weatherDatabase;
-    public WeatherApp WeatherDatabase => _weatherDatabase;
+    private AttendanceDatabase _weatherDatabase;
+    public AttendanceDatabase AttendanceDatabase => _weatherDatabase;
 
     private RecipeDatabase _recipeDatabase;
     public RecipeDatabase RecipeDatabase => _recipeDatabase;
 
     private MBTIManager _mbtiDatabase;
 
-    [SerializeField] private PandaImage _pandaImage;
     private PandaManager _pandaDatabase;
 
-    //Item
-    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
     private ItemDatabase _itemDatabase;
     public ItemDatabase ItemDatabase => _itemDatabase;
-    
+
     private FurniturePositionDatabase _furniturePosDatabase;
     public FurniturePositionDatabase FurniturePosDatabase => _furniturePosDatabase;
 
+    private NPCDatabase _npcDatabase;
+    public NPCDatabase NPCDatabase => _npcDatabase;
+
+    private SideStoryDialogueManager _sideStoryDialogueDatabase;
+    public SideStoryDialogueManager SideDialogueDatabase => _sideStoryDialogueDatabase;
+
+    private MainStoryDialogueManager _mainStoryDialogueDatabase;
+    public MainStoryDialogueManager MainDialogueDatabase => _mainStoryDialogueDatabase; 
+
+    private ChallengesDatabase _challengesDatabase;
+    public ChallengesDatabase ChallengesDatabase => _challengesDatabase;
+
+    private Challenges _challenges;
+    public Challenges Challenges => _challenges;
+
+    private MessageDatabase _messageDatabase;
+    public MessageDatabase MessageDatabase => _messageDatabase;
+
     private HarvestItemManager _harvestItemDatabase;
-    [SerializeField] HarvestItemImage _harvestItemImage;
+    public HarvestItemManager HarvestItemDatabase => _harvestItemDatabase;
+
+    private NoticeDatabase _noticeDatabase;
+    public NoticeDatabase NoticeDatabase => _noticeDatabase;
+
+
+    //ì´ë¯¸ì§€ë“¤
+    //Panda
+    [Space]
+    [SerializeField] private PandaImage _pandaImage;
+    public PandaImage PandaImage => _pandaImage;
+
+    [Space]
+    //Item
+    [SerializeField] private ItemSpriteDatabase[] _gatheringItemImages;
+    public ItemSpriteDatabase[] GatheringItemImages => _gatheringItemImages;
+
+    [SerializeField] private ItemSpriteDatabase _foodItemImages;
+    public ItemSpriteDatabase FoodItemImages => _foodItemImages;
+
+    [SerializeField] private ItemSpriteDatabase[] _toolItemImages;
+    public ItemSpriteDatabase[] ToolItemImages => _toolItemImages;
+
+    [SerializeField] private HarvestItemImage _harvestItemImage;
+    public HarvestItemImage HarvestItemImage => _harvestItemImage;
+
+
+    [Space]
+    //NPC
+    [SerializeField] private ItemSpriteDatabase[] _npcImages;
+    public ItemSpriteDatabase[] NpcImages => _npcImages;
+
+    [SerializeField] private ItemSpriteDatabase _npcIntimacyImages;
+
+    [Space]
+    //Furniture
+    [SerializeField] private FurnitureSpriteDatabase _furnitureItemImages;
+    public FurnitureSpriteDatabase FurnitureItemImages => _furnitureItemImages;
+
+    [Space]
+    //Message
+    [SerializeField] private ItemSpriteDatabase _mailPaper;
+    public ItemSpriteDatabase MailPaper => _mailPaper;
+
+    [Space]
+    //Album
+    [SerializeField] private ItemSpriteDatabase _albumImages;
+    public ItemSpriteDatabase AlbumImages => _albumImages;
+
+    private AlbumDatabase _albumDatabase;
+    public AlbumDatabase AlbumDatabase => _albumDatabase;
+
+    [Space]
+    //Sticker
+    [SerializeField] private ItemSpriteDatabase _stickerImages;
+
+    [Space]
+    //Weather Image
+    [SerializeField] private WeatherImage _weatherImages;
+    public WeatherImage WeatherImage => _weatherImages;
 
     public override void Awake()
     {
-        var obj = FindObjectsOfType<DatabaseManager>();
-        if(obj.Length == 1)
-        {
-            base.Awake();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        base.Awake();
 
         _userInfo = new UserInfo();
         _startPandaInfo = new StarterPandaInfo();
-        _dialogueDatabase = new DialogueManager();
         _photoDatabase = new PhotoDatabase();
         _itemDatabase = new ItemDatabase();
-        //_weatherDatabase = new WeatherApp();
+        _weatherDatabase = new AttendanceDatabase();
         _recipeDatabase = new RecipeDatabase();
         _mbtiDatabase = new MBTIManager();
-
-
         _pandaDatabase = new PandaManager();
         _furniturePosDatabase = new FurniturePositionDatabase();
         _harvestItemDatabase = new HarvestItemManager();
+        _npcDatabase = new NPCDatabase();
+        _sideStoryDialogueDatabase = new SideStoryDialogueManager();
+        _mainStoryDialogueDatabase = new MainStoryDialogueManager();
+        _messageDatabase = new MessageDatabase();
+        _albumDatabase = new AlbumDatabase();
+        _challengesDatabase = new ChallengesDatabase();
+        _challenges = new Challenges();
+        _noticeDatabase = new NoticeDatabase();
 
-        UserInfo.Register();
-        StartPandaInfo.Register();
-        _dialogueDatabase.Register();
-        _photoDatabase.Register();
-
-        for(int i = 0; i < _itemDatabase.ItemSpriteArray.Length; i++)
-        {
-            _itemDatabase.ItemSpriteArray[i] = _gatheringItemImages[i];
-        }
         _itemDatabase.Register();
-
-
-        //_weatherDatabase.Register();
+        _userInfo.Register();
+        _startPandaInfo.Register();
+        _photoDatabase.Register();
+        _pandaDatabase.Register();
         _recipeDatabase.Register();
         _mbtiDatabase.Register();
-
-        _pandaDatabase.PandaImage = _pandaImage;
-        _pandaDatabase.Register();
         _furniturePosDatabase.Register();
-
-        _harvestItemDatabase.HarvestItemImage = _harvestItemImage;
         _harvestItemDatabase.Register();
-
+        _weatherDatabase.Register();
+        _npcDatabase.Register();
+        _sideStoryDialogueDatabase.Register();
+        _mainStoryDialogueDatabase.Register();
+        _messageDatabase.Register();
+        _albumDatabase.Register();
+        _challengesDatabase.Register();
+        _challenges.Register();
     }
 
     /// <summary>
-    /// weekWeather data
-    /// </summary>
-    /// <returns></returns>
-    public List<WeatherData> GetWeekWeatherData()
-    {
-        return _weatherDatabase.GetWeekWeathers();
-    }
-
-    /// <summary>
-    /// mbti¿¡ µû¸¥ ÆÇ´Ù ÃëÇâ ¼³Á¤
+    /// mbtiï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="mbti"></param>
     /// <returns></returns>
@@ -131,61 +185,155 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
     }
 
     /// <summary>
-    /// ÆÇ´Ù Ä£¹Ğµµ ¾÷µ¥ÀÌÆ® </summary>
+    /// ï¿½Ç´ï¿½ Ä£ï¿½Ğµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® </summary>
     public void UpdatePandaIntimacy(int pandaID, float intimacy)
     {
         _pandaDatabase.UpdatePandaIntimacy(pandaID, intimacy);
     }
 
     /// <summary>
-    /// ÆÇ´Ù Çàº¹µµ ¾÷µ¥ÀÌÆ® </summary>
+    /// ï¿½Ç´ï¿½ ï¿½àº¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® </summary>
     public void UpdatePandaHappiness(int pandaID, float happiness)
     {
         _pandaDatabase.UpdatePandaHappiness(pandaID, happiness);
     }
 
     /// <summary>
-    /// ½ºÅ¸ÅÍ ÆÇ´Ù mbti ¼³Á¤</summary>
+    /// ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ç´ï¿½ mbti ï¿½ï¿½ï¿½ï¿½</summary>
     public void SetStarterMBTI(string mbti)
     {
         _pandaDatabase.SetStarterMBTI(mbti);
     }
 
-    //Gathering Item
-    /// <summary>
-    /// GatheringItem BugList
-    /// </summary>
-    /// <returns></returns>
-    public List<Item> GetBugItemList()
+
+    public Item GetGIImageById(string id)
     {
-        return _itemDatabase.ItemBugList;
+        Dictionary<string, Item> allItemDic = _itemDatabase.AllItemDic;
+        string code = id.Substring(0, 3);
+
+        if(allItemDic.TryGetValue(id, out Item item))
+        {
+            return item;
+        }
+
+        Debug.Log("ì•„ì´í…œì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
+        return null;
     }
 
     /// <summary>
-    /// GatheringItem FishList
+    /// NPC List
     /// </summary>
-    /// <returns></returns>
-    public List<Item> GetFishItemList()
+    public List<NPC> GetNPCList()
     {
-        return _itemDatabase.ItemFishList;
+        return _npcDatabase.NpcList;
     }
 
     /// <summary>
-    /// GatheringItem FruitList
+    /// NPC IDë¡œ ì´ë¦„ ì°¾ê¸°
     /// </summary>
+    /// <param name="id"></param>
     /// <returns></returns>
-    public List<Item> GetFruitItemList()
+    public string GetNPCNameById(string id)
     {
-        return _itemDatabase.ItemFruitList;
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Name;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// NPC IDë¡œ Image ì°¾ê¸°
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Sprite GetNPCImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i].Image;
+            }
+        }
+        return null;
+    }
+
+    public Sprite GetNPCIntimacyImageById(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                NPC currentNPC = GetNPCList()[i];
+                string intimacy = GetIntimacy(currentNPC.Intimacy, currentNPC.MinIntimacy, currentNPC.MaxIntimacy).ToString();
+
+                for (int j = 0; j < _npcIntimacyImages.ItemSprites.Length; j++)
+                {
+                    if (_npcIntimacyImages.ItemSprites[j].Id.Equals(intimacy))
+                    {
+                        return _npcIntimacyImages.ItemSprites[j].Image;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private int GetIntimacy(int amount, int minIntimacy, int maxIntimacy)
+    {
+        amount /= 20;
+
+        if (amount < minIntimacy)
+        {
+            return minIntimacy;
+        }
+        else if (amount >= maxIntimacy)
+        {
+            return maxIntimacy;
+        }
+
+        return amount;
+    }
+
+    public NPC GetNPC(string id)
+    {
+        for (int i = 0; i < GetNPCList().Count; i++)
+        {
+            if (GetNPCList()[i].Id.Equals(id))
+            {
+                return GetNPCList()[i];
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// ì¹œë°€ë„ ì¦ê°€ í•¨ìˆ˜
+    /// </summary>
+    /// <param name="id">NPCID</param>
+    /// <param name="count">ì¦ê°€í•  ì–‘</param>
+    public void AddIntimacy(string id, int count)
+    {
+        for (int i = 0; i < _npcDatabase.NpcList.Count; i++)
+        {
+            if (_npcDatabase.NpcList[i].Id.Equals(id))
+            {
+                _npcDatabase.NpcList[i].Intimacy += count;
+            }
+        }
     }
 
     /// <summary>
     /// Furniture ItemList
     /// </summary>
     /// <returns></returns>
-    public List<Item> GetFurnitureItem()
+    public Dictionary<string, Furniture> GetFurnitureItem()
     {
-        return _itemDatabase.FurnitureList;
+        return _itemDatabase.FurnitureDic;
     }
 
     /// <summary>
@@ -197,17 +345,46 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
         return _itemDatabase.FurnitureTypeList;
     }
 
-
-    public void OnApplicationQuit()
+    /// <summary>
+    /// Mail List
+    /// </summary>
+    public List<Message> GetMailList()
     {
-        _photoDatabase.Save();
-        _furniturePosDatabase.Save();
-        _userInfo.SaveUserInfoData();
-        _startPandaInfo.SavePandaInfoData();
+        return _messageDatabase.MailList;
     }
 
-    public HarvestItem GetHarvestItemdata(int harvestItemID)
+
+
+
+    /// <summary>
+    /// ê¸°ì¡´ì˜ ìŠ¤í‹°ì»¤ ì´ë¯¸ì§€ ì¶œë ¥
+    /// </summary>
+    /// <returns></returns>
+    public ItemSpriteDatabase GetStickerImages()
+    {
+        return _stickerImages;
+    }
+
+    public Sprite GetStickerImage(string id)
+    {
+        for(int i = 0, count = _stickerImages.ItemSprites.Length; i < count; i++)
+        {
+            if (_stickerImages.ItemSprites[i].Id == id)
+                return _stickerImages.ItemSprites[i].Image;
+        }
+
+        Debug.LogFormat("{0} í•´ë‹¹ ì´ë¯¸ì§€ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", id);
+        return null;
+    }
+
+
+    public HarvestItem GetHarvestItemdata(string harvestItemID)
     {
         return _harvestItemDatabase.GetHarvestItemdata(harvestItemID);
+    }
+
+    public Dictionary<string, ChallengesData> GetChallengesDic()
+    {
+        return _challengesDatabase.GetChallengesDic();
     }
 }

@@ -23,7 +23,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     protected int _pandaID;
     protected string _pandaName;
     protected Sprite _pandaImage;
-    protected Preference _preference;
+    //protected Preference _preference;
 
     protected GameObject _uiPandaParent;
     [SerializeField] protected UIPanda _uiPandaPrefab;
@@ -35,7 +35,7 @@ public abstract class Panda : MonoBehaviour, IInteraction
     public float Intimacy
     {
         get { return _intimacy; }
-        private set { }
+        set { _intimacy = value; }
     }
 
     /// <summary>판다 행복도</summary>
@@ -109,7 +109,10 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
-        ToggleUIPandaButton();
+        //if(_uiPanda != null)
+        //{
+        //    ToggleUIPandaButton();
+        //}
     }
 
     public void UpdateInteraction()
@@ -119,22 +122,22 @@ public abstract class Panda : MonoBehaviour, IInteraction
 
     public void ExitInteraction()
     {
-        ToggleUIPandaButton();
+        //ToggleUIPandaButton();
     }
 
     // 나중에 삭제
-    protected void PandaMouseClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (hit.collider == GetComponent<Collider2D>())
-            {
-                ToggleUIPandaButton();
-            }
-        }
-    }
+    //protected void PandaMouseClick()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+    //        if (hit.collider == GetComponent<Collider2D>())
+    //        {
+    //            ToggleUIPandaButton();
+    //        }
+    //    }
+    //}
 
     protected void SetPandaData(PandaData pandaData)
     {

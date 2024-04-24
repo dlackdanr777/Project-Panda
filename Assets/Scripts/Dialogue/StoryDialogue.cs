@@ -2,7 +2,7 @@
 public class StoryDialogue
 {
     //스토리 ID
-    public int StoryID { get; private set; }
+    public string StoryID { get; private set; }
 
     //스토리 제목
     public string StoryName { get; private set; }
@@ -11,17 +11,17 @@ public class StoryDialogue
     public int RequiredIntimacy { get; private set; }
 
     //이전 스토리
-    public int PriorStoryID { get; private set; }
+    public string PriorStoryID { get; private set; }
 
     //다음 스토리
-    public int NextStoryID { get; private set; }
+    public string NextStoryID { get; private set; }
 
     //판다 ID
-    public int PandaID { get; private set; }
+    public string PandaID { get; private set; }
 
     public DialogData[] DialogDatas { get; private set; }
 
-    public StoryDialogue(int storyID, string storyName, int requiredIntimacy, int priorStoryID, int nextStoryID, int pandaID, DialogData[] dialogDatas)
+    public StoryDialogue(string storyID, string storyName, int requiredIntimacy, string priorStoryID, string nextStoryID, string pandaID, DialogData[] dialogDatas)
     {
         StoryID = storyID;
         StoryName = storyName;

@@ -141,8 +141,8 @@ public class ScreenshotCamera : MonoBehaviour
     {
         _camera = GetComponent<Camera>();
         _areaImage = _shootingImage.GetComponent<Image>();
-        DataBind.SetButtonValue("ShowScreenshotCameraButton", () => gameObject.SetActive(true));
-        DataBind.SetButtonValue("HideScreenshotCameraButton", () => gameObject.SetActive(false));
+        DataBind.SetUnityActionValue("ShowScreenshotCameraButton", () => gameObject.SetActive(true));
+        DataBind.SetUnityActionValue("HideScreenshotCameraButton", () => gameObject.SetActive(false));
     }
 
 

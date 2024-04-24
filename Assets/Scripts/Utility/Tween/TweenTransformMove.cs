@@ -7,6 +7,7 @@ namespace Muks.Tween
         public Vector3 StartPosition;
         public Vector3 TargetPosition;
 
+
         public override void SetData(DataSequence dataSequence)
         {
             base.SetData(dataSequence);
@@ -15,6 +16,7 @@ namespace Muks.Tween
             TargetPosition = (Vector3)dataSequence.TargetValue;
         }
 
+
         protected override void Update()
         {
             base.Update();
@@ -22,7 +24,13 @@ namespace Muks.Tween
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
 
             transform.position = Vector3.LerpUnclamped(StartPosition, TargetPosition, percent);
+        }
 
+
+        protected override void TweenCompleted()
+        {
+            if (TweenMode != TweenMode.Spike)
+                transform.position = TargetPosition;
         }
     }
 }

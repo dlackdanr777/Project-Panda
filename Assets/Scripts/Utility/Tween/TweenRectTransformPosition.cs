@@ -42,5 +42,12 @@ namespace Muks.Tween
 
             _rectTransform.anchoredPosition = Vector3.LerpUnclamped(StartAnchoredPosition, TargetAnchoredPosition, percent);
         }
+
+
+        protected override void TweenCompleted()
+        {
+            if (TweenMode != TweenMode.Spike)
+                _rectTransform.anchoredPosition = TargetAnchoredPosition;
+        }
     }
 }

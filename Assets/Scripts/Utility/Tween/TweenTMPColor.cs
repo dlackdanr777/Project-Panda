@@ -14,6 +14,7 @@ namespace Muks.Tween
 
         public TextMeshProUGUI Text;
 
+
         public override void SetData(DataSequence dataSequence)
         {
             base.SetData(dataSequence);
@@ -28,6 +29,7 @@ namespace Muks.Tween
             }
         }
 
+
         protected override void Update()
         {
             base.Update();
@@ -35,6 +37,13 @@ namespace Muks.Tween
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
             
             Text.color = Color.LerpUnclamped(StartColor, TargetColor, percent);
+        }
+
+
+        protected override void TweenCompleted()
+        {
+            if (TweenMode != TweenMode.Spike)
+                Text.color = TargetColor;
         }
     }
 }

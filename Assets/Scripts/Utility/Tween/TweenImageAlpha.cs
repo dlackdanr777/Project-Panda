@@ -40,6 +40,12 @@ namespace Muks.Tween
 
             Image.color = Color.LerpUnclamped(StartColor, TargetColor, percent);
         }
+
+        protected override void TweenCompleted()
+        {
+            if(TweenMode != TweenMode.Spike)
+                Image.color = TargetColor;
+        }
     }
 }
 

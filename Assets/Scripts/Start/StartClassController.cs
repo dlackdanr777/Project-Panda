@@ -49,23 +49,29 @@ public class StartClassController : MonoBehaviour
 
     private void Init()
     {
-        if (!DatabaseManager.Instance.UserInfo.IsExistingUser)
-        {
-            _lastIndex = _newUserStartList.Count;
-            for (int i = 0; i < _lastIndex; i++)
-            {
-                _newUserStartList[i].Init(this);
-            }
-        }
-        else
-        {
-            _lastIndex = _existingUserStartList.Count;
-            for (int i = 0; i < _lastIndex; i++)
-            {
-                _existingUserStartList[i].Init(this);
-            }
-        }
+        //TODO: 차후 기존유저 로딩 생기면 풀기
+        /*  if (!DatabaseManager.Instance.UserInfo.IsExistingUser)
+          {
+              _lastIndex = _newUserStartList.Count;
+              for (int i = 0; i < _lastIndex; i++)
+              {
+                  _newUserStartList[i].Init(this);
+              }
+          }
+          else
+          {
+              _lastIndex = _existingUserStartList.Count;
+              for (int i = 0; i < _lastIndex; i++)
+              {
+                  _existingUserStartList[i].Init(this);
+              }
+          }*/
 
+        _lastIndex = _newUserStartList.Count;
+        for (int i = 0; i < _lastIndex; i++)
+        {
+            _newUserStartList[i].Init(this);
+        }
         ChangeCurrentClass();
     }
 
@@ -80,13 +86,16 @@ public class StartClassController : MonoBehaviour
     {
         if (_nextIndex >= _lastIndex) //index를 모두 지나왔다면?
         {
-            LoadingSceneManager.LoadScene("IntegratedMainScene");
+            LoadingSceneManager.LoadScene("24_01_09_Integrated");
             return;
         }
 
-        _currentClass = !DatabaseManager.Instance.UserInfo.IsExistingUser 
-            ? _newUserStartList[_nextIndex] 
-            : _currentClass = _existingUserStartList[_nextIndex];
+        //TODO: 차후 기존유저 로딩 생기면 풀기
+        /*  _currentClass = !DatabaseManager.Instance.UserInfo.IsExistingUser 
+              ? _newUserStartList[_nextIndex] 
+              : _currentClass = _existingUserStartList[_nextIndex];*/
+
+        _currentClass = _newUserStartList[_nextIndex];
 
         _nextIndex++;
         OnBackgroundButtonClickd();

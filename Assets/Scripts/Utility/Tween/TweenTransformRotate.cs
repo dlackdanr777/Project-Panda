@@ -12,6 +12,7 @@ namespace Muks.Tween
         /// <summary> 시작 회전 값</summary>
         public Vector3 StartEulerAngles;
 
+
         public override void SetData(DataSequence dataSequence)
         {
             base.SetData(dataSequence);
@@ -20,6 +21,7 @@ namespace Muks.Tween
             TargetEulerAngles = (Vector3)dataSequence.TargetValue;
         }
 
+
         protected override void Update()
         {
             base.Update();
@@ -27,7 +29,13 @@ namespace Muks.Tween
             float percent = _percentHandler[TweenMode](ElapsedDuration, TotalDuration);
 
             transform.eulerAngles = Vector3.LerpUnclamped(StartEulerAngles, TargetEulerAngles, percent);
+        }
 
+
+        protected override void TweenCompleted()
+        {
+            if (TweenMode != TweenMode.Spike)
+                transform.eulerAngles = TargetEulerAngles;
         }
     }
 }

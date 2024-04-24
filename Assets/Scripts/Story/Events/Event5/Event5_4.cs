@@ -3,53 +3,29 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Event5_4 : StoryEvent
+public class Event5_4 : InteractionStoryEvent
 {
-    private bool _clickEnable;
-
-    private Coroutine _clickCoroutine;
     public override void EventStart(Action onComplate)
     {
+        _nextActionHandler = onComplate;
+        // 상점 기능 구현되면 상점에서 잠자리채 사는 것으로 변경
         //잠자리채 구매 시 이벤트 종료
-        Tween.SpriteRendererAlpha(gameObject, 1, 2, TweenMode.Quadratic);
-        _clickEnable = true;
-        _clickCoroutine = StartCoroutine(ButtonClickEnable(onComplate));
+        ShowFollowButton();
     }
 
     public override void EventCancel(Action onComplate = null)
     {
-        SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
-        renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 0);
-        if (_clickCoroutine != null)
-            StopCoroutine(_clickCoroutine);
+        HideFollowButton();
+
     }
-    private IEnumerator ButtonClickEnable(Action onComplate)
+
+    protected override void OnFollowButtonClicked()
     {
-        while (_clickEnable)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.one, 10);
+        HideFollowButton();
 
-                foreach (RaycastHit2D hit in hits)
-                {
-                    if (hit.transform.gameObject != gameObject)
-                        continue;
+        // 잠자리채 인벤토리로 이동
 
-                    // 잠자리채 구매
-                    BuyDragonflyNet(onComplate);
-                    _clickEnable = false;
-                    
-                }
-            }
+        _nextActionHandler?.Invoke();
 
-            yield return null;
-        }
-    }
-    private void BuyDragonflyNet(Action onComplate)
-    {
-        //곤충 채집 활성화?
-        Tween.SpriteRendererAlpha(gameObject, 0, 2, TweenMode.Quadratic, onComplate);
     }
 }

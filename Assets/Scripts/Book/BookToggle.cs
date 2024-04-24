@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class BookToggle : MonoBehaviour
 {
     public static Action<int> OnMoveBookPage = delegate { };
+
+    [Header("Components")]
     [SerializeField] GameObject[] _pages;
 
     private ToggleGroup _toggleGroup;
@@ -23,7 +25,10 @@ public class BookToggle : MonoBehaviour
         foreach(var toggle in _toggleGroup.GetComponentsInChildren<Toggle>().Select((value, index) => (value, index))) //Select : index와 toggle 둘 다 이용하기 위해 
         {
             Toggle t = toggle.value;
-            toggle.value.onValueChanged.AddListener((isOn) => OnClickToggle(isOn, t, toggle.index));
+            toggle.value.onValueChanged.AddListener((isOn) => 
+            {
+                OnClickToggle(isOn, t, toggle.index);
+            });
 
             _toggleList.Add(toggle.index, toggle.value);
         }
@@ -40,7 +45,7 @@ public class BookToggle : MonoBehaviour
     private void OnClickToggle(bool isOn, Toggle t, int index)
     {
         //ToggleGroup이 가지고 있는 모든 Toggle 구함
-        foreach(var toggle in _toggleList)
+        foreach (var toggle in _toggleList)
         {
             toggle.Value.transform.SetParent(transform); //현재 위치를 부모로
             toggle.Value.transform.SetSiblingIndex(toggle.Key); //순서 재정렬
@@ -49,18 +54,21 @@ public class BookToggle : MonoBehaviour
         t.transform.SetParent(transform.parent); 
         t.transform.SetAsLastSibling();
 
-        //Book page 이동
-        for (int i = 0; i < _toggleList.Count; i++)
+        if(_pages.Length != 0)
         {
-            if (i == index)
+
+            //Book page 이동
+            for (int i = 0; i < _toggleList.Count; i++)
             {
-                _pages[i].SetActive(true);
-            }
-            else
-            {
-                _pages[i].SetActive(false);
+                if (i == index)
+                {
+                    _pages[i].SetActive(true);
+                }
+                else
+                {
+                    _pages[i].SetActive(false);
+                }
             }
         }
-        //OnMoveBookPage?.Invoke(index);
     }
 }

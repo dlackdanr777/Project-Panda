@@ -4,14 +4,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIInsideWood : UIView
 {
-    [SerializeField] private GameObject _borderButton;
+    [SerializeField] private GameObject _dontTouchArea;
 
     [SerializeField] private Vector3 _cameraMovePos;
 
+    [SerializeField] private SpriteRenderer _inSideWood;
+
+    [SerializeField] private SpriteRenderer _outSideWood;
+
     private float _tempCameraSize;
+
+    private Vector3 _tmpPos;
 
     public event Action OnShowHandler;
 
@@ -20,24 +27,31 @@ public class UIInsideWood : UIView
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);
-        DataBind.SetButtonValue("WoodBorderButton", OnBorderButtonClicked);
-        DataBind.SetButtonValue("InventoryButton", OnInventoryButtonClicked);
-        DataBind.SetButtonValue("DiaryButton", OnDiaryButtonClicked);
+
+       _inSideWood.gameObject.SetActive(false);
+        DataBind.SetUnityActionValue("WishTreeExitButton", OnWishTreeExitButtonClicked);
+        DataBind.SetUnityActionValue("DiaryButton", OnDiaryButtonClicked);
+
+        gameObject.SetActive(false);
     }
 
     public override void Show()
     {
         VisibleState = VisibleState.Appearing;
-
         _tempCameraSize = Camera.main.orthographicSize;
-        _uiNav.AllHide();
-        
+        _tmpPos = Camera.main.transform.position;
+        _uiNav.HideMainUI();
+
+        _inSideWood.gameObject.SetActive(true);
+        _dontTouchArea.SetActive(true);
+        _inSideWood.color = new Color(_inSideWood.color.r, _inSideWood.color.g, _inSideWood.color.b, 0);
+
         Tween.TransformMove(Camera.main.gameObject, _cameraMovePos, 1f, TweenMode.Smoothstep, () =>
         {
-            Tween.CameraSize(Camera.main.gameObject, 12, 1f, TweenMode.Smoothstep, () =>
+            Tween.SpriteRendererAlpha(_inSideWood.gameObject, 1, 1, TweenMode.Smoothstep);
+            Tween.CameraOrthographicSize(Camera.main.gameObject, 12, 1f, TweenMode.Smoothstep, () =>
             {
                 VisibleState = VisibleState.Appeared;
-
                 gameObject.SetActive(true);
                 OnShowHandler?.Invoke();
             });
@@ -52,11 +66,16 @@ public class UIInsideWood : UIView
         VisibleState = VisibleState.Disappearing;
         gameObject.SetActive(false);
 
-        Tween.CameraSize(Camera.main.gameObject, _tempCameraSize, 1f, TweenMode.Smoothstep, () =>
+        _inSideWood.color = new Color(_inSideWood.color.r, _inSideWood.color.g, _inSideWood.color.b, 1);
+        Vector3 targetPos = _tmpPos;
+        Tween.SpriteRendererAlpha(_inSideWood.gameObject, 0, 1, TweenMode.Smoothstep);
+        Tween.TransformMove(Camera.main.gameObject, targetPos, 1, TweenMode.Smoothstep);
+        Tween.CameraOrthographicSize(Camera.main.gameObject, _tempCameraSize, 1f, TweenMode.Smoothstep, () =>
         {
             VisibleState = VisibleState.Disappeared;
-
-            _uiNav.AllShow();
+            _inSideWood.gameObject.SetActive(false);
+            _dontTouchArea.SetActive(false);
+            _uiNav.ShowMainUI();
             OnHideHandler?.Invoke();
         });
 
@@ -76,20 +95,7 @@ public class UIInsideWood : UIView
     }
 
 
-    private void OnInventoryButtonClicked()
-    {
-        if (!_uiNav.Check("WishTreeInventory"))
-        {
-            _uiNav.Push("WishTreeInventory");
-        }
-        else
-        {
-            _uiNav.Pop("WishTreeInventory");
-        }       
-    }
-
-
-    private void OnBorderButtonClicked()
+    private void OnWishTreeExitButtonClicked()
     {
         _uiNav.Pop();
     }
