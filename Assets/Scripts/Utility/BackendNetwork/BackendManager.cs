@@ -117,8 +117,15 @@ namespace Muks.BackEnd
         {
             if (maxRepeatCount <= 0)
             {
+                BackendReturnObject errorBro = Backend.BMember.GuestLogin("게스트 로그인");
+                string errorCode = errorBro.GetErrorCode();
+                string statusCode = errorBro.GetStatusCode();
+                string messageCode = errorBro.GetMessage();
+
                 string errorName = "서버 접속 오류";
-                string errorDescription = "서버에 접속하지 못했습니다. \n재 접속을 시도하세요.";
+                string errorDescription = "ErrorCode: " + errorCode;
+                errorDescription += "\nStatusCode: " + statusCode;
+                errorDescription += "\nMessageCode: " + messageCode;
                 _popup.Show(errorName, errorDescription, () => GuestLogin(3, onCompleted));
                 return;
             }
