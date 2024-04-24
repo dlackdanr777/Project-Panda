@@ -563,6 +563,9 @@ namespace Muks.BackEnd
 
         public void LogUpload(BackendReturnObject bro)
         {
+            if (!Backend.IsLogin || !Login)
+                return;
+
             if (bro.IsSuccess())
                 return;
             Param logParam = new Param();
