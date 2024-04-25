@@ -47,7 +47,11 @@ public class ShowNPCStory : MonoBehaviour
             sr.enabled = true;
             //gameObject.SetActive(true);
             sr.sprite = _image;
-            gameObject.GetComponent<Animator>().enabled = true;
+            Animator animator = gameObject.GetComponent<Animator>();
+            if(animator != null)
+            {
+                animator.enabled = true;
+            }
             this.enabled = false;
 
         }

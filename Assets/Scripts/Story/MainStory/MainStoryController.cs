@@ -123,10 +123,11 @@ public class MainStoryController : MonoBehaviour
         }
 
         _storyIndex = _storyKey[0];
+        DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = _storyIndex;
 
         //DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
         // 저장된 값 불러오기
-        for(int i = 0; i < _storyDatabase.Count; i++)
+        for (int i = 0; i < _storyDatabase.Count; i++)
         {
             //_storyDatabase[_storyKey[i]].IsSuccess = false;
 
@@ -190,13 +191,23 @@ public class MainStoryController : MonoBehaviour
         {
             return;
         }
-        foreach (string key in NextStory)
+        _currentMap = TimeManager.Instance.CurrentMap;
+        //foreach (string key in NextStory)
+        //{
+        //    if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _currentMap != TimeManager.Instance.CurrentMap)
+        //    {
+        //        _currentMap = TimeManager.Instance.CurrentMap;
+        //        PoyaSetTrue();
+        //        JijiSetTrue();
+        //        SetPosition();
+        //    }
+        //}
+        if (_storyDatabase[DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID].StoryStartPanda.Equals(_npcID))
         {
-            if (_storyDatabase[key].StoryStartPanda.Equals(_npcID) && _currentMap != TimeManager.Instance.CurrentMap)
-            {
-                _currentMap = TimeManager.Instance.CurrentMap;
-                SetPosition();
-            }
+            // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
+            PoyaSetTrue();
+            JijiSetTrue();
+            SetPosition();
         }
     }
 
@@ -217,10 +228,15 @@ public class MainStoryController : MonoBehaviour
 
             }
         }
-        // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
-        PoyaSetTrue();
-        JijiSetTrue();
-        SetPosition();
+        // 한 번만 실행
+        if (_storyDatabase[DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID].StoryStartPanda.Equals(_npcID))
+        {
+            // 지지와 포야가 다음 이야기에 포함되어 있다면 애니메이션 끄기
+            PoyaSetTrue();
+            JijiSetTrue();
+            SetPosition();
+        }
+
     }
 
     private void StartMainStory()
@@ -428,9 +444,9 @@ public class MainStoryController : MonoBehaviour
             //    }   
             //}
             SortingNextStory();
+            OnFinishStoryHandler?.Invoke();
         }
         NpcButtonSetSibling();
-        OnFinishStoryHandler?.Invoke();
     }
 
 
@@ -528,7 +544,6 @@ public class MainStoryController : MonoBehaviour
                 // 지지 바라보는 방향 설정
                 if (key == "MS01A" && jijiScale.x < 0)
                 {
-                    Debug.Log("MS01A");
                     _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
                 }
                 else if(jijiScale.x > 0 && key != "MS01A")

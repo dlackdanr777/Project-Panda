@@ -30,6 +30,7 @@ namespace BT
         private string _map;
         private Animator _animator;
         public int Num;
+        private float _fadeTime = 1f;
         //private float _time;
 
         //[System.Serializable]
@@ -149,7 +150,7 @@ namespace BT
             if (_map != TimeManager.Instance.CurrentMap)
             {
                 _map = TimeManager.Instance.CurrentMap;
-                SetPandaSize();
+                Invoke("SetPandaSize", _fadeTime);
             }
 
             // 판다 행복도 지속적으로 감소
