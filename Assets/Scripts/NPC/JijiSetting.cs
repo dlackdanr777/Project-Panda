@@ -8,6 +8,7 @@ public class JijiSetting : MonoBehaviour
     private string _map;
     private Animator _animator;
     private int Num;
+    private float _fadeTime = 1f;
 
     public int[] _treeMapAnimations;
     public int[] _elseMapAnimations;
@@ -61,7 +62,7 @@ public class JijiSetting : MonoBehaviour
         if (_map != TimeManager.Instance.CurrentMap)
         {
             _map = TimeManager.Instance.CurrentMap;
-            SetPandaSize();
+            Invoke("SetPandaSize", _fadeTime);
         }
     }
 
