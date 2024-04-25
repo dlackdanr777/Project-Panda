@@ -46,6 +46,12 @@ public class UIMainScene : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        Invoke("AttendCheck", 3);
+    }
+
+
     private void OnCameraButtonClicked()
     {
         _uiNav.Push("Camera");
@@ -133,8 +139,6 @@ public class UIMainScene : MonoBehaviour
         _uiNav.Pop("Picture");
     }
 
-
-
     public void OnHideMainUIButtonClicked()
     {
         _uiNav.HideMainUI();
@@ -192,5 +196,17 @@ public class UIMainScene : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("UINotice");
     }
+
+
+    private void AttendCheck()
+    {
+        if (DatabaseManager.Instance.AttendanceDatabase.IsAttendanced || GameManager.Instance.IsFirstAccessMainScene)
+            return;
+
+        GameManager.Instance.IsFirstAccessMainScene = true;
+        _uiNav.Push("Attendance");
+
+    }
+
 
 }

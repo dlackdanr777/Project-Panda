@@ -63,6 +63,8 @@ namespace Shop
 
         private void OnSellButtonClicked()
         {
+            _sellButton.interactable = false;
+            _exitButton.interactable = false;
             if (GameManager.Instance.Player.GainBamboo(_sellMoney))
             {
                 SoundManager.Instance.PlayEffectAudio(SoundEffectType.Sell);
@@ -76,6 +78,8 @@ namespace Shop
                     //1초 대기 후 닫기
                     Tween.TransformMove(_completeImage, _completeImage.transform.position, 1, TweenMode.Constant, () =>
                     {
+                        _sellButton.interactable = true;
+                        _exitButton.interactable = true;
                         _completeImage.gameObject.SetActive(false);
                         gameObject.SetActive(false);
                         OnSellCompleteHandler?.Invoke();
@@ -94,6 +98,8 @@ namespace Shop
                     //1초 대기 후 닫기
                     Tween.TransformMove(_maxBambooImage, _maxBambooImage.transform.position, 1, TweenMode.Constant, () =>
                     {
+                        _sellButton.interactable = true;
+                        _exitButton.interactable = true;
                         _maxBambooImage.gameObject.SetActive(false);
                         gameObject.SetActive(false);
                         OnSellCompleteHandler?.Invoke();

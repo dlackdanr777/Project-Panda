@@ -65,6 +65,9 @@ namespace Shop
 
         private void OnBuyButtonClicked()
         {
+            _buyButton.interactable = false;
+            _exitButton.interactable = false;
+
             //소지 금액이 구매 금액보다 작을 경우
             if (!GameManager.Instance.Player.SpendBamboo(_buyMoney))
             {
@@ -77,6 +80,8 @@ namespace Shop
                     //1초 대기 후 닫기
                     Tween.TransformMove(_notBuyImage, _notBuyImage.transform.position, 1, TweenMode.Constant, () =>
                     {
+                        _buyButton.interactable = true;
+                        _exitButton.interactable = true;
                         _notBuyImage.gameObject.SetActive(false);
                         gameObject.SetActive(false);
                         OnBuyCompleteHandler?.Invoke();
@@ -99,6 +104,8 @@ namespace Shop
                 //1초 대기 후 닫기
                 Tween.TransformMove(_completeImage, _completeImage.transform.position, 1, TweenMode.Constant, () =>
                 {
+                    _buyButton.interactable = true;
+                    _exitButton.interactable = true;
                     _completeImage.gameObject.SetActive(false);
                     gameObject.SetActive(false);
                     OnBuyCompleteHandler?.Invoke();
