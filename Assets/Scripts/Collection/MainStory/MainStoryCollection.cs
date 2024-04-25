@@ -299,7 +299,7 @@ public class MainStoryCollection : MonoBehaviour
                 break;
 
             case GatheringItemType.Fish:
-                SoundManager.Instance.PlayEffectAudio(_fishAnimeEndSound);
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeStartSound);
                 SoundManager.Instance.PlayEffectAudio(_fishAnimeMiddleSound);
                 break;
 
@@ -329,7 +329,8 @@ public class MainStoryCollection : MonoBehaviour
                 break;
 
             case GatheringItemType.Fish:
-                SoundManager.Instance.PlayEffectAudio(_fishAnimeStartSound, 1.3f);
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeMiddleSound);
+                SoundManager.Instance.PlayEffectAudio(_fishAnimeEndSound);
                 break;
 
             case GatheringItemType.Fruit:
