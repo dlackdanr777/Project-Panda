@@ -1,12 +1,7 @@
+using Muks.Tween;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Muks.DataBind;
-using Unity.VisualScripting;
-using Muks.Tween;
-using Muks.BackEnd;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIChallenges : UIView
