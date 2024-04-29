@@ -14,6 +14,7 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene1 Components")]
+    [SerializeField] private GameObject _scene1;
     [SerializeField] private SpriteRenderer _fadeImage;
     [SerializeField] private GameObject _flash;
     [SerializeField] private GameObject _poirot;
@@ -21,6 +22,7 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene2 Components")]
+    [SerializeField] private GameObject _scene2;
     [SerializeField] private GameObject _backgroundImage;
     [SerializeField] private GameObject _scene2Poya;
     [SerializeField] private GameObject _closeLetter;
@@ -35,6 +37,7 @@ public class IntroScene : MonoBehaviour
 
     [Space]
     [Header("Scene3 Components")]
+    [SerializeField] private GameObject _scene3;
     [SerializeField] private UIIntroTitle _uiTitle;
     [SerializeField] private Transform _startPos;
     [SerializeField] private Transform _endCameraPos;
@@ -58,6 +61,8 @@ public class IntroScene : MonoBehaviour
 
     private bool _isletterClicked;
 
+    private Coroutine _sceneRoutine;
+
     private void Awake()
     {
         _flashAnimator = _flash.GetComponent<Animator>();
@@ -71,12 +76,13 @@ public class IntroScene : MonoBehaviour
         Scene3Init();
 
         _skipButton.onClick.AddListener(OnSkipButtonClicked);
+        _skipButton.gameObject.SetActive(false);
     }
 
 
     private void Start()
     {
-        StartCoroutine(Scene1());
+        _sceneRoutine = StartCoroutine(Scene1());
     }
 
 
@@ -141,16 +147,16 @@ public class IntroScene : MonoBehaviour
         string context = "여러분... ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.15f));
 
-        context = "저는 오늘을 기점으로   \n탐정 생활을 마감하고 새로운 여정을 시작하려 합니다. ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 40));
+        context = "저는 오늘을 기점으로 화려했던 탐정 생활을 마감하고 새로운 여정을 시작하려 합니다.  ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45));
 
-        context = "그러니 이제 안녕히... ";
+        context = "그러니 이제 안녕히... 다들 행복하시구려. ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         //대사 종료
         _uiIntroScene.EndDialogue();
-
         SoundManager.Instance.PlayBackgroundAudio(_poirotHideSound, 1.5f, false);
+        _skipButton.gameObject.SetActive(true);
 
         yield return YieldCache.WaitForSeconds(5.5f);
 
@@ -200,7 +206,7 @@ public class IntroScene : MonoBehaviour
         Tween.SpriteRendererAlpha(_fadeImage.gameObject, 1, 2, TweenMode.Constant);
 
         yield return YieldCache.WaitForSeconds(2f);
-        StartCoroutine(Scene2());
+        _sceneRoutine = StartCoroutine(Scene2());
     }
 
 
@@ -230,11 +236,14 @@ public class IntroScene : MonoBehaviour
 
         yield return YieldCache.WaitForSeconds(1f);
 
-        string context = "흑흑흑... 할아버지... ";
+        string context = "훌쩍... ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.12f));
 
+        context = "이 바보 할아버지... 말도 안하고 사라지면 어떡해! ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
         context = "어라...?          \n이건 뭐지? ";
-        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45));
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
 
         //포야 대사 종료
@@ -296,7 +305,7 @@ public class IntroScene : MonoBehaviour
         yield return YieldCache.WaitForSeconds(5f);
 
 
-        //포야 독백 시작
+        //포야 편지 읽기
         _uiIntroScene.StartDialogue();
         _uiIntroScene.SetDialogueNameText("포아로");
         _uiIntroScene.SetDialogueImage(_poirotSprite);
@@ -306,16 +315,33 @@ public class IntroScene : MonoBehaviour
         context = "내 손주 포야에게 ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        context = "네가 할아버지의 마지막 모습에 놀랐을 거라 생각해. ";
+        context = "포야, 할아버지 때문에 많이 놀랐지? 껄껄껄 ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        context = "하지만 이건 시작에 불과해.          \n나의 진짜 모험은 이제부터야. ";
+        context = "그 놀란 표정을 못봐서 아쉽구만! ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+
+        context = "나는 사라져버린게 아니란다. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+        context = "그저 새로운 모험이 시작되었을 뿐!     \n혹시 나를 찾고 싶다고? 그렇다면 명탐정으로 거듭나서 나를 찾아보거라! ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         _uiIntroScene.SetDialogueImage(_poirotGreetSprite);
 
-        context = "내가 남긴 책과 소원나무의 열쇠로 너의 여정을 시작하길 바란다. ";
+        context = "먼저 신비한 나무의 문을 여는 것부터 시작하지. ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+        context = "준비가 끝난다면 편지를 읽고 '전송'이라고 외쳐보거라. ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+
+        _uiIntroScene.SetDialogueNameText("포야");
+        _uiIntroScene.SetDialogueImage(_poyaSprite);
+
+        context = "전..송...? ";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context, 45, 0.12f));
 
 
         //대사 종료
@@ -369,7 +395,6 @@ public class IntroScene : MonoBehaviour
         Color targetColor = new Color(0, 0, 0, 1);
         Tween.IamgeColor(_uiFadeImage.gameObject, targetColor, 2);
 
-        SoundManager.Instance.PlayBackgroundAudio(_scene3Music, 3, false);
         yield return YieldCache.WaitForSeconds(4f);
 
         //멀티버스 스튜디오 로고명 출력
@@ -392,12 +417,16 @@ public class IntroScene : MonoBehaviour
         Tween.CanvasGroupAlpha(_companyLogo, 0, 2);
         yield return YieldCache.WaitForSeconds(3f);
 
-        StartCoroutine(Scene3());
+        _sceneRoutine = StartCoroutine(Scene3());
     }
 
 
     private IEnumerator Scene3()
     {
+        SoundManager.Instance.PlayBackgroundAudio(_scene3Music, 3, false);
+
+        _skipButton.gameObject.SetActive(false);
+        _companyLogo.gameObject.SetActive(false);
         _fadeImage.gameObject.SetActive(false);
         _uiFadeImage.gameObject.SetActive(true);
         _uiFadeImage.color = Color.black;
@@ -458,10 +487,29 @@ public class IntroScene : MonoBehaviour
 
     private void OnSkipButtonClicked()
     {
-        GameManager.Instance.Player.AddItemById("ITG05", 1, ItemAddEventType.None, false);
+/*        GameManager.Instance.Player.AddItemById("ITG05", 1, ItemAddEventType.None, false);
         GameManager.Instance.Player.AddItemById("IFR02", 5);
         DatabaseManager.Instance.UserInfo.IsExistingUser = true;
         DatabaseManager.Instance.UserInfo.SaveUserInfoData(10);
-        LoadingSceneManager.LoadScene("24_01_09_Integrated");
+        LoadingSceneManager.LoadScene("24_01_09_Integrated");*/
+
+        _skipButton.interactable = false;
+
+        if(_sceneRoutine != null)
+            StopCoroutine(_sceneRoutine);
+
+        FadeInOutManager.Instance.FadeIn(0.5f, () =>
+        {
+            _scene1.SetActive(false);
+            _scene2.SetActive(false);
+            _uiIntroScene.gameObject.SetActive(false);
+
+            _sceneRoutine = StartCoroutine(Scene3());
+
+            FadeInOutManager.Instance.FadeOut(0.05f);
+        });
+
+
+
     }
 }
