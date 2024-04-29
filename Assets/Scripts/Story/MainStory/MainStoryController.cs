@@ -548,8 +548,6 @@ public class MainStoryController : MonoBehaviour
                 }
                 else if(jijiScale.x > 0 && key != "MS01A")
                 {
-                    Debug.Log("jijiScale.x > 0");
-
                     _jiji.gameObject.transform.localScale = new UnityEngine.Vector3(-jijiScale.x, jijiScale.y, jijiScale.z);
                 }
                 _jiji.enabled = true;
