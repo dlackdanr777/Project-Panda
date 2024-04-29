@@ -421,7 +421,7 @@ public class MainStoryController : MonoBehaviour
                 }
 
                 // NextStory 추가
-                AddNextStory(key, id);
+                AddNextStory(key);
 
                 // 채집이 있다면 채집 활성화
                 foreach (string nextStoryId in NextStory)
@@ -598,7 +598,7 @@ public class MainStoryController : MonoBehaviour
         SetAnimControll();
     }
 
-    private void AddNextStory(string key, string id)
+    private void AddNextStory(string key)
     {
         //Debug.Log(string.Join(", ", DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList));
         for (int j = 0; j < _storyKey.Count; j++)
@@ -630,7 +630,7 @@ public class MainStoryController : MonoBehaviour
                             {
                                 Debug.Log("스토리 완료: " + k);
                                 DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(k);
-                                DatabaseManager.Instance.Challenges.MainStoryDone(id);
+                                DatabaseManager.Instance.Challenges.MainStoryDone(key);
                             }
                             NextStory.Remove(k);
                             break;
