@@ -105,6 +105,20 @@ namespace Muks.BackEnd
                 //HideLoginUI();
                 LoadMyData();
                 LoadNextScene(bro);
+
+                if(string.IsNullOrWhiteSpace(DatabaseManager.Instance.UserInfo.NickName))
+                {
+                    string nickName = string.Empty;
+                    bool isSuccess = false;
+                    do
+                    {
+                        nickName = "User" + Random.Range(1000000, 2000000);
+                        isSuccess = BackendManager.Instance.CreateNickName(nickName);
+                    }while(!isSuccess);
+
+                    DatabaseManager.Instance.UserInfo.NickName = nickName;
+                    DatabaseManager.Instance.UserInfo.AsyncSaveUserInfoData(3);
+                }
             });
         }
 

@@ -33,6 +33,7 @@ public class AttendanceDatabase
         int attendanceDayCount = UserInfo.AttendanceUserData.AttendanceDayCount;
         GiveReward(_attendanceDataDic[attendanceDayCount].Item, _attendanceDataDic[attendanceDayCount].Amount);
         DatabaseManager.Instance.UserInfo.AttendanceUserData.AsyncSaveAttendanceData(10);
+        BackendManager.Instance.LogUpload("AttendanceLog", "Check Days " + "(" + attendanceDayCount + ")");
     }
 
 

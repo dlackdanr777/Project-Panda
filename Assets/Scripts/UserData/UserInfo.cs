@@ -34,7 +34,7 @@ public class UserInfo
         }
     }
 
-    public string UserId;    //아이디
+    public string NickName;    //아이디
     public string _lastAccessDay;
     public DateTime LastAccessDay => DateTime.Parse(_lastAccessDay); //마지막 접속일
     public int DayCount; //몇일 접속했나?
@@ -137,7 +137,7 @@ public class UserInfo
             return;
         }
 
-        UserId = json[0]["UserId"].ToString();
+        NickName = json[0]["NickName"].ToString();
         DayCount = int.Parse(json[0]["DayCount"].ToString());
         _lastAccessDay = json[0]["LastAccessDay"].ToString();
         IsExistingUser = (bool)json[0]["IsExistingUser"];
@@ -324,7 +324,7 @@ public class UserInfo
     {
         Param param = new Param();
 
-        param.Add("UserId", UserId);
+        param.Add("NickName", NickName);
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);

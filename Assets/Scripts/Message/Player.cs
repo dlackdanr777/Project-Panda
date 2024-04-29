@@ -67,6 +67,7 @@ public class Player
             Bamboo -= amount;
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
             //SaveBambooData(3); //서버 저장용이나 임시적으로 제외
+            BackendManager.Instance.LogUpload("BambooLog", "SpendBamboo" + "(" + amount + ")" + "  Total" + "(" + GameManager.Instance.Player.Bamboo + ")");
             return true;
         }
         else
@@ -82,6 +83,7 @@ public class Player
             Bamboo = Mathf.Clamp(Bamboo + amount, 0, MaxBamboo);
             DataBind.SetTextValue("BambooCount", Bamboo.ToString());
             DatabaseManager.Instance.Challenges.StackedBambooCount += amount; // 도전과제 달성 체크
+            BackendManager.Instance.LogUpload("BambooLog", "GainBamboo" + "(" + amount + ")" + "  Total" + "(" + GameManager.Instance.Player.Bamboo + ")");
             //SaveBambooData(3); //서버 저장용이나 임시적으로 제외
             return true;
         }
