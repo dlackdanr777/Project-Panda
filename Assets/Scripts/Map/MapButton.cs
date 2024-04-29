@@ -1,10 +1,7 @@
-using UnityEngine;
-using UnityEngine.UI;
-using Muks.Tween;
 using Muks.DataBind;
-using UnityEngine.SceneManagement;
-using BT;
+using Muks.Tween;
 using TMPro;
+using UnityEngine;
 
 public class MapButton : MonoBehaviour
 {
@@ -63,22 +60,6 @@ public class MapButton : MonoBehaviour
 
         LoadingSceneManager.OnLoadSceneHandler += OnSceneChanged;
 
-        Vector3 tmpCameraPos = GameManager.Instance.TmpCameraData.TmpPos;
-        int tmpCenterIndex = GameManager.Instance.TmpCameraData.TmpCenterIndex;
-
-        if (tmpCenterIndex != -1)
-        {
-            CurrentMap = tmpCenterIndex;
-            _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
-            if(CurrentMap == 5)
-            {
-                _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
-            }
-        }
-
-        if(tmpCameraPos != Vector3.zero)
-            _cameraController.transform.position = tmpCameraPos;
-
         DataBind.SetUnityActionValue("WishTreeButton", MoveWishTree);
         DataBind.SetUnityActionValue("FishingGroundButton", MoveFishingGround);
         DataBind.SetUnityActionValue("ForestEntranceButton", MoveForestEntrance);
@@ -98,6 +79,8 @@ public class MapButton : MonoBehaviour
 
     private void Start()
     {
+        LoadMapData();
+
         // 처음 시작
         if (_currentMapID == null)
         {
@@ -113,6 +96,8 @@ public class MapButton : MonoBehaviour
         {
             ShowMapName();
         }
+
+
     }
 
     /// <summary>
@@ -438,6 +423,81 @@ public class MapButton : MonoBehaviour
         {
             Tween.TMPAlpha(_mapNameText.gameObject, 0, 1f, TweenMode.EaseInExpo);
         }));
+    }
+
+
+    private void LoadMapData()
+    {
+        Vector3 tmpCameraPos = GameManager.Instance.TmpCameraData.TmpPos;
+        int tmpCenterIndex = GameManager.Instance.TmpCameraData.TmpCenterIndex;
+
+        if (tmpCenterIndex != -1)
+        {
+            CurrentMap = tmpCenterIndex;
+            _cameraController.MapCenter = _targetTransform[(int)CurrentMap].position;
+            if (CurrentMap == 5)
+            {
+                _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
+            }
+
+            switch (CurrentMap)
+            {
+                case 0:
+                    SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
+                    break;
+                case 1:
+                    SoundManager.Instance.PlayBackgroundAudio(_fishingGroundAudioClip, 2);
+                    break;
+                case 2:
+                    SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
+                    break;
+                case 3:
+                    SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+                    break;
+                case 4:
+                    SoundManager.Instance.PlayBackgroundAudio(_villageAudioClip, 2);
+                    break;
+                case 5:
+                    SoundManager.Instance.PlayBackgroundAudio(_marcketAudioClip, 2);
+                    break;
+                case 6:
+                    SoundManager.Instance.PlayBackgroundAudio(_catworldAudioClip, 2);
+                    break;
+                case 7:
+                    SoundManager.Instance.PlayBackgroundAudio(_mermaidForestAudioClip, 2);
+                    break;
+                case 8:
+                    SoundManager.Instance.PlayBackgroundAudio(_forestAudioClip, 2);
+                    break;
+                case 9:
+                    SoundManager.Instance.PlayBackgroundAudio(_crossRoadAudioClip, 2);
+                    break;
+                case 10:
+                    SoundManager.Instance.PlayBackgroundAudio(_villageHouseAudioClip, 2);
+                    break;
+                case 11:
+                    SoundManager.Instance.PlayBackgroundAudio(_cityHallLobbyAudioClip, 2);
+                    break;
+                case 12:
+                    SoundManager.Instance.PlayBackgroundAudio(_cityHallBossRoomAudioClip, 2);
+                    break;
+                case 13:
+                    SoundManager.Instance.PlayBackgroundAudio(_castleNyangAudioClip, 2);
+                    break;
+                case 14:
+                    SoundManager.Instance.PlayBackgroundAudio(_mainTreeInsideAudioClip, 2);
+                    break;
+            }
+        }
+
+        else
+        {
+            SoundManager.Instance.PlayBackgroundAudio(_treeAudioClip, 2);
+        }
+
+        if (tmpCameraPos != Vector3.zero)
+            _cameraController.transform.position = tmpCameraPos;
+
     }
 
     /// <summary>메인 씬에서 다른 씬으로 변경될때 실행되는 함수</summary>
