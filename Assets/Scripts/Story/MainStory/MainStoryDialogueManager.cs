@@ -118,7 +118,7 @@ public class MainStoryDialogueManager : MonoBehaviour
             if(_dataMainStory[i]["TalkPandaID"].ToString() == "POYA00"){
                 _isExistPoya = true;
             }
-            else if(_dataMainStory[i]["TalkPandaID"].ToString() == "NPC01")
+            else if(_dataMainStory[i]["TalkPandaID"].ToString() == "NPC01" || _dataMainStory[i]["TalkPandaID"].ToString() == "NPC00")
             {
                 _isExistJiji = true;
             }

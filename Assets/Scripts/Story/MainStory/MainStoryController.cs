@@ -40,7 +40,7 @@ public class MainStoryController : MonoBehaviour
         UIMainDialogue.OnAddRewardHandler += AddReward;
         UIMainDialogue.OnFinishStoryHandler += FinishStory;
         UIMainDialogue.OnCheckConditionHandler += CheckCondition;
-        OnFinishStoryHandler += CheckNectStory;
+        OnFinishStoryHandler += CheckNextStory;
         SceneManager.sceneLoaded += ChangeScene;
         TimeManager.OnChangedTimeHandler += CheckMap;
         FadeInOutManager.Instance.OnFadeOutHandler += NpcButtonSetSibling;
@@ -49,7 +49,7 @@ public class MainStoryController : MonoBehaviour
     {
         UIMainDialogue.OnAddRewardHandler -= AddReward;
         UIMainDialogue.OnFinishStoryHandler -= FinishStory;
-        OnFinishStoryHandler -= CheckNectStory;
+        OnFinishStoryHandler -= CheckNextStory;
         SceneManager.sceneLoaded -= ChangeScene;
         TimeManager.OnChangedTimeHandler -= CheckMap;
         UIMainDialogue.OnCheckConditionHandler -= CheckCondition;
@@ -80,7 +80,7 @@ public class MainStoryController : MonoBehaviour
 
         Init();
         //Invoke("SetNPCButton", 1f);
-        CheckNectStory();
+        CheckNextStory();
         SetNPCButton();
         NpcButtonSetSibling();
     }
@@ -211,7 +211,7 @@ public class MainStoryController : MonoBehaviour
         }
     }
 
-    private void CheckNectStory()
+    private void CheckNextStory()
     {
         if (string.IsNullOrWhiteSpace(_npcID))
         {

@@ -33,7 +33,6 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
     private void CheckCompletedStory(string id)
     {
         List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
-        Debug.LogFormat("{0} 실행", name);
 
         //이미 확인을 마친 상태인데도 List를 순회하며 찾는 경우 리소스낭비가 될 수 있기에 막는다.
         if(!_isStoryIdCompleted)
@@ -56,14 +55,12 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
         {
             if(string.IsNullOrWhiteSpace(_disableStoryId) || !_isDisableStoryIdCompleted)
             {
-                Debug.LogFormat("{0} 활성", name);
                 _target.SetActive(true);
                 return;
             }
 
             else if (_isDisableStoryIdCompleted)
             {
-                Debug.LogFormat("{0} 비 활성", name);
                 _target.SetActive(false);
                 return;
             }
@@ -79,12 +76,10 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
 
             if (string.IsNullOrWhiteSpace(_storyId))
             {
-                Debug.LogFormat("{0} 활성", name);
                 gameObject.SetActive(true);
                 return;
             }
 
-            Debug.LogFormat("{0} 비 활성", name);
             _target.SetActive(false);
         }
  

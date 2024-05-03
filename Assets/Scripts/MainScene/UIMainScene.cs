@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(UINavigation))]
 public class UIMainScene : MonoBehaviour
 {
-
     private UINavigation _uiNav;
+
 
     private void Awake()
     {
@@ -211,6 +212,18 @@ public class UIMainScene : MonoBehaviour
 
     private void AttendCheck()
     {
+        List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
+        bool story0Check = false;
+
+        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        {
+            if (completeStoryList[i] == "MS00A")
+                story0Check = true;
+        }
+
+        if (!story0Check)
+            return;
+
         if (DatabaseManager.Instance.AttendanceDatabase.IsAttendanced || GameManager.Instance.IsFirstAccessMainScene)
             return;
 
@@ -219,8 +232,21 @@ public class UIMainScene : MonoBehaviour
 
     }
 
+
     private void SurveyCheck()
     {
+        List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
+        bool story0Check = false;
+
+        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        {
+            if (completeStoryList[i] == "MS00A")
+                story0Check = true;
+        }
+
+        if (!story0Check)
+            return;
+
         if (!DatabaseManager.Instance.UserInfo.GetStoryOutroBool(UserInfo.StoryOutroType.Story1))
             return;
 

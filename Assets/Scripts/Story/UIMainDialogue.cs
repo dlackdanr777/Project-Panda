@@ -145,7 +145,8 @@ public class UIMainDialogue : UIView
         }
 
         _dialogue = storyDialogue;
-        _currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
+        _currentNPC = storyDialogue.StoryStartPanda;
+        //_currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
         _uiNav.Push("MainDialogue");
         _isStoryStart = true;
         _isEnd = false;
