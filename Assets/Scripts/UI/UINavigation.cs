@@ -300,4 +300,18 @@ public class UINavigation : MonoBehaviour
             yield return YieldCache.WaitForSeconds(0.02f);
         }
     }
+
+
+    public bool VisibleCheck()
+    {
+        for(int i = 0, count = _uiViews.Count; i < count; i++)
+        {
+            if (_uiViews[i].VisibleState == VisibleState.Disappeared || _uiViews[i].VisibleState == VisibleState.Appeared)
+                continue;
+
+            return false;
+        }
+
+        return true;
+    }
 }
