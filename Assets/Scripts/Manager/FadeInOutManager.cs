@@ -97,6 +97,7 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
                 _fadeImage.gameObject.SetActive(false);
                 _isLoading = false;
                 OnEndFadeOutHandler?.Invoke();
+                Debug.Log("페이드 아웃 종료");
             });
         });
 
