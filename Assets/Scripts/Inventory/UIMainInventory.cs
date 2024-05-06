@@ -1,6 +1,4 @@
 using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,18 +45,22 @@ public class UIMainInventory : UIView
 
     public override void Show()
     {
-        VisibleState = VisibleState.Appearing;
+        VisibleState = VisibleState.Appearing; //열리는 중 상태로 변경
         gameObject.SetActive(true);
         _slotParent.gameObject.SetActive(false);
 
+        //타겟 오브젝트를 열기 위한 기본 설정을 진행한다.
         _targetRect.anchoredPosition = _tmpPos + _movePos;
         _canvasGroup.alpha = _startAlpha;
         _canvasGroup.blocksRaycasts = false;
 
+        //일정 시간동안 타겟 오브젝트를 이동시킨다.
         Tween.RectTransfromAnchoredPosition(_targetRect.gameObject, _tmpPos, _duration, _tweenMode);
+
+        //일정 시간 동안 CanvasGroup의 Alpha값을 변경 시킨다.
         Tween.CanvasGroupAlpha(gameObject, _targetAlpha, _duration, _tweenMode, () =>
         {
-            VisibleState = VisibleState.Appeared;
+            VisibleState = VisibleState.Appeared; // 열린 상태로 변경
             _canvasGroup.blocksRaycasts = true;
             _slotParent.gameObject.SetActive(true);
         });

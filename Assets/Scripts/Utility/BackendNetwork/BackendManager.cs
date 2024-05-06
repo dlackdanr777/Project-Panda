@@ -1,11 +1,11 @@
 using BackEnd;
-using LitJson;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Muks.BackEnd
 {
+    /// <summary>서버와의 연결 상태을 확인 하는 열거형</summary>
     public enum BackendState
     {
         Failure,
@@ -15,13 +15,14 @@ namespace Muks.BackEnd
     }
 
 
+    /// <summary> 뒤끝과 연동할 수 있게 해주는 싱글톤 클래스 </summary>
     public class BackendManager : SingletonHandler<BackendManager>
     {
         [Header("Components")]
         [SerializeField] private UIBackendPopup _popup;
 
 
-        /// <summary>이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)</summary> 
+        /// <summary>이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화)</summary> 
         public bool Login;
 
         public override void Awake()
