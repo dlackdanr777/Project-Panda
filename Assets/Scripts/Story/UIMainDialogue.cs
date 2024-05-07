@@ -2,6 +2,7 @@ using Muks.DataBind;
 using Muks.Tween;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,7 @@ public class UIMainDialogue : UIView
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
     [SerializeField] private Button _nextButton;
+    [SerializeField] private TextMeshProUGUI _storyNameText;
 
     private Vector2 _tempPos;
     private DialogueState _state;
@@ -220,6 +222,7 @@ public class UIMainDialogue : UIView
             }
             if (!_isFail) //실패가 아닐 때만
             {
+                ShowStoryName();
                 OnFinishStoryHandler?.Invoke(_dialogue.StoryID);
                 DatabaseManager.Instance.UserInfo.StoryUserData.AsyncSaveStoryData(3);
             }
@@ -404,7 +407,14 @@ public class UIMainDialogue : UIView
         }
         _itemRewardRoutine = StartCoroutine(ItemRewardRoutine());
     }
-
+    private void ShowStoryName()
+    {
+        _storyNameText.text = _dialogue.StroyName;
+        Tween.TMPAlpha(_storyNameText.gameObject, 1, 1f, TweenMode.EaseOutExpo, (System.Action)(() =>
+        {
+            Tween.TMPAlpha(_storyNameText.gameObject, 0, 1f, TweenMode.EaseInExpo);
+        }));
+    }
     private void CheckCondition()
     {
         _isConditionTrue = false;
