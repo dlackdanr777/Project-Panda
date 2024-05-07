@@ -31,7 +31,7 @@ public class MainStoryDialogueManager : MonoBehaviour
     public void Register()
     {
         string csv;
-        ReadCSV("01__TEST_1_1_"); // 메인 스토리
+        ReadCSV("01__TEST_1_1_2"); // 메인 스토리
 
         // NPC 스토리
         for (int i = 2; i <= 36; i++)
