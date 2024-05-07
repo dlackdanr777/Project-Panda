@@ -473,7 +473,7 @@ public class IntroScene : MonoBehaviour
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant);
 
         //타이틀 시작
-        yield return YieldCache.WaitForSeconds(6);
+        yield return YieldCache.WaitForSeconds(3);
         _uiFadeImage.gameObject.SetActive(false);
         _uiTitle.Show();
     }
