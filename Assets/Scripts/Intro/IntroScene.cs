@@ -325,7 +325,10 @@ public class IntroScene : MonoBehaviour
         context = "나는 사라져버린게 아니란다. ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        context = "그저 새로운 모험이 시작되었을 뿐!     \n혹시 나를 찾고 싶다고? 그렇다면 명탐정으로 거듭나서 나를 찾아보거라! ";
+        context = "그저 새로운 모험이 시작되었을 뿐!     \n혹시 나를 찾고 싶다고?";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+        context = "그렇다면 명탐정으로 거듭나서 나를 찾아보거라! ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         _uiIntroScene.SetDialogueImage(_poirotGreetSprite);
@@ -470,7 +473,7 @@ public class IntroScene : MonoBehaviour
         Tween.IamgeAlpha(_uiFadeImage.gameObject, 0, 3f, TweenMode.Constant);
 
         //타이틀 시작
-        yield return YieldCache.WaitForSeconds(6);
+        yield return YieldCache.WaitForSeconds(3);
         _uiFadeImage.gameObject.SetActive(false);
         _uiTitle.Show();
     }
