@@ -144,21 +144,21 @@ namespace Cooking
         }
 
 
+        /// <summary> 최대 2개의 아이템을 받아 레시피를 반환하는 함수 </summary>
         private RecipeData GetRecipeByItems(InventoryItem item1, InventoryItem item2)
         {
-            // 아이템이 존재하지 않는 경우
+            // 아이템이 존재하지 않는 경우 return
             if (item1 == null && item2 == null)
             {
                 Debug.Log("아이템이 존재하지 않습니다.");
                 return null;
             }
 
+            //두개 모두 같은 아이템 이지만 보유 갯수가 2개 미만일때 return
             if (item1 == item2 && item1.Count < 2)
-            {
                 return null;
-            }
 
-
+            //튜플을 통해 저장된 레시피 정보에서 같은 재료를 사용하는 레시피가 있는지 확인 후 해당 레시피를 가져온다.
             string item1ID = item1 != null ? item1.Id : "";
             string item2ID = item2 != null ? item2.Id : "";
 
@@ -166,9 +166,7 @@ namespace Cooking
             Tuple<string, string, int> tuple2 = Tuple.Create(item2ID, item1ID, (int)_currentCookware);
 
             if (_recipeDataDic.TryGetValue(tuple1, out RecipeData recipe) || _recipeDataDic.TryGetValue(tuple2, out recipe))
-            {
                 return recipe;
-            }
 
             //레시피가 존재하지 않을 경우엔 애매한 아이템을 준다.
             string foodId = "CookFd54";

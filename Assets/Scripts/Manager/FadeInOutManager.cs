@@ -31,7 +31,10 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
 
 
     public event Action OnFadeInHandler;
+    public event Action OnEndFadeInHandler;
     public event Action OnFadeOutHandler;
+    public event Action OnEndFadeOutHandler;
+    public event Action OnEndFirstLoadingHandler;
 
 
     public void Start()
@@ -50,7 +53,7 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
 
     /// <summary>FadeIn효과를 주는 함수(duration이 0일 경우 기본 값, onComplete는 FadeIn효과가 종료된 후 실행)</summary>
     public void FadeIn(float duration = 0, Action onComplete = null)
-     {
+    {
         if (_isLoading)
             return;
 
@@ -63,10 +66,14 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
         _fadeImage.gameObject.SetActive(true);
 
         duration = duration == 0 ? _fadeDuration : duration;
-        Tween.IamgeAlpha(_fadeImage.gameObject, 1, duration, _fadeTweenMode, onComplete);
+        Tween.IamgeAlpha(_fadeImage.gameObject, 1, duration, _fadeTweenMode, () =>
+        {
+            onComplete?.Invoke();
+            OnEndFadeInHandler?.Invoke();
+        });
 
         OnFadeInHandler?.Invoke();
-     }
+    }
 
 
     /// <summary>FadeOut효과를 주는 함수(duration이 0일 경우 기본 값, onComplete는 FadeIn효과가 종료된 후 실행)</summary>
@@ -89,6 +96,8 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
 
                 _fadeImage.gameObject.SetActive(false);
                 _isLoading = false;
+                OnEndFadeOutHandler?.Invoke();
+                Debug.Log("페이드 아웃 종료");
             });
         });
 
@@ -106,7 +115,7 @@ public class FadeInOutManager : SingletonHandler<FadeInOutManager>
         
         Tween.TransformMove(gameObject, transform.position, waitDuration, TweenMode.Constant, () =>
         {
-            FadeOut(duration, waitDuration);
+            FadeOut(duration, waitDuration + 2);
             _firstLoadingImages[randInt].Loading(duration * 0.5f);
         });
     }

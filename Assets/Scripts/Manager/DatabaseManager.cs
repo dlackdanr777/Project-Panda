@@ -301,13 +301,9 @@ public class DatabaseManager : SingletonHandler<DatabaseManager>
 
     public NPC GetNPC(string id)
     {
-        for (int i = 0; i < GetNPCList().Count; i++)
-        {
-            if (GetNPCList()[i].Id.Equals(id))
-            {
-                return GetNPCList()[i];
-            }
-        }
+        if(NPCDatabase.NpcDic.TryGetValue(id, out NPC npc))
+            return npc;
+
         return null;
     }
 

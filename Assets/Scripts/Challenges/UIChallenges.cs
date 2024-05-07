@@ -1,10 +1,7 @@
+using Muks.Tween;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Muks.DataBind;
-using Unity.VisualScripting;
-using Muks.Tween;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIChallenges : UIView

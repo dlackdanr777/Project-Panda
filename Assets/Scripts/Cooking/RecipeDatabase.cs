@@ -83,12 +83,12 @@ public class RecipeDatabase
 
     public void LoadData()
     {
-        BackendManager.Instance.GetChartData(_chartID, 10, RecipeParse);
+        BackendManager.Instance.GetChartData(_chartID, 10, LoadRecipeByServer);
     }
 
 
     /// <summary>서버에서 레시피 정보를 받아 List, Dic로 변환하는 함수</summary>
-    public void RecipeParse(BackendReturnObject bro)
+    public void LoadRecipeByServer(BackendReturnObject bro)
     {
         JsonData json = bro.FlattenRows();
         List<RecipeData> recipeDataList = new List<RecipeData>(); //리스트 생성

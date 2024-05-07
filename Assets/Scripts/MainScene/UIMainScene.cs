@@ -1,4 +1,5 @@
 using Muks.DataBind;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(UINavigation))]
 public class UIMainScene : MonoBehaviour
 {
-
     private UINavigation _uiNav;
+
 
     private void Awake()
     {
@@ -43,12 +44,16 @@ public class UIMainScene : MonoBehaviour
 
         DataBind.SetUnityActionValue("ShowNoticeButton", OnShowNoticeButtonClicked);
         DataBind.SetUnityActionValue("HideNoticeButton", OnHideNoticeButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowSurveyButton", OnShowSurveyButtonClicked);
     }
 
 
     private void Start()
     {
-        Invoke("AttendCheck", 3);
+        FadeInOutManager.Instance.OnEndFadeOutHandler += AttendCheck;
+        FadeInOutManager.Instance.OnEndFadeOutHandler += SurveyCheck;
+        LoadingSceneManager.OnLoadSceneHandler += ChangeSceneEvent;
     }
 
 
@@ -198,14 +203,82 @@ public class UIMainScene : MonoBehaviour
     }
 
 
+    public void OnShowSurveyButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("UISurvey");
+    }
+
+
     private void AttendCheck()
     {
+        List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
+        bool story0Check = false;
+
+        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        {
+            if (completeStoryList[i] == "MS00A")
+                story0Check = true;
+        }
+
+        if (!story0Check)
+            return;
+
         if (DatabaseManager.Instance.AttendanceDatabase.IsAttendanced || GameManager.Instance.IsFirstAccessMainScene)
             return;
 
         GameManager.Instance.IsFirstAccessMainScene = true;
         _uiNav.Push("Attendance");
 
+    }
+
+
+    private void SurveyCheck()
+    {
+        List<string> completeStoryList = DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList;
+        bool story0Check = false;
+
+        for (int i = 0, count = completeStoryList.Count; i < count; i++)
+        {
+            if (completeStoryList[i] == "MS00A")
+                story0Check = true;
+        }
+
+        if (!story0Check)
+            return;
+
+        if (!DatabaseManager.Instance.UserInfo.GetStoryOutroBool(UserInfo.StoryOutroType.Story1))
+            return;
+
+        if (DatabaseManager.Instance.UserInfo.IsSurveyButtonClicked)
+            return;
+
+        StartCoroutine(IESurveyCheck());
+    } 
+
+
+    private IEnumerator IESurveyCheck()
+    {
+        while (true)
+        {
+            if (_uiNav.VisibleCheck())
+            {
+                _uiNav.Push("UISurvey");
+                yield break;
+            }
+
+            yield return YieldCache.WaitForSeconds(0.02f);
+        }
+
+    }
+
+
+    private void ChangeSceneEvent()
+    {
+        StopAllCoroutines();
+        FadeInOutManager.Instance.OnEndFadeOutHandler -= AttendCheck;
+        FadeInOutManager.Instance.OnEndFadeOutHandler -= SurveyCheck;
+        LoadingSceneManager.OnLoadSceneHandler -= ChangeSceneEvent;
     }
 
 

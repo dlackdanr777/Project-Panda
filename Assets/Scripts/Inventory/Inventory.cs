@@ -1,3 +1,4 @@
+using Muks.BackEnd;
 using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
@@ -65,8 +66,12 @@ public class Inventory
             {
                 item.IsReceived = true;
 
-                if(isServerUploaded)
+                if (isServerUploaded)
+                {
                     DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
+                    BackendManager.Instance.LogUpload("InventoryLog", "Add " + id + "(" + count + ")");
+                }
+
 
                 return true;
             }
@@ -174,6 +179,7 @@ public class Inventory
                 _items = _items.OrderBy(x => x.Id).ThenByDescending(x => x.Count).ToList();
                 OnRemoveHandler?.Invoke();
                 DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
+                BackendManager.Instance.LogUpload("InventoryLog", "Remove " + id + "(" + count +")");
                 return true; // 아이템을 성공적으로 제거하였음을 반환
             }
             else
@@ -182,6 +188,7 @@ public class Inventory
                 itemCountToRemove -= item.Count;
                 OnRemoveHandler?.Invoke();
                 DatabaseManager.Instance.UserInfo.InventoryUserData.AsyncSaveInventoryData(10);
+                BackendManager.Instance.LogUpload("InventoryLog", "Remove " + id + "(" + count + ")");
             }
         }
         return false; // 아이템을 제거하지 못했을 때

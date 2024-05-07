@@ -1,11 +1,11 @@
 using BackEnd;
-using LitJson;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Muks.BackEnd
 {
+    /// <summary>서버와의 연결 상태을 확인 하는 열거형</summary>
     public enum BackendState
     {
         Failure,
@@ -15,13 +15,14 @@ namespace Muks.BackEnd
     }
 
 
+    /// <summary> 뒤끝과 연동할 수 있게 해주는 싱글톤 클래스 </summary>
     public class BackendManager : SingletonHandler<BackendManager>
     {
         [Header("Components")]
         [SerializeField] private UIBackendPopup _popup;
 
 
-        /// <summary>이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화됨)</summary> 
+        /// <summary>이 값이 참일 때만 서버에 정보를 보냅니다.(로그인 실패인데 정보를 보내면 서버 정보가 초기화)</summary> 
         public bool Login;
 
         public override void Awake()
@@ -234,14 +235,6 @@ namespace Muks.BackEnd
         /// <summary> 차트 ID와 반복 횟수, 연결이 됬을 경우 실행할 함수를 받아 뒤끝에서 ChartData를 받아오는 함수 </summary>
         public void GetChartData(string selectedProbabilityFileId, int maxRepeatCount = 10, Action<BackendReturnObject> onCompleted = null)
         {
-/*            if (!Backend.IsLogin)
-            {
-                string errorName = "로그인 실패";
-                string errorDescription = "서버에 로그인이 되어있지 않습니다. \n다시 시도해주세요.";
-                _popup.Show(errorName, errorDescription, ExitApp);
-                return;
-            }*/
-
             if (maxRepeatCount <= 0)
             {
                 string errorName = "서버 접속 오류";
@@ -444,7 +437,7 @@ namespace Muks.BackEnd
             }
             else
             {
-                LogUpload(bro);
+                ErrorLogUpload(bro);
 
                 if (bro.IsClientRequestFailError()) // 클라이언트의 일시적인 네트워크 끊김 시
                 {
@@ -561,17 +554,53 @@ namespace Muks.BackEnd
         }
 
 
-        public void LogUpload(BackendReturnObject bro)
+        /// <summary>닉네임을 변경하는 함수, 성공시 true, 중복 닉네임 혹은 실패시 false 반환</summary>
+        public bool UpdateNickName(string nickName)
+        {
+            BackendReturnObject checkBro = Backend.BMember.CheckNicknameDuplication(nickName);
+
+            if (!checkBro.IsSuccess())
+                return false;
+
+            BackendReturnObject bro = Backend.BMember.UpdateNickname(nickName);
+            return bro.IsSuccess();
+        }
+
+
+        /// <summary>닉네임을 생성하는 함수, 성공시 true, 중복 닉네임 혹은 실패시 false 반환</summary>
+        public bool CreateNickName(string nickName)
+        {
+            BackendReturnObject checkBro = Backend.BMember.CheckNicknameDuplication(nickName);
+
+            if(!checkBro.IsSuccess())
+                return false;
+
+            BackendReturnObject bro = Backend.BMember.CreateNickname(nickName);
+            return bro.IsSuccess();
+        }
+
+
+        public void ErrorLogUpload(BackendReturnObject bro)
         {
             if (!Backend.IsLogin || !Login)
                 return;
 
-            if (bro.IsSuccess())
-                return;
             Param logParam = new Param();
-            logParam.Add("errorLog", bro.ToString());
+            logParam.Add(Backend.UserNickName + "ErrorLog", bro.ToString());
 
-            Backend.GameLog.InsertLogV2("updateLog", logParam);
+            Backend.GameLog.InsertLogV2("ErrorLogs", logParam);
+        }
+
+
+        public void LogUpload(string logName, string logDescription)
+        {
+            if (!Backend.IsLogin || !Login)
+                return;
+
+            Param logParam = new Param();
+            logParam.Add(logName, logDescription);
+            Backend.GameLog.InsertLogV2("UserLogs", logParam, bro => { Debug.Log("로그 저장 성공! " + logName + ": " + logDescription); });
+
         }
 
 

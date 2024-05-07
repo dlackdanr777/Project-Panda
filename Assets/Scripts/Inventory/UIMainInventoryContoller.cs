@@ -9,26 +9,18 @@ public class UIMainInventoryContoller : MonoBehaviour
 {
     [Header("인벤토리")]
     [SerializeField] private UIInventoryCategory _bugInventoryCategory;
-
     [SerializeField] private UIInventoryCategory _fishInventoryCategory;
-
     [SerializeField] private UIInventoryCategory _fruitInventoryCategory;
-
     [SerializeField] private UIInventoryCategory _foodInventoryCategory;
-
     [SerializeField] private UIInventoryCategory _toolInventoryCategory;
 
 
     [Space]
     [Header("인벤토리 버튼")]
     [SerializeField] private Toggle _bugButton;
-
     [SerializeField] private Toggle _fishButton;
-
     [SerializeField] private Toggle _fruitButton;
-
     [SerializeField] private Toggle _foodButton;
-
     [SerializeField] private Toggle _toolButton;
 
     [Space]

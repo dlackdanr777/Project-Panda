@@ -1,3 +1,4 @@
+using Muks.BackEnd;
 using Muks.DataBind;
 using Muks.Tween;
 using System;
@@ -625,12 +626,15 @@ public class Challenges
 
     private void SuccessChallenge(string challengesId)
     {
+        if (!DatabaseManager.Instance.GetChallengesDic().ContainsKey(challengesId))
+            return;
+
         Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
 
-
         ChallengeDone?.Invoke(challengesId);
         DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
+        BackendManager.Instance.LogUpload("ChallengeLog", "Success" + "(" + challengesId + ")");
     }
 
     public void EarningRewards(string challengesId)
@@ -645,5 +649,6 @@ public class Challenges
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
         DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
+        BackendManager.Instance.LogUpload("ChallengeLog", "Success" + "(" + challengesId + ")");
     }
 }
