@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MainStoryController : MonoBehaviour
 {
-    public static event Action<MainStoryDialogue> OnStartInteractionHandler;
+    public static event Action<MainStoryDialogue, string> OnStartInteractionHandler;
 
     public static event Action OnFinishStoryHandler;
     public static event Action OnCheckConditionHandler;
@@ -125,11 +125,11 @@ public class MainStoryController : MonoBehaviour
         _storyIndex = _storyKey[0];
         DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = _storyIndex;
 
-        //DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
+        DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
         // 저장된 값 불러오기
         for (int i = 0; i < _storyDatabase.Count; i++)
         {
-            //_storyDatabase[_storyKey[i]].IsSuccess = false;
+            _storyDatabase[_storyKey[i]].IsSuccess = false;
 
             // 완료된 id일 경우
             if (!string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i]))){
@@ -332,7 +332,7 @@ public class MainStoryController : MonoBehaviour
     private void ShowContext(MainStoryDialogue data)
     {
         List<MainDialogueData> dialogueData = data.DialogueData;
-        OnStartInteractionHandler?.Invoke(data); //대화 출력
+        OnStartInteractionHandler?.Invoke(data, _npcID); //대화 출력
     }
 
     private void AddReward(string id, string npcId)

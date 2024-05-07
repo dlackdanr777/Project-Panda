@@ -2,6 +2,7 @@ using Muks.DataBind;
 using Muks.Tween;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,7 @@ public class UIMainDialogue : UIView
     [SerializeField] private UIDialogueButton _leftButton;
     [SerializeField] private UIDialogueButton _rightButton;
     [SerializeField] private Button _nextButton;
+    [SerializeField] private TextMeshProUGUI _storyNameText;
 
     private Vector2 _tempPos;
     private DialogueState _state;
@@ -54,6 +56,7 @@ public class UIMainDialogue : UIView
         MainStoryController.OnCheckConditionHandler += CheckCondition;
         DataBind.SetTextValue("MainDialogueName", " ");
         DataBind.SetTextValue("MainDialogueContexts", " ");
+        _storyNameText.text = " ";
 
         _nextButton.onClick.AddListener(OnNextButtonClicked);
         //DataBind.SetButtonValue("MainDialogueNextButton", OnNextButtonClicked);
@@ -122,6 +125,7 @@ public class UIMainDialogue : UIView
 
         DataBind.SetTextValue("MainDialogueName", " ");
         DataBind.SetTextValue("MainDialogueContexts", " ");
+        _storyNameText.text = " ";
         int intimacy = GetIntimacy(DatabaseManager.Instance.GetNPC(_currentNPC).Intimacy);
         DataBind.SetSpriteValue("MainDialogueIntimacyImage", _intimacyImage[intimacy]);
         _pandaImage.color = new Color(_pandaImage.color.r, _pandaImage.color.g, _pandaImage.color.b, 0);
@@ -136,7 +140,7 @@ public class UIMainDialogue : UIView
         });
     }
 
-    private void StartStory(MainStoryDialogue storyDialogue)
+    private void StartStory(MainStoryDialogue storyDialogue, string npcId)
     {
         if (_isStoryStart)
         {
@@ -145,7 +149,8 @@ public class UIMainDialogue : UIView
         }
 
         _dialogue = storyDialogue;
-        _currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
+        //_currentNPC = DatabaseManager.Instance.GetNPCList()[int.Parse(_dialogue.StoryID.Substring(2, 2)) - 1].Id;
+        _currentNPC = npcId;
         _uiNav.Push("MainDialogue");
         _isStoryStart = true;
         _isEnd = false;
@@ -219,6 +224,7 @@ public class UIMainDialogue : UIView
             }
             if (!_isFail) //실패가 아닐 때만
             {
+                ShowStoryName();
                 OnFinishStoryHandler?.Invoke(_dialogue.StoryID);
                 DatabaseManager.Instance.UserInfo.StoryUserData.AsyncSaveStoryData(3);
             }
@@ -402,6 +408,16 @@ public class UIMainDialogue : UIView
             StopCoroutine(_itemRewardRoutine);
         }
         _itemRewardRoutine = StartCoroutine(ItemRewardRoutine());
+    }
+
+    private void ShowStoryName()
+    {
+        float duration = 1f;
+        _storyNameText.text = _dialogue.StroyName;
+        Tween.TMPAlpha(_storyNameText.gameObject, 1, duration, TweenMode.Constant, (System.Action)(() =>
+        {
+            Tween.TMPAlpha(_storyNameText.gameObject, 0, duration, TweenMode.EaseInExpo);
+        }));
     }
 
     private void CheckCondition()

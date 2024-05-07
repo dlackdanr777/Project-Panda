@@ -31,10 +31,12 @@ public class MainStoryDialogueManager : MonoBehaviour
     public void Register()
     {
         string csv;
-        ReadCSV("01__TEST_1_1_2 (1)");
+        ReadCSV("01__TEST_1_1_"); // 메인 스토리
+
+        // NPC 스토리
         for (int i = 2; i <= 36; i++)
         {
-            if (i == 4 || i == 22 || i == 23) // 현재 없는 파일
+            if (i == 4 || i == 22 || i == 23) // 현재 없는 NPC 파일
             {
                 continue;
             }
