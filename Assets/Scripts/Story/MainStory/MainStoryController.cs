@@ -125,11 +125,11 @@ public class MainStoryController : MonoBehaviour
         _storyIndex = _storyKey[0];
         DatabaseManager.Instance.MainDialogueDatabase.CurrentStoryID = _storyIndex;
 
-        DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
+        //DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Clear();
         // 저장된 값 불러오기
         for (int i = 0; i < _storyDatabase.Count; i++)
         {
-            _storyDatabase[_storyKey[i]].IsSuccess = false;
+            //_storyDatabase[_storyKey[i]].IsSuccess = false;
 
             // 완료된 id일 경우
             if (!string.IsNullOrEmpty(DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Find(x => x == _storyKey[i]))){
