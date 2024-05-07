@@ -626,7 +626,7 @@ public class MainStoryController : MonoBehaviour
                             _storyDatabase[k].IsSuccess = true;
                             if (!DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Contains(k))
                             {
-                                Debug.Log("스토리 완료: " + k);
+                                //Debug.Log("스토리 완료: " + k);
                                 DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList.Add(k);
                                 DatabaseManager.Instance.Challenges.MainStoryDone(key);
                             }
