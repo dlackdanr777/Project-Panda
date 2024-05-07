@@ -325,7 +325,10 @@ public class IntroScene : MonoBehaviour
         context = "나는 사라져버린게 아니란다. ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
-        context = "그저 새로운 모험이 시작되었을 뿐!     \n혹시 나를 찾고 싶다고? 그렇다면 명탐정으로 거듭나서 나를 찾아보거라! ";
+        context = "그저 새로운 모험이 시작되었을 뿐!     \n혹시 나를 찾고 싶다고?";
+        yield return StartCoroutine(_uiIntroScene.StartContext(context));
+
+        context = "그렇다면 명탐정으로 거듭나서 나를 찾아보거라! ";
         yield return StartCoroutine(_uiIntroScene.StartContext(context));
 
         _uiIntroScene.SetDialogueImage(_poirotGreetSprite);
