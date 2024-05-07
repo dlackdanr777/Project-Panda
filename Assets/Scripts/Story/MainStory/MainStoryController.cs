@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MainStoryController : MonoBehaviour
 {
-    public static event Action<MainStoryDialogue, string> OnStartInteractionHandler;
+    public static event Action<MainStoryDialogue> OnStartInteractionHandler;
 
     public static event Action OnFinishStoryHandler;
     public static event Action OnCheckConditionHandler;
@@ -332,7 +332,7 @@ public class MainStoryController : MonoBehaviour
     private void ShowContext(MainStoryDialogue data)
     {
         List<MainDialogueData> dialogueData = data.DialogueData;
-        OnStartInteractionHandler?.Invoke(data, _npcID); //대화 출력
+        OnStartInteractionHandler?.Invoke(data); //대화 출력
     }
 
     private void AddReward(string id, string npcId)
