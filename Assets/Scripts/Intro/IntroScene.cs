@@ -437,7 +437,7 @@ public class IntroScene : MonoBehaviour
         //포야 독백
         yield return YieldCache.WaitForSeconds(3f);
         _scene3Text.gameObject.SetActive(true);
-        char[] tempChars = "신비한 숲에서 꼭 할아버지를 찾아내고     \n나도 대탐정이 되겠어! ".ToCharArray();
+        char[] tempChars = "신비한 숲에서 꼭 할아버지를 찾아내고     \n나도 명탐정이 되겠어! ".ToCharArray();
         string tempString = string.Empty;
 
         for (int i = 0, count = tempChars.Length; i < count; i++)
