@@ -1,6 +1,4 @@
 using Muks.Tween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CanvasGroup))]
@@ -51,14 +49,14 @@ public class UIMainBugReport : UIView
     {
         _canvasGroup.blocksRaycasts = false;
         VisibleState = VisibleState.Disappearing;
-        //_uiBugReport.Hide();
-        gameObject.SetActive(false);
-        /*        _target.transform.localScale = _targetScale;
-                Tween.TransformScale(_target, _startScale * 0.5f, _duration, TweenMode.EaseInBack, () =>
-                {
-                    gameObject.SetActive(false);
-                    VisibleState = VisibleState.Disappeared;
-                });*/
+        _uiBugReport.Hide();
+
+        _target.transform.localScale = _targetScale;
+        Tween.TransformScale(_target, _startScale * 0.5f, _duration, TweenMode.EaseInBack, () =>
+        {
+            gameObject.SetActive(false);
+            VisibleState = VisibleState.Disappeared;
+        });
     }
 
 
