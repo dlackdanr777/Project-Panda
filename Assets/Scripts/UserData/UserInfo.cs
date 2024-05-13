@@ -34,11 +34,12 @@ public class UserInfo
         }
     }
 
-    public string UserId;    //아이디
+    public string NickName;    //아이디
     public string _lastAccessDay;
     public DateTime LastAccessDay => DateTime.Parse(_lastAccessDay); //마지막 접속일
     public int DayCount; //몇일 접속했나?
     public bool IsExistingUser; //기존 유저인가?
+    public bool IsSurveyButtonClicked; //설문 조사 버튼을 눌렀는가?
     public bool IsCookTutorialClear; //요리씬 튜토리얼을 완료했는가?
     private bool _isExistingStory1Outro; //스토리1 아웃트로를 감상했는가?
 
@@ -137,10 +138,13 @@ public class UserInfo
             return;
         }
 
-        UserId = json[0]["UserId"].ToString();
+        NickName = json[0]["NickName"].ToString();
         DayCount = int.Parse(json[0]["DayCount"].ToString());
         _lastAccessDay = json[0]["LastAccessDay"].ToString();
         IsExistingUser = (bool)json[0]["IsExistingUser"];
+
+        if (json[0].ContainsKey("IsSurveyButtonClicked"))
+            IsSurveyButtonClicked = (bool)json[0]["IsSurveyButtonClicked"];
 
         if (json[0].ContainsKey("IsCookTutorialClear"))
             IsCookTutorialClear = (bool)json[0]["IsCookTutorialClear"];
@@ -324,10 +328,11 @@ public class UserInfo
     {
         Param param = new Param();
 
-        param.Add("UserId", UserId);
+        param.Add("NickName", NickName);
         param.Add("DayCount", DayCount);
         param.Add("LastAccessDay", _lastAccessDay);
         param.Add("IsExistingUser", IsExistingUser);
+        param.Add("IsSurveyButtonClicked", IsSurveyButtonClicked);
         param.Add("IsCookTutorialClear", IsCookTutorialClear);
         param.Add("IsExistingStory1Outro", _isExistingStory1Outro);
 

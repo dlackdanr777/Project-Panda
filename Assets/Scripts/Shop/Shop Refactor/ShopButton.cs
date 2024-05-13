@@ -1,3 +1,4 @@
+using Muks.BackEnd;
 using Muks.DataBind;
 using System;
 using System.Collections;
@@ -49,6 +50,7 @@ public class ShopButton : MonoBehaviour
 
                 // 도전 과제 달성 체크
                 DatabaseManager.Instance.Challenges.UsingShop(true);
+
             }
             else
             {

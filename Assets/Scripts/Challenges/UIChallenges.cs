@@ -1,10 +1,7 @@
+using Muks.Tween;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Muks.DataBind;
-using Unity.VisualScripting;
-using Muks.Tween;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIChallenges : UIView
@@ -20,7 +17,6 @@ public class UIChallenges : UIView
 
     [Space]
     [Header("Components")]
-    [SerializeField] private BambooFieldSystem _bambooFieldSystem; // 대나무 획득 위해 필요
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _backGroundImage;
     [SerializeField] private ScrollRect _scrollRect;
@@ -132,7 +128,7 @@ public class UIChallenges : UIView
             //EarningBamboo(id);
             int getBoombooAmount = DatabaseManager.Instance.GetChallengesDic()[id].BambooCount;
             GameManager.Instance.Player.GainBamboo(getBoombooAmount);
-
+            GameManager.Instance.Player.AsyncSaveBambooData(3);
             _clearChallenges.Add(id); // 완료된 도전과제 저장 후 창 종료 시 맨 아래로 이동
         }
     }
@@ -150,12 +146,6 @@ public class UIChallenges : UIView
 
         // 스크롤 뷰 맨 위가 보이도록 설정
         _scrollRect.verticalNormalizedPosition = 1f;
-    }
-
-
-    private void EarningBamboo(string id)
-    {
-        _bambooFieldSystem.HarvestBamboo(0, DatabaseManager.Instance.GetChallengesDic()[id].BambooCount, _slotDic[id].GetBambooTransform);
     }
 
 

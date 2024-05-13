@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 public enum VisibleState
 {
@@ -32,14 +30,10 @@ public abstract class UIView : MonoBehaviour
     /// </summary>
     public VisibleState VisibleState;
 
-    /// <summary>
-    /// UI를 불러낼때 콜백되는 함수
-    /// </summary>
+    /// <summary>UI를 불러낼때 콜백되는 함수</summary>
     public abstract void Show();
 
 
-    /// <summary>
-    /// UI를 끌때 콜백되는 함수
-    /// </summary>
+    ///<summary UI를 끌때 콜백되는 함수</summary>
     public abstract void Hide();
 }

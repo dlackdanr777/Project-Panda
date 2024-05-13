@@ -66,8 +66,12 @@ namespace CookingTutorial
 
             //여섯번째 이미지
             _uiCookTutorial.ChangeStep(CookTutorialStep.Step6);
-            context = "자! 이제 본격적으로 요리를 시작하는거에유     \n왼쪽 상단에 첫번째 게이지를 정확한 포인트까지 맞춰보는거에유 ";
+            context = "자! 이제 본격적으로 요리를 시작하는거에유 ";
             yield return StartCoroutine(_uiCookTutorial.Dialogue.StartContext(context));
+
+            context = "왼쪽 상단에 첫번째 게이지를 정확한 포인트까지 맞춰보는거에유 ";
+            yield return StartCoroutine(_uiCookTutorial.Dialogue.StartContext(context));
+
 
             //일곱번째 이미지
             _uiCookTutorial.ChangeStep(CookTutorialStep.Step7);

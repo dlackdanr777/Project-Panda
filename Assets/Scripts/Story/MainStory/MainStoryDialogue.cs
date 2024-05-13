@@ -35,7 +35,7 @@ public class MainStoryDialogue
     public MainStoryDialogue(string storyID, string stroyName, string priorStoryID, string nextStoryID, int requiredIntimacy, MainEventType eventType, string eventTypeCondition, int eventTypeAmount, string storyStartPanda, string mapId, List<MainDialogueData> dialogueData, MainEventType rewardType, string rewardID, int rewardCount, int rewardIntimacy)
     {
         StoryID = storyID;
-        StroyName = stroyName;
+        StroyName = stroyName.Replace("/n", "\n");
         PriorStoryID = priorStoryID;
         NextStoryID = nextStoryID;
         RequiredIntimacy = requiredIntimacy;

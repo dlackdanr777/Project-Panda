@@ -1,3 +1,4 @@
+using Muks.BackEnd;
 using Muks.DataBind;
 using Muks.Tween;
 using System;
@@ -113,7 +114,9 @@ public class Challenges
 
         // 메인스토리
         Dictionary<string, MainStoryDialogue> msDic = DatabaseManager.Instance.MainDialogueDatabase.MSDic;
-        foreach(string key in msDic.Keys)
+        _mainStoryCount.Clear();
+        _checkStoryCompleteList.Clear();
+        foreach (string key in msDic.Keys)
         {
             if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
             {
@@ -137,14 +140,16 @@ public class Challenges
         {
             if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
             {
-                break;
+                continue;
             }
             if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
             {
                 _checkStoryCompleteList.Add(key);
                 _mainStoryCount[key.Substring(0, 4)]--;
+
                 if (_mainStoryCount[key.Substring(0, 4)] == 0)
                 {
+
                     challengesId = "RW" + key.Substring(0, 4);
                     DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
                 }
@@ -354,21 +359,36 @@ public class Challenges
         //    string storyChallengeId = "RW" + id.Substring(0, 4);
         //    SuccessChallenge(storyChallengeId); // 도전과제 달성
         //}
-        foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
+        //foreach (string key in DatabaseManager.Instance.MainDialogueDatabase.StoryCompletedList)
+        //{
+        //    if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
+        //    {
+        //        continue;
+        //    }
+        //    if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
+        //    {
+        //        _checkStoryCompleteList.Add(key);
+        //        _mainStoryCount[key.Substring(0, 4)]--;
+        //        if (_mainStoryCount[key.Substring(0, 4)] == 0)
+        //        {
+        //            string storyChallengeId = "RW" + key.Substring(0, 4);
+        //            SuccessChallenge(storyChallengeId); // 도전과제 달성
+        //        }
+        //    }
+        //}
+
+        if (id.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
         {
-            if (key.Substring(0, 2) != "MS") // 메인 스토리가 아닐 경우
+            return;
+        }
+        if (!_checkStoryCompleteList.Contains(id) && _mainStoryCount.Keys.Contains(id.Substring(0, 4)))
+        {
+            _checkStoryCompleteList.Add(id);
+            _mainStoryCount[id.Substring(0, 4)]--;
+            if (_mainStoryCount[id.Substring(0, 4)] == 0)
             {
-                break;
-            }
-            if (!_checkStoryCompleteList.Contains(key) && _mainStoryCount.Keys.Contains(key.Substring(0, 4)))
-            {
-                _checkStoryCompleteList.Add(key);
-                _mainStoryCount[key.Substring(0, 4)]--;
-                if (_mainStoryCount[key.Substring(0, 4)] == 0)
-                {
-                    string storyChallengeId = "RW" + key.Substring(0, 4);
-                    SuccessChallenge(storyChallengeId); // 도전과제 달성
-                }
+                string storyChallengeId = "RW" + id.Substring(0, 4);
+                SuccessChallenge(storyChallengeId); // 도전과제 달성
             }
         }
     }
@@ -606,12 +626,15 @@ public class Challenges
 
     private void SuccessChallenge(string challengesId)
     {
+        if (!DatabaseManager.Instance.GetChallengesDic().ContainsKey(challengesId))
+            return;
+
         Debug.Log("도전과제 완료: id" +  challengesId);
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsDone = true;
 
-
         ChallengeDone?.Invoke(challengesId);
         DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
+        BackendManager.Instance.LogUpload("ChallengeLog", "Success" + "(" + challengesId + ")");
     }
 
     public void EarningRewards(string challengesId)
@@ -626,5 +649,6 @@ public class Challenges
 
         DatabaseManager.Instance.GetChallengesDic()[challengesId].IsClear = true;
         DatabaseManager.Instance.UserInfo.ChallengesUserData.AsyncSaveChallengesData(10);
+        BackendManager.Instance.LogUpload("ChallengeLog", "Success" + "(" + challengesId + ")");
     }
 }

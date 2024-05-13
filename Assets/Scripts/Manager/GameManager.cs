@@ -26,6 +26,9 @@ public class GameManager : SingletonHandler<GameManager>
     /// <summary> 참일 경우 상호작용을 막는다. </summary>
     public bool FirezeInteraction;
 
+    /// <summary>첫 메인씬 접속 확인</summary>
+    public bool IsFirstAccessMainScene; //출석 체크 UI가 첫 접속에만 보이게 할때 사용
+
 
     public override void Awake()
     {

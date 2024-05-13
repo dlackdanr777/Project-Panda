@@ -22,10 +22,10 @@ public class ConfirmEnabledAfterCheckCompletedStory : MonoBehaviour
 
     private void Start()
     {
-        CheckCompletedStory("0");
-
         UIMainDialogue.OnFinishStoryHandler += CheckCompletedStory;
         LoadingSceneManager.OnLoadSceneHandler += OnChangeSceneEvent;
+
+        CheckCompletedStory("0");
     }
 
 

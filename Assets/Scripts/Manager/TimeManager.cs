@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
+using BT;
 
 public enum ETime
 {
@@ -69,9 +70,11 @@ public class TimeManager : SingletonHandler<TimeManager>
         if (_mapDatabase.IsMapExists)
         {
             ChangedBackGround();
+            StarterPanda.Instance.PandaImage.enabled = true;
         }
         else
         {
+            StarterPanda.Instance.PandaImage.enabled = false;
             Debug.LogError("맵이 존재하지 않는 씬 입니다.");
         }
     }
