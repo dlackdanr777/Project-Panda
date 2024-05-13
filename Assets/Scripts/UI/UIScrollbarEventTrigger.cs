@@ -34,11 +34,13 @@ public class UIScrollbarEventTrigger : MonoBehaviour
     private void Update()
     {
         if(!_isButtonClicked)
-            _moveSpeed = Mathf.Clamp(_moveSpeed - _sensitivity * Time.deltaTime / _smoothStopTime, 0, _sensitivity);  
+            _moveSpeed = Mathf.Clamp(_moveSpeed - _sensitivity * Time.deltaTime / _smoothStopTime, 0, _sensitivity);
+        else
+            _scrollbar.value = Mathf.Clamp(_scrollbar.value, 0, 1);
 
-         _scrollbar.value = _isUpButton ? _scrollbar.value + _moveSpeed * Time.deltaTime : _scrollbar.value - _moveSpeed * Time.deltaTime;
+        _scrollbar.value = _isUpButton ? _scrollbar.value + _moveSpeed * Time.deltaTime : _scrollbar.value - _moveSpeed * Time.deltaTime;
 
-        _scrollbar.value = Mathf.Clamp(_scrollbar.value, 0, 1);
+
     }
 
 
