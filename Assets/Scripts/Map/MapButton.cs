@@ -43,15 +43,21 @@ public class MapButton : MonoBehaviour
         }
     }
     //private Vector2 _forestMapSize; // 맵마다 크기가 다르다면 설정
+    private float _indoorMapSizeY; // 실내 맵 y
+    private float _outdoorMapSizeY; // 실외 맵 y
     private Vector2 _mapSize;
     private Camera _camera;
     private float _height;
     private float _width;
     private bool _isLeft;
+    private bool _isIndoor;
 
     private void Awake()
     {
         //_forestMapSize = new Vector2(30, _cameraController.MapSize.y);
+        _indoorMapSizeY = 15f;
+        _outdoorMapSizeY = 25f;
+
         _mapSize = _cameraController.MapSize;
         _camera = _cameraController.GetComponent<Camera>();
 
@@ -200,7 +206,7 @@ public class MapButton : MonoBehaviour
     }
     private void MoveMarket()
     {
-        _cameraController.MapSize = new Vector2(59.5f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(59.5f, _outdoorMapSizeY);
         SoundManager.Instance.PlayBackgroundAudio(_marcketAudioClip, 2);
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
@@ -247,7 +253,7 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 7;
-        _cameraController.MapSize = new Vector2(31f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(31f, _outdoorMapSizeY);
 
         MoveField(_isLeft);
     }
@@ -271,6 +277,7 @@ public class MapButton : MonoBehaviour
 
             MoveField(_isLeft);
         }
+
     }
 
     private void MoveOtherWorldlyForestEntrance()
@@ -292,7 +299,8 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 10;
-        _cameraController.MapSize = new Vector2(30f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(30f, _indoorMapSizeY);
+        _isIndoor = true;
 
         MoveCenter();
     }
@@ -303,7 +311,8 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 11;
-        _cameraController.MapSize = new Vector2(28.5f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(28.5f, _indoorMapSizeY);
+        _isIndoor = true;
 
         MoveCenter();
     }
@@ -314,7 +323,8 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 12;
-        _cameraController.MapSize = new Vector2(45, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(45, _indoorMapSizeY);
+        _isIndoor = true;
 
         MoveCenter();
     }
@@ -325,7 +335,8 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 13;
-        _cameraController.MapSize = new Vector2(15f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(15f, _indoorMapSizeY);
+        _isIndoor = true;
 
         MoveCenter();
     }
@@ -336,7 +347,8 @@ public class MapButton : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
 
         CurrentMap = 14;
-        _cameraController.MapSize = new Vector2(22.7f, _cameraController.MapSize.y);
+        _cameraController.MapSize = new Vector2(22.7f, _indoorMapSizeY);
+        _isIndoor = true;
 
         MoveCenter();
     }
@@ -348,6 +360,16 @@ public class MapButton : MonoBehaviour
 
         FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
         {
+            if (_isIndoor)
+            {
+                MoveIndoors();
+                _isIndoor = false;
+            }
+            else
+            {
+                MoveOutdoors();
+            }
+
             TimeManager.Instance.CheckMap();
 
             _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
@@ -396,6 +418,16 @@ public class MapButton : MonoBehaviour
         Vector3 targetPos = new Vector3(_targetTransform[CurrentMap].position.x, _targetTransform[CurrentMap].position.y, Camera.main.transform.position.z);
         FadeInOutManager.Instance.FadeIn(_fadeTime, (System.Action)(() =>
         {
+            if (_isIndoor)
+            {
+                MoveIndoors();
+                _isIndoor = false;
+            }
+            else
+            {
+                MoveOutdoors();
+            }
+
             TimeManager.Instance.CheckMap();
 
             _cameraController.MapCenter = _targetTransform[(int)this.CurrentMap].position;
@@ -505,5 +537,18 @@ public class MapButton : MonoBehaviour
     {
         GameManager.Instance.TmpCameraData.SaveData(_cameraController.transform.position, CurrentMap);
         LoadingSceneManager.OnLoadSceneHandler -= OnSceneChanged;
+    }
+
+
+    private void MoveIndoors()
+    {
+        _cameraController.MaxZoomSize = 15f;
+        Camera.main.orthographicSize = 15f;
+    }
+
+    private void MoveOutdoors()
+    {
+        _cameraController.MaxZoomSize = 25f;
+        Camera.main.orthographicSize = 25f;
     }
 }
