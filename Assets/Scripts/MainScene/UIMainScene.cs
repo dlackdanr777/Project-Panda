@@ -46,6 +46,9 @@ public class UIMainScene : MonoBehaviour
         DataBind.SetUnityActionValue("HideNoticeButton", OnHideNoticeButtonClicked);
 
         DataBind.SetUnityActionValue("ShowSurveyButton", OnShowSurveyButtonClicked);
+
+        DataBind.SetUnityActionValue("ShowBugReportButton", OnShowBugReportButtonClicked);
+        DataBind.SetUnityActionValue("HideBugReportButton", OnShowBugReportButtonClicked);
     }
 
 
@@ -208,6 +211,19 @@ public class UIMainScene : MonoBehaviour
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
         _uiNav.Push("UISurvey");
     }
+
+    private void OnShowBugReportButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
+        _uiNav.Push("UIBugReport");
+    }
+
+    private void OnHideBugReportButtonClicked()
+    {
+        SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
+        _uiNav.Pop("UIBugReport");
+    }
+
 
 
     private void AttendCheck()

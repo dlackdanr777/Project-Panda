@@ -599,8 +599,18 @@ namespace Muks.BackEnd
 
             Param logParam = new Param();
             logParam.Add(logName, logDescription);
-            Backend.GameLog.InsertLogV2("UserLogs", logParam, bro => { Debug.Log("로그 저장 성공! " + logName + ": " + logDescription); });
+            Backend.GameLog.InsertLogV2("UserLogs", logParam, bro => { });
+        }
 
+
+        public void BugReportUpload(string logDescription)
+        {
+            if (!Backend.IsLogin || !Login)
+                return;
+
+            Param logParam = new Param();
+            logParam.Add("Description", logDescription);
+            Backend.GameLog.InsertLogV2("BugReport", logParam);
         }
 
 

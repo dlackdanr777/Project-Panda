@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using Muks.Tween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,8 @@ public class UIMainPreferences : UIView
         _tmpPos = _targetRect.anchoredPosition;
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
         _uiPreferences.Init();
+
+        DataBind.SetTextValue("UserName","ID: " + DatabaseManager.Instance.UserInfo.NickName);
         gameObject.SetActive(false);
     }
 
