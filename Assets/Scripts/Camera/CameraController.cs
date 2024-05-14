@@ -12,7 +12,11 @@ public class CameraController : MonoBehaviour
 
     [Tooltip("카메라 확대 최대 크기")]
     [SerializeField] private float _maxZoomSize;
-    public float MaxZoomSize => _maxZoomSize;
+    public float MaxZoomSize
+    {
+        get { return _maxZoomSize; }
+        set { _maxZoomSize = value; }
+    }
 
     [Tooltip("카메라 축소 최소 크기")]
     [SerializeField] private float _minZoomSize;
