@@ -6,6 +6,7 @@ using UnityEngine;
 public class VersionManagement : IDisposable
 {
     private const string _playStoreLink = "market://details?id=패키지 네임";
+    private const string _oneStoreLink = "onestore://common/product/0000774867";
     private const string _appStoreLink = "itms-apps://itunes.apple.com/app/앱ID";
 
 
@@ -62,7 +63,14 @@ public class VersionManagement : IDisposable
                 Version server = new Version(version);
 
                 int result = server.CompareTo(client);
+
+               
                 if (result == 0)
+                {
+                    return true;
+                }
+
+                else if (result < 0)
                 {
                     return true;
                 }
@@ -85,7 +93,11 @@ public class VersionManagement : IDisposable
     {
         string errorName = "업데이트";
         string errorDescription = "최신 버전이 존재합니다. \n업데이트를 진행해 주세요.";
-        BackendManager.Instance.ShowPopup(errorName, errorDescription, () => Application.OpenURL("https://www.notion.so/Unity-Engine-Engineer-65cb31e1caac4a2d9a686c0bf22d355d"));
+        BackendManager.Instance.ShowPopup(errorName, errorDescription, () =>
+        {
+            Application.OpenURL(_oneStoreLink);
+            Application.Quit();
+        });
 
     }
 
