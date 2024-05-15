@@ -47,7 +47,7 @@ public class Inventory
     /// <param name="field"></param>
     /// field index ex) GatheringItem[] 0:bug, 1:fish, 2:fruit
     /// <param name="id"></param>
-    public bool AddById(string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true)
+    public bool AddById(string id, int count, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true, bool alarmCheck = true)
     {
         Dictionary<string, Item> itemDic = DatabaseManager.Instance.ItemDatabase.AllItemDic;
 
@@ -62,7 +62,8 @@ public class Inventory
                 }
             }
 
-            if (Add(item, count))
+
+            if (Add(item, count, alarmCheck))
             {
                 item.IsReceived = true;
 
@@ -86,7 +87,7 @@ public class Inventory
     }
 
 
-    private bool Add(Item item, int count)
+    private bool Add(Item item, int count, bool alarmCheck)
     {
         int remainCount = count; // 남은 아이템 개수
         // 이미 존재하는 아이템인지 확인
@@ -112,6 +113,7 @@ public class Inventory
                 int addToInventory = Math.Min(spaceLeft, remainCount);
                 existingItem.Count += addToInventory;
                 remainCount -= addToInventory;
+                existingItem.AlarmCheck = alarmCheck;
 
                 // 모든 아이템을 추가했으면 종료
                 if (remainCount == 0)
@@ -129,7 +131,7 @@ public class Inventory
         while (remainCount > 0)
         {
             int addToInventory = Math.Min(MaxInventoryItemCount, remainCount);
-            InventoryItem newItem = new InventoryItem(item.Id, item.Name, item.Description, addToInventory, item.Price, item.Rank, item.Map, item.Image);
+            InventoryItem newItem = new InventoryItem(item.Id, item.Name, item.Description, addToInventory, item.Price, item.Rank, item.Map, item.Image, alarmCheck);
             _items.Add(newItem);
             remainCount -= addToInventory;
         }

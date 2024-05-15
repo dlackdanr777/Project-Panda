@@ -10,6 +10,7 @@ public class InventoryServerSaveData
 {
     public string Id;
     public int Count;
+    public bool AlarmCheck;
 }
 
 
@@ -284,19 +285,20 @@ public class InventoryUserData
         for (int i = 0; i < GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
             InventoryServerSaveData data = GatheringInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
+            Debug.Log(data.Id + ": " + data.AlarmCheck);
         }
 
         for (int i = 0, count = CookInventoryDataArray.Count; i < count; i++)
         {
             InventoryServerSaveData data = CookInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
         }
 
         for (int i = 0, count = ToolInventoryDataArray.Count; i < count; i++)
         {
             InventoryServerSaveData data = ToolInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
         }
     }
 
@@ -317,6 +319,8 @@ public class InventoryUserData
                 InventoryServerSaveData data = new InventoryServerSaveData();
                 data.Id = itemList[j].Id;
                 data.Count = itemList[j].Count;
+                data.AlarmCheck = itemList[j].AlarmCheck;
+                Debug.Log(data.Id + ": " + data.AlarmCheck);
                 GatheringInventoryDataArray.Add(data);
             }
         }
@@ -330,6 +334,7 @@ public class InventoryUserData
             InventoryServerSaveData data = new InventoryServerSaveData();
             data.Id = cookInventory[i].Id;
             data.Count = cookInventory[i].Count;
+            data.AlarmCheck = cookInventory[i].AlarmCheck;
             CookInventoryDataArray.Add(data);
         }
 
@@ -342,6 +347,7 @@ public class InventoryUserData
             InventoryServerSaveData data = new InventoryServerSaveData();
             data.Id = toolInventory[i].Id;
             data.Count = 1;
+            data.AlarmCheck = toolInventory[i].AlarmCheck;
             ToolInventoryDataArray.Add(data);
         }
 
