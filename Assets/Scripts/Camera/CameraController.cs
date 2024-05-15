@@ -6,6 +6,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Camera _camera;
 
     [Space]
+    [Tooltip("카메라 이동 속도 배율")]
+    [SerializeField] private float _moveSpeed;
+
     [Tooltip("카메라 확대/축소 속도")]
     [SerializeField] private float _zoomSpeed;
     public float ZoomSpeed => _zoomSpeed;
@@ -75,13 +78,13 @@ public class CameraController : MonoBehaviour
 #if UNITY_EDITOR
 
         MouseMovement();
-        MouseZoomInOut();
+        //MouseZoomInOut();
 
 
 #elif PLATFORM_ANDROID
 
         TouchMovement();
-        TouchZoomInOut();
+        //TouchZoomInOut();
         
 #endif
 
@@ -182,7 +185,7 @@ public class CameraController : MonoBehaviour
         {
 
             Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - (Vector3)touch.position);
-            _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
+            _camera.transform.position = LimitPos(_tmpCameraPos + (movePos * _camera.orthographicSize * _moveSpeed));
 
             CheckAcceleration();
         }
@@ -251,7 +254,7 @@ public class CameraController : MonoBehaviour
         else if (Input.GetMouseButton(0) && _touchEnabled)
         {
             Vector3 movePos = Camera.main.ScreenToViewportPoint(_tmpTouchPos - Input.mousePosition);
-            _camera.transform.position = LimitPos(_tmpCameraPos + movePos * _camera.orthographicSize);
+            _camera.transform.position = LimitPos(_tmpCameraPos + (movePos * _camera.orthographicSize * _moveSpeed));
 
             CheckAcceleration();
         }

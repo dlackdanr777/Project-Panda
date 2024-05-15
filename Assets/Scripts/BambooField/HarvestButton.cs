@@ -10,9 +10,10 @@ public class HarvestButton : MonoBehaviour, IInteraction
 
     public void StartInteraction()
     {
+
         if (IsSet)
         {
-            Debug.Log("작물 수확 버튼 클릭");
+            SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
             BambooFieldSystem.ClickHavestButton();
         }
     }
