@@ -50,7 +50,7 @@ public class MainStoryDialogueManager : MonoBehaviour
             }
             ReadCSV(csv);
         }
-        for (int i = 45; i <= 48; i++)
+        for (int i = 45; i <= 50; i++)
         {
             csv = "NPCSideStory/NPC" + i;
             ReadCSV(csv);
