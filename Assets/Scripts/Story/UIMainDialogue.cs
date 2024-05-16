@@ -355,9 +355,10 @@ public class UIMainDialogue : UIView
         _moneyReward.SetActive(true);
         foreach (var item in _moneyReward.transform.GetChild(0).GetComponentsInChildren<Image>())
         {
+            item.gameObject.transform.position = gameObject.transform.position;
             Tween.TransformMove(item.gameObject, _targetPos.position, 0.5f, TweenMode.Quadratic);
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         _moneyReward.SetActive(false);
     }
 

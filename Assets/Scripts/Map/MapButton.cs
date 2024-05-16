@@ -1,10 +1,14 @@
 using Muks.DataBind;
 using Muks.Tween;
+using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapButton : MonoBehaviour
 {
+    public static event Action OnMoveMapHandler;
+
     [Tooltip("메인 카메라 연결")]
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private Transform[] _targetTransform;// = new Transform[DatabaseManager.Instance.GetMapDic().Count];
@@ -389,6 +393,7 @@ public class MapButton : MonoBehaviour
                 Camera.main.transform.position = targetPos + new Vector3(-lx, 0, 0);
             }
 
+            OnMoveMapHandler?.Invoke();
             FadeOut();
         }));
     }
@@ -408,6 +413,7 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos - new Vector3(lx, 0, 0);
 
+            OnMoveMapHandler?.Invoke();
             FadeOut();
         }));
     }
@@ -434,6 +440,7 @@ public class MapButton : MonoBehaviour
 
             Camera.main.transform.position = targetPos;
 
+            OnMoveMapHandler?.Invoke();
             FadeOut();
         }));
     }
