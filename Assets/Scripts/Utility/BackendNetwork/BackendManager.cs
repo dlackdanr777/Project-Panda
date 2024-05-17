@@ -603,12 +603,13 @@ namespace Muks.BackEnd
         }
 
 
-        public void BugReportUpload(string logDescription)
+        public void BugReportUpload(string email, string logDescription)
         {
             if (!Backend.IsLogin || !Login)
                 return;
 
             Param logParam = new Param();
+            logParam.Add("Email", email);
             logParam.Add("Description", logDescription);
             Backend.GameLog.InsertLogV2("BugReport", logParam);
         }
