@@ -11,8 +11,16 @@ public class BambooNPC : MonoBehaviour
         _currentHour = TimeManager.Instance.GameHour;
         UIMainDialogue.OnFinishStoryHandler += CheckCompletedStory;
         MapButton.OnMoveMapHandler += ShowNPC;
+        LoadingSceneManager.OnLoadSceneHandler += ActionDisabled;
         gameObject.SetActive(false);
     }
+
+
+    private void OnDestroy()
+    {
+        ActionDisabled();
+    }
+
 
     private void ShowNPC()
     {
@@ -31,4 +39,13 @@ public class BambooNPC : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+
+    private void ActionDisabled()
+    {
+        UIMainDialogue.OnFinishStoryHandler -= CheckCompletedStory;
+        MapButton.OnMoveMapHandler -= ShowNPC;
+        LoadingSceneManager.OnLoadSceneHandler -= ActionDisabled;
+    }
+
 }
