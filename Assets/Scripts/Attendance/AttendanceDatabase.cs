@@ -88,7 +88,7 @@ public class AttendanceDatabase
     #region LoadWeatherData
     public void LoadData()
     {
-        BackendManager.Instance.GetChartData("107804", 10, WeatherParseByServer);
+        BackendManager.Instance.GetChartData("122216", 10, WeatherParseByServer);
     }
 
 

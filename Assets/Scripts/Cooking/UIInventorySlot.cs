@@ -56,11 +56,13 @@ public class UIInventorySlot : MonoBehaviour
         _itemImage.sprite = item.Image;
         _amountText.text = item.Count.ToString();
 
-        if (_item.InvenAlarmCheck)
-            _alarmImage.gameObject?.SetActive(true);
-
-        else
-            _alarmImage.gameObject?.SetActive(false);
+        if (_alarmImage != null)
+        {
+            if (_item.InvenAlarmCheck)
+                _alarmImage.gameObject.SetActive(true);
+            else
+                _alarmImage.gameObject.SetActive(false);
+        }
     }
 }
 
