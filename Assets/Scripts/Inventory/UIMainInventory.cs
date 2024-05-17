@@ -107,7 +107,7 @@ public class UIMainInventory : UIView
         if (item == null)
             return;
 
-        item.AlarmCheck = false;
+        item.InvenAlarmCheck = false;
         _detailView.Show(item);
         _inventoryContoller.UpdateUI();
         AlarmCheck();
@@ -133,10 +133,9 @@ public class UIMainInventory : UIView
 
             for (int j = 0, countJ = itemList.Count; j < countJ; j++)
             {
-                if (itemList[j].AlarmCheck)
+                if (itemList[j].InvenAlarmCheck)
                 {
                     DataBind.SetBoolValue("InvenAlarm", true);
-                    Debug.Log("실행");
                     return;
                 }
             }
@@ -149,17 +148,28 @@ public class UIMainInventory : UIView
             itemList = invens[i].GetItemList();
             for (int j = 0, countJ = itemList.Count; j < countJ; j++)
             {
-                if (itemList[j].AlarmCheck)
+                if (itemList[j].InvenAlarmCheck)
                 {
                     DataBind.SetBoolValue("InvenAlarm", true);
-                    Debug.Log("실행");
                     return;
                 }
             }
         }
 
+        invens = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Tool);
+        for (int i = 0, countI = invens.Length; i < countI; i++)
+        {
+            itemList = invens[i].GetItemList();
+            for (int j = 0, countJ = itemList.Count; j < countJ; j++)
+            {
+                if (itemList[j].InvenAlarmCheck)
+                {
+                    DataBind.SetBoolValue("InvenAlarm", true);
+                    return;
+                }
+            }
+        }
 
-        Debug.Log("실행안됨");
         DataBind.SetBoolValue("InvenAlarm", false);
         _alarmCheck = false;
     }
