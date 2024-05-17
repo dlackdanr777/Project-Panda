@@ -10,7 +10,8 @@ public class UIBugReport : MonoBehaviour
     [SerializeField] private UIBugReportPopup _popup;
     [SerializeField] private Button _okButton;
     [SerializeField] private Button _cancelButton;
-    [SerializeField] private TMP_InputField _inputField;
+    [SerializeField] private TMP_InputField _emailInput;
+    [SerializeField] private TMP_InputField _descriptionInput;
 
 
     public void Init(UnityAction cancelButtonClicked)
@@ -31,14 +32,15 @@ public class UIBugReport : MonoBehaviour
     public void Hide()
     {
         _popup.Hide();
-        _inputField.text = string.Empty;
+        _emailInput.text = string.Empty;
+        _descriptionInput.text = string.Empty;
     }
 
 
     private void OkButtonClicked()
     {
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonClick);
-        BackendManager.Instance.BugReportUpload(_inputField.text);
+        BackendManager.Instance.BugReportUpload(_emailInput.text, _descriptionInput.text);
         _popup.Show("소중한 제보 감사드립니다.");
     }
 
