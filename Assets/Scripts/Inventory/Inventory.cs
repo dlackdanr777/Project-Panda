@@ -65,6 +65,9 @@ public class Inventory
 
             if (Add(item, count, alarmCheck))
             {
+                if (!item.IsReceived && !item.DiaryAlarmCheck)
+                    item.DiaryAlarmCheck = true;
+
                 item.IsReceived = true;
 
                 if (isServerUploaded)
@@ -113,7 +116,7 @@ public class Inventory
                 int addToInventory = Math.Min(spaceLeft, remainCount);
                 existingItem.Count += addToInventory;
                 remainCount -= addToInventory;
-                existingItem.AlarmCheck = alarmCheck;
+                existingItem.InvenAlarmCheck = alarmCheck;
 
                 // 모든 아이템을 추가했으면 종료
                 if (remainCount == 0)

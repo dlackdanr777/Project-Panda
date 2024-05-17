@@ -137,6 +137,7 @@ public class NpcUserData
                     npcList[j].IsReceived = true;
                     npcList[j].Intimacy = NPCReceived[i].Intimacy;
                     npcList[j].SSId = NPCReceived[i].SSId;
+                    npcList[j].DiaryAlarmCheck = NPCReceived[i].AlarmCheck;
                 }
             }
 
@@ -155,7 +156,7 @@ public class NpcUserData
             {
                 if (npcDatabase[i][j].IsReceived)
                 {
-                    NPCReceived.Add(new NPCData(npcDatabase[i][j].Id, npcDatabase[i][j].Intimacy, npcDatabase[i][j].SSId));
+                    NPCReceived.Add(new NPCData(npcDatabase[i][j].Id, npcDatabase[i][j].Intimacy, npcDatabase[i][j].SSId, npcDatabase[i][j].DiaryAlarmCheck));
                 }
             }
         }
