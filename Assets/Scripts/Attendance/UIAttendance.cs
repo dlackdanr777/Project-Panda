@@ -71,11 +71,13 @@ public class UIAttendance : UIView
 
         if (!_attendanceDatabase.IsAttendanced)
         {
+            DataBind.SetBoolValue("AttendanceAlarm", true);
             _attendanceButton.EnableButtonClick(OnAttendanceButtonClicked);
         }
         else
         {
             _attendanceCheckIamge.gameObject.SetActive(true);
+            DataBind.SetBoolValue("AttendanceAlarm", false);
             _attendanceButton.DisableButtonClick();
         }
 
@@ -139,6 +141,7 @@ public class UIAttendance : UIView
 
     private void OnAttendanceButtonClicked()
     {
+        SoundManager.Instance.PlayEffectAudio(_attendanceSound, 0.22f);
         _attendanceButton.gameObject.SetActive(true);
         _attendanceCheckIamge.gameObject.SetActive(true);
         _canvasGroup.blocksRaycasts = false;
@@ -149,7 +152,8 @@ public class UIAttendance : UIView
         Tween.TransformScale(_attendanceCheckIamge.gameObject, new Vector3(1, 1, 1), 0.35f, TweenMode.EaseInQuint, () => _canvasGroup.blocksRaycasts = true);
 
         _attendanceDatabase.AttendanceCheck();
-        SoundManager.Instance.PlayEffectAudio(_attendanceSound, 0.22f);
+        DataBind.SetBoolValue("AttendanceAlarm", false);
+
     }
 
 

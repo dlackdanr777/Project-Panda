@@ -9,6 +9,9 @@ using UnityEngine;
 
 public class Player
 {
+    public event Action OnAddItemHandler;
+    public event Action OnRemoveItemHandler;
+
     public int Familiarity;
 
     [Header("Inventory")]
@@ -94,22 +97,25 @@ public class Player
     }
 
 
-    public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true)
+    public bool AddItemById(string id, int count = 1, ItemAddEventType type = ItemAddEventType.AddChallengesCount, bool isServerUploaded = true, bool alarmCheck = true)
     {
         InventoryItemField field = GetField(id);
 
         switch (field)
         {
             case InventoryItemField.GatheringItem:
-                GatheringItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
+                GatheringItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded, alarmCheck);
+                OnAddItemHandler?.Invoke();
                 return true;
 
             case InventoryItemField.Cook:
-                CookItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
+                CookItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded, alarmCheck);
+                OnAddItemHandler?.Invoke();
                 return true;
 
             case InventoryItemField.Tool:
-                ToolItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded);
+                ToolItemInventory[GetItemType(id)].AddById(id, count, type, isServerUploaded, alarmCheck);
+                OnAddItemHandler?.Invoke();
                 return true;
         }
 
@@ -124,12 +130,15 @@ public class Player
         switch (field)
         {
             case InventoryItemField.GatheringItem:
+                OnRemoveItemHandler?.Invoke();
                 return GatheringItemInventory[GetItemType(id)].RemoveItemById(id, count);
 
             case InventoryItemField.Cook:
+                OnRemoveItemHandler?.Invoke();
                 return CookItemInventory[GetItemType(id)].RemoveItemById(id, count);
 
             case InventoryItemField.Tool:
+                OnRemoveItemHandler?.Invoke();
                 return ToolItemInventory[GetItemType(id)].RemoveItemById(id, count);
         }
 
