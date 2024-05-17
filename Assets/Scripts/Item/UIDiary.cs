@@ -1,4 +1,3 @@
-using Muks.DataBind;
 using Muks.Tween;
 using System;
 using UnityEngine;
@@ -20,7 +19,6 @@ public class UIDiary : UIView
     [SerializeField] private Animator _coverAnimator;
     [SerializeField] private Button _backgroundButton;
     [SerializeField] private UIDetailView _detailView;
-    [SerializeField] private UIBookList[] _bookLists;
 
 
     [Space]
@@ -46,19 +44,7 @@ public class UIDiary : UIView
         _showPos = _book.anchoredPosition;
         _hidePos = _book.anchoredPosition + new Vector2(0, -1800);
 
-        GameManager.Instance.Player.OnAddItemHandler += AlarmCheck;
-        MainStoryController.OnStartStoryHandler += AlarmCheck;
-        LoadingSceneManager.OnLoadSceneHandler += ChangeSceneEvent;
-
-
-        for(int i = 0, count = _bookLists.Length; i < count; i++)
-        {
-            _bookLists[i].Init(AlarmCheck);
-        }
-
         gameObject.SetActive(false);
-
-        AlarmCheck();
     }
 
     public override void Hide()
@@ -111,32 +97,5 @@ public class UIDiary : UIView
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
         _uiNav.Pop("DropdownMenuButton");
         _uiNav.Pop("Diary");
-    }
-
-    private void AlarmCheck()
-    {
-        bool checkAlarm = false;
-        for(int i = 0, count = _bookLists.Length; i < count; i++)
-        {
-            checkAlarm = _bookLists[i].AlarmCheck() || checkAlarm;
-        }
-
-        if (checkAlarm)
-        {
-            DataBind.SetBoolValue("DiaryAlarm", true);
-        }
-
-        else
-        {
-            DataBind.SetBoolValue("DiaryAlarm", false);
-        }
-
-    }
-
-    private void ChangeSceneEvent()
-    {
-        GameManager.Instance.Player.OnAddItemHandler -= AlarmCheck;
-        MainStoryController.OnStartStoryHandler -= AlarmCheck;
-        LoadingSceneManager.OnLoadSceneHandler -= ChangeSceneEvent;
     }
 }

@@ -45,13 +45,11 @@ namespace Muks.Tween
 
         public bool IsLoop;
 
-        public bool IsRightMove = true;
-
         protected Dictionary<TweenMode, Func<float, float, float>> _percentHandler;
 
         private LoopType _loopType;
 
-
+        private bool _isRightMove = true;
 
 
         public virtual void SetData(DataSequence dataSequence)
@@ -132,16 +130,16 @@ namespace Muks.Tween
                         break;
 
                     case LoopType.Yoyo:
-                        ElapsedDuration += IsRightMove ? Time.deltaTime : -Time.deltaTime;
+                        ElapsedDuration += _isRightMove ? Time.deltaTime : -Time.deltaTime;
                         ElapsedDuration = Mathf.Clamp(ElapsedDuration, 0, TotalDuration);
 
-                        if (IsRightMove && TotalDuration <= ElapsedDuration)
+                        if (_isRightMove && TotalDuration <= ElapsedDuration)
                         {
-                            IsRightMove = false;
+                            _isRightMove = false;
                         }
-                        else if (!IsRightMove && ElapsedDuration <= 0)
+                        else if (!_isRightMove && ElapsedDuration <= 0)
                         {
-                            IsRightMove = true;
+                            _isRightMove = true;
                         }
                         break;
                 }   

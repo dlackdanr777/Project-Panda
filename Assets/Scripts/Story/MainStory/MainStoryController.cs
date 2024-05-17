@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class MainStoryController : MonoBehaviour
 {
     public static event Action<MainStoryDialogue> OnStartInteractionHandler;
-    public static event Action OnStartStoryHandler;
+
     public static event Action OnFinishStoryHandler;
     public static event Action OnCheckConditionHandler;
 
@@ -99,13 +99,10 @@ public class MainStoryController : MonoBehaviour
                 if (!DatabaseManager.Instance.GetNPC(_npcID).IsReceived)
                 {
                     DatabaseManager.Instance.GetNPC(_npcID).IsReceived = true; //NPC ¸¸³²
-                    DatabaseManager.Instance.GetNPC(_npcID).DiaryAlarmCheck = true;
-
                 }
                 _storyIndex = key;
                 StartMainStory();
                 _isInitialized = true;
-                OnStartStoryHandler?.Invoke();
                 break;
             }
         }

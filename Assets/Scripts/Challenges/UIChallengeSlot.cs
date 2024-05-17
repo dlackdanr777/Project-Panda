@@ -1,4 +1,7 @@
+using Muks.BackEnd;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +16,6 @@ public class UIChallengeSlot : MonoBehaviour
     [SerializeField] private Button _clearButton;
     [SerializeField] private Image _clearImage;
     [SerializeField] private Sprite _doneSprite;
-    [SerializeField] private Image _alarmImage;
 
     [Space]
     [Header("Audio Clips")]
@@ -76,30 +78,4 @@ public class UIChallengeSlot : MonoBehaviour
         Clear(false);
         _rectTransform.SetAsLastSibling();
     }
-
-
-    public bool AlarmCheck()
-    {
-        if (_data.IsDone)
-        {
-            if (_data.IsClear)
-            {
-                _alarmImage.gameObject.SetActive(false);
-                return false;
-            }
-
-            else
-            {
-                _alarmImage.gameObject.SetActive(true);
-                return true;
-            }
-        }
-
-        else
-        {
-            _alarmImage.gameObject.SetActive(false);
-            return false;
-        }
-
-    }  
 }

@@ -1,6 +1,10 @@
+using Muks.DataBind;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,34 +24,16 @@ public class UIBookList : MonoBehaviour
     [SerializeField] private Button _leftButton;
     [SerializeField] private Button _rightButton;
     [SerializeField] private Sprite[] _cardImage; //봄,여름 / 가을,겨울 / 혼합
-    
-    private Action _onDetailViewClickHandler;
+
     private List<GatheringItem> _gatheringDatabase;
     private List<ToolItem> _toolDatabase;
     private List<NPC> _npcDatabase;
     private List<Item> _database;
     private int _current; //현재 페이지 위치
-    
 
-    public bool AlarmCheck()
-    {
-        for(int i = 0, count = _database.Count; i < count; i++)
-        {
-            if (_database[i].DiaryAlarmCheck)
-                return true;
-        }
-
-        return false;
-    }
-
-
-
-    public void Init(Action onDetailViewClicked)
+    private void Awake()
     {
         _detailView.Init();
-
-        _onDetailViewClickHandler += onDetailViewClicked;
-
         //현재 어떤 필드의 몇 번째 아이템인지 데이터 연결
         if (_bookField == BookField.Item)
         {
@@ -114,10 +100,6 @@ public class UIBookList : MonoBehaviour
     private void OnEnable()
     {
         _current = 0;
-
-        if (_database == null)
-            return;
-
         UpdateContents();
     }
 
@@ -163,20 +145,12 @@ public class UIBookList : MonoBehaviour
                     child.GetChild(0).GetComponent<Image>().preserveAspect = true;
                     child.GetChild(1).GetComponent<TextMeshProUGUI>().text = _database[(_current * 9) + i].Name;
                     child.GetComponent<Button>().interactable = true;
-
-                    if(_database[(_current * 9) + i].DiaryAlarmCheck)
-                        child.GetChild(2).gameObject.SetActive(true);
-
-                    else
-                        child.GetChild(2).gameObject.SetActive(false);
                 }
                 else
                 {
                     child.GetChild(0).GetComponent<Image>().enabled = false;
                     child.GetChild(0).GetComponent<Image>().sprite = null;
                     child.GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
-                    child.GetChild(2).gameObject.SetActive(false);
-
                     child.GetComponent<Button>().interactable = false;
                 }
 
@@ -215,9 +189,6 @@ public class UIBookList : MonoBehaviour
     private void OnClickDetailView(int index)
     {
         _detailView.Show(_database[(_current * 9) + index]);
-        _database[(_current * 9) + index].DiaryAlarmCheck = false;
-        transform.GetChild(index).GetChild(2).gameObject.SetActive(false);
-        _onDetailViewClickHandler?.Invoke();
     }
 
 

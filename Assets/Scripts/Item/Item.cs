@@ -27,8 +27,6 @@ public class Item
 
     public bool IsReceived;
 
-    public bool DiaryAlarmCheck;
-
 
     public Item(string id, string name, string description, int price, string rank, string map, Sprite image)
     {
