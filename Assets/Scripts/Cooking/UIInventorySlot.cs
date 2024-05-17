@@ -25,7 +25,8 @@ public class UIInventorySlot : MonoBehaviour
         _itemImage.gameObject.SetActive(false);
         _amountText.gameObject.SetActive(false);
 
-        _alarmImage.gameObject?.SetActive(false);
+        if(_alarmImage != null)
+        _alarmImage.gameObject.SetActive(false);
 
         if (onButtonClicked != null)
             _button.onClick.AddListener(() => onButtonClicked(_item));
@@ -42,7 +43,10 @@ public class UIInventorySlot : MonoBehaviour
             _amountText.text = null;
             _itemImage.gameObject.SetActive(false);
             _amountText.gameObject.SetActive(false);
-            _alarmImage.gameObject?.SetActive(false);
+
+            if (_alarmImage != null)
+                _alarmImage.gameObject.SetActive(false);
+
             return;
         }
 

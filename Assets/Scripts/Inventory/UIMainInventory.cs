@@ -28,9 +28,6 @@ public class UIMainInventory : UIView
     [SerializeField] private UIDetailView _detailView;
     [SerializeField] private Transform _slotParent;
     [SerializeField] private Button _backgroundButton;
-    [SerializeField] private Image _alarmImage;
-
-    private bool _alarmCheck;
 
 
     public override void Init(UINavigation uiNav)
@@ -171,7 +168,6 @@ public class UIMainInventory : UIView
         }
 
         DataBind.SetBoolValue("InvenAlarm", false);
-        _alarmCheck = false;
     }
 
 
