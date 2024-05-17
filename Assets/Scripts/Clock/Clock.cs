@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Timer : MonoBehaviour
+public class Clock : MonoBehaviour
 {
     private int _currentHour;
     private float _currentMinute;
@@ -33,8 +33,7 @@ public class Timer : MonoBehaviour
         else
         {
             _currentMinute += (Time.deltaTime / 60f);
-            _currentMinute %= 60;
-            float angleZ = Mathf.Lerp(0, 360f, (_currentHour + _currentMinute) / 24f);
+            float angleZ = Mathf.Lerp(0, 360f, (_currentHour + _currentMinute/10) / 24f); // 게임에서 10분이 1시간
             _clockHands.transform.rotation = Quaternion.Euler(0, 0, angleZ);
         }
     }
