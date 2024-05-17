@@ -1,3 +1,4 @@
+using Muks.DataBind;
 using Muks.Tween;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,8 +65,11 @@ public class UIChallenges : UIView
             }
         }
         CloseChallenges();
+        AlarmCheck();
         DatabaseManager.Instance.Challenges.ChallengeDone += ChallengeDone;
         LoadingSceneManager.OnLoadSceneHandler += ChangeSceneEvent;
+        GameManager.Instance.Player.OnAddItemHandler += AlarmCheck;
+
         gameObject.SetActive(false);
     }
 
@@ -130,6 +134,7 @@ public class UIChallenges : UIView
             GameManager.Instance.Player.GainBamboo(getBoombooAmount);
             GameManager.Instance.Player.AsyncSaveBambooData(3);
             _clearChallenges.Add(id); // 완료된 도전과제 저장 후 창 종료 시 맨 아래로 이동
+            AlarmCheck();
         }
     }
 
@@ -149,6 +154,20 @@ public class UIChallenges : UIView
     }
 
 
+    private void AlarmCheck()
+    {
+        bool alarmCheck = false;
+        foreach(string key in _slotDic.Keys)
+        {
+            alarmCheck = _slotDic[key].AlarmCheck() || alarmCheck;
+        }
+
+        DataBind.SetBoolValue("ChallengesAlarm", alarmCheck);
+    }
+
+
+
+
     private void OnBackgroundButtonClicked()
     {
         SoundManager.Instance.PlayEffectAudio(SoundEffectType.ButtonExit);
@@ -160,6 +179,8 @@ public class UIChallenges : UIView
     private void ChangeSceneEvent()
     {
         DatabaseManager.Instance.Challenges.ChallengeDone -= ChallengeDone;
+        GameManager.Instance.Player.OnAddItemHandler -= AlarmCheck;
         LoadingSceneManager.OnLoadSceneHandler -= ChangeSceneEvent;
     }
+
 }

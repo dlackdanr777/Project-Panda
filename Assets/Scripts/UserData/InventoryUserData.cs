@@ -10,6 +10,8 @@ public class InventoryServerSaveData
 {
     public string Id;
     public int Count;
+    public bool AlarmCheck;
+    public bool DiaryAlarmCheck;
 }
 
 
@@ -281,22 +283,30 @@ public class InventoryUserData
 
     private void LoadUserInventory()
     {
+        Dictionary<string, Item> allItemDic = DatabaseManager.Instance.ItemDatabase.AllItemDic;
+
         for (int i = 0; i < GatheringInventoryDataArray.Count; i++) //저장된 데이터
         {
             InventoryServerSaveData data = GatheringInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
+            if (allItemDic.ContainsKey(data.Id))
+                allItemDic[data.Id].DiaryAlarmCheck = data.DiaryAlarmCheck;
         }
 
         for (int i = 0, count = CookInventoryDataArray.Count; i < count; i++)
         {
             InventoryServerSaveData data = CookInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
+            if (allItemDic.ContainsKey(data.Id))
+                allItemDic[data.Id].DiaryAlarmCheck = data.DiaryAlarmCheck;
         }
 
         for (int i = 0, count = ToolInventoryDataArray.Count; i < count; i++)
         {
             InventoryServerSaveData data = ToolInventoryDataArray[i];
-            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false);
+            GameManager.Instance.Player.AddItemById(data.Id, data.Count, ItemAddEventType.None, false, data.AlarmCheck);
+            if (allItemDic.ContainsKey(data.Id))
+                allItemDic[data.Id].DiaryAlarmCheck = data.DiaryAlarmCheck;
         }
     }
 
@@ -306,6 +316,7 @@ public class InventoryUserData
         Inventory[] GatheringItemInventory = GameManager.Instance.Player.GatheringItemInventory;
         Inventory[] CookItemInventory = GameManager.Instance.Player.CookItemInventory;
         Inventory[] ToolItemInventory = GameManager.Instance.Player.ToolItemInventory;
+        Dictionary<string, Item> allItemDic = DatabaseManager.Instance.ItemDatabase.AllItemDic;
 
         GatheringInventoryDataArray.Clear(); //있던 데이터 지우고 거기에 저장
         for (int i = 0; i < GatheringItemInventory.Length; i++)
@@ -317,6 +328,8 @@ public class InventoryUserData
                 InventoryServerSaveData data = new InventoryServerSaveData();
                 data.Id = itemList[j].Id;
                 data.Count = itemList[j].Count;
+                data.AlarmCheck = itemList[j].InvenAlarmCheck;
+                data.DiaryAlarmCheck = allItemDic[data.Id].DiaryAlarmCheck;
                 GatheringInventoryDataArray.Add(data);
             }
         }
@@ -330,6 +343,8 @@ public class InventoryUserData
             InventoryServerSaveData data = new InventoryServerSaveData();
             data.Id = cookInventory[i].Id;
             data.Count = cookInventory[i].Count;
+            data.AlarmCheck = cookInventory[i].InvenAlarmCheck;
+            data.DiaryAlarmCheck = allItemDic[data.Id].DiaryAlarmCheck;
             CookInventoryDataArray.Add(data);
         }
 
@@ -342,6 +357,8 @@ public class InventoryUserData
             InventoryServerSaveData data = new InventoryServerSaveData();
             data.Id = toolInventory[i].Id;
             data.Count = 1;
+            data.AlarmCheck = toolInventory[i].InvenAlarmCheck;
+            data.DiaryAlarmCheck = allItemDic[data.Id].DiaryAlarmCheck;
             ToolInventoryDataArray.Add(data);
         }
 

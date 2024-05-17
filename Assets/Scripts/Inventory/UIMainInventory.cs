@@ -1,4 +1,8 @@
+using Muks.DataBind;
 using Muks.Tween;
+using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,12 +30,15 @@ public class UIMainInventory : UIView
     [SerializeField] private Button _backgroundButton;
 
 
-
     public override void Init(UINavigation uiNav)
     {
         base.Init(uiNav);     
         _canvasGroup = GetComponent<CanvasGroup>();
         _tmpPos = _targetRect.anchoredPosition;
+
+        GameManager.Instance.Player.OnAddItemHandler += AlarmCheck;
+        GameManager.Instance.Player.OnRemoveItemHandler += AlarmCheck;
+        LoadingSceneManager.OnLoadSceneHandler += OnChangeSceneEvent;
 
         _inventoryContoller.Init(SlotButtonClicked);
         _detailView.Init(() => _detailView.gameObject.SetActive(false));
@@ -40,6 +47,9 @@ public class UIMainInventory : UIView
         _backgroundButton.onClick.AddListener(OnBackgroundButtonClicked);
 
         gameObject.SetActive(false);
+        AlarmCheck();
+
+
     }
 
 
@@ -73,7 +83,6 @@ public class UIMainInventory : UIView
 
         _slotParent.gameObject.SetActive(false);
         _detailView.gameObject.SetActive(false);
-
         _targetRect.anchoredPosition = _tmpPos;
         _canvasGroup.alpha = _targetAlpha;
         _canvasGroup.blocksRaycasts = false;
@@ -91,10 +100,14 @@ public class UIMainInventory : UIView
 
     private void SlotButtonClicked(InventoryItem item)
     {
+
         if (item == null)
             return;
 
+        item.InvenAlarmCheck = false;
         _detailView.Show(item);
+        _inventoryContoller.UpdateUI();
+        AlarmCheck();
     }
 
 
@@ -105,6 +118,65 @@ public class UIMainInventory : UIView
         _uiNav.Pop("Inventory");
     }
 
+
+    private void AlarmCheck()
+    {
+        Inventory[] invens = GameManager.Instance.Player.GetItemInventory(InventoryItemField.GatheringItem);
+        List<InventoryItem> itemList;
+
+        for (int i = 0, countI = invens.Length; i < countI; i++)
+        {
+            itemList = invens[i].GetItemList();
+
+            for (int j = 0, countJ = itemList.Count; j < countJ; j++)
+            {
+                if (itemList[j].InvenAlarmCheck)
+                {
+                    DataBind.SetBoolValue("InvenAlarm", true);
+                    return;
+                }
+            }
+
+        }
+
+        invens = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Cook);
+        for (int i = 0, countI = invens.Length; i < countI; i++)
+        {
+            itemList = invens[i].GetItemList();
+            for (int j = 0, countJ = itemList.Count; j < countJ; j++)
+            {
+                if (itemList[j].InvenAlarmCheck)
+                {
+                    DataBind.SetBoolValue("InvenAlarm", true);
+                    return;
+                }
+            }
+        }
+
+        invens = GameManager.Instance.Player.GetItemInventory(InventoryItemField.Tool);
+        for (int i = 0, countI = invens.Length; i < countI; i++)
+        {
+            itemList = invens[i].GetItemList();
+            for (int j = 0, countJ = itemList.Count; j < countJ; j++)
+            {
+                if (itemList[j].InvenAlarmCheck)
+                {
+                    DataBind.SetBoolValue("InvenAlarm", true);
+                    return;
+                }
+            }
+        }
+
+        DataBind.SetBoolValue("InvenAlarm", false);
+    }
+
+
+    private void OnChangeSceneEvent()
+    {
+        GameManager.Instance.Player.OnAddItemHandler -= AlarmCheck;
+        GameManager.Instance.Player.OnRemoveItemHandler -= AlarmCheck;
+        LoadingSceneManager.OnLoadSceneHandler -= OnChangeSceneEvent;
+    }
 
 
 }

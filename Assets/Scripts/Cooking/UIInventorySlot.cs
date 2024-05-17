@@ -8,10 +8,9 @@ using UnityEngine.UI;
 public class UIInventorySlot : MonoBehaviour
 {
     [SerializeField] private Image _itemImage;
-
     [SerializeField] private Button _button;
-
     [SerializeField] private TextMeshProUGUI _amountText;
+    [SerializeField] private Image _alarmImage;
 
     private InventoryItem _item;
 
@@ -25,6 +24,9 @@ public class UIInventorySlot : MonoBehaviour
         _amountText.text = null;
         _itemImage.gameObject.SetActive(false);
         _amountText.gameObject.SetActive(false);
+
+        if(_alarmImage != null)
+        _alarmImage.gameObject.SetActive(false);
 
         if (onButtonClicked != null)
             _button.onClick.AddListener(() => onButtonClicked(_item));
@@ -41,6 +43,10 @@ public class UIInventorySlot : MonoBehaviour
             _amountText.text = null;
             _itemImage.gameObject.SetActive(false);
             _amountText.gameObject.SetActive(false);
+
+            if (_alarmImage != null)
+                _alarmImage.gameObject.SetActive(false);
+
             return;
         }
 
@@ -49,6 +55,12 @@ public class UIInventorySlot : MonoBehaviour
         _item = item;
         _itemImage.sprite = item.Image;
         _amountText.text = item.Count.ToString();
+
+        if (_item.InvenAlarmCheck)
+            _alarmImage.gameObject?.SetActive(true);
+
+        else
+            _alarmImage.gameObject?.SetActive(false);
     }
 }
 

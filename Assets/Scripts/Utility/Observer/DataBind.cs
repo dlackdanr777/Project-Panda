@@ -10,6 +10,7 @@ namespace Muks.DataBind
         private static DataBindContainer<string> _textBindDic = new DataBindContainer<string>();
         private static DataBindContainer<UnityAction> _unityActionBindDic = new DataBindContainer<UnityAction>();
         private static DataBindContainer<Sprite> _spriteBindDic = new DataBindContainer<Sprite>();
+        private static DataBindContainer<bool> _boolBindDic = new DataBindContainer<bool>();
 
 
         /// <summary> 데이터를 연결하고 값을 저장하는 함수 </summary>
@@ -68,6 +69,24 @@ namespace Muks.DataBind
         public static BindData<Sprite> GetSpriteBindData(string bindId)
         {
             return _spriteBindDic.GetBindData(bindId);
+        }
+
+        /// <summary> 데이터를 연결하고 값을 저장하는 함수 </summary>
+        public static void SetBoolValue(string bindId, bool value)
+        {
+            _boolBindDic.SetValue(bindId, value);
+        }
+
+        /// <summary> id에 맞는 값을 리턴하는 함수 </summary>
+        public static bool GetBoolValue(string bindId)
+        {
+            return _boolBindDic.GetValue(bindId);
+        }
+
+        /// <summary> 데이터를 연결해주는 클래스를 리턴하는 함수 </summary>
+        public static BindData<bool> GetBoolBindData(string bindId)
+        {
+            return _boolBindDic.GetBindData(bindId);
         }
     }
 }

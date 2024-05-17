@@ -27,14 +27,14 @@ public class Timer : MonoBehaviour
             _currentHour = TimeManager.Instance.GameHour;
             _currentMinute = 0;
 
-            float angleZ = Mathf.Lerp(0, 360f, _currentHour / 24f);
+            float angleZ = Mathf.Lerp(0, -360f, _currentHour / 24f);
             _clockHands.transform.rotation = Quaternion.Euler(0, 0, angleZ);
         }
         else
         {
             _currentMinute += (Time.deltaTime / 60f);
             _currentMinute %= 60;
-            float angleZ = Mathf.Lerp(0, 360f, (_currentHour + _currentMinute) / 24f);
+            float angleZ = Mathf.Lerp(0, -360f, (_currentHour + _currentMinute) / 24f);
             _clockHands.transform.rotation = Quaternion.Euler(0, 0, angleZ);
         }
     }
