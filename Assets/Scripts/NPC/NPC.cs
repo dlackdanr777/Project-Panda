@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class NPC : Item
@@ -30,11 +28,13 @@ public class NPCData
     public string Id;
     public int Intimacy;
     public string SSId;
+    public bool AlarmCheck;
     
-    public NPCData(string id,  int intimacy, string ssId)
+    public NPCData(string id,  int intimacy, string ssId, bool alarmCheck)
     {
         Id = id;
         Intimacy =intimacy;
         SSId = ssId;
+        AlarmCheck = alarmCheck;
     }
 }

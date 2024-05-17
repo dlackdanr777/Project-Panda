@@ -13,7 +13,8 @@ public enum InventoryItemField
     GatheringItem,
     Cook,
     Tool,
-    Furniture
+    Furniture,
+    Length
 }
 
 public enum CookItemType
